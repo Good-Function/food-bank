@@ -1,0 +1,55 @@
+name: Food Bank CI/CD
+
+on:
+  push:
+    paths:
+      - "OperatorPortal/**"
+      - .github/workflows/deploy-to-azure.yml
+    branches:
+      - main
+defaults:
+  run:
+    working-directory: OperatorPortal 
+env:
+  IMAGE_NAME: operator-portal
+  RESOURCE_GROUP: bzsoswaw
+  
+jobs:
+  build:
+    name: Build / Push to ACR
+    runs-on: ubuntu-latest
+    steps:
+    - name: git checkout main branch
+      uses: actions/checkout@v2
+    - name: "Login via Azure CLI"
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Log into registry
+      uses: docker/login-action@v1
+      with:
+        registry: ${{ secrets.ACR_ENDPOINT }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    - name: "build image"
+      run: docker build . -t ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+    - name: "push image"
+      run: docker push ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+# Deploy Bicep file
+    - name: deploy
+      id: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        resourceGroupName: bzsoswaw
+        template: ./OperatorPortal/infra.bicep
+        parameters: >
+          image=${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          name=${{ env.IMAGE_NAME }}
+          acrendpoint=${{ secrets.ACR_ENDPOINT }}
+          acrlogin=${{ secrets.ACR_USERNAME }}
+          acrpassword=${{ secrets.ACR_PASSWORD }}
+        failOnStdErr: false
+
+    - name: Get Outputs
+      run: |
+        echo "FQDN: ${{ steps.deploy.outputs.fqdn }}"
