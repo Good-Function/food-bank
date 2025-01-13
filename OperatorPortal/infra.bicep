@@ -58,7 +58,7 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
         }
         {
           name: 'exampleref'
-          value: example
+          value: 'example'
         }
       ]
       ingress: {
