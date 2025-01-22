@@ -4,8 +4,15 @@
     text-decoration: none;
 }
 
-:target {
-    background-color: var(--pico-primary-background);
-    color: var(--pico-primary-inverse);
-    text-decoration: none;
+.bzsos-logo {
+    background-image: url('/img/bzsoslogo.png'); 
+    background-size: contain;
+    background-position: center; 
+    width: 195px;
+    height: 80px;"
+}
+@media screen and (max-width: 770px) {
+    .bzsos-logo {
+        display: none;
+    }
 }

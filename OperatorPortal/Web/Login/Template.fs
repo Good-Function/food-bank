@@ -30,7 +30,7 @@ let private login (returnUrl: string option) =
                     type' = "Email"
                 )
                 input (ariaLabel = "Password", placeholder = "Password", name = "Password", type' = "password")
-                input (type'="submit", style = "width:450px", name="Login", value="Zaloguj")
+                input (type'="submit", name="Login", value="Zaloguj")
                 div(id="ErrorContainer") 
             }
         }
