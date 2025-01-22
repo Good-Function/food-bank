@@ -10,7 +10,7 @@ let Template (content: HtmlElement) (currentPath: Page) =
             div (style = "display: flex; align-items: center; justify-content: space-between;") {
                 div ( class'="bzsos-logo" )
                 Template currentPath
-                div (style = "width:175px;") { ThemeToggler.Component }
+                div () { ThemeToggler.Component }
             }
             hr ()
         }
