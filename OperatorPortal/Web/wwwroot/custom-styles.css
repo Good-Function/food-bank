@@ -1,0 +1,11 @@
+.active {
+    background-color: var(--pico-primary-background);
+    color: var(--pico-primary-inverse);
+    text-decoration: none;
+}
+
+:target {
+    background-color: var(--pico-primary-background);
+    color: var(--pico-primary-inverse);
+    text-decoration: none;
+}
