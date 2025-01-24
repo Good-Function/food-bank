@@ -3,7 +3,6 @@ module E2EPlaywright
 open KestrelTestServer
 open Microsoft.Playwright
 open Xunit
-open FsUnit.Xunit
 
 let screenshot name (page: IPage) =
     task {
@@ -28,6 +27,6 @@ let ``User can log in and see organizations page``() =
         let! _ = emailInput.FillAsync "test@test.test"
         let! _ = passwordInput.FillAsync "yourpassword123"
         let! _ = submitButton.ClickAsync()
-        let! organizationsPage = page.GetByText("Organizations Page").TextContentAsync()
-        organizationsPage |> should equal "Organizations Page"
+        // Assert
+        do! Assertions.Expect(page.Locator("text=Kazik Barazik")).ToHaveTextAsync("Kazik Barazik")
 }

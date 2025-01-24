@@ -11,7 +11,7 @@ let ``Navigations contains /ogranizations, /applications, /team links`` () =
     task {
         // Arrange
         let api = runTestApi().CreateClient()
-        api.DefaultRequestHeaders.Add("Authorization", "TestUser")
+        api.DefaultRequestHeaders.Add(Authentication.FakeAuthenticationHeader, "TestUser")
         // Act
         let! response = api.GetAsync "/organizations"
         // Assert

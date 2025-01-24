@@ -1,19 +1,13 @@
-module Organizations.Template
+module Organizations.ListTemplate
 
-open Layout.Navigation
 open Oxpecker.ViewEngine
-open Oxpecker.Htmx
-open Layout
 
 type OrganizationDto =
     { Name: string
       ContactPerson: string
       City: string }
 
-let private page =
-    div (hxGet = "/organizations?data=true", hxTrigger = "load") { "Loading..." }
-
-let DataTemplate (data: OrganizationDto list) =
+let Template (data: OrganizationDto list) =
     div () {
         table (class' = "striped") {
             thead () {
@@ -23,7 +17,6 @@ let DataTemplate (data: OrganizationDto list) =
                     th () { "City" }
                 }
             }
-
             tbody () {
                 for row in data do
                     tr () {
@@ -34,11 +27,3 @@ let DataTemplate (data: OrganizationDto list) =
             }
         }
     }
-
-let Partial =
-    Fragment() {
-        Body.Template page Page.Organizations
-        Head.ReplaceTitle <| Page.Organizations.ToTitle()
-    }
-
-let FullPage = Head.Template Partial (Page.Organizations.ToTitle())

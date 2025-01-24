@@ -4,26 +4,20 @@ open System.Threading
 open Oxpecker
 open RenderBasedOnHtmx
 
+let renderPage = render PageTemplate.Partial PageTemplate.FullPage
+
 let renderOrganizations: EndpointHandler =
     fun ctx ->
-        let shouldFetchData =
-            match ctx.TryGetQueryValue "data" with
-            | Some str when str = "true" -> true
-            | _ -> false
+        Thread.Sleep(1000)
 
-        if shouldFetchData then
-            Thread.Sleep(1500)
+        ctx.WriteHtmlView(
+            ListTemplate.Template
+                [ { Name = "Test Org"
+                    City = "Pruszków"
+                    ContactPerson = "Kazik Barazik" }
+                  { Name = "OpenAI"
+                    City = "Piaseczno"
+                    ContactPerson = "Sam Altman" } ]
+        )
 
-            ctx.WriteHtmlView(
-                Template.DataTemplate
-                    [ { Name = "Test Org"
-                        City = "Pruszków"
-                        ContactPerson = "Kazik Barazik" }
-                      { Name = "OpenAI"
-                        City = "Piaseczno"
-                        ContactPerson = "Sam Altman" } ]
-            )
-        else
-            ctx |> render Template.Partial Template.FullPage
-
-let Endpoints = [ route "/" renderOrganizations ]
+let Endpoints = [ route "/" renderPage; route "/list" renderOrganizations ]

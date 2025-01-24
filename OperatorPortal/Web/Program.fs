@@ -4,7 +4,6 @@ open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.DependencyInjection
-open Microsoft.Extensions.FileProviders
 open Oxpecker
 
 let protect =  configureEndpoint _.RequireAuthorization() 

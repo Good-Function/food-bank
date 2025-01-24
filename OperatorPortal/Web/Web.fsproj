@@ -28,7 +28,8 @@
       <Compile Include="Login\Router.fs" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Include="Organizations\Template.fs" />
+      <Compile Include="Organizations\PageTemplate.fs" />
+      <Compile Include="Organizations\ListTemplate.fs" />
       <Compile Include="Organizations\Router.fs" />
       <Compile Include="Applications\Template.fs" />
       <Compile Include="Applications\Router.fs" />
