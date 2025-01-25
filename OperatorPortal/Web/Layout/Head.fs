@@ -14,6 +14,7 @@ let Template (content: HtmlElement) (currentTitle: string) =
             meta (name = "color-scheme", content = "light dark")
             meta (name = "htmx-config", content="""{"responseHandling": [{"code":".*", "swap": true}]}""")
             script (src = "/htmx.min.js")
+            script (src = "/theme.js")
             link (rel = "stylesheet", href = "custom-styles.css")
             link (rel = "stylesheet", href = "pico.pumpkin.min.css")
             title (id="title") { currentTitle + " | Bzsos" }

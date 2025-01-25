@@ -6,8 +6,13 @@ let Component =
     raw
         """
 <button class="outline" style="border:none; border-radius:50%; background-color: var(--pico-contrast); padding: 8px; outline: none; box-shadow: none; color: var(--pico-contrast-inverse);"
-        onclick="document.documentElement.setAttribute('data-theme', 
-            document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light')">
+        onclick="
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            console.log('HAH');
+        ">
     <div style="width: 30px; height: 30px;">
         <svg xmlns="http://www.w3.org/2000/svg" 
              width="24" 

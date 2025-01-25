@@ -20,7 +20,7 @@ let endpoints =
 
 let notFoundHandler (ctx: HttpContext) =
     ctx.SetStatusCode 404
-    ctx.WriteHtmlView Layout.NotFound.Template 
+    ctx.WriteHtmlView (Layout.Head.Template Layout.NotFound.Template "Not Found")
 
 let createServer () =
     let builder = WebApplication.CreateBuilder()
