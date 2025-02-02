@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
-        <RootNamespace>OperatorPortal</RootNamespace>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
     <ItemGroup>
+      <PackageReference Include="FSharp.Data" Version="6.4.1" />
       <PackageReference Include="Oxpecker" Version="1.1.2" />
       <PackageReference Include="Oxpecker.Htmx" Version="1.0.0" />
       <PackageReference Include="Oxpecker.ViewEngine" Version="1.0.1" />
@@ -31,6 +31,13 @@
       <Compile Include="Organizations\PageTemplate.fs" />
       <Compile Include="Organizations\ListTemplate.fs" />
       <Compile Include="Organizations\Router.fs" />
+      <Content Include="Organizations\Database\migrations.sql" />
+      <Content Include="Organizations\Database\sample.sql" />
+      <Compile Include="Organizations\Database\OrganizationRow.fs" />
+      <Compile Include="Organizations\Database\csvLoader.fs" />
+      <Content Include="Organizations\Database\db_sample.csv">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Compile Include="Applications\Template.fs" />
       <Compile Include="Applications\Router.fs" />
       <Compile Include="Authentication.fs" />
