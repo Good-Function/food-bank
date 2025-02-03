@@ -1,4 +1,4 @@
-DELETE FROM organizacje
+DELETE FROM organizacje;
 INSERT INTO organizacje (
     Teczka, IdentyfikatorEnova, NIP, Regon, KrsNr, FormaPrawna, OPP,
     NazwaOrganizacjiPodpisujacejUmowe, AdresRejestrowy, NazwaPlacowkiTrafiaZywnosc,

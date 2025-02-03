@@ -1,4 +1,4 @@
-module FormDataBuilder
+module Tools.FormDataBuilder
 
 open System.Collections.Generic
 open System.Net.Http

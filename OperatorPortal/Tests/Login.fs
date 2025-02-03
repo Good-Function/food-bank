@@ -2,8 +2,8 @@
 
 open System
 open System.Net
-open FormDataBuilder
-open TestServer
+open Tools.FormDataBuilder
+open Tools.TestServer
 open Xunit
 open FSharp.Control
 open FsUnit.Xunit

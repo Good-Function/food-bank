@@ -3,7 +3,7 @@ module Navigation
 open System.Net
 open AngleSharp.Html.Parser
 open Xunit
-open TestServer
+open Tools.TestServer
 open FsUnit.Xunit
 
 [<Fact>]
