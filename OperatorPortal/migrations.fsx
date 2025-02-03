@@ -4,6 +4,7 @@
 open System
 open System.IO
 open DbUp
+open DbUp.Helpers
 
 let logAndParseEngineResult (result: Engine.DatabaseUpgradeResult) =
     match result.Successful with
@@ -29,5 +30,6 @@ let path = Path.Combine(Directory.GetCurrentDirectory(), "Web", "Organizations",
 
 DeployChanges.To.PostgresqlDatabase(connectionString)
              .WithScriptsFromFileSystem(path, fun sqlFilePath -> true)
+             .JournalTo(NullJournal())
              .LogToConsole().Build().PerformUpgrade()
 |> logAndParseEngineResult

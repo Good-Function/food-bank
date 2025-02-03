@@ -4,17 +4,22 @@
         <GenerateProgramFile>true</GenerateProgramFile>
     </PropertyGroup>
     <ItemGroup>
+        <Content Include="wwwroot\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Tools\FormDataBuilder.fs" />
+        <Compile Include="Tools\TestServer.fs" />
+    </ItemGroup>
+    <ItemGroup>
         <Compile Include="E2E\KestrelTestServer.fs" />
         <Compile Include="E2E\E2EPlaywright.fs" />
-        <Compile Include="FormDataBuilder.fs" />
-        <Compile Include="TestServer.fs" />
         <Compile Include="Navigation.fs" />
         <Compile Include="Login.fs" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="AngleSharp" Version="1.2.0" />
-        <PackageReference Include="dbup-postgresql" Version="5.0.40" />
-        <PackageReference Include="FSharp.Data" Version="6.4.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
         <PackageReference Include="Microsoft.Playwright" Version="1.49.0" />
         <PackageReference Include="xunit" Version="2.9.3" />
@@ -28,11 +33,6 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Web\Web.fsproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <Content Include="wwwroot\**\*">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
     </ItemGroup>
     <ItemGroup>
       <Content Include="OrganizationsFromExcel\db_sample.xlsx" />

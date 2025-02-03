@@ -1,4 +1,4 @@
-module TestServer
+module Tools.TestServer
 
 open Microsoft.AspNetCore.Mvc.Testing
 open Program
