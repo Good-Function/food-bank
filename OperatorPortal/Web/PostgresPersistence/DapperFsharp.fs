@@ -5,30 +5,28 @@ open Dapper
 open Npgsql
 open OptionHandler
 
-let dbSingleOrNone<'Result> (query: string) (param: obj) (connection: IDbConnection) : Async<'Result option> =
-    async {
-        let! result = connection.QuerySingleOrDefaultAsync<'Result>(query, param) |> Async.AwaitTask
+type IDbConnection with
+    member this.trySingle<'Result> (query: string) (param: obj): Async<'Result option> =
+        async {
+            let! result = this.QuerySingleOrDefaultAsync<'Result>(query, param) |> Async.AwaitTask
 
-        return
-            match box result with
-            | null -> None
-            | _ -> Some result
-    }
-
-let dbSingle<'Result> (query: string) (param: obj) (connection: IDbConnection) : Async<'Result> =
-    async {
-        let! result = connection.QuerySingleAsync<'Result>(query, param) |> Async.AwaitTask
-        return result
-    }
-
-let dbQuery<'Result> (query: string) (connection: IDbConnection) : Async<'Result seq> =
-    connection.QueryAsync<'Result>(query) |> Async.AwaitTask
-
-let dbQueryMultiple (query: string) (param: obj) (connection: IDbConnection) : Async<SqlMapper.GridReader> =
-    connection.QueryMultipleAsync(query, param) |> Async.AwaitTask
-
-let dbExecute (sql: string) (param: obj) (connection: IDbConnection) =
-    connection.ExecuteAsync(sql, param) |> Async.AwaitTask |> Async.Ignore
+            return
+                match box result with
+                | null -> None
+                | _ -> Some result
+        }
+        
+    member this.Single<'Result> (query: string) (param: obj): Async<'Result> =
+        async {
+            let! result = this.QuerySingleAsync<'Result>(query, param) |> Async.AwaitTask
+            return result
+        }
+        
+    member this.Query<'Result> (query: string): Async<'Result seq> =
+        this.QueryAsync<'Result>(query) |> Async.AwaitTask
+        
+    member this.Execute (sql:string) (param:obj) =
+        this.ExecuteAsync(sql, param) |> Async.AwaitTask |> Async.Ignore
 
 let dbConnect (connectionString: string) : unit -> Async<IDbConnection> =
     OptionHandler.RegisterTypes()

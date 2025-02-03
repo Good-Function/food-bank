@@ -22,7 +22,7 @@ let ``Sample excel can be parsed to organizations and saved`` () =
         
         let! db = con()
         
-        let! rows = db |> dbQuery<OrganizationRow>("SELECT * FROM organizacje")
+        let! rows = db.Query<OrganizationRow>("SELECT * FROM organizacje")
         
         true |> should equal false
     }
