@@ -6,8 +6,6 @@ services:
     environment:
       POSTGRES_PASSWORD: Strong!Passw0rd
       POSTGRES_USER: postgres
-      POSTGRES_DB: db
+      POSTGRES_DB: food_bank
     ports:
       - 5432:5432
-    volumes:
-      - ./database.sql:/docker-entrypoint-initdb.d/database.sql

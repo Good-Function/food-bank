@@ -1,6 +1,6 @@
-CREATE TABLE organizacja
+CREATE TABLE IF NOT EXISTS organizacje
 (
-    Teczka                              INT PRIMARY KEY CONSTRAINT organizacja_pk,
+    Teczka                              INT CONSTRAINT organizacje_pk PRIMARY KEY,
     IdentyfikatorEnova                  BIGINT  NOT NULL,
     NIP                                 BIGINT  NOT NULL,
     Regon                               BIGINT  NOT NULL,
