@@ -37,7 +37,7 @@ type Setup() =
     
     interface IDisposable with
         member _.Dispose() = ()
-
+[<assembly: CaptureConsole >] do ()
 [<assembly: AssemblyFixture(typeof<Setup>)>] do ()
 
 
