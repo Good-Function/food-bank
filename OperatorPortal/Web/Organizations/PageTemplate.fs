@@ -7,7 +7,7 @@ open Layout
 
 let private page =
     div (hxGet = "/organizations/list", hxTrigger = "load") {
-        for _ in 1..3 do div(class'="shimmer")
+        for _ in 1..6 do div(class'="shimmer")
     }
 
 let Partial =

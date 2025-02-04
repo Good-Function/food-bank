@@ -31,7 +31,6 @@ let parse (org: Orgs.Row): OrganizationRow=
       Telefon = org.Telefon
       Przedstawiciel = org.Przedstawiciel
       Kontakt = org.Kontakt
-      Fax = org.Fax
       Email = org.``E-mail``
       Dostepnosc = org.Dostępność
       OsobaDoKontaktu = org.``Osoba do kontaktu``

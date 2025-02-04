@@ -18,6 +18,9 @@
       </Content>
       <Content Include="Dockerfile" />
       <Compile Include="renderBasedOnHtmx.fs" />
+      <Content Include="settings.ini">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="PostgresPersistence\OptionHandler.fs" />
@@ -34,9 +37,7 @@
       <Compile Include="Login\Router.fs" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Include="Organizations\PageTemplate.fs" />
-      <Compile Include="Organizations\ListTemplate.fs" />
-      <Compile Include="Organizations\Router.fs" />
+      <Compile Include="Organizations\Application\ReadModels.fs" />
       <Content Include="Organizations\Database\migrations.sql" />
       <Content Include="Organizations\Database\sample.sql" />
       <Compile Include="Organizations\Database\OrganizationRow.fs" />
@@ -44,9 +45,15 @@
       <Content Include="Organizations\Database\db_sample.csv">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <Compile Include="Organizations\Database\OrganizationsDao.fs" />
+      <Compile Include="Organizations\PageTemplate.fs" />
+      <Compile Include="Organizations\ListTemplate.fs" />
+      <Compile Include="Organizations\CompositionRoot.fs" />
+      <Compile Include="Organizations\Router.fs" />
       <Compile Include="Applications\Template.fs" />
       <Compile Include="Applications\Router.fs" />
       <Compile Include="Authentication.fs" />
+      <Compile Include="Settings.fs" />
       <Compile Include="Program.fs" />
     </ItemGroup>
 </Project>

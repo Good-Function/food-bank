@@ -1,23 +1,23 @@
 module Organizations.Router
 
-open System.Threading
 open Oxpecker
 open RenderBasedOnHtmx
+open Organizations.Application.ReadModels
+open Organizations.CompositionRoot
 
 let renderPage = render PageTemplate.Partial PageTemplate.FullPage
 
-let renderOrganizations: EndpointHandler =
+let renderOrganizations (readOrganizationSummaries: ReadOrganizationSummaries) : EndpointHandler =
     fun ctx ->
-        Thread.Sleep(1000)
+        task {
+            let! summaries = readOrganizationSummaries
+            return ctx.WriteHtmlView(
+                ListTemplate.Template summaries
+            )   
+        }
 
-        ctx.WriteHtmlView(
-            ListTemplate.Template
-                [ { Name = "Test Org"
-                    City = "Pruszków"
-                    ContactPerson = "Kazik Barazik" }
-                  { Name = "OpenAI"
-                    City = "Piaseczno"
-                    ContactPerson = "Sam Altman" } ]
-        )
-
-let Endpoints = [ route "/" renderPage; route "/list" renderOrganizations ]
+let Endpoints (dependencies: Dependencies) =
+    [
+        route "/" renderPage
+        route "/list" (renderOrganizations dependencies.ReadOrganizationSummaries)
+    ]

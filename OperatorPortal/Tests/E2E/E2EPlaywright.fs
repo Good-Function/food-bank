@@ -28,5 +28,5 @@ let ``User can log in and see organizations page``() =
         let! _ = passwordInput.FillAsync "yourpassword123"
         let! _ = submitButton.ClickAsync()
         // Assert
-        do! Assertions.Expect(page.Locator("text=Kazik Barazik")).ToHaveTextAsync("Kazik Barazik")
+        do! Assertions.Expect(page.Locator("table")).ToBeAttachedAsync()
 }
