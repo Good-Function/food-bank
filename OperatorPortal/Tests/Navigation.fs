@@ -1,10 +1,11 @@
 module Navigation
 
 open System.Net
-open AngleSharp.Html.Parser
 open Xunit
 open Tools.TestServer
 open FsUnit.Xunit
+open Tools.HttResponseMessageToHtml
+open FSharp.Data
 
 [<Fact>]
 let ``Navigations contains /ogranizations, /applications, /team links`` () =
@@ -15,12 +16,11 @@ let ``Navigations contains /ogranizations, /applications, /team links`` () =
         // Act
         let! response = api.GetAsync "/organizations"
         // Assert
-        let! document = response.Content.ReadAsStringAsync()
-        let doc = HtmlParser().ParseDocument document
-        let navLinks =
-            doc.QuerySelectorAll "nav ul li a"
-            |> Seq.map _.GetAttribute("href")
-            |> Seq.toList
+        let! document = response.HtmlContent
+        
+        let navLinks = document.CssSelect "nav ul li a"
+                       |> Seq.map(_.Attribute("href").Value())
+                       |> Seq.toList
         navLinks |> should equal [ "/organizations"; "/applications"; "/team" ]    
         response.StatusCode |> should equal HttpStatusCode.OK
     }
