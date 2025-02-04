@@ -18,7 +18,7 @@ let ``/ogranizations displays organization's name `` () =
         // Act
         let! response = api.GetAsync "/organizations/list"
         // Assert
-        let! doc = response.HtmlContentF
+        let! doc = response.HtmlContent
         let summaries =
             doc.CssSelect "tbody tr"
             |> Seq.map(fun row -> row.Descendants "td" |> Seq.map(_.InnerText()))
