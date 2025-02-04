@@ -6,7 +6,8 @@ open Npgsql
 open OptionHandler
 
 type IDbConnection with
-    member this.trySingle<'Result> (query: string) (param: obj): Async<'Result option> =
+
+    member this.trySingle<'Result> (query: string) (param: obj) : Async<'Result option> =
         async {
             let! result = this.QuerySingleOrDefaultAsync<'Result>(query, param) |> Async.AwaitTask
 
@@ -15,20 +16,23 @@ type IDbConnection with
                 | null -> None
                 | _ -> Some result
         }
-        
-    member this.Single<'Result> (query: string) (param: obj): Async<'Result> =
+
+    member this.Single<'Result> (query: string) (param: obj) : Async<'Result> =
         async {
             let! result = this.QuerySingleAsync<'Result>(query, param) |> Async.AwaitTask
             return result
         }
-        
-    member this.Query<'Result> (query: string): Async<'Result seq> =
-        this.QueryAsync<'Result>(query) |> Async.AwaitTask
-        
-    member this.Execute (sql:string) (param:obj) =
+
+    member this.Query<'Result>(query: string) =
+        async {
+            let! result = this.QueryAsync<'Result>(query) |> Async.AwaitTask
+            return Seq.toList result
+        }
+
+    member this.Execute (sql: string) (param: obj) =
         this.ExecuteAsync(sql, param) |> Async.AwaitTask |> Async.Ignore
 
-let dbConnect (connectionString: string) : unit -> Async<IDbConnection> =
+let connectDB (connectionString: string) : unit -> Async<IDbConnection> =
     OptionHandler.RegisterTypes()
 
     fun () ->

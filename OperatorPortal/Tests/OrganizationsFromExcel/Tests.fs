@@ -1,14 +1,10 @@
 module Tests.OrganizationsFromExcel.Tests
 
-open PostgresPersistence
 open Xunit
 open FsUnit.Xunit
 open Organizations.Database.csvLoader
-open DapperFsharp
 open Organizations.Database.OrganizationRow
-
-let con = dbConnect("Host=localhost;Port=5432;User Id=postgres;Password=Strong!Passw0rd;Database=food_bank;")
-
+open PostgresPersistence.DapperFsharp
 
 [<Literal>]
 let ResolutionFolder = __SOURCE_DIRECTORY__
@@ -21,7 +17,7 @@ INSERT INTO organizacje (
     NazwaOrganizacjiPodpisujacejUmowe, AdresRejestrowy, NazwaPlacowkiTrafiaZywnosc,
     AdresPlacowkiTrafiaZywnosc, GminaDzielnica, Powiat, NazwaOrganizacjiKsiegowanieDarowizn,
     KsiegowanieAdres, TelOrganProwadzacegoKsiegowosc, WwwFacebook, Telefon, Przedstawiciel,
-    Kontakt, Fax, Email, Dostepnosc, OsobaDoKontaktu, TelefonOsobyKontaktowej,
+    Kontakt, Email, Dostepnosc, OsobaDoKontaktu, TelefonOsobyKontaktowej,
     MailOsobyKontaktowej, OsobaOdbierajacaZywnosc, TelefonOsobyOdbierajacej,
     LiczbaBeneficjentow, Beneficjenci, Sieci, Bazarki, Machfit, FEPZ2024, Kategoria,
     RodzajPomocy, SposobUdzielaniaPomocy, WarunkiMagazynowe, HACCP, Sanepid,
@@ -32,7 +28,7 @@ INSERT INTO organizacje (
     @NazwaOrganizacjiPodpisujacejUmowe, @AdresRejestrowy, @NazwaPlacowkiTrafiaZywnosc,
     @AdresPlacowkiTrafiaZywnosc, @GminaDzielnica, @Powiat, @NazwaOrganizacjiKsiegowanieDarowizn,
     @KsiegowanieAdres, @TelOrganProwadzacegoKsiegowosc, @WwwFacebook, @Telefon, @Przedstawiciel,
-    @Kontakt, @Fax, @Email, @Dostepnosc, @OsobaDoKontaktu, @TelefonOsobyKontaktowej,
+    @Kontakt, @Email, @Dostepnosc, @OsobaDoKontaktu, @TelefonOsobyKontaktowej,
     @MailOsobyKontaktowej, @OsobaOdbierajacaZywnosc, @TelefonOsobyOdbierajacej,
     @LiczbaBeneficjentow, @Beneficjenci, @Sieci, @Bazarki, @Machfit, @FEPZ2024, @Kategoria,
     @RodzajPomocy, @SposobUdzielaniaPomocy, @WarunkiMagazynowe, @HACCP, @Sanepid,
@@ -45,7 +41,7 @@ INSERT INTO organizacje (
 let ``Sample excel can be parsed to organizations and saved`` () =
     async {
         // Arrange
-        let! db = con()
+        let! db = Tools.DbConnection.connectDb()
         let row = sampleOrgs.Rows |> Seq.head
         // Act
         let parsedRow = parse row

@@ -20,7 +20,6 @@ CREATE TABLE IF NOT EXISTS organizacje
     Telefon                             TEXT    NOT NULL,
     Przedstawiciel                      TEXT    NOT NULL,
     Kontakt                             TEXT    NOT NULL,
-    Fax                                 TEXT    NOT NULL,
     Email                               TEXT    NOT NULL,
     Dostepnosc                          TEXT    NOT NULL,
     OsobaDoKontaktu                     TEXT    NOT NULL,

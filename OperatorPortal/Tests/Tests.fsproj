@@ -11,10 +11,13 @@
     <ItemGroup>
         <Compile Include="Tools\FormDataBuilder.fs" />
         <Compile Include="Tools\TestServer.fs" />
+        <Compile Include="Tools\DbConnection.fs" />
+        <Compile Include="Tools\HttResponseMessageToHtml.fs" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="E2E\KestrelTestServer.fs" />
         <Compile Include="E2E\E2EPlaywright.fs" />
+        <Compile Include="Organizations.fs" />
         <Compile Include="Navigation.fs" />
         <Compile Include="Login.fs" />
     </ItemGroup>
