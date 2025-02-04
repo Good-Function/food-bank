@@ -26,7 +26,7 @@ let connectionString =
       "Host=localhost;Port=5432;User Id=postgres;Password=Strong!Passw0rd;Database=food_bank;"
 
 Console.WriteLine(connectionString)
-let path = Path.Combine(Directory.GetCurrentDirectory(), "Web", "Organizations", "Database")
+let path = Path.Combine(__SOURCE_DIRECTORY__, "Web", "Organizations", "Database")
 
 DeployChanges.To.PostgresqlDatabase(connectionString)
              .WithScriptsFromFileSystem(path, fun sqlFilePath -> true)

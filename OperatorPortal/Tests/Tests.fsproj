@@ -8,6 +8,7 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Tools\Setup.fs" />
         <Compile Include="Tools\FormDataBuilder.fs" />
         <Compile Include="Tools\TestServer.fs" />
         <Compile Include="Tools\DbConnection.fs" />
@@ -26,6 +27,7 @@
         <PackageReference Include="FsUnit.xUnit" Version="7.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.1" />
         <PackageReference Update="FSharp.Core" Version="9.0.101" />
+        <PackageReference Include="Testcontainers" Version="4.1.0" />
         <PackageReference Include="xunit.v3" Version="1.0.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1" />
     </ItemGroup>
