@@ -13,6 +13,7 @@ defaults:
 env:
   IMAGE_NAME: operator-portal
   RESOURCE_GROUP: bzsoswaw
+  ASPNETCORE_ENVIRONMENT: Development
   
 jobs:
   build:
