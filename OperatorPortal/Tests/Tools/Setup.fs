@@ -3,7 +3,7 @@ module Tests.Setup
 open System
 open System.Diagnostics
 open System.Threading
-open DotNet.Testcontainers.Builders
+open Testcontainers.PostgreSql
 open Xunit
 
 let runFSharpScript scriptPath =
@@ -23,17 +23,14 @@ let runFSharpScript scriptPath =
 
 type Setup() =
     do
-        let container =
-            ContainerBuilder()
-                .WithImage("postgres:latest")
-                .WithReuse(true)
-                .WithName("foodbank_db")
-                .WithEnvironment("POSTGRES_USER", "postgres")
-                .WithEnvironment("POSTGRES_PASSWORD", "Strong!Passw0rd")
-                .WithEnvironment("POSTGRES_DB", "food_bank")
-                .WithPortBinding(5432, false)
-                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
-                .Build()
+        let container = PostgreSqlBuilder()
+                            .WithReuse(true)
+                            .WithName("foodbank_db")
+                            .WithEnvironment("POSTGRES_USER", "postgres")
+                            .WithEnvironment("POSTGRES_PASSWORD", "Strong!Passw0rd")
+                            .WithEnvironment("POSTGRES_DB", "food_bank")
+                            .WithPortBinding(5432, false)
+                            .Build();
         container.StartAsync() |> Async.AwaitTask |> Async.RunSynchronously
         Thread.Sleep(1000)
         runFSharpScript "/home/marcin/code/food-bank/OperatorPortal/migrations.fsx"
