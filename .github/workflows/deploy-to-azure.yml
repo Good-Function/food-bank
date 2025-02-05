@@ -36,7 +36,7 @@ jobs:
       run: docker ps
     - name: show tables
       if: always()
-      run: CONTAINER_ID=$(docker ps --format '{{.ID}}') & docker exec -it $CONTAINER_ID psql -U postgres -d food_bank -c '\d'
+      run: CONTAINER_ID=$(docker ps --format ${{ '${{.ID}}' }}) & docker exec -it $CONTAINER_ID psql -U postgres -d food_bank -c '\d'
     - name: "Login via Azure CLI"
       uses: azure/login@v1
       with:
