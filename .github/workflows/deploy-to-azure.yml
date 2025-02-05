@@ -29,6 +29,10 @@ jobs:
       run: dotnet build
     - name: Playwright
       run: pwsh Tests/bin/Debug/net9.0/playwright.ps1 install chromium --with-deps
+    - name: docker + postgres
+      run: docker compose up -d
+    - name: migrations
+      run: dotnet fsi migrations.fsx
     - name: Test
       run: dotnet test --logger html
     - name: show containers
