@@ -36,7 +36,7 @@ jobs:
       run: docker ps
     - name: show tables
       if: always()
-      run: docker exec -it foodbank_db psql -U postgres -d food_bank -c '\d'
+      run: docker exec foodbank_db psql -U postgres -d food_bank -c '\d'
     - name: "Login via Azure CLI"
       uses: azure/login@v1
       with:
