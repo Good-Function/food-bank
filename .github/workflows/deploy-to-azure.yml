@@ -16,7 +16,7 @@ env:
   
 jobs:
   build:
-    name: Build / Push to ACR
+    name: Test & Build -> Push to ACR
     runs-on: ubuntu-latest
     steps:
     - name: git checkout main branch
@@ -25,6 +25,8 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Test
+        run: dotnet test
     - name: Log into registry
       uses: docker/login-action@v1
       with:
