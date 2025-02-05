@@ -25,6 +25,8 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '9.0.x'
+    - name: Check F# Interactive
+      run: dotnet fsi --version
     - name: Build
       run: dotnet build
     - name: Playwright
