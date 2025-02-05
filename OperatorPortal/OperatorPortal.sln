@@ -4,6 +4,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Web", "Web\Web.fsproj", "{1
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Tests", "Tests\Tests.fsproj", "{F61DE8EA-3489-428A-A6D4-06F515198EA0}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Migrations", "Migrations\Migrations.fsproj", "{7FACD6EB-7DA4-412D-A372-E420DB4A6E3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{F61DE8EA-3489-428A-A6D4-06F515198EA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F61DE8EA-3489-428A-A6D4-06F515198EA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F61DE8EA-3489-428A-A6D4-06F515198EA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FACD6EB-7DA4-412D-A372-E420DB4A6E3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FACD6EB-7DA4-412D-A372-E420DB4A6E3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FACD6EB-7DA4-412D-A372-E420DB4A6E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FACD6EB-7DA4-412D-A372-E420DB4A6E3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -33,6 +33,7 @@
         <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\Migrations\Migrations.fsproj" />
       <ProjectReference Include="..\Web\Web.fsproj" />
     </ItemGroup>
     <ItemGroup>

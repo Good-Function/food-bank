@@ -1,6 +1,5 @@
 module Organizations
 
-open System
 open System.Net
 open Tools.HttResponseMessageToHtml
 open Xunit
