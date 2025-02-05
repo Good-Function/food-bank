@@ -26,6 +26,7 @@ type Setup() =
             ContainerBuilder()
                 .WithImage("postgres:latest")
                 .WithReuse(true)
+                .WithName("foodbank_db")
                 .WithEnvironment("POSTGRES_USER", "postgres")
                 .WithEnvironment("POSTGRES_PASSWORD", "Strong!Passw0rd")
                 .WithEnvironment("POSTGRES_DB", "food_bank")
