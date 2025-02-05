@@ -25,12 +25,14 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '9.0.x'
+    - name: Playwright
+      run: pwsh bin/Debug/net8.0/playwright.ps1 install chromium --with-deps
     - name: "Login via Azure CLI"
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: Test
-      run: dotnet test
+      run: dotnet test --logger html
     - name: Log into registry
       uses: docker/login-action@v1
       with:
