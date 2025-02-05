@@ -12,6 +12,7 @@ let runFSharpScript scriptPath =
     psi.RedirectStandardOutput <- true
     psi.RedirectStandardError <- true
     psi.UseShellExecute <- false
+    psi.CreateNoWindow <- true
     File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_pre.txt"), "WILL RUN MIGRATIONS")
     use proc = Process.Start(psi)
     proc.WaitForExit()
