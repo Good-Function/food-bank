@@ -31,6 +31,9 @@ jobs:
       run: pwsh Tests/bin/Debug/net9.0/playwright.ps1 install chromium --with-deps
     - name: Test
       run: dotnet test --logger html
+    - name: Tests html
+      if: always()
+      run: cat Tests/bin/Debug/net9.0/test.txt
     - name: "Login via Azure CLI"
       uses: azure/login@v1
       with:
