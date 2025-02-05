@@ -19,8 +19,6 @@ let ``/ogranizations displays organization's name `` () =
         api.DefaultRequestHeaders.Add(Authentication.FakeAuthenticationHeader, "TestUser")
         // Act
         let! response = api.GetAsync "/organizations/list"
-        let! x = response.Content.ReadAsStringAsync()
-        printfn "%s" x
         // Assert
         let! doc = response.HtmlContent()
         let summaries =
