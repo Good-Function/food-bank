@@ -18,6 +18,7 @@ let ``Navigations contains /ogranizations, /applications, /team links`` () =
         let! response = api.GetAsync "/organizations"
         let! stuff = response.Content.ReadAsStringAsync()
         File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "test.txt"), stuff)
+        response.StatusCode |> should equal 100
         stuff |> should equal "teradascie"
         // Assert
         let! document = response.HtmlContent()
