@@ -2,6 +2,7 @@ module Tests.Setup
 
 open System
 open System.Diagnostics
+open System.Threading
 open DotNet.Testcontainers.Builders
 open Xunit
 
@@ -34,6 +35,7 @@ type Setup() =
                 .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
                 .Build()
         container.StartAsync() |> Async.AwaitTask |> Async.RunSynchronously
+        Thread.Sleep(1000)
         runFSharpScript "/home/marcin/code/food-bank/OperatorPortal/migrations.fsx"
     
     interface IDisposable with
