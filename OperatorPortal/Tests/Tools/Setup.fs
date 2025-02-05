@@ -3,7 +3,6 @@ module Tests.Setup
 open System
 open System.Diagnostics
 open System.IO
-open System.Threading
 open Testcontainers.PostgreSql
 open Xunit
 
@@ -13,21 +12,18 @@ let runFSharpScript scriptPath =
     psi.RedirectStandardError <- true
     psi.UseShellExecute <- false
     File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_pre.txt"), "WILL RUN MIGRATIONS")
-    try 
-        use proc = Process.Start(psi)
-        File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_pre.txt"), proc.ToString())
-        File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_pre.txt"), proc.ProcessName)
+    use proc = Process.Start(psi)
+    File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_pre.txt"), proc.ToString())
+    File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_pre.txt"), proc.ProcessName)
 
-        proc.WaitForExit()
-        let output = proc.StandardOutput.ReadToEnd()
-        let errors = proc.StandardError.ReadToEnd()
-        printfn "Script Output: %s" output
-        File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_out.txt"), output)
-        if not (String.IsNullOrWhiteSpace(errors)) then
-            printfn "Script Errors: %s" errors
-            File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_err.txt"), output)
-    with
-    | ex -> File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_err.txt"), ex.ToString())
+    proc.WaitForExit()
+    let output = proc.StandardOutput.ReadToEnd()
+    let errors = proc.StandardError.ReadToEnd()
+    printfn "Script Output: %s" output
+    File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_out.txt"), output)
+    if not (String.IsNullOrWhiteSpace(errors)) then
+        printfn "Script Errors: %s" errors
+        File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_err.txt"), output)
 
 type Setup() =
     do
@@ -40,8 +36,8 @@ type Setup() =
                             .WithPortBinding(5432, false)
                             .Build();
         container.StartAsync() |> Async.AwaitTask |> Async.RunSynchronously
-        Thread.Sleep(1000)
-        runFSharpScript "/home/marcin/code/food-bank/OperatorPortal/migrations.fsx"
+        let migrator = Path.GetFullPath(Path.Combine(__SOURCE_DIRECTORY__, @"../../", "migrations.fsx"))
+        runFSharpScript migrator
     
     interface IDisposable with
         member _.Dispose() = ()
