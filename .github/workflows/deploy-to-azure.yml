@@ -21,7 +21,7 @@ jobs:
     steps:
     - name: git checkout main branch
       uses: actions/checkout@v2
-    - name: Setup .NET
+    - name: Setup .NET, because the default is 8.0
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '9.0.x'
@@ -31,6 +31,11 @@ jobs:
       run: pwsh Tests/bin/Debug/net9.0/playwright.ps1 install chromium --with-deps
     - name: Test
       run: dotnet test --logger html
+    - name: show tables
+      if: always()
+      run: |
+      	CONTAINER_ID=$(docker ps --filter "ancestor=postgres" --format "{{.ID}}")
+      	docker exec -it $CONTAINER_ID psql -U postgres -d food_bank -c "\dt"
     - name: "Login via Azure CLI"
       uses: azure/login@v1
       with:
