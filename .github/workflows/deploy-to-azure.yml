@@ -21,6 +21,10 @@ jobs:
     steps:
     - name: git checkout main branch
       uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '9.0.x'
     - name: "Login via Azure CLI"
       uses: azure/login@v1
       with:
