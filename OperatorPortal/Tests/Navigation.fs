@@ -1,5 +1,6 @@
 module Navigation
 
+open System.IO
 open System.Net
 open Xunit
 open Tools.TestServer
@@ -15,6 +16,9 @@ let ``Navigations contains /ogranizations, /applications, /team links`` () =
         api.DefaultRequestHeaders.Add(Authentication.FakeAuthenticationHeader, "TestUser")
         // Act
         let! response = api.GetAsync "/organizations"
+        let! stuff = response.Content.ReadAsStringAsync()
+        File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "test.txt"), stuff)
+        stuff |> should equal "teradascie"
         // Assert
         let! document = response.HtmlContent()
         
