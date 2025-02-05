@@ -31,12 +31,15 @@ jobs:
       run: pwsh Tests/bin/Debug/net9.0/playwright.ps1 install chromium --with-deps
     - name: Test
       run: dotnet test --logger html
+    - name: Migrations pre
+      if: always()
+      run: cat Tests/bin/Debug/net9.0/migrations_pre.txt
     - name: Migrations status
       if: always()
-      run: cat Tests/bin/Debug/net9.0/migrations_out.txt
+      run: cat Tests/bin/Debug/net9.0/migrations_out.txt >> $GITHUB_OUTPUT
     - name: Migrations errors
       if: always()
-      run: cat Tests/bin/Debug/net9.0/migrations_err.txt
+      run: cat Tests/bin/Debug/net9.0/migrations_err.txt >> $GITHUB_OUTPUT
     - name: show containers
       if: always()
       run: docker ps
