@@ -25,29 +25,12 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '9.0.x'
-    - name: Check F# Interactive
-      run: dotnet fsi --version
     - name: Build
       run: dotnet build
     - name: Playwright
       run: pwsh Tests/bin/Debug/net9.0/playwright.ps1 install chromium --with-deps
     - name: Test
       run: dotnet test --logger html
-    - name: Migrations pre
-      if: always()
-      run: cat Tests/bin/Debug/net9.0/migrations_pre.txt
-    - name: Migrations status
-      if: always()
-      run: cat Tests/bin/Debug/net9.0/migrations_out.txt
-    - name: Migrations errors
-      if: always()
-      run: cat Tests/bin/Debug/net9.0/migrations_err.txt
-    - name: show containers
-      if: always()
-      run: docker ps
-    - name: show tables
-      if: always()
-      run: docker exec foodbank_db psql -U postgres -d food_bank -c '\d'
     - name: "Login via Azure CLI"
       uses: azure/login@v1
       with:
