@@ -32,8 +32,10 @@ jobs:
     - name: Test
       run: dotnet test --logger html
     - name: Migrations status
+      if: always()
       run: cat Tests/bin/Debug/net9.0/migrations_out.txt
     - name: Migrations errors
+      if: always()
       run: cat Tests/bin/Debug/net9.0/migrations_err.txt
     - name: show containers
       if: always()
