@@ -14,15 +14,18 @@ let runFSharpScript scriptPath =
     psi.UseShellExecute <- false
     psi.CreateNoWindow <- true
     File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_pre.txt"), "WILL RUN MIGRATIONS")
-    use proc = Process.Start(psi)
-    proc.WaitForExit()
-    let output = proc.StandardOutput.ReadToEnd()
-    let errors = proc.StandardError.ReadToEnd()
-    printfn "Script Output: %s" output
-    File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_out.txt"), output)
-    if not (String.IsNullOrWhiteSpace(errors)) then
-        printfn "Script Errors: %s" errors
-        File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_err.txt"), output)
+    try 
+        use proc = Process.Start(psi)
+        proc.WaitForExit()
+        let output = proc.StandardOutput.ReadToEnd()
+        let errors = proc.StandardError.ReadToEnd()
+        printfn "Script Output: %s" output
+        File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_out.txt"), output)
+        if not (String.IsNullOrWhiteSpace(errors)) then
+            printfn "Script Errors: %s" errors
+            File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_err.txt"), output)
+    with
+    | ex -> File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_err.txt"), ex.ToString())
 
 type Setup() =
     do
