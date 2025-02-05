@@ -2,6 +2,7 @@ module Tests.Setup
 
 open System
 open System.Diagnostics
+open System.IO
 open System.Threading
 open Testcontainers.PostgreSql
 open Xunit
@@ -16,10 +17,11 @@ let runFSharpScript scriptPath =
     let output = proc.StandardOutput.ReadToEnd()
     let errors = proc.StandardError.ReadToEnd()
     proc.WaitForExit()
-
     printfn "Script Output: %s" output
+    File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_out.txt"), output)
     if not (String.IsNullOrWhiteSpace(errors)) then
         printfn "Script Errors: %s" errors
+        File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "migrations_err.txt"), output)
 
 type Setup() =
     do
