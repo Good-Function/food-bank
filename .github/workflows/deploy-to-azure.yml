@@ -33,9 +33,7 @@ jobs:
       run: dotnet test --logger html
     - name: show tables
       if: always()
-      run: |
-	CONTAINER_ID=$(docker ps --filter "ancestor=postgres" --format "{{.ID}}") \
-	  docker exec -it $CONTAINER_ID psql -U postgres -d food_bank -c "\dt" \
+      run: CONTAINER_ID=$(docker ps --filter "ancestor=postgres" --format "{{.ID}}") & docker exec -it $CONTAINER_ID psql -U postgres -d food_bank -c "\dt"
     - name: "Login via Azure CLI"
       uses: azure/login@v1
       with:
