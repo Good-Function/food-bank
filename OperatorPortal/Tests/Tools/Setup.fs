@@ -1,11 +1,37 @@
 module Tests.Setup
 
 open System
+open System.Collections.Concurrent
 open System.Diagnostics
 open System.IO
 open System.Threading
+open System.Threading.Tasks
 open Testcontainers.PostgreSql
 open Xunit
+
+let run scriptPath  =
+    let cts = TaskCompletionSource()
+    use cmd = new Process()
+    let cmdInfo = ProcessStartInfo()
+    cmdInfo.FileName <- "bash"
+    cmdInfo.RedirectStandardInput <- true
+    cmdInfo.RedirectStandardOutput <- true
+    cmdInfo.RedirectStandardError <- true
+    cmdInfo.UseShellExecute <- false
+    cmdInfo.WorkingDirectory <- scriptPath
+    cmd.StartInfo <- cmdInfo
+    let output = new BlockingCollection<string>()
+    let append = fun (args: DataReceivedEventArgs) ->
+        output.Add args.Data
+        if args.Data = "_finito_" then cts.SetResult()
+    cmd.ErrorDataReceived.Add append
+    cmd.OutputDataReceived.Add append
+    cmd.Start() |> ignore
+    cmd.BeginOutputReadLine();
+    cmd.BeginErrorReadLine();
+    cmd.StandardInput.WriteLine($"dotnet fsi migrations.fsx ; echo _finito_")
+    cts.Task.Wait()
+    output |> Seq.toList |> List.filter(fun output -> output <> "_finito_")
 
 let runFSharpScript scriptPath =
     let psi = ProcessStartInfo("dotnet", $"fsi {scriptPath}")
@@ -35,7 +61,8 @@ type Setup() =
                             .Build();
         container.StartAsync() |> Async.AwaitTask |> Async.RunSynchronously
         Thread.Sleep(1000)
-        runFSharpScript "/home/marcin/code/food-bank/OperatorPortal/migrations.fsx"
+        run "/home/marcin/code/food-bank/OperatorPortal"
+        ()
     
     interface IDisposable with
         member _.Dispose() = ()

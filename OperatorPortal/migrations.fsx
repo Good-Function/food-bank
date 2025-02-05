@@ -10,12 +10,13 @@ let logAndParseEngineResult (result: Engine.DatabaseUpgradeResult) =
     match result.Successful with
      | true ->
          Console.ForegroundColor <- ConsoleColor.Green
-         Console.WriteLine "Success"
+         Console.WriteLine "Finished: Success"
          Console.ResetColor()
          0
      | false ->
          Console.ForegroundColor <- ConsoleColor.Red
          Console.WriteLine result.Error
+         Console.WriteLine "Finished: Failed"
          Console.ResetColor()
          -1
          

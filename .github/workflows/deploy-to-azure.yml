@@ -36,10 +36,10 @@ jobs:
       run: cat Tests/bin/Debug/net9.0/migrations_pre.txt
     - name: Migrations status
       if: always()
-      run: cat Tests/bin/Debug/net9.0/migrations_out.txt >> $GITHUB_OUTPUT
+      run: cat Tests/bin/Debug/net9.0/migrations_out.txt
     - name: Migrations errors
       if: always()
-      run: cat Tests/bin/Debug/net9.0/migrations_err.txt >> $GITHUB_OUTPUT
+      run: cat Tests/bin/Debug/net9.0/migrations_err.txt
     - name: show containers
       if: always()
       run: docker ps
