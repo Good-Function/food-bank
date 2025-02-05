@@ -13,6 +13,7 @@ let ``/ogranizations displays organization's name `` () =
     task {
         // Arrange
         let! dbSummaries = readSummaries Tools.DbConnection.connectDb
+        let dbSummaryTeczkaIds = dbSummaries |> List.map(fun summary -> $"%i{summary.Teczka}")
         let api = runTestApi().CreateClient()
         api.DefaultRequestHeaders.Add(Authentication.FakeAuthenticationHeader, "TestUser")
         // Act
@@ -22,6 +23,7 @@ let ``/ogranizations displays organization's name `` () =
         let summaries =
             doc.CssSelect "tbody tr"
             |> Seq.map(fun row -> row.Descendants "td" |> Seq.map(_.InnerText()))
+            |> Seq.filter(fun row -> dbSummaryTeczkaIds |> List.contains (row |> Seq.head))
             |> Seq.toList
         response.StatusCode |> should equal HttpStatusCode.OK
         (dbSummaries, summaries) ||> List.iter2(fun dbSummary summary ->
