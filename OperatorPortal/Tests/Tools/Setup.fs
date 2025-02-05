@@ -1,18 +1,8 @@
 module Tests.Setup
 
 open System
-open System.Diagnostics
-open System.IO
 open Testcontainers.PostgreSql
 open Xunit
-
-let runFSharpScript scriptPath =
-    let psi = ProcessStartInfo("dotnet", $"fsi {scriptPath}")
-    psi.RedirectStandardOutput <- true
-    psi.RedirectStandardError <- true
-    psi.UseShellExecute <- false
-    use proc = Process.Start(psi)
-    proc.WaitForExit()
 
 type Setup() =
     do
@@ -25,8 +15,7 @@ type Setup() =
                             .WithPortBinding(5432, false)
                             .Build();
         container.StartAsync() |> Async.AwaitTask |> Async.RunSynchronously
-        let migrator = Path.GetFullPath(Path.Combine(__SOURCE_DIRECTORY__, @"../../", "migrations.fsx"))
-        runFSharpScript migrator
+        Migrations.main([||]) |> ignore
     
     interface IDisposable with
         member _.Dispose() = ()

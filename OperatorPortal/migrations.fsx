@@ -26,7 +26,6 @@ let connectionString =
   | None ->
       "Host=localhost;Port=5432;User Id=postgres;Password=Strong!Passw0rd;Database=food_bank;"
 
-Console.WriteLine(connectionString)
 let path = Path.Combine(__SOURCE_DIRECTORY__, "Web", "Organizations", "Database")
 
 DeployChanges.To.PostgresqlDatabase(connectionString)
