@@ -16,7 +16,7 @@ let ``Navigations contains /ogranizations, /applications, /team links`` () =
         // Act
         let! response = api.GetAsync "/organizations"
         // Assert
-        let! document = response.HtmlContent
+        let! document = response.HtmlContent()
         
         let navLinks = document.CssSelect "nav ul li a"
                        |> Seq.map(_.Attribute("href").Value())

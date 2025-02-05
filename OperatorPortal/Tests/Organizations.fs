@@ -22,7 +22,7 @@ let ``/ogranizations displays organization's name `` () =
         let! x = response.Content.ReadAsStringAsync()
         printfn "%s" x
         // Assert
-        let! doc = response.HtmlContent
+        let! doc = response.HtmlContent()
         let summaries =
             doc.CssSelect "tbody tr"
             |> Seq.map(fun row -> row.Descendants "td" |> Seq.map(_.InnerText()))
