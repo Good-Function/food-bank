@@ -9,7 +9,7 @@ open Organizations.Database.OrganizationsDao
 open FSharp.Data
 
 [<Fact>]
-let ``/ogranizations displays organization's name `` () =
+let ``/ogranizations/list displays organization's most important data `` () =
     task {
         // Arrange
         let! dbSummaries = readSummaries Tools.DbConnection.connectDb
@@ -41,4 +41,24 @@ let ``/ogranizations displays organization's name `` () =
             dbSummary.Kategoria |> should equal (summary |> Seq.item 11)
             $"%i{dbSummary.LiczbaBeneficjentow}" |> should equal (summary |> Seq.item 12)
              ) 
+    }
+    
+[<Fact>]
+let ``/ogranizations/{id} displays all organization's data's`` () =
+    task {
+        // Arrange
+        let! dbSummaries = readSummaries Tools.DbConnection.connectDb
+        let teczka = (dbSummaries |> List.head).Teczka
+        let! test = readBy Tools.DbConnection.connectDb teczka
+        printfn "%A" test
+        // Think of creating CreateAuthenticatedClient or |> authenticate "TestUser"
+        let api = runTestApi().CreateClient()
+        api.DefaultRequestHeaders.Add(Authentication.FakeAuthenticationHeader, "TestUser")
+        // Act
+        let! response = api.GetAsync $"/organizations/%i{teczka}"
+        // Assert
+        response.StatusCode |> should equal HttpStatusCode.NotFound
+        response.StatusCode |> should equal HttpStatusCode.OK
+        let! doc = response.HtmlContent()
+        ()
     }
