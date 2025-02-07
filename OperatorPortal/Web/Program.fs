@@ -7,6 +7,7 @@ open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Configuration
+open Organizations.Database
 open Oxpecker
 open Settings
 
@@ -38,7 +39,8 @@ let createServer () =
           .Get<Settings>()
     let dbConnect = connectDB(settings.DbConnectionString)
     let orgDeps: Organizations.CompositionRoot.Dependencies = {
-        ReadOrganizationSummaries = Organizations.Database.OrganizationsDao.readSummaries dbConnect
+        ReadOrganizationSummaries = OrganizationsDao.readSummaries dbConnect
+        ReadOrganizationDetailsBy = OrganizationsDao.readBy dbConnect
     }
     builder.Services
         .AddRouting()

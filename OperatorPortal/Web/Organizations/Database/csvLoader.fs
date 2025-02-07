@@ -1,7 +1,7 @@
 module Organizations.Database.csvLoader
 
 open FSharp.Data
-open OrganizationRow
+open Organizations.Application.ReadModels
 
 [<Literal>]
 let ResolutionFolder = __SOURCE_DIRECTORY__
@@ -10,7 +10,7 @@ type Orgs = CsvProvider<"db_sample.csv", ResolutionFolder=ResolutionFolder>
 
 let polishToBool = function | "tak" -> true |_ -> false
 
-let parse (org: Orgs.Row): OrganizationRow=
+let parse (org: Orgs.Row): OrganizationDetails =
     { Teczka = org.Teczka
       IdentyfikatorEnova = org.``Identyfikator ENOVA``
       NIP = org.NIP

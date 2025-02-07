@@ -1,9 +1,9 @@
 module Tests.OrganizationsFromExcel.Tests
 
+open Organizations.Application.ReadModels
 open Xunit
 open FsUnit.Xunit
 open Organizations.Database.csvLoader
-open Organizations.Database.OrganizationRow
 open PostgresPersistence.DapperFsharp
 
 [<Literal>]
@@ -47,7 +47,7 @@ let ``Sample excel can be parsed to organizations and saved`` () =
         let parsedRow = parse row
         do! db.Execute sqlSaveOrg parsedRow
         // Assert
-        let! rowFromDb = db.Single<OrganizationRow>
+        let! rowFromDb = db.Single<OrganizationDetails>
                              "SELECT * FROM organizacje where Teczka = @Teczka"
                              {|Teczka = parsedRow.Teczka|}
         rowFromDb |> should equal parsedRow

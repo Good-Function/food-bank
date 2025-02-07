@@ -6,8 +6,9 @@ open Oxpecker.Htmx
 open Layout
 
 let private page =
-    div (hxGet = "/organizations/list", hxTrigger = "load") {
-        for _ in 1..6 do div(class'="shimmer")
+    div (hxGet = "/organizations/list", hxTrigger = "load", id = "OrganizationsPage") {
+        for _ in 1..6 do
+            div (class' = "shimmer")
     }
 
 let Partial =

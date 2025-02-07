@@ -1,6 +1,7 @@
 module Organizations.ListTemplate
 
 open Oxpecker.ViewEngine
+open Oxpecker.Htmx
 open Organizations.Application.ReadModels
 
 let Template (data: OrganizationSummary list) =
@@ -28,7 +29,11 @@ let Template (data: OrganizationSummary list) =
                 tbody () {
                     for row in data do
                         tr (style = "position: relative") {
-                            td () { a (href = $"/organizations/%i{row.Teczka}") { $"%i{row.Teczka}" } }
+                            td () {
+                                a (href = $"/organizations/%i{row.Teczka}", hxTarget = "#OrganizationsPage") {
+                                    $"%i{row.Teczka}"
+                                }
+                            }
                             td () { row.NazwaPlacowkiTrafiaZywnosc }
                             td () { row.AdresPlacowkiTrafiaZywnosc }
                             td () { row.GminaDzielnica }

@@ -44,21 +44,25 @@ let ``/ogranizations/list displays organization's most important data `` () =
     }
     
 [<Fact>]
-let ``/ogranizations/{id} displays all organization's data's`` () =
+let ``/ogranizations/{id} displays Identyfikatory, ... 's data's`` () =
     task {
         // Arrange
         let! dbSummaries = readSummaries Tools.DbConnection.connectDb
         let teczka = (dbSummaries |> List.head).Teczka
-        let! test = readBy Tools.DbConnection.connectDb teczka
-        printfn "%A" test
+        let! organization = readBy Tools.DbConnection.connectDb teczka
         // Think of creating CreateAuthenticatedClient or |> authenticate "TestUser"
         let api = runTestApi().CreateClient()
         api.DefaultRequestHeaders.Add(Authentication.FakeAuthenticationHeader, "TestUser")
         // Act
         let! response = api.GetAsync $"/organizations/%i{teczka}"
         // Assert
-        response.StatusCode |> should equal HttpStatusCode.NotFound
         response.StatusCode |> should equal HttpStatusCode.OK
         let! doc = response.HtmlContent()
-        ()
+        let sections = 
+            doc.CssSelect "article"
+        let [identyfikatorySection;] = sections
+        let identyfikatory = (identyfikatorySection.CssSelect "p") |> List.map(_.InnerText())
+        identyfikatory[0] |> should equal $"%i{organization.IdentyfikatorEnova}"
+        identyfikatory[1] |> should equal $"%i{organization.NIP}"
+        identyfikatory.Length |> should be (greaterThan 0)
     }

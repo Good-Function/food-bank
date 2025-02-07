@@ -1,7 +1,6 @@
 module Organizations.Database.OrganizationsDao
 
 open System.Data
-open Organizations.Database.OrganizationRow
 open PostgresPersistence.DapperFsharp
 open Organizations.Application.ReadModels
 
@@ -30,7 +29,7 @@ FROM organizacje ORDER BY teczka
 let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: int) =
     async {
         let! db = connectDB()
-        return! db.Single<OrganizationRow> """
+        return! db.Single<OrganizationDetails> """
 SELECT * FROM organizacje WHERE teczka = @teczka
 """ {|teczka = teczka|}
     }
