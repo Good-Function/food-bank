@@ -5,8 +5,12 @@
 }
 
 @keyframes shimmering {
-    0% { background-position: -1300px 0; }
-    100% { background-position: 1300px 0; }
+    0% {
+        background-position: -1300px 0;
+    }
+    100% {
+        background-position: 1300px 0;
+    }
 }
 
 .shimmer {
@@ -20,11 +24,15 @@
 }
 
 .bzsos-logo {
-    background-image: url('/img/bzsoslogo.png'); 
+    background-image: url('/img/bzsoslogo.png');
     background-size: contain;
-    background-position: center; 
+    background-position: center;
     width: 195px;
-    height: 80px;"
+    height: 80px;
+}
+
+label {
+    margin-bottom: 0;
 }
 
 @media screen and (max-width: 770px) {

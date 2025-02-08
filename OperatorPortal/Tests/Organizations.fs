@@ -60,9 +60,36 @@ let ``/ogranizations/{id} displays Identyfikatory, ... 's data's`` () =
         let! doc = response.HtmlContent()
         let sections = 
             doc.CssSelect "article"
-        let [identyfikatorySection;] = sections
-        let identyfikatory = (identyfikatorySection.CssSelect "p") |> List.map(_.InnerText())
+        let [
+            identyfikatorySection
+            kontaktySection
+            dokumentySection
+            adresSection
+            adresKsiegowosciSection
+            beneficjenciSection
+            zrodlaZywnosciSection
+            warunkiSection
+        ] = sections
+        let identyfikatory = (identyfikatorySection.CssSelect "small") |> List.map(_.InnerText())
+        let kontakty = (kontaktySection.CssSelect "small") |> List.map(_.InnerText())
+        let dokumenty = (dokumentySection.CssSelect "small") |> List.map(_.InnerText())
+        let adresy = (adresSection.CssSelect "small") |> List.map(_.InnerText())
+        let adresyKsiegowosci = (adresKsiegowosciSection.CssSelect "small") |> List.map(_.InnerText())
+        let beneficjenci = (beneficjenciSection.CssSelect "small") |> List.map(_.InnerText())
+        let zrodlaZywnosci = (zrodlaZywnosciSection.CssSelect "small") |> List.map(_.InnerText())
+        let warunki = (warunkiSection.CssSelect "small") |> List.map(_.InnerText())
         identyfikatory[0] |> should equal $"%i{organization.IdentyfikatorEnova}"
         identyfikatory[1] |> should equal $"%i{organization.NIP}"
+        identyfikatory[2] |> should equal $"%i{organization.Regon}"
+        identyfikatory[3] |> should equal organization.KrsNr
+        identyfikatory[4] |> should equal organization.FormaPrawna
+        identyfikatory[5] |> should equal "Nie"
+        kontakty[0] |> should equal organization.WwwFacebook
+        dokumenty[0] |> should equal "01.10.2023"
+        adresy[0] |> should equal organization.NazwaOrganizacjiPodpisujacejUmowe
+        adresyKsiegowosci[0] |> should equal organization.NazwaOrganizacjiKsiegowanieDarowizn
+        beneficjenci[0] |> should equal $"%i{organization.LiczbaBeneficjentow}"
+        zrodlaZywnosci[0] |> should equal "Tak"
+        warunki[0] |> should equal organization.Kategoria
         identyfikatory.Length |> should be (greaterThan 0)
     }
