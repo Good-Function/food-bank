@@ -27,6 +27,7 @@
         <Compile Include="PostgresPersistence\DapperFsharp.fs" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Layout\Icons\Pen.fs" />
         <Compile Include="Layout\ThemeToggler.fs" />
         <Compile Include="Layout\Head.fs" />
         <Compile Include="Layout\Navigation.fs" />

@@ -1,3 +1,26 @@
+main {
+    padding-block:0 !important;
+}
+
+label {
+    margin-bottom: 0 !important;
+}
+
+.action-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.action-header > span:nth-child(2){
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.action-header > span:nth-child(2):hover{
+    border-bottom: 2px solid var(--pico-primary-background);
+}
+
+
 .active {
     background-color: var(--pico-primary-background);
     color: var(--pico-primary-inverse);
