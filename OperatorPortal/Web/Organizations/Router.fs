@@ -18,7 +18,7 @@ let renderDetails (readDetailsBy: ReadOrganizationDetailsBy) (id: int) : Endpoin
     fun ctx ->
         task {
             let! details = readDetailsBy id
-            return ctx.WriteHtmlView(DetailsTemplate.Template details)
+            return ctx |> render (DetailsTemplate.Template details) (DetailsTemplate.FullPage details) 
         }
 
 let Endpoints (dependencies: Dependencies) =

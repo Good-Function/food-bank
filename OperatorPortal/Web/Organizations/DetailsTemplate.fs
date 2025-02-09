@@ -1,6 +1,8 @@
 module Organizations.DetailsTemplate
 
 open System
+open Layout
+open Layout.Navigation
 open Organizations.Application.ReadModels
 open Oxpecker.ViewEngine
 
@@ -9,10 +11,10 @@ let field (labelText: string) (value: string) =
         label () { b () { labelText } }
         small () { value }
     }
-    
+
 let toTakNie (isTrue: bool) =
     $"""{if isTrue then "Tak" else "Nie"}"""
-    
+
 let formatDate (dateOpt: DateTime option) : string =
     match dateOpt with
     | Some date -> date.ToString("dd.MM.yyyy", System.Globalization.CultureInfo("pl-PL"))
@@ -31,8 +33,8 @@ let Template (org: OrganizationDetails) =
                 field "Forma Prawna" org.FormaPrawna
                 field "OPP" (org.OPP |> toTakNie)
             }
-            
-            article() {
+
+            article () {
                 header () { "Kontakty" }
                 field "www / facebook" org.WwwFacebook
                 field "Telefon" org.Telefon
@@ -46,8 +48,8 @@ let Template (org: OrganizationDetails) =
                 field "Osoba odbierająca żywność" org.OsobaOdbierajacaZywnosc
                 field "Telefon do os. odbierającej" org.TelefonOsobyOdbierajacej
             }
-            
-            article() {
+
+            article () {
                 header () { "Dokumenty" }
                 field "Wniosek" (org.Wniosek |> formatDate)
                 field "Umowa z dnia" (org.UmowaZDn |> formatDate)
@@ -67,28 +69,28 @@ let Template (org: OrganizationDetails) =
                 field "Gmina / Dzielnica" org.GminaDzielnica
                 field "Powiat" org.Powiat
             }
-            
+
             article () {
                 header () { "Dane adresowe księgowości" }
                 field "Organizacja na którą wystawiamy WZ" org.NazwaOrganizacjiKsiegowanieDarowizn
                 field "Adres" org.KsiegowanieAdres
                 field "Telefon" org.TelOrganProwadzacegoKsiegowosc
             }
-            
+
             article () {
                 header () { "Beneficjenci" }
                 field "Liczba beneficjentów" $"%i{org.LiczbaBeneficjentow}"
                 field "Beneficjenci" org.Beneficjenci
             }
-            
+
             article () {
-                header () {"Żródła żywności"}
+                header () { "Żródła żywności" }
                 field "Sieci" (org.Sieci |> toTakNie)
                 field "Bazarki" (org.Bazarki |> toTakNie)
                 field "Machfit" (org.Machfit |> toTakNie)
                 field "FEPŻ 2024" (org.FEPZ2024 |> toTakNie)
             }
-            
+
             article () {
                 header () { "Warunki udzielania pomocy żywnościowej" }
                 field "Kategoria" org.Kategoria
@@ -102,3 +104,6 @@ let Template (org: OrganizationDetails) =
             }
         }
     }
+
+let FullPage (org: OrganizationDetails) =
+    Head.Template (Body.Template (Template org) Page.Organizations) (Page.Organizations.ToTitle())
