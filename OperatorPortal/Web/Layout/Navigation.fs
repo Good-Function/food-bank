@@ -32,7 +32,6 @@ let Template (currentPath: Page) =
                 li () {
                     a (
                         href = path.ToPath(),
-                        hxTarget = "#container",
                         class' = "nav-link " + if path = currentPath then "active" else ""
                     ) {
                         path.ToTitle()
