@@ -46,9 +46,10 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Compile Include="Organizations\Database\OrganizationsDao.fs" />
-      <Compile Include="Organizations\PageTemplate.fs" />
-      <Compile Include="Organizations\ListTemplate.fs" />
+      <Compile Include="Organizations\renderOrganizationPage.fs" />
       <Compile Include="Organizations\DetailsTemplate.fs" />
+      <Compile Include="Organizations\SearchableListTemplate.fs" />
+      <Compile Include="Organizations\ListTemplate.fs" />
       <Compile Include="Organizations\CompositionRoot.fs" />
       <Compile Include="Organizations\Router.fs" />
       <Compile Include="Applications\Template.fs" />

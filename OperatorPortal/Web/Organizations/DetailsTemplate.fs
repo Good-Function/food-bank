@@ -5,6 +5,8 @@ open Layout
 open Layout.Navigation
 open Organizations.Application.ReadModels
 open Oxpecker.ViewEngine
+open Web.Organizations
+open renderOrganizationPage
 
 let field (labelText: string) (value: string) =
     p () {
@@ -113,6 +115,6 @@ let Template (org: OrganizationDetails) =
             }
         }
     }
-
+    
 let FullPage (org: OrganizationDetails) =
-    Head.Template (Body.Template (Template org) Page.Organizations) (Page.Organizations.ToTitle())
+    composePage {Content = Template org; CurrentPage = Page.Organizations}
