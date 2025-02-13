@@ -94,7 +94,7 @@ resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-preview'
   properties: {
     administratorLogin: 'pgadmin'
     administratorLoginPassword: dbAdminPassword
-    version: '17.2'
+    version: '17'
     network: {
       delegatedSubnetResourceId: vnet.properties.subnets[0].id
       privateDnsZoneArmResourceId: privateDnsZone.id
