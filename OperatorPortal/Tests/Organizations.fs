@@ -12,7 +12,7 @@ open FSharp.Data
 let ``/ogranizations/list displays organization's most important data `` () =
     task {
         // Arrange
-        let! dbSummaries = readSummaries Tools.DbConnection.connectDb
+        let! dbSummaries = readSummaries Tools.DbConnection.connectDb ""
         let dbSummaryTeczkaIds = dbSummaries |> List.map(fun summary -> $"%i{summary.Teczka}")
         let api = runTestApi().CreateClient()
         api.DefaultRequestHeaders.Add(Authentication.FakeAuthenticationHeader, "TestUser")
@@ -47,7 +47,7 @@ let ``/ogranizations/list displays organization's most important data `` () =
 let ``/ogranizations/{id} displays Identyfikatory, ... 's data's`` () =
     task {
         // Arrange
-        let! dbSummaries = readSummaries Tools.DbConnection.connectDb
+        let! dbSummaries = readSummaries Tools.DbConnection.connectDb ""
         let teczka = (dbSummaries |> List.head).Teczka
         let! organization = readBy Tools.DbConnection.connectDb teczka
         // Think of creating CreateAuthenticatedClient or |> authenticate "TestUser"
