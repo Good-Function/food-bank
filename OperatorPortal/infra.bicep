@@ -84,39 +84,39 @@ resource privateDnsZone 'Microsoft.Network/privateDnsZones@2024-06-01' = {
   location: 'global'
 }
 
-// resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-preview' = {
-//   name: dbServerName
-//   location: location
-//   sku: {
-//     name: 'Standard_B1ms'
-//     tier: 'Burstable'
-//   }
-//   properties: {
-//     administratorLogin: 'pgadmin'
-//     administratorLoginPassword: dbAdminPassword
-//     version: '16'
-//     network: {
-//       delegatedSubnetResourceId: vnet.properties.subnets[0].id
-//       privateDnsZoneArmResourceId: privateDnsZone.id
-//     }
-//     storage: {
-//       storageSizeGB: 32
-//     }
-//     authConfig: {
-//       activeDirectoryAuth: 'Disabled'
-//       passwordAuth: 'Enabled'
-//     }
-//   }
-// }
+resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-preview' = {
+  name: dbServerName
+  location: location
+  sku: {
+    name: 'Standard_D2s_v3'
+    tier: 'GeneralPurpose'
+  }
+  properties: {
+    administratorLogin: 'pgadmin'
+    administratorLoginPassword: dbAdminPassword
+    version: '16'
+    network: {
+      delegatedSubnetResourceId: vnet.properties.subnets[0].id
+      privateDnsZoneArmResourceId: privateDnsZone.id
+    }
+    storage: {
+      storageSizeGB: 32
+    }
+    authConfig: {
+      activeDirectoryAuth: 'Disabled'
+      passwordAuth: 'Enabled'
+    }
+  }
+}
 
-// resource database 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2024-11-01-preview' = {
-//   parent: postgres
-//   name: dbName
-//   properties: {
-//     charset: 'UTF8'
-//     collation: 'en_US.utf8'
-//   }
-// }
+resource database 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2024-11-01-preview' = {
+  parent: postgres
+  name: dbName
+  properties: {
+    charset: 'UTF8'
+    collation: 'en_US.utf8'
+  }
+}
 
 resource law 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
   name: name
