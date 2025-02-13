@@ -4,10 +4,10 @@ open System.Data
 open PostgresPersistence.DapperFsharp
 open Organizations.Application.ReadModels
 
-let readSummaries (connectDB: unit -> Async<IDbConnection>) =
+let readSummaries (connectDB: unit -> Async<IDbConnection>) (searchTerm: string) =
     async {
         let! db = connectDB()
-        return! db.Query<OrganizationSummary> """
+        let! summaries = db.Query<OrganizationSummary> """
 SELECT 
     teczka,
     formaprawna,
@@ -24,6 +24,10 @@ SELECT
     kategoria
 FROM organizacje ORDER BY teczka 
 """
+        let data = summaries
+                |> List.filter (fun sum ->
+                        sum.Teczka.ToString().Contains searchTerm || sum.NazwaPlacowkiTrafiaZywnosc.ToLowerInvariant().Contains(searchTerm.ToLowerInvariant()))
+        return data
     }
     
 let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: int) =

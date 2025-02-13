@@ -6,7 +6,7 @@ open Layout.Navigation
 open Organizations.Application.ReadModels
 open Oxpecker.ViewEngine
 open Web.Organizations
-open renderOrganizationPage
+open PageComposer
 
 let field (labelText: string) (value: string) =
     p () {
@@ -117,4 +117,4 @@ let Template (org: OrganizationDetails) =
     }
     
 let FullPage (org: OrganizationDetails) =
-    composePage {Content = Template org; CurrentPage = Page.Organizations}
+    composeFullPage {Content = Template org; CurrentPage = Page.Organizations}

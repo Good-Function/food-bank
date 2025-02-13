@@ -5,32 +5,29 @@ open RenderBasedOnHtmx
 open Organizations.Application.ReadModels
 open Organizations.CompositionRoot
 
-let renderPage: EndpointHandler =
+let indexPage: EndpointHandler =
     fun ctx ->
-        ctx |> render (SearchableListTemplate.PartialPage None) (SearchableListTemplate.FullPage None)
+        ctx.WriteHtmlView (SearchableListTemplate.FullPage "")
 
-let renderSummaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
+let list: EndpointHandler =
     fun ctx ->
         task {
             let search =
                 match ctx.TryGetQueryValue "search" with
                 | None -> ""
                 | Some s -> s
-
-            let! summaries = readSummaries
-            let template =
-                match search with
-                | "" -> ListTemplate.Template summaries
-                | s ->
-                    ListTemplate.Template(
-                        summaries
-                        |> List.filter (fun sum ->
-                            sum.Teczka.ToString().Contains(s) || sum.NazwaPlacowkiTrafiaZywnosc.ToLowerInvariant().Contains(s.ToLowerInvariant()))
-                    )
-            return ctx |> render template (SearchableListTemplate.FullPage (ctx.TryGetQueryValue "search"))
+            return ctx |> render (SearchableListTemplate.Template search) (SearchableListTemplate.FullPage search)
+        }
+        
+let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
+    fun ctx ->
+        task {
+            let search = ctx.TryGetQueryValue "search" |> Option.defaultValue ""
+            let! summaries = readSummaries search
+            return ctx.WriteHtmlView (ListTemplate.Template summaries)
         }
 
-let renderDetails (readDetailsBy: ReadOrganizationDetailsBy) (id: int) : EndpointHandler =
+let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int) : EndpointHandler =
     fun ctx ->
         task {
             let! details = readDetailsBy id
@@ -41,6 +38,7 @@ let renderDetails (readDetailsBy: ReadOrganizationDetailsBy) (id: int) : Endpoin
         }
 
 let Endpoints (dependencies: Dependencies) =
-    [ route "/" renderPage
-      route "/list" (renderSummaries dependencies.ReadOrganizationSummaries)
-      routef "/{%i}" (renderDetails dependencies.ReadOrganizationDetailsBy) ]
+    [ route "/" indexPage
+      route "/list" list
+      route "/summaries" (summaries dependencies.ReadOrganizationSummaries)
+      routef "/{%i}" (details dependencies.ReadOrganizationDetailsBy) ]

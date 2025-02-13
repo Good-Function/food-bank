@@ -65,5 +65,5 @@ type OrganizationDetails = {
     OstatnieOdwiedzinyData: System.DateTime option 
 }
 
-type ReadOrganizationSummaries = Async<OrganizationSummary list>
+type ReadOrganizationSummaries = string -> Async<OrganizationSummary list>
 type ReadOrganizationDetailsBy = int -> Async<OrganizationDetails>

@@ -1,4 +1,4 @@
-module Web.Organizations.renderOrganizationPage
+module Web.Organizations.PageComposer
 
 open Layout
 open Layout.Navigation
@@ -9,5 +9,5 @@ type PageOptions = {
     CurrentPage: Page
 }
 
-let composePage (page: PageOptions) =
+let composeFullPage (page: PageOptions) =
     Head.Template (Body.Template page.Content page.CurrentPage) (page.CurrentPage.ToTitle()) 
