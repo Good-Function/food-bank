@@ -52,7 +52,7 @@ jobs:
       uses: azure/arm-deploy@v1
       with:
         resourceGroupName: bzsoswaw
-        template: infra.bicep
+        template: ./OperatorPortal/infra.bicep
         parameters: >
           image=${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           name=${{ env.IMAGE_NAME }}
