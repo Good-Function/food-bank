@@ -84,6 +84,19 @@ resource privateDnsZone 'Microsoft.Network/privateDnsZones@2024-06-01' = {
   location: 'global'
 }
 
+resource privateDnsLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2024-06-01' = {
+  name: '${vnetName}-link'
+  location: 'global'
+  parent: privateDnsZone
+  properties: {
+    virtualNetwork: {
+      id: vnet.id
+    }
+    registrationEnabled: false
+  }
+}
+
+
 resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-preview' = {
   name: dbServerName
   location: location
