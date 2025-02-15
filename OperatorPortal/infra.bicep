@@ -158,7 +158,7 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
           value: acrpassword
         }
         {
-          name: 'dbConnectionStringref'
+          name: 'dbconnectionstringref'
           value: 'privatelink.postgres.database.azure.com;Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
         }
       ]
@@ -188,7 +188,7 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
           env: [
             {
               name: 'DbConnectionString'
-              secretRef: 'dbConnectionStringref'
+              secretRef: 'dbconnectionstringref'
             }
           ]
         }
