@@ -79,23 +79,25 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
   }
 }
 
-resource postgresPrivateEndpoint 'Microsoft.Network/privateEndpoints@2024-06-01' = {
-  name: '${dbServerName}-private-endpoint'
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-05-01' = {
+  name: 'postgresql-private-endpoint'
   location: location
   properties: {
     subnet: {
-      id: vnet.properties.subnets[0].id
+      id: vnet.properties.subnets[0].id // Ensure this is the correct subnet where your flexible server is deployed
     }
     privateLinkServiceConnections: [
       {
-        name: '${dbServerName}-connection'
+        name: 'postgresql-connection'
         properties: {
           privateLinkServiceConnectionState: {
             status: 'Approved'
-            description: 'Connection to PostgreSQL Private Endpoint'
+            description: 'Private link connection for PostgreSQL'
           }
-          privateLinkServiceConnectionType: 'Microsoft.DBforPostgreSQL'
-          privateLinkServiceConnectionResourceId: postgres.id
+          privateLinkServiceId: postgres.id 
+          groupIds: [
+            'postgresqlServer' // This refers to the group ID for PostgreSQL
+          ]
         }
       }
     ]
