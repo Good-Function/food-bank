@@ -158,8 +158,8 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
           value: acrpassword
         }
         {
-          name: 'exampleref'
-          value: 'example'
+          name: 'dbConnectionStringref'
+          value: 'privatelink.postgres.database.azure.com;Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
         }
       ]
       ingress: {
@@ -187,8 +187,8 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
           }
           env: [
             {
-              name: 'EXAMPLE_VARIABLE'
-              secretRef: 'exampleref'
+              name: 'DbConnectionString'
+              secretRef: 'dbConnectionStringref'
             }
           ]
         }

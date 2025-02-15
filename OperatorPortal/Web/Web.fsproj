@@ -53,6 +53,8 @@
       <Compile Include="Organizations\CompositionRoot.fs" />
       <Compile Include="Organizations\Router.fs" />
       <Compile Include="Applications\Template.fs" />
+      <Compile Include="Applications\Database.fs" />
+      <Compile Include="Applications\CompositionRoot.fs" />
       <Compile Include="Applications\Router.fs" />
       <Compile Include="Authentication.fs" />
       <Compile Include="Settings.fs" />

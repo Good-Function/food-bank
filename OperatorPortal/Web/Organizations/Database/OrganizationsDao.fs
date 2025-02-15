@@ -4,6 +4,7 @@ open System.Data
 open PostgresPersistence.DapperFsharp
 open Organizations.Application.ReadModels
 
+
 let readSummaries (connectDB: unit -> Async<IDbConnection>) (searchTerm: string) =
     async {
         let! db = connectDB()

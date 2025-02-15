@@ -13,14 +13,16 @@ open Settings
 
 let protect =  configureEndpoint _.RequireAuthorization()
 
-let endpoints (orgDeps: Organizations.CompositionRoot.Dependencies) =
+let endpoints 
+    (orgDeps: Organizations.CompositionRoot.Dependencies)
+    (appDeps: Applications.CompositionRoot.Dependencies) =
     [
         GET [
             route "/" <| redirectTo "/organizations" false
         ]
         subRoute "/login" Login.Router.Endpoints
         subRoute "/organizations" (Organizations.Router.Endpoints orgDeps) |> protect
-        subRoute "/applications" Applications.Router.Endpoints |> protect
+        subRoute "/applications" (Applications.Router.Endpoints appDeps) |> protect
     ]
 
 let notFoundHandler (ctx: HttpContext) =
@@ -42,6 +44,9 @@ let createServer () =
         ReadOrganizationSummaries = OrganizationsDao.readSummaries dbConnect
         ReadOrganizationDetailsBy = OrganizationsDao.readBy dbConnect
     }
+    let appDeps: Applications.CompositionRoot.Dependencies = {
+        TestRead = Applications.Database.readSchemas dbConnect
+    }
     builder.Services
         .AddRouting()
         .AddOxpecker()
@@ -55,7 +60,7 @@ let createServer () =
         .UseStaticFiles()
         .UseAuthentication()
         .UseAuthorization()
-        .UseOxpecker(endpoints orgDeps)
+        .UseOxpecker(endpoints orgDeps appDeps)
         .Run(notFoundHandler)
     app
    
