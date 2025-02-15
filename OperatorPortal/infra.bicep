@@ -79,6 +79,29 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
   }
 }
 
+resource postgresPrivateEndpoint 'Microsoft.Network/privateEndpoints@2024-06-01' = {
+  name: '${dbServerName}-private-endpoint'
+  location: location
+  properties: {
+    subnet: {
+      id: vnet.properties.subnets[0].id
+    }
+    privateLinkServiceConnections: [
+      {
+        name: '${dbServerName}-connection'
+        properties: {
+          privateLinkServiceConnectionState: {
+            status: 'Approved'
+            description: 'Connection to PostgreSQL Private Endpoint'
+          }
+          privateLinkServiceConnectionType: 'Microsoft.DBforPostgreSQL'
+          privateLinkServiceConnectionResourceId: postgres.id
+        }
+      }
+    ]
+  }
+}
+
 resource privateDnsZone 'Microsoft.Network/privateDnsZones@2024-06-01' = {
   name: 'privatelink.postgres.database.azure.com'
   location: 'global'
