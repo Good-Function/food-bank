@@ -49,7 +49,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
       {
         name: subnetDbName
         properties: {
-          addressPrefix: '10.0.1.0/24'
+          addressPrefix: '10.0.1.0/23'
           delegations: [
             {
               name: 'Microsoft.DBforPostgreSQL'
@@ -63,7 +63,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
       {
         name: subnetAppName
         properties: {
-          addressPrefix: '10.0.2.0/24'
+          addressPrefix: '10.0.2.0/23'
           delegations: [
             {
               name: 'Microsoft.App'
