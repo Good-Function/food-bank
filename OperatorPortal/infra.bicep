@@ -197,7 +197,7 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
         }
         {
           name: 'dbconnectionstringref'
-          value: 'Host=${privateDnsZone.name};Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
+          value: 'Host=${dbServerName}.${privateDnsZone.name};Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
         }
       ]
       ingress: {
