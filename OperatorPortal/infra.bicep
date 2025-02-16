@@ -82,7 +82,7 @@ resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
     name: '${dbServerName}.private.postgres.database.azure.com'
     location: 'global'
     resource vNetLink 'virtualNetworkLinks' = {
-        name: '${pgServerPrefix}-link'
+        name: '${dbServerName}-link'
         location: 'global'
         properties: {
             registrationEnabled: false
