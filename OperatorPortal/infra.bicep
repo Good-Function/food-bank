@@ -58,7 +58,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
               }
             }
           ]
-          privateEndpointNetworkPolicies: 'Disabled'
         }
       }
       {
@@ -79,48 +78,18 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
   }
 }
 
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-05-01' = {
-  name: 'postgresql-private-endpoint'
-  location: location
-  properties: {
-    subnet: {
-      id: vnet.properties.subnets[0].id // Ensure this is the correct subnet where your flexible server is deployed
-    }
-    privateLinkServiceConnections: [
-      {
-        name: 'postgresql-connection'
+resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+    name: '${dbServerName}.private.postgres.database.azure.com'
+    location: 'global'
+    resource vNetLink 'virtualNetworkLinks' = {
+        name: '${pgServerPrefix}-link'
+        location: 'global'
         properties: {
-          privateLinkServiceConnectionState: {
-            status: 'Approved'
-            description: 'Private link connection for PostgreSQL'
-          }
-          privateLinkServiceId: postgres.id 
-          groupIds: [
-            'postgresqlServer' // This refers to the group ID for PostgreSQL
-          ]
+            registrationEnabled: false
+            virtualNetwork: { id: virtualNetwork.id }
         }
-      }
-    ]
-  }
-}
-
-resource privateDnsZone 'Microsoft.Network/privateDnsZones@2024-06-01' = {
-  name: 'privatelink.postgres.database.azure.com'
-  location: 'global'
-}
-
-resource privateDnsLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2024-06-01' = {
-  name: '${vnetName}-link'
-  location: 'global'
-  parent: privateDnsZone
-  properties: {
-    virtualNetwork: {
-      id: vnet.id
     }
-    registrationEnabled: false
-  }
 }
-
 
 resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-preview' = {
   name: dbServerName
@@ -174,6 +143,9 @@ resource environment 'Microsoft.App/managedEnvironments@2022-03-01' = {
   name: name
   location: location
   properties: {
+    vnetConfiguration: {
+      infrastructureSubnetId: vnet.properties.subnets[1].id  // Ensure this is the correct subnet
+    }
     appLogsConfiguration: {
       destination: 'log-analytics'
       logAnalyticsConfiguration: {
@@ -197,7 +169,7 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
         }
         {
           name: 'dbconnectionstringref'
-          value: 'Host=${dbServerName}.${privateDnsZone.name};Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
+          value: 'Host=${privateDnsZone.name};Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
         }
       ]
       ingress: {
