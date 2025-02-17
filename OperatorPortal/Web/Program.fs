@@ -39,7 +39,6 @@ let createServer () =
           .AddEnvironmentVariables()
           .Build()
           .Get<Settings>()
-    Console.WriteLine settings.DbConnectionString
     let dbConnect = connectDB(settings.DbConnectionString)
     let orgDeps: Organizations.CompositionRoot.Dependencies = {
         ReadOrganizationSummaries = OrganizationsDao.readSummaries dbConnect
