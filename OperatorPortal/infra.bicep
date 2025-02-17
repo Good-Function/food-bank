@@ -71,7 +71,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
 }
 
 resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-    name: '${dbServerName}.private.postgres.database.azure.com'
+    name: 'private.postgres.database.azure.com'
     location: 'global'
     resource vNetLink 'virtualNetworkLinks' = {
         name: '${dbServerName}-link'
@@ -161,7 +161,7 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
         }
         {
           name: 'dbconnectionstringref'
-          value: 'Host=${privateDnsZone.name};Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
+          value: 'Host=${dbServerName}.private.postgres.database.azure.com;Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
         }
       ]
       ingress: {
