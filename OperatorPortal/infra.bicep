@@ -90,7 +90,7 @@ resource dnsARecord 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
     ttl: 3600
     aRecords: [
       {
-          ipv4Address: reference(postgres.id, '2024-11-01-preview').privateIpAddress
+          ipv4Address: postgres.properties.privateIpAddress
       }
     ]
   }
