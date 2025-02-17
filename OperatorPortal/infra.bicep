@@ -143,10 +143,7 @@ resource law 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
     }
   })
 }
- vnetConfiguration: {
-      infrastructureSubnetId: caEnvVnetInfraSubnetId
-      internal: caEnvPrivate
-    }
+
 resource environment 'Microsoft.App/managedEnvironments@2022-03-01' = {
   name: name
   location: location
