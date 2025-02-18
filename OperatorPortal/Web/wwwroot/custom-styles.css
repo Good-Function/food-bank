@@ -63,3 +63,11 @@ label {
         display: none;
     }
 }
+
+.focus-dim {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 0 0 100vmax rgb(0 0 0 / 50%);
+}
