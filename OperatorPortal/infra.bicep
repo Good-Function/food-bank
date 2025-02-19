@@ -74,7 +74,7 @@ resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
     name: 'privatelink.postgres.database.azure.com'
     location: 'global'
     resource vNetLink 'virtualNetworkLinks' = {
-        name: '${dbServerName}-link'
+        name: 'privatelink.postgres.database.azure.com'
         location: 'global'
         properties: {
             registrationEnabled: false
