@@ -83,19 +83,6 @@ resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
     }
 }
 
-// resource dnsARecord 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: privateDnsZone
-//   name: dbServerName
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//           ipv4Address: postgres.properties.privateIpAddress
-//       }
-//     ]
-//   }
-// }
-
 resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-preview' = {
   name: dbServerName
   location: location
