@@ -100,7 +100,7 @@ resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-preview'
   name: dbServerName
   location: location
   sku: {
-    name: 'B1MS'
+    name: 'Standard_B1ms'
     tier: 'Burstable'
   }
   properties: {
