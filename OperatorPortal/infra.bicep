@@ -100,8 +100,8 @@ resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-preview'
   name: dbServerName
   location: location
   sku: {
-    name: 'Standard_D2s_v3'
-    tier: 'GeneralPurpose'
+    name: 'B1MS'
+    tier: 'Burstable'
   }
   properties: {
     administratorLogin: 'pgadmin'
