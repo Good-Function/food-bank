@@ -60,4 +60,7 @@
       <Compile Include="Settings.fs" />
       <Compile Include="Program.fs" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Migrations\Migrations.fsproj" />
+    </ItemGroup>
 </Project>

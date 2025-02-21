@@ -47,6 +47,7 @@ let createServer () =
     let appDeps: Applications.CompositionRoot.Dependencies = {
         TestRead = Applications.Database.readSchemas dbConnect
     }
+    Migrations.main [|settings.DbConnectionString|] |> ignore
     builder.Services
         .AddRouting()
         .AddOxpecker()
