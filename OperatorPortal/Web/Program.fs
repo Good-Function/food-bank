@@ -47,7 +47,6 @@ let createServer () =
     let appDeps: Applications.CompositionRoot.Dependencies = {
         TestRead = Applications.Database.readSchemas dbConnect
     }
-    Migrations.main [|settings.DbConnectionString|] |> ignore
     builder.Services
         .AddRouting()
         .AddOxpecker()
@@ -55,6 +54,7 @@ let createServer () =
         .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(Authentication.configureAuthenticationCookie) |> ignore
     let app = builder.Build()
+    Migrations.main [|settings.DbConnectionString; "externalrunner"|] |> ignore
     if app.Environment.EnvironmentName <> "Production" then app.Use(Authentication.fakeAuthenticate) |> ignore
     app
         .UseRouting()

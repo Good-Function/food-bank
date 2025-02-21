@@ -4,6 +4,7 @@ open System
 open System.IO
 open DbUp
 open DbUp.Helpers
+open DbUp.ScriptProviders
 
 let logAndParseEngineResult (result: Engine.DatabaseUpgradeResult) =
     match result.Successful with
@@ -25,13 +26,23 @@ let main argv =
         match argv |> Array.tryHead with
         | Some connectionString -> connectionString
         | None -> "Host=localhost;Port=5432;User Id=postgres;Password=Strong!Passw0rd;Database=food_bank;"
+        
+    let isExternalRunner =
+        match argv |> Array.tryItem 1 with
+        | Some "externalrunner" -> true
+        | _ -> false
+
+    let options =
+        FileSystemScriptOptions(Filter = (fun sqlFilePath -> true), IncludeSubDirectories = true)
 
     let path =
-        Path.GetFullPath(Path.Combine(__SOURCE_DIRECTORY__, @"../", "Web/Organizations/Database"))
+        match isExternalRunner with
+        | true -> AppDomain.CurrentDomain.BaseDirectory
+        | false -> Path.GetFullPath(Path.Combine(__SOURCE_DIRECTORY__, @"../", "Web"))
 
     DeployChanges.To
         .PostgresqlDatabase(connectionString)
-        .WithScriptsFromFileSystem(path, (fun sqlFilePath -> true))
+        .WithScriptsFromFileSystem(path, options)
         .JournalTo(NullJournal())
         .LogToConsole()
         .Build()
