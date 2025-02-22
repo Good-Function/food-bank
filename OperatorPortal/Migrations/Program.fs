@@ -26,19 +26,12 @@ let main argv =
         match argv |> Array.tryHead with
         | Some connectionString -> connectionString
         | None -> "Host=localhost;Port=5432;User Id=postgres;Password=Strong!Passw0rd;Database=food_bank;"
-        
-    let isExternalRunner =
+    let path =
         match argv |> Array.tryItem 1 with
-        | Some "externalrunner" -> true
-        | _ -> false
-
+        | Some path -> path
+        | _ -> Path.GetFullPath(Path.Combine(__SOURCE_DIRECTORY__, @"../", "Web"))
     let options =
         FileSystemScriptOptions(Filter = (fun sqlFilePath -> true), IncludeSubDirectories = true)
-
-    let path =
-        match isExternalRunner with
-        | true -> AppDomain.CurrentDomain.BaseDirectory
-        | false -> Path.GetFullPath(Path.Combine(__SOURCE_DIRECTORY__, @"../", "Web"))
 
     DeployChanges.To
         .PostgresqlDatabase(connectionString)

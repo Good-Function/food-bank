@@ -54,7 +54,7 @@ let createServer () =
         .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(Authentication.configureAuthenticationCookie) |> ignore
     let app = builder.Build()
-    Migrations.main [|settings.DbConnectionString; "externalrunner"|] |> ignore
+    Migrations.main [|settings.DbConnectionString; AppDomain.CurrentDomain.BaseDirectory|] |> ignore
     if app.Environment.EnvironmentName <> "Production" then app.Use(Authentication.fakeAuthenticate) |> ignore
     app
         .UseRouting()

@@ -17,7 +17,7 @@ let ``/ogranizations/list displays organization's most important data `` () =
         let api = runTestApi().CreateClient()
         api.DefaultRequestHeaders.Add(Authentication.FakeAuthenticationHeader, "TestUser")
         // Act
-        let! response = api.GetAsync "/organizations/list"
+        let! response = api.GetAsync "/organizations/summaries"
         // Assert
         let! doc = response.HtmlContent()
         let summaries =
@@ -60,16 +60,24 @@ let ``/ogranizations/{id} displays Identyfikatory, ... 's data's`` () =
         let! doc = response.HtmlContent()
         let sections = 
             doc.CssSelect "article"
-        let [
-            identyfikatorySection
-            kontaktySection
-            dokumentySection
-            adresSection
-            adresKsiegowosciSection
-            beneficjenciSection
-            zrodlaZywnosciSection
-            warunkiSection
-        ] = sections
+            
+        let identyfikatorySection,
+            kontaktySection,
+            dokumentySection,
+            adresSection,
+            adresKsiegowosciSection,
+            beneficjenciSection,
+            zrodlaZywnosciSection,
+            warunkiSection= (
+                sections[0],
+                sections[1],
+                sections[2],
+                sections[3],
+                sections[4],
+                sections[5],
+                sections[6],
+                sections[7]
+                )
         let identyfikatory = (identyfikatorySection.CssSelect "small") |> List.map(_.InnerText())
         let kontakty = (kontaktySection.CssSelect "small") |> List.map(_.InnerText())
         let dokumenty = (dokumentySection.CssSelect "small") |> List.map(_.InnerText())
