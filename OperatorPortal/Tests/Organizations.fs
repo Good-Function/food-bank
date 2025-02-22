@@ -1,21 +1,24 @@
 module Organizations
 
 open System.Net
-open Tools.HttResponseMessageToHtml
 open Xunit
 open Tools.TestServer
 open FsUnit.Xunit
+open Tools.HttResponseMessageToHtml
 open Organizations.Database.OrganizationsDao
 open FSharp.Data
 
 [<Fact>]
-let ``/ogranizations/list displays organization's most important data `` () =
+let ``/organizations/{id}/identyfikatory``() =
+    ()
+
+[<Fact>]
+let ``/ogranizations/summaries displays organization's most important data `` () =
     task {
         // Arrange
         let! dbSummaries = readSummaries Tools.DbConnection.connectDb ""
         let dbSummaryTeczkaIds = dbSummaries |> List.map(fun summary -> $"%i{summary.Teczka}")
-        let api = runTestApi().CreateClient()
-        api.DefaultRequestHeaders.Add(Authentication.FakeAuthenticationHeader, "TestUser")
+        let api = runTestApi() |> authenticate "TestUser"
         // Act
         let! response = api.GetAsync "/organizations/summaries"
         // Assert
@@ -50,9 +53,7 @@ let ``/ogranizations/{id} displays Identyfikatory, ... 's data's`` () =
         let! dbSummaries = readSummaries Tools.DbConnection.connectDb ""
         let teczka = (dbSummaries |> List.head).Teczka
         let! organization = readBy Tools.DbConnection.connectDb teczka
-        // Think of creating CreateAuthenticatedClient or |> authenticate "TestUser"
-        let api = runTestApi().CreateClient()
-        api.DefaultRequestHeaders.Add(Authentication.FakeAuthenticationHeader, "TestUser")
+        let api = runTestApi() |> authenticate "TestUser"
         // Act
         let! response = api.GetAsync $"/organizations/%i{teczka}"
         // Assert

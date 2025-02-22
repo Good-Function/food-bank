@@ -11,7 +11,7 @@ open FsUnit.Xunit
 [<Fact>]
 let ``By default user is redirected to /organizations page`` () =
     task {
-        let api = runTestApi().CreateClient()
+        let api = runTestApi()
         let! response = api.GetAsync "/"
         response.StatusCode |> should equal HttpStatusCode.Found
         response.Headers.Location |> should equal (Uri("/organizations"))
@@ -22,7 +22,7 @@ let ``When unauthenticated user tries to access /applications then it is redirec
     ()
     =
     task {
-        let api = runTestApi().CreateClient()
+        let api = runTestApi()
         let! response = api.GetAsync "/applications"
         response.StatusCode |> should equal HttpStatusCode.Found
         response.Headers.Location
@@ -33,7 +33,7 @@ let ``When unauthenticated user tries to access /applications then it is redirec
 let ``User can log in, get the auth cookie and be redirected to default page /organizations`` () =
     task {
         // Arrange
-        let api = runTestApi().CreateClient()
+        let api = runTestApi()
         let data = formData {
             yield ("Email", "test@test.test")
             yield ("Password", "password123")

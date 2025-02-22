@@ -1,6 +1,5 @@
 module Navigation
 
-open System.IO
 open System.Net
 open Xunit
 open Tools.TestServer
@@ -12,8 +11,7 @@ open FSharp.Data
 let ``Navigations contains /ogranizations, /applications, /team links`` () =
     task {
         // Arrange
-        let api = runTestApi().CreateClient()
-        api.DefaultRequestHeaders.Add(Authentication.FakeAuthenticationHeader, "TestUser")
+        let api = runTestApi() |> authenticate "TestUser"
         // Act
         let! response = api.GetAsync "/organizations"
         // Assert
