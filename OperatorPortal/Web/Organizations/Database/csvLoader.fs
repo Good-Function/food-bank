@@ -1,5 +1,6 @@
 module Organizations.Database.csvLoader
 
+open System
 open FSharp.Data
 open Organizations.Application.ReadModels
 
@@ -9,6 +10,12 @@ let ResolutionFolder = __SOURCE_DIRECTORY__
 type Orgs = CsvProvider<"db_sample.csv", ResolutionFolder=ResolutionFolder>
 
 let polishToBool = function | "tak" -> true |_ -> false
+
+let parseOptionalToDateOnly (str:string) =
+    let success, date = DateOnly.TryParse str
+    match success with
+    | false -> None
+    | _ -> Some date
 
 let parse (org: Orgs.Row): OrganizationDetails =
     { Teczka = org.Teczka
@@ -52,9 +59,9 @@ let parse (org: Orgs.Row): OrganizationDetails =
       Sanepid = org.SANEPID |> polishToBool
       TransportOpis = org.``Transport - opis``
       TransportKategoria = org.``Transport - kategoria``
-      Wniosek = org.Wniosek
-      UmowaZDn = org.``Umowa z dnia``
-      UmowaRODO = org.``Umowa RODO``
-      KartyOrganizacjiData = org.``Karty organizacji data``
-      OstatnieOdwiedzinyData = org.``Ostatnie odwiedziny data``
+      Wniosek = org.Wniosek |> Option.map DateOnly.FromDateTime
+      UmowaZDn = org.``Umowa z dnia`` |> Option.map DateOnly.FromDateTime
+      UmowaRODO = org.``Umowa RODO`` |> parseOptionalToDateOnly
+      KartyOrganizacjiData = org.``Karty organizacji data`` |> Option.map DateOnly.FromDateTime
+      OstatnieOdwiedzinyData = org.``Ostatnie odwiedziny data`` |> Option.map DateOnly.FromDateTime
     }

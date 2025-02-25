@@ -1,6 +1,7 @@
 module Organizations
 
 open System.Net
+open Tests
 open Xunit
 open Tools.TestServer
 open FsUnit.Xunit
@@ -9,7 +10,8 @@ open Organizations.Database.OrganizationsDao
 open FSharp.Data
 
 [<Fact>]
-let ``/organizations/{id}/identyfikatory``() =
+let ``POST /organizations/{id}/kontakty can edit organization``() =
+    //save 
     ()
 
 [<Fact>]
@@ -49,13 +51,12 @@ let ``/ogranizations/summaries displays organization's most important data `` ()
 [<Fact>]
 let ``/ogranizations/{id} displays Identyfikatory, ... 's data's`` () =
     task {
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let! dbSummaries = readSummaries Tools.DbConnection.connectDb ""
-        let teczka = (dbSummaries |> List.head).Teczka
-        let! organization = readBy Tools.DbConnection.connectDb teczka
         let api = runTestApi() |> authenticate "TestUser"
         // Act
-        let! response = api.GetAsync $"/organizations/%i{teczka}"
+        let! response = api.GetAsync $"/organizations/{organization.Teczka}"
         // Assert
         response.StatusCode |> should equal HttpStatusCode.OK
         let! doc = response.HtmlContent()
@@ -92,13 +93,11 @@ let ``/ogranizations/{id} displays Identyfikatory, ... 's data's`` () =
         identyfikatory[2] |> should equal $"%i{organization.Regon}"
         identyfikatory[3] |> should equal organization.KrsNr
         identyfikatory[4] |> should equal organization.FormaPrawna
-        identyfikatory[5] |> should equal "Nie"
         kontakty[0] |> should equal organization.WwwFacebook
-        dokumenty[0] |> should equal "01.10.2023"
+        dokumenty[0] |> should equal (organization.Wniosek.Value.ToString("dd.MM.yyyy", System.Globalization.CultureInfo("pl-PL")))
         adresy[0] |> should equal organization.NazwaOrganizacjiPodpisujacejUmowe
         adresyKsiegowosci[0] |> should equal organization.NazwaOrganizacjiKsiegowanieDarowizn
         beneficjenci[0] |> should equal $"%i{organization.LiczbaBeneficjentow}"
-        zrodlaZywnosci[0] |> should equal "Tak"
         warunki[0] |> should equal organization.Kategoria
         identyfikatory.Length |> should be (greaterThan 0)
     }

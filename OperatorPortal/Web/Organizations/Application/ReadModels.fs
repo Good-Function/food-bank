@@ -1,7 +1,7 @@
 module Organizations.Application.ReadModels
 
 type OrganizationSummary = {
-    Teczka: int 
+    Teczka: int64 
     FormaPrawna: string 
     NazwaPlacowkiTrafiaZywnosc: string
     AdresPlacowkiTrafiaZywnosc: string
@@ -17,7 +17,7 @@ type OrganizationSummary = {
 }
 
 type OrganizationDetails = {
-    Teczka: int
+    Teczka: int64
     IdentyfikatorEnova: int64
     NIP: int64 
     Regon: int64 
@@ -58,12 +58,12 @@ type OrganizationDetails = {
     Sanepid: bool // Zgoda sanepidu. Suche paczki mogą pójść bez sanepidu. 
     TransportOpis: string 
     TransportKategoria: string 
-    Wniosek: System.DateTime option 
-    UmowaZDn: System.DateTime option  
-    UmowaRODO: string 
-    KartyOrganizacjiData: System.DateTime option 
-    OstatnieOdwiedzinyData: System.DateTime option 
+    Wniosek: System.DateOnly option 
+    UmowaZDn: System.DateOnly option  
+    UmowaRODO: System.DateOnly option 
+    KartyOrganizacjiData: System.DateOnly option 
+    OstatnieOdwiedzinyData: System.DateOnly option 
 }
 
 type ReadOrganizationSummaries = string -> Async<OrganizationSummary list>
-type ReadOrganizationDetailsBy = int -> Async<OrganizationDetails>
+type ReadOrganizationDetailsBy = int64 -> Async<OrganizationDetails>

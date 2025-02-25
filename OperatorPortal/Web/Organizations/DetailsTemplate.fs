@@ -17,7 +17,7 @@ let field (labelText: string) (value: string) =
 let toTakNie (isTrue: bool) =
     $"""{if isTrue then "Tak" else "Nie"}"""
 
-let formatDate (dateOpt: DateTime option) : string =
+let formatDate (dateOpt: DateOnly option) : string =
     match dateOpt with
     | Some date -> date.ToString("dd.MM.yyyy", System.Globalization.CultureInfo("pl-PL"))
     | None -> ""
@@ -36,9 +36,9 @@ let Template (org: OrganizationDetails) =
             div () {
                 article () {
                     editableHeader "Identyfikatory"
-                    field "ENOVA" $"%i{org.IdentyfikatorEnova}"
-                    field "NIP" $"%i{org.NIP}"
-                    field "Regon" $"%i{org.Regon}"
+                    field "ENOVA" $"{org.IdentyfikatorEnova}"
+                    field "NIP" $"{org.NIP}"
+                    field "Regon" $"{org.Regon}"
                     field "KRS" org.KrsNr
                     field "Forma Prawna" org.FormaPrawna
                     field "OPP" (org.OPP |> toTakNie)
@@ -63,7 +63,7 @@ let Template (org: OrganizationDetails) =
                     editableHeader "Dokumenty"
                     field "Wniosek" (org.Wniosek |> formatDate)
                     field "Umowa z dnia" (org.UmowaZDn |> formatDate)
-                    field "Umowa z RODO" org.UmowaRODO
+                    field "Umowa z RODO" (org.UmowaRODO |> formatDate)
                     field "Karty organizacji" (org.KartyOrganizacjiData |> formatDate)
                     field "Ostatnie odwiedziny" (org.OstatnieOdwiedzinyData |> formatDate)
                 }
@@ -89,7 +89,7 @@ let Template (org: OrganizationDetails) =
 
                 article () {
                     editableHeader "Beneficjenci"
-                    field "Liczba beneficjentów" $"%i{org.LiczbaBeneficjentow}"
+                    field "Liczba beneficjentów" $"{org.LiczbaBeneficjentow}"
                     field "Beneficjenci" org.Beneficjenci
                 }
 

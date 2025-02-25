@@ -4,12 +4,12 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Dapper" Version="2.1.35" />
+      <PackageReference Include="Dapper" Version="2.1.66" />
       <PackageReference Include="FSharp.Data" Version="6.4.1" />
-      <PackageReference Include="Npgsql" Version="9.0.2" />
-      <PackageReference Include="Oxpecker" Version="1.1.2" />
+      <PackageReference Include="Npgsql" Version="9.0.3" />
+      <PackageReference Include="Oxpecker" Version="1.2.0" />
       <PackageReference Include="Oxpecker.Htmx" Version="1.0.0" />
-      <PackageReference Include="Oxpecker.ViewEngine" Version="1.0.1" />
+      <PackageReference Include="Oxpecker.ViewEngine" Version="1.1.0" />
       <PackageReference Update="FSharp.Core" Version="9.0.201" />
     </ItemGroup>
     <ItemGroup>

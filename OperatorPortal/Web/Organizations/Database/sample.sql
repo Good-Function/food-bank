@@ -22,8 +22,8 @@ INSERT INTO organizacje (
           'Maria Wiśniewska', '+48 22 123 45 70', 150, 'Rodziny wielodzietne, osoby starsze',
           TRUE, FALSE, TRUE, TRUE, 'Pomoc żywnościowa', 'Dystrybucja paczek żywnościowych',
           'Dostawa do placówki', 'Magazyn chłodniczy', TRUE, TRUE, 'Własny transport',
-          'Chłodnia', '2023-10-01 10:00:00', '2023-10-05 12:00:00', 'Umowa RODO podpisana',
-          '2023-10-10 14:00:00', '2023-10-15 16:00:00'
+          'Chłodnia', '2023-10-01', '2023-10-05', NULL,
+          '2023-10-10', '2023-10-15'
       ),
       (
           102, 9876543210987, 9876543210, 987654321, '0000654321', 'Fundacja', TRUE,
@@ -36,8 +36,8 @@ INSERT INTO organizacje (
           'Tomasz Wiśniewski', '+48 12 345 67 92', 200, 'Dzieci i młodzież z ubogich rodzin',
           FALSE, TRUE, FALSE, TRUE, 'Pomoc edukacyjna', 'Dystrybucja materiałów szkolnych',
           'Dostawa do placówki', 'Magazyn suchy', FALSE, TRUE, 'Wynajęty transport',
-          'Suchy', '2023-09-15 11:00:00', '2023-09-20 13:00:00', 'Umowa RODO podpisana',
-          '2023-09-25 15:00:00', '2023-09-30 17:00:00'
+          'Suchy', '2023-09-15', '2023-09-20', '2023-09-30',
+          '2023-09-25', '2023-09-30'
       ),
       (
           103, 4567890123456, 4567890123, 456789012, '0000789012', 'Spółka z o.o.', FALSE,
@@ -49,8 +49,8 @@ INSERT INTO organizacje (
           'Pon-Pt 10:00-18:00', 'Agnieszka Nowak', '+48 71 234 56 80', 'agnieszka.nowak@zdrowieismak.pl',
           'Jan Kowalczyk', '+48 71 234 56 81', 100, 'Osoby bezdomne', TRUE, FALSE, TRUE, FALSE,
           'Pomoc żywnościowa', 'Dostawa posiłków', 'Dostawa do placówki', 'Magazyn suchy',
-          TRUE, FALSE, 'Własny transport', 'Suchy', '2023-08-01 09:00:00', '2023-08-05 11:00:00',
-          'Umowa RODO podpisana', '2023-08-10 13:00:00', '2023-08-15 15:00:00'
+          TRUE, FALSE, 'Własny transport', 'Suchy', '2023-08-01', '2023-08-05',
+          '2023-03-23', '2023-08-10', '2023-08-15'
       ),
       (
           104, 7890123456789, 7890123456, 789012345, '0000456789', 'Stowarzyszenie', TRUE,
@@ -62,8 +62,8 @@ INSERT INTO organizacje (
           'Pon-Pt 7:00-15:00', 'Tomasz Kowalski', '+48 58 345 67 91', 'tomasz.kowalski@razemdladzieci.org',
           'Anna Zielińska', '+48 58 345 67 92', 120, 'Dzieci z rodzin ubogich', FALSE, TRUE, FALSE, TRUE,
           'Pomoc żywnościowa', 'Dystrybucja paczek żywnościowych', 'Dostawa do placówki',
-          'Magazyn chłodniczy', TRUE, TRUE, 'Wynajęty transport', 'Chłodnia', '2023-07-01 08:00:00',
-          '2023-07-05 10:00:00', 'Umowa RODO podpisana', '2023-07-10 12:00:00', '2023-07-15 14:00:00'
+          'Magazyn chłodniczy', TRUE, TRUE, 'Wynajęty transport', 'Chłodnia', '2023-07-01',
+          '2023-07-05', NULL, '2023-07-10', '2023-07-15'
       ),
       (
           105, 3210987654321, 3210987654, 321098765, '0000321098', 'Fundacja', FALSE,
@@ -75,6 +75,6 @@ INSERT INTO organizacje (
           'Pon-Pt 8:00-16:00', 'Magdalena Kowalska', '+48 42 123 45 69', 'magdalena.kowalska@pomocnadlon.org',
           'Piotr Wiśniewski', '+48 42 123 45 70', 180, 'Osoby starsze, samotne', TRUE, FALSE, TRUE, FALSE,
           'Pomoc żywnościowa', 'Dystrybucja paczek żywnościowych', 'Dostawa do placówki',
-          'Magazyn suchy', FALSE, TRUE, 'Własny transport', 'Suchy', '2023-06-01 07:00:00',
-          '2023-06-05 09:00:00', 'Umowa RODO podpisana', '2023-06-10 11:00:00', '2023-06-15 13:00:00'
+          'Magazyn suchy', FALSE, TRUE, 'Własny transport', 'Suchy', '2023-06-01',
+          '2023-06-05', '2023-06-07', '2023-06-10', '2023-06-15'
       );

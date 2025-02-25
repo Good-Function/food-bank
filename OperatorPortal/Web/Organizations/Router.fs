@@ -27,7 +27,7 @@ let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
             return ctx.WriteHtmlView (ListTemplate.Template summaries)
         }
 
-let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int) : EndpointHandler =
+let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
     fun ctx ->
         task {
             let! details = readDetailsBy id
@@ -41,4 +41,4 @@ let Endpoints (dependencies: Dependencies) =
     [ route "/" indexPage
       route "/list" list
       route "/summaries" (summaries dependencies.ReadOrganizationSummaries)
-      routef "/{%i}" (details dependencies.ReadOrganizationDetailsBy) ]
+      routef "/{%d}" (details dependencies.ReadOrganizationDetailsBy) ]

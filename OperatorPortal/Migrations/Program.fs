@@ -3,7 +3,6 @@
 open System
 open System.IO
 open DbUp
-open DbUp.Helpers
 open DbUp.ScriptProviders
 
 let logAndParseEngineResult (result: Engine.DatabaseUpgradeResult) =
@@ -36,7 +35,6 @@ let main argv =
     DeployChanges.To
         .PostgresqlDatabase(connectionString)
         .WithScriptsFromFileSystem(path, options)
-        .JournalTo(NullJournal())
         .LogToConsole()
         .Build()
         .PerformUpgrade()

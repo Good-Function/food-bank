@@ -1,6 +1,7 @@
+DROP TABLE IF EXISTS organizacje; -- This is only for now, when production data doesn't exist.
 CREATE TABLE IF NOT EXISTS organizacje
 (
-    Teczka                              INT CONSTRAINT organizacje_pk PRIMARY KEY,
+    Teczka                              BIGINT CONSTRAINT organizacje_pk PRIMARY KEY,
     IdentyfikatorEnova                  BIGINT  NOT NULL,
     NIP                                 BIGINT  NOT NULL,
     Regon                               BIGINT  NOT NULL,
@@ -41,9 +42,9 @@ CREATE TABLE IF NOT EXISTS organizacje
     Sanepid                             BOOLEAN NOT NULL,
     TransportOpis                       TEXT    NOT NULL,
     TransportKategoria                  TEXT    NOT NULL,
-    Wniosek                             TIMESTAMP NULL,
-    UmowaZDn                            TIMESTAMP NULL,
-    UmowaRODO                           TEXT    NOT NULL,
-    KartyOrganizacjiData                TIMESTAMP NULL,
-    OstatnieOdwiedzinyData              TIMESTAMP NULL
+    Wniosek                             DATE    NULL,
+    UmowaZDn                            DATE    NULL,
+    UmowaRODO                           DATE    NULL,
+    KartyOrganizacjiData                DATE    NULL,
+    OstatnieOdwiedzinyData              DATE    NULL
 );
