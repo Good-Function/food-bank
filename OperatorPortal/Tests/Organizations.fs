@@ -49,7 +49,7 @@ let ``/ogranizations/summaries displays organization's most important data `` ()
     }
     
 [<Fact>]
-let ``/ogranizations/{id} displays Identyfikatory, ... 's data's`` () =
+let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adresy, adresy ksiegowosci, beneficjenci, zrodla zywnosci, warunku sections`` () =
     task {
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
@@ -94,10 +94,43 @@ let ``/ogranizations/{id} displays Identyfikatory, ... 's data's`` () =
         identyfikatory[3] |> should equal organization.KrsNr
         identyfikatory[4] |> should equal organization.FormaPrawna
         kontakty[0] |> should equal organization.WwwFacebook
-        dokumenty[0] |> should equal (organization.Wniosek.Value.ToString("dd.MM.yyyy", System.Globalization.CultureInfo("pl-PL")))
+        kontakty[1] |> should equal organization.Telefon
+        kontakty[2] |> should equal organization.Przedstawiciel
+        kontakty[3] |> should equal organization.Kontakt
+        kontakty[4] |> should equal organization.Email
+        kontakty[5] |> should equal organization.Dostepnosc
+        kontakty[6] |> should equal organization.OsobaDoKontaktu
+        kontakty[7] |> should equal organization.TelefonOsobyKontaktowej
+        kontakty[8] |> should equal organization.MailOsobyKontaktowej
+        kontakty[9] |> should equal organization.OsobaOdbierajacaZywnosc
+        kontakty[10] |> should equal organization.TelefonOsobyOdbierajacej
+        dokumenty[0] |> should equal (organization.Wniosek |> Formatters.toDate)
+        dokumenty[1] |> should equal (organization.UmowaZDn |> Formatters.toDate)
+        dokumenty[2] |> should equal (organization.UmowaRODO |> Formatters.toDate)
+        dokumenty[3] |> should equal (organization.KartyOrganizacjiData |> Formatters.toDate)
+        dokumenty[4] |> should equal (organization.OstatnieOdwiedzinyData |> Formatters.toDate)
         adresy[0] |> should equal organization.NazwaOrganizacjiPodpisujacejUmowe
+        adresy[1] |> should equal organization.AdresRejestrowy
+        adresy[2] |> should equal organization.NazwaPlacowkiTrafiaZywnosc
+        adresy[3] |> should equal organization.AdresPlacowkiTrafiaZywnosc
+        adresy[4] |> should equal organization.GminaDzielnica
+        adresy[5] |> should equal organization.Powiat
         adresyKsiegowosci[0] |> should equal organization.NazwaOrganizacjiKsiegowanieDarowizn
+        adresyKsiegowosci[1] |> should equal organization.KsiegowanieAdres
+        adresyKsiegowosci[2] |> should equal organization.TelOrganProwadzacegoKsiegowosc
         beneficjenci[0] |> should equal $"%i{organization.LiczbaBeneficjentow}"
+        beneficjenci[1] |> should equal organization.Beneficjenci
+        zrodlaZywnosci[0] |> should equal (organization.Sieci |> Formatters.toTakNie)
+        zrodlaZywnosci[1] |> should equal (organization.Bazarki |> Formatters.toTakNie)
+        zrodlaZywnosci[2] |> should equal (organization.Machfit |> Formatters.toTakNie)
+        zrodlaZywnosci[3] |> should equal (organization.FEPZ2024 |> Formatters.toTakNie)
         warunki[0] |> should equal organization.Kategoria
+        warunki[1] |> should equal organization.RodzajPomocy
+        warunki[2] |> should equal organization.SposobUdzielaniaPomocy
+        warunki[3] |> should equal organization.WarunkiMagazynowe
+        warunki[4] |> should equal (organization.HACCP |> Formatters.toTakNie) 
+        warunki[5] |> should equal (organization.Sanepid |> Formatters.toTakNie)
+        warunki[6] |> should equal organization.TransportOpis
+        warunki[7] |> should equal organization.TransportKategoria
         identyfikatory.Length |> should be (greaterThan 0)
     }
