@@ -1,0 +1,5 @@
+﻿<Solution>
+  <Project Path="Migrations\Migrations.fsproj" Type="Classic F#" />
+  <Project Path="Tests\Tests.fsproj" Type="Classic F#" />
+  <Project Path="Web\Web.fsproj" Type="Classic F#" />
+</Solution>
