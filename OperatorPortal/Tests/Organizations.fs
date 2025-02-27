@@ -63,74 +63,96 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
         let sections = 
             doc.CssSelect "article"
             
-        let identyfikatorySection,
-            kontaktySection,
-            dokumentySection,
-            adresSection,
-            adresKsiegowosciSection,
-            beneficjenciSection,
-            zrodlaZywnosciSection,
-            warunkiSection= (
-                sections[0],
-                sections[1],
-                sections[2],
-                sections[3],
-                sections[4],
-                sections[5],
-                sections[6],
-                sections[7]
+        let extractSmallText (node: HtmlNode) = node.CssSelect("small") |> List.map _.InnerText()
+            
+        let identyfikatory,
+            kontakty,
+            dokumenty,
+            adresy,
+            adresyKsiegowosci,
+            beneficjenci,
+            zrodlaZywnosci,
+            warunki= (
+                sections[0] |> extractSmallText,
+                sections[1] |> extractSmallText,
+                sections[2] |> extractSmallText,
+                sections[3] |> extractSmallText,
+                sections[4] |> extractSmallText,
+                sections[5] |> extractSmallText,
+                sections[6] |> extractSmallText,
+                sections[7] |> extractSmallText
                 )
-        let identyfikatory = (identyfikatorySection.CssSelect "small") |> List.map(_.InnerText())
-        let kontakty = (kontaktySection.CssSelect "small") |> List.map(_.InnerText())
-        let dokumenty = (dokumentySection.CssSelect "small") |> List.map(_.InnerText())
-        let adresy = (adresSection.CssSelect "small") |> List.map(_.InnerText())
-        let adresyKsiegowosci = (adresKsiegowosciSection.CssSelect "small") |> List.map(_.InnerText())
-        let beneficjenci = (beneficjenciSection.CssSelect "small") |> List.map(_.InnerText())
-        let zrodlaZywnosci = (zrodlaZywnosciSection.CssSelect "small") |> List.map(_.InnerText())
-        let warunki = (warunkiSection.CssSelect "small") |> List.map(_.InnerText())
-        identyfikatory[0] |> should equal $"%i{organization.IdentyfikatorEnova}"
-        identyfikatory[1] |> should equal $"%i{organization.NIP}"
-        identyfikatory[2] |> should equal $"%i{organization.Regon}"
-        identyfikatory[3] |> should equal organization.KrsNr
-        identyfikatory[4] |> should equal organization.FormaPrawna
-        kontakty[0] |> should equal organization.WwwFacebook
-        kontakty[1] |> should equal organization.Telefon
-        kontakty[2] |> should equal organization.Przedstawiciel
-        kontakty[3] |> should equal organization.Kontakt
-        kontakty[4] |> should equal organization.Email
-        kontakty[5] |> should equal organization.Dostepnosc
-        kontakty[6] |> should equal organization.OsobaDoKontaktu
-        kontakty[7] |> should equal organization.TelefonOsobyKontaktowej
-        kontakty[8] |> should equal organization.MailOsobyKontaktowej
-        kontakty[9] |> should equal organization.OsobaOdbierajacaZywnosc
-        kontakty[10] |> should equal organization.TelefonOsobyOdbierajacej
-        dokumenty[0] |> should equal (organization.Wniosek |> Formatters.toDate)
-        dokumenty[1] |> should equal (organization.UmowaZDn |> Formatters.toDate)
-        dokumenty[2] |> should equal (organization.UmowaRODO |> Formatters.toDate)
-        dokumenty[3] |> should equal (organization.KartyOrganizacjiData |> Formatters.toDate)
-        dokumenty[4] |> should equal (organization.OstatnieOdwiedzinyData |> Formatters.toDate)
-        adresy[0] |> should equal organization.NazwaOrganizacjiPodpisujacejUmowe
-        adresy[1] |> should equal organization.AdresRejestrowy
-        adresy[2] |> should equal organization.NazwaPlacowkiTrafiaZywnosc
-        adresy[3] |> should equal organization.AdresPlacowkiTrafiaZywnosc
-        adresy[4] |> should equal organization.GminaDzielnica
-        adresy[5] |> should equal organization.Powiat
-        adresyKsiegowosci[0] |> should equal organization.NazwaOrganizacjiKsiegowanieDarowizn
-        adresyKsiegowosci[1] |> should equal organization.KsiegowanieAdres
-        adresyKsiegowosci[2] |> should equal organization.TelOrganProwadzacegoKsiegowosc
-        beneficjenci[0] |> should equal $"%i{organization.LiczbaBeneficjentow}"
-        beneficjenci[1] |> should equal organization.Beneficjenci
-        zrodlaZywnosci[0] |> should equal (organization.Sieci |> Formatters.toTakNie)
-        zrodlaZywnosci[1] |> should equal (organization.Bazarki |> Formatters.toTakNie)
-        zrodlaZywnosci[2] |> should equal (organization.Machfit |> Formatters.toTakNie)
-        zrodlaZywnosci[3] |> should equal (organization.FEPZ2024 |> Formatters.toTakNie)
-        warunki[0] |> should equal organization.Kategoria
-        warunki[1] |> should equal organization.RodzajPomocy
-        warunki[2] |> should equal organization.SposobUdzielaniaPomocy
-        warunki[3] |> should equal organization.WarunkiMagazynowe
-        warunki[4] |> should equal (organization.HACCP |> Formatters.toTakNie) 
-        warunki[5] |> should equal (organization.Sanepid |> Formatters.toTakNie)
-        warunki[6] |> should equal organization.TransportOpis
-        warunki[7] |> should equal organization.TransportKategoria
-        identyfikatory.Length |> should be (greaterThan 0)
+        identyfikatory[0..4] |> should equal [
+            $"%i{organization.IdentyfikatorEnova}"
+            $"%i{organization.NIP}"
+            $"%i{organization.Regon}"
+            organization.KrsNr
+            organization.FormaPrawna
+        ]
+        kontakty[0..10] |> should equal [
+            organization.WwwFacebook
+            organization.Telefon
+            organization.Przedstawiciel
+            organization.Email
+            organization.Kontakt
+            organization.Dostepnosc
+            organization.OsobaDoKontaktu
+            organization.TelefonOsobyKontaktowej
+            organization.MailOsobyKontaktowej
+            organization.OsobaOdbierajacaZywnosc
+            organization.TelefonOsobyOdbierajacej
+        ]
+        kontakty[0..10] |> should equal [
+            organization.WwwFacebook
+            organization.Telefon
+            organization.Przedstawiciel
+            organization.Kontakt
+            organization.Email
+            organization.Dostepnosc
+            organization.OsobaDoKontaktu
+            organization.TelefonOsobyKontaktowej
+            organization.MailOsobyKontaktowej
+            organization.OsobaOdbierajacaZywnosc
+            organization.TelefonOsobyOdbierajacej
+        ]
+        dokumenty[0..4] |> should equal [
+            (organization.Wniosek |> Formatters.toDate)
+            (organization.UmowaZDn |> Formatters.toDate)
+            (organization.UmowaRODO |> Formatters.toDate)
+            (organization.KartyOrganizacjiData |> Formatters.toDate)
+            (organization.OstatnieOdwiedzinyData |> Formatters.toDate)
+        ]
+        adresy[0..5] |> should equal [
+            organization.NazwaOrganizacjiPodpisujacejUmowe
+            organization.AdresRejestrowy
+            organization.NazwaPlacowkiTrafiaZywnosc
+            organization.AdresPlacowkiTrafiaZywnosc
+            organization.GminaDzielnica
+            organization.Powiat
+        ]
+        adresyKsiegowosci[0..2] |> should equal [
+            organization.NazwaOrganizacjiKsiegowanieDarowizn
+            organization.KsiegowanieAdres
+            organization.TelOrganProwadzacegoKsiegowosc
+        ]
+        beneficjenci[0..2] |> should equal [
+            $"%i{organization.LiczbaBeneficjentow}"
+            organization.Beneficjenci
+        ]
+        zrodlaZywnosci[0..3] |> should equal [
+            (organization.Sieci |> Formatters.toTakNie)
+            (organization.Bazarki |> Formatters.toTakNie)
+            (organization.Machfit |> Formatters.toTakNie)
+            (organization.FEPZ2024 |> Formatters.toTakNie)
+        ]
+        warunki[0..7] |> should equal [
+            organization.Kategoria
+            organization.RodzajPomocy
+            organization.SposobUdzielaniaPomocy
+            organization.WarunkiMagazynowe
+            (organization.HACCP |> Formatters.toTakNie) 
+            (organization.Sanepid |> Formatters.toTakNie)
+            organization.TransportOpis
+            organization.TransportKategoria
+        ]
     }
