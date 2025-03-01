@@ -42,7 +42,9 @@
       <Content Include="Organizations\Database\migrations.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Include="Organizations\Database\sample.sql" />
+      <Content Include="Organizations\Database\sample.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Compile Include="Organizations\Database\csvLoader.fs" />
       <Content Include="Organizations\Database\db_sample.csv">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
