@@ -2,24 +2,14 @@ main {
     padding-block:0 !important;
 }
 
-label {
-    margin-bottom: 0 !important;
-}
-
 .action-header {
     display: flex;
     justify-content: space-between;
 }
 
-.action-header > span:nth-child(2){
+.action-header-actions > span {
     cursor: pointer;
-    border-bottom: 2px solid transparent;
 }
-
-.action-header > span:nth-child(2):hover{
-    border-bottom: 2px solid var(--pico-primary-background);
-}
-
 
 .active {
     background-color: var(--pico-primary-background);
@@ -54,10 +44,6 @@ label {
     height: 80px;
 }
 
-label {
-    margin-bottom: 0;
-}
-
 @media screen and (max-width: 770px) {
     .bzsos-logo {
         display: none;
@@ -65,9 +51,6 @@ label {
 }
 
 .focus-dim {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
     box-shadow: 0 0 0 100vmax rgb(0 0 0 / 50%);
+    position: relative;
 }

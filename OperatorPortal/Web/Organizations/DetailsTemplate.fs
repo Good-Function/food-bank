@@ -25,7 +25,9 @@ let formatDate (dateOpt: DateOnly option) : string =
 let editableHeader (name: string) =
     header (class' = "action-header") {
         span () { name }
-        span () { Icons.Pen }
+        div(class' = "action-header-actions") {
+            span () { Icons.Pen }
+        }
     }
 
 let Template (org: OrganizationDetails) =
@@ -70,16 +72,7 @@ let Template (org: OrganizationDetails) =
             }
 
             div () {
-                article () {
-                    editableHeader "Dane adresowe"
-                    field "Organizacja, która podpisała umowę" org.NazwaOrganizacjiPodpisujacejUmowe
-                    field "Adres rejestrowy" org.AdresRejestrowy
-                    field "Placówka do której trafia żywność" org.NazwaPlacowkiTrafiaZywnosc
-                    field "Adres dostawy żywności" org.AdresPlacowkiTrafiaZywnosc
-                    field "Gmina / Dzielnica" org.GminaDzielnica
-                    field "Powiat" org.Powiat
-                }
-
+                DaneAdresowe.View org
                 article () {
                     editableHeader "Dane adresowe księgowości"
                     field "Organizacja na którą wystawiamy WZ" org.NazwaOrganizacjiKsiegowanieDarowizn

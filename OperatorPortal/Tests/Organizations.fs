@@ -156,3 +156,55 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             organization.TransportKategoria
         ]
     }
+    
+[<Fact>]
+let ``GET /ogranizations/{id}/dane-adresowe/edit returns prefilled inputs to edit the data`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.GetAsync $"/organizations/{organization.Teczka}/dane-adresowe/edit"
+        // Assert
+        let! doc = response.HtmlContent()
+        let inputs =
+            doc.CssSelect "input" |> List.map _.AttributeValue("value")
+        response.StatusCode |> should equal HttpStatusCode.OK
+        inputs |> should equal [
+            organization.NazwaOrganizacjiPodpisujacejUmowe
+            organization.AdresRejestrowy
+            organization.NazwaPlacowkiTrafiaZywnosc
+            organization.AdresPlacowkiTrafiaZywnosc
+            organization.GminaDzielnica
+            organization.Powiat
+        ]
+        inputs.Length |> should equal 6
+    }
+    
+[<Fact>]
+let ``GET /ogranizations/{id}/dane-adresowe returns fields from dane adresowe`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.GetAsync $"/organizations/{organization.Teczka}/dane-adresowe"
+        // Assert
+        let! doc = response.HtmlContent()
+        let inputs =
+            doc.CssSelect "small" |> List.map _.InnerText()
+        response.StatusCode |> should equal HttpStatusCode.OK
+        inputs |> should equal [
+            organization.NazwaOrganizacjiPodpisujacejUmowe
+            organization.AdresRejestrowy
+            organization.NazwaPlacowkiTrafiaZywnosc
+            organization.AdresPlacowkiTrafiaZywnosc
+            organization.GminaDzielnica
+            organization.Powiat
+        ]
+        inputs.Length |> should equal 6
+    }

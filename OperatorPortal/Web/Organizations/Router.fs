@@ -26,12 +26,24 @@ let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
             let! summaries = readSummaries search
             return ctx.WriteHtmlView (ListTemplate.Template summaries)
         }
+let daneAdresowe (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy id
+            return ctx.WriteHtmlView (DaneAdresowe.View details)
+        }
+        
+let daneAdresoweEdit (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy id
+            return ctx.WriteHtmlView (DaneAdresowe.Form details)
+        }
 
 let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
     fun ctx ->
         task {
             let! details = readDetailsBy id
-
             return
                 ctx
                 |> render (DetailsTemplate.Template details) (DetailsTemplate.FullPage details)
@@ -41,4 +53,7 @@ let Endpoints (dependencies: Dependencies) =
     [ route "/" indexPage
       route "/list" list
       route "/summaries" (summaries dependencies.ReadOrganizationSummaries)
-      routef "/{%d}" (details dependencies.ReadOrganizationDetailsBy) ]
+      routef "/{%d}" (details dependencies.ReadOrganizationDetailsBy)
+      routef "/{%d}/dane-adresowe" (daneAdresowe dependencies.ReadOrganizationDetailsBy)
+      routef "/{%d}/dane-adresowe/edit" (daneAdresoweEdit dependencies.ReadOrganizationDetailsBy)
+   ]
