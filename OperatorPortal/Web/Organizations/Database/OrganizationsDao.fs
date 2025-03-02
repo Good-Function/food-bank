@@ -4,39 +4,7 @@ open System.Data
 open PostgresPersistence.DapperFsharp
 open Organizations.Application.ReadModels
 
-let readSummaries (connectDB: unit -> Async<IDbConnection>) (searchTerm: string) =
-    async {
-        let! db = connectDB()
-        let! summaries = db.Query<OrganizationSummary> """
-SELECT 
-    teczka,
-    formaprawna,
-    nazwaplacowkitrafiazywnosc,
-    adresplacowkitrafiazywnosc,
-    gminadzielnica,
-    telefon,
-    kontakt,
-    email,
-    dostepnosc,
-    osobadokontaktu,
-    telefonosobykontaktowej,
-    liczbabeneficjentow,
-    kategoria
-FROM organizacje ORDER BY teczka 
-"""
-        let data = summaries
-                |> List.filter (fun sum ->
-                        sum.Teczka.ToString().Contains searchTerm || sum.NazwaPlacowkiTrafiaZywnosc.ToLowerInvariant().Contains(searchTerm.ToLowerInvariant()))
-        return data
-    }
-
-let searchSummaries (connectDB: unit -> Async<IDbConnection>) (searchTerm: string) =
-    async {
-        let! db = connectDB()
-        let parameters = Dapper.DynamicParameters()
-        parameters.Add("@searchTerm", searchTerm)
-
-        let! summaries = db.QueryWithParam<OrganizationSummary>("""
+let searchOrgsSql = """
 SELECT 
     teczka,
     formaprawna,
@@ -52,13 +20,18 @@ SELECT
     liczbabeneficjentow,
     kategoria
 FROM organizacje
-WHERE similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.1
-   OR similarity(gminadzielnica, @searchTerm) > 0.1
-ORDER BY teczka;
-""", parameters)
-        return summaries
-    }
+WHERE
+   @searchTerm = '' 
+   OR (similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.1 OR similarity(gminadzielnica, @searchTerm) > 0.1)
+ORDER BY teczka DESC;
+"""
 
+let readSummaries (connectDB: unit -> Async<IDbConnection>) (searchTerm: string) =
+    async {
+        let! db = connectDB()
+        return! db.QueryBy<OrganizationSummary> searchOrgsSql {| searchTerm = searchTerm |}
+    }
+    
 let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: int64) =
     async {
         let! db = connectDB()

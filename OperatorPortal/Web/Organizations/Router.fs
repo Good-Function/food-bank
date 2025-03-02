@@ -19,14 +19,11 @@ let list: EndpointHandler =
             return ctx |> render (SearchableListTemplate.Template search) (SearchableListTemplate.FullPage search)
         }
         
-let summaries (readSummaries: ReadOrganizationSummaries) (searchSummaries: SearchOrganizationSummaries) : EndpointHandler =
+let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
     fun ctx ->
         task {
             let search = ctx.TryGetQueryValue "search" |> Option.defaultValue ""
-            let! summaries =
-                match search with
-                | "" -> readSummaries search
-                | _ -> searchSummaries search
+            let! summaries = readSummaries search
             return ctx.WriteHtmlView (ListTemplate.Template summaries)
         }
 let daneAdresowe (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
@@ -55,7 +52,7 @@ let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHan
 let Endpoints (dependencies: Dependencies) =
     [ route "/" indexPage
       route "/list" list
-      route "/summaries" (summaries dependencies.ReadOrganizationSummaries dependencies.SearchOrganizationSummaries)
+      route "/summaries" (summaries dependencies.ReadOrganizationSummaries)
       routef "/{%d}" (details dependencies.ReadOrganizationDetailsBy)
       routef "/{%d}/dane-adresowe" (daneAdresowe dependencies.ReadOrganizationDetailsBy)
       routef "/{%d}/dane-adresowe/edit" (daneAdresoweEdit dependencies.ReadOrganizationDetailsBy)
