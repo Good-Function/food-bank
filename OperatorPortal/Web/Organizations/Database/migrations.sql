@@ -48,5 +48,3 @@ CREATE TABLE IF NOT EXISTS organizacje
     KartyOrganizacjiData                DATE    NULL,
     OstatnieOdwiedzinyData              DATE    NULL
 );
-
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
