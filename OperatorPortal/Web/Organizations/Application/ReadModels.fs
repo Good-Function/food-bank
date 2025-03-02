@@ -66,4 +66,5 @@ type OrganizationDetails = {
 }
 
 type ReadOrganizationSummaries = string -> Async<OrganizationSummary list>
+type SearchOrganizationSummaries = string -> Async<OrganizationSummary list>
 type ReadOrganizationDetailsBy = int64 -> Async<OrganizationDetails>

@@ -29,6 +29,12 @@ type IDbConnection with
             return Seq.toList result
         }
 
+    member this.QueryWithParam<'Result>(query: string, param: obj) =
+        async {
+            let! result = this.QueryAsync<'Result>(query, param) |> Async.AwaitTask
+            return Seq.toList result
+        }
+
     member this.Execute (sql: string) (param: obj) =
         this.ExecuteAsync(sql, param) |> Async.AwaitTask |> Async.Ignore
 

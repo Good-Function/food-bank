@@ -29,7 +29,36 @@ FROM organizacje ORDER BY teczka
                         sum.Teczka.ToString().Contains searchTerm || sum.NazwaPlacowkiTrafiaZywnosc.ToLowerInvariant().Contains(searchTerm.ToLowerInvariant()))
         return data
     }
-    
+
+let searchSummaries (connectDB: unit -> Async<IDbConnection>) (searchTerm: string) =
+    async {
+        let! db = connectDB()
+        let parameters = Dapper.DynamicParameters()
+        parameters.Add("@searchTerm", searchTerm)
+
+        let! summaries = db.QueryWithParam<OrganizationSummary>("""
+SELECT 
+    teczka,
+    formaprawna,
+    nazwaplacowkitrafiazywnosc,
+    adresplacowkitrafiazywnosc,
+    gminadzielnica,
+    telefon,
+    kontakt,
+    email,
+    dostepnosc,
+    osobadokontaktu,
+    telefonosobykontaktowej,
+    liczbabeneficjentow,
+    kategoria
+FROM organizacje
+WHERE similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.1
+   OR similarity(gminadzielnica, @searchTerm) > 0.1
+ORDER BY teczka;
+""", parameters)
+        return summaries
+    }
+
 let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: int64) =
     async {
         let! db = connectDB()
