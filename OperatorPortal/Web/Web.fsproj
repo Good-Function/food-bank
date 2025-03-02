@@ -18,6 +18,9 @@
       </Content>
       <Content Include="Dockerfile" />
       <Compile Include="renderBasedOnHtmx.fs" />
+      <Content Include="postgres_extensions.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Content Include="settings.ini">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
