@@ -53,6 +53,7 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Compile Include="Organizations\Database\OrganizationsDao.fs" />
+      <Compile Include="Organizations\Dtos.fs" />
       <Compile Include="Organizations\PageComposer.fs" />
       <Compile Include="Organizations\DaneAdresowe.fs" />
       <Compile Include="Organizations\DetailsTemplate.fs" />

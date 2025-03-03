@@ -5,10 +5,10 @@ open Organizations.Application.ReadModels
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 
-let private editField (labelText: string) (value: string) =
+let private editField (labelText: string) (value: string) (name: string) =
     p () {
         label () { b () { labelText } }
-        input (value = value)
+        input (value = value, name = name)
     }
 
 let private field (labelText: string) (value: string) =
@@ -66,11 +66,11 @@ let Form (org: OrganizationDetails) =
                 }
             }
 
-            editField "Organizacja, która podpisała umowę" org.NazwaOrganizacjiPodpisujacejUmowe
-            editField "Adres rejestrowy" org.AdresRejestrowy
-            editField "Placówka do której trafia żywność" org.NazwaPlacowkiTrafiaZywnosc
-            editField "Adres dostawy żywności" org.AdresPlacowkiTrafiaZywnosc
-            editField "Gmina / Dzielnica" org.GminaDzielnica
-            editField "Powiat" org.Powiat
+            editField "Organizacja, która podpisała umowę" org.NazwaOrganizacjiPodpisujacejUmowe (nameof org.NazwaOrganizacjiPodpisujacejUmowe)
+            editField "Adres rejestrowy" org.AdresRejestrowy (nameof org.AdresRejestrowy)
+            editField "Placówka do której trafia żywność" org.NazwaPlacowkiTrafiaZywnosc (nameof org.NazwaPlacowkiTrafiaZywnosc)
+            editField "Adres dostawy żywności" org.AdresPlacowkiTrafiaZywnosc (nameof org.AdresPlacowkiTrafiaZywnosc)
+            editField "Gmina / Dzielnica" org.GminaDzielnica (nameof org.GminaDzielnica)
+            editField "Powiat" org.Powiat (nameof org.Powiat)
         }
     }
