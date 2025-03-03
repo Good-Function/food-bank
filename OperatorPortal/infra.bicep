@@ -106,6 +106,13 @@ resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-preview'
       passwordAuth: 'Enabled'
     }
   }
+  resource postgresConfig 'configurations' = {
+      name: 'azure.extensions'
+      properties: {
+        value: 'pg_trgm'
+        source: 'user-override'
+      }
+    }
 }
 
 resource database 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2024-11-01-preview' = {
@@ -170,7 +177,6 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
       }
       registries: [
         {
-          // server is in the format of myregistry.azurecr.io
           server: acrendpoint
           username: acrlogin
           passwordSecretRef: 'containerregistrypasswordref'
@@ -180,7 +186,6 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
     template: {
       containers: [
         {
-          // This is in the format of myregistry.azurecr.io
           image: image
           name: name
           resources: {
