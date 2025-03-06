@@ -1,5 +1,7 @@
 module Organizations.Router
 
+open Organizations.Application
+open Organizations.Dtos
 open Oxpecker
 open RenderBasedOnHtmx
 open Organizations.Application.ReadModels
@@ -29,27 +31,27 @@ let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
             return ctx.WriteHtmlView(ListTemplate.Template summaries)
         }
 
-let daneAdresowe (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
+let daneAdresowe (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
         task {
-            let! details = readDetailsBy id
-            return ctx.WriteHtmlView(DaneAdresowe.View details)
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(DaneAdresowe.View details.DaneAdresowe teczka)
         }
 
-let daneAdresoweEdit (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
+let daneAdresoweEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
         task {
-            let! details = readDetailsBy id
-            return ctx.WriteHtmlView(DaneAdresowe.Form details)
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(DaneAdresowe.Form details.DaneAdresowe teczka)
         }
 
-let replaceDaneAdresowe (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) :EndpointHandler =
+let changeDaneAdresowe (handle: Commands.ChangeDaneAdresowe) (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
-            let! form = ctx.BindForm<Dtos.DaneAdresoweForm>()
-            printf "%A" form // TODO
-            let! details = readDetailsBy id // Now... I am not needing whole details. Time to fix this.
-            return ctx.WriteHtmlView(DaneAdresowe.View details)
+            let! form = ctx.BindForm<DaneAdresoweForm>()
+            let cmd = form.toChangeDaneAdresowe teczka
+            do! cmd |> handle
+            return ctx.WriteHtmlView(DaneAdresowe.View form.toDaneAdresowe teczka)
         }
         
 
@@ -71,4 +73,4 @@ let Endpoints (dependencies: Dependencies) =
             routef "/{%d}" (details dependencies.ReadOrganizationDetailsBy)
             routef "/{%d}/dane-adresowe" (daneAdresowe dependencies.ReadOrganizationDetailsBy)
             routef "/{%d}/dane-adresowe/edit" (daneAdresoweEdit dependencies.ReadOrganizationDetailsBy) ]
-      PUT [ routef "/{%d}/dane-adresowe" (replaceDaneAdresowe dependencies.ReadOrganizationDetailsBy)] ]
+      PUT [ routef "/{%d}/dane-adresowe" (changeDaneAdresowe dependencies.ModifyDaneAdresowe)] ]

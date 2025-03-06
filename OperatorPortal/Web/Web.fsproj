@@ -42,6 +42,7 @@
     </ItemGroup>
     <ItemGroup>
       <Compile Include="Organizations\Application\ReadModels.fs" />
+      <Compile Include="Organizations\Application\Commands.fs" />
       <Content Include="Organizations\Database\migrations.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
@@ -53,12 +54,12 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Compile Include="Organizations\Database\OrganizationsDao.fs" />
+      <Compile Include="Organizations\Templates\DaneAdresowe.fs" />
+      <Compile Include="Organizations\Templates\PageComposer.fs" />
+      <Compile Include="Organizations\Templates\DetailsTemplate.fs" />
+      <Compile Include="Organizations\Templates\SearchableListTemplate.fs" />
+      <Compile Include="Organizations\Templates\ListTemplate.fs" />
       <Compile Include="Organizations\Dtos.fs" />
-      <Compile Include="Organizations\PageComposer.fs" />
-      <Compile Include="Organizations\DaneAdresowe.fs" />
-      <Compile Include="Organizations\DetailsTemplate.fs" />
-      <Compile Include="Organizations\SearchableListTemplate.fs" />
-      <Compile Include="Organizations\ListTemplate.fs" />
       <Compile Include="Organizations\CompositionRoot.fs" />
       <Compile Include="Organizations\Router.fs" />
       <Compile Include="Applications\Template.fs" />

@@ -16,6 +16,15 @@ type OrganizationSummary = {
     Kategoria: string
 }
 
+type DaneAdresowe = {
+    NazwaOrganizacjiPodpisujacejUmowe: string 
+    AdresRejestrowy: string 
+    NazwaPlacowkiTrafiaZywnosc: string 
+    AdresPlacowkiTrafiaZywnosc: string 
+    GminaDzielnica: string 
+    Powiat: string 
+}
+
 type OrganizationDetails = {
     Teczka: int64
     IdentyfikatorEnova: int64
@@ -24,12 +33,7 @@ type OrganizationDetails = {
     KrsNr: string 
     FormaPrawna: string // fundacja, stowarzyszenie, org koscielna
     OPP: bool // szczegóły: Organizacja użytku publicznego
-    NazwaOrganizacjiPodpisujacejUmowe: string 
-    AdresRejestrowy: string 
-    NazwaPlacowkiTrafiaZywnosc: string 
-    AdresPlacowkiTrafiaZywnosc: string 
-    GminaDzielnica: string 
-    Powiat: string 
+    DaneAdresowe: DaneAdresowe
     NazwaOrganizacjiKsiegowanieDarowizn: string
     KsiegowanieAdres: string 
     TelOrganProwadzacegoKsiegowosc: string 

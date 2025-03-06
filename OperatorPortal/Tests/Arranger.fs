@@ -24,36 +24,38 @@ let AnOrganization(): Organizations.Application.ReadModels.OrganizationDetails =
       KrsNr = IdGenerator.CreateId().ToString()
       FormaPrawna = f.PickRandomParam([| "Fundacja" |])
       OPP = f.Random.Bool()
-      NazwaOrganizacjiPodpisujacejUmowe = f.Company.CompanyName()
-      AdresRejestrowy = f.Address.FullAddress()
-      NazwaPlacowkiTrafiaZywnosc = f.Company.CompanyName()
-      AdresPlacowkiTrafiaZywnosc = f.Address.FullAddress()
-      GminaDzielnica =
-        f.PickRandom(
-            [| "Radzymin"
-               "Płońsk"
-               "Maków Mazowiecki"
-               "Ostrołęka"
-               "Płock"
-               "Siedlce"
-               "Radom"
-               "Ciechanów"
-               "Mława"
-               "Przasnysz" |]
-        )
-      Powiat =
-        f.PickRandom(
-            [| "płoński"
-               "ostrołęcki"
-               "przasnyski"
-               "ostrowski"
-               "makowski"
-               "ciechanowski"
-               "mławski"
-               "Warszawa"
-               "Radom"
-               "Płock" |]
-        )
+      DaneAdresowe = {
+          NazwaOrganizacjiPodpisujacejUmowe = f.Company.CompanyName()
+          AdresRejestrowy = f.Address.FullAddress()
+          NazwaPlacowkiTrafiaZywnosc = f.Company.CompanyName()
+          AdresPlacowkiTrafiaZywnosc = f.Address.FullAddress()
+          GminaDzielnica =
+            f.PickRandom(
+                [| "Radzymin"
+                   "Płońsk"
+                   "Maków Mazowiecki"
+                   "Ostrołęka"
+                   "Płock"
+                   "Siedlce"
+                   "Radom"
+                   "Ciechanów"
+                   "Mława"
+                   "Przasnysz" |]
+            )
+          Powiat =
+            f.PickRandom(
+                [| "płoński"
+                   "ostrołęcki"
+                   "przasnyski"
+                   "ostrowski"
+                   "makowski"
+                   "ciechanowski"
+                   "mławski"
+                   "Warszawa"
+                   "Radom"
+                   "Płock" |]
+            )
+      }
       NazwaOrganizacjiKsiegowanieDarowizn = f.Company.CompanyName()
       KsiegowanieAdres = f.Address.FullAddress()
       TelOrganProwadzacegoKsiegowosc = f.Phone.PhoneNumber()

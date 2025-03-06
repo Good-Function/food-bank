@@ -32,7 +32,7 @@ let editableHeader (name: string) =
 
 let Template (org: OrganizationDetails) =
     Fragment() {
-        h3 () { $"Teczka {org.Teczka}, {org.NazwaPlacowkiTrafiaZywnosc}" }
+        h3 () { $"Teczka {org.Teczka}, {org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc}" }
 
         div (class' = "grid") {
             div () {
@@ -72,7 +72,7 @@ let Template (org: OrganizationDetails) =
             }
 
             div () {
-                DaneAdresowe.View org
+                DaneAdresowe.View org.DaneAdresowe org.Teczka
                 article () {
                     editableHeader "Dane adresowe księgowości"
                     field "Organizacja na którą wystawiamy WZ" org.NazwaOrganizacjiKsiegowanieDarowizn

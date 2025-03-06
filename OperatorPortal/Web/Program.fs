@@ -43,6 +43,7 @@ let createServer () =
     let orgDeps: Organizations.CompositionRoot.Dependencies = {
         ReadOrganizationSummaries = OrganizationsDao.readSummaries dbConnect
         ReadOrganizationDetailsBy = OrganizationsDao.readBy dbConnect
+        ModifyDaneAdresowe = OrganizationsDao.modifyDaneAdresowe dbConnect
     }
     let appDeps: Applications.CompositionRoot.Dependencies = {
         TestRead = Applications.Database.readSchemas dbConnect

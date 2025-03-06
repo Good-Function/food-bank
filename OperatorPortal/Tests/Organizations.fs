@@ -1,6 +1,7 @@
 module Organizations
 
 open System.Net
+open Organizations.Database
 open Tests
 open Xunit
 open Tools.TestServer
@@ -93,19 +94,6 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             organization.WwwFacebook
             organization.Telefon
             organization.Przedstawiciel
-            organization.Email
-            organization.Kontakt
-            organization.Dostepnosc
-            organization.OsobaDoKontaktu
-            organization.TelefonOsobyKontaktowej
-            organization.MailOsobyKontaktowej
-            organization.OsobaOdbierajacaZywnosc
-            organization.TelefonOsobyOdbierajacej
-        ]
-        kontakty[0..10] |> should equal [
-            organization.WwwFacebook
-            organization.Telefon
-            organization.Przedstawiciel
             organization.Kontakt
             organization.Email
             organization.Dostepnosc
@@ -123,12 +111,12 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             (organization.OstatnieOdwiedzinyData |> Formatters.toDate)
         ]
         adresy[0..5] |> should equal [
-            organization.NazwaOrganizacjiPodpisujacejUmowe
-            organization.AdresRejestrowy
-            organization.NazwaPlacowkiTrafiaZywnosc
-            organization.AdresPlacowkiTrafiaZywnosc
-            organization.GminaDzielnica
-            organization.Powiat
+            organization.DaneAdresowe.NazwaOrganizacjiPodpisujacejUmowe
+            organization.DaneAdresowe.AdresRejestrowy
+            organization.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc
+            organization.DaneAdresowe.AdresPlacowkiTrafiaZywnosc
+            organization.DaneAdresowe.GminaDzielnica
+            organization.DaneAdresowe.Powiat
         ]
         adresyKsiegowosci[0..2] |> should equal [
             organization.NazwaOrganizacjiKsiegowanieDarowizn
@@ -173,12 +161,12 @@ let ``GET /ogranizations/{id}/dane-adresowe/edit returns prefilled inputs to edi
             doc.CssSelect "input" |> List.map _.AttributeValue("value")
         response.StatusCode |> should equal HttpStatusCode.OK
         inputs |> should equal [
-            organization.NazwaOrganizacjiPodpisujacejUmowe
-            organization.AdresRejestrowy
-            organization.NazwaPlacowkiTrafiaZywnosc
-            organization.AdresPlacowkiTrafiaZywnosc
-            organization.GminaDzielnica
-            organization.Powiat
+            organization.DaneAdresowe.NazwaOrganizacjiPodpisujacejUmowe
+            organization.DaneAdresowe.AdresRejestrowy
+            organization.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc
+            organization.DaneAdresowe.AdresPlacowkiTrafiaZywnosc
+            organization.DaneAdresowe.GminaDzielnica
+            organization.DaneAdresowe.Powiat
         ]
         inputs.Length |> should equal 6
     }
@@ -199,12 +187,12 @@ let ``GET /ogranizations/{id}/dane-adresowe returns fields from dane adresowe`` 
             doc.CssSelect "small" |> List.map _.InnerText()
         response.StatusCode |> should equal HttpStatusCode.OK
         inputs |> should equal [
-            organization.NazwaOrganizacjiPodpisujacejUmowe
-            organization.AdresRejestrowy
-            organization.NazwaPlacowkiTrafiaZywnosc
-            organization.AdresPlacowkiTrafiaZywnosc
-            organization.GminaDzielnica
-            organization.Powiat
+            organization.DaneAdresowe.NazwaOrganizacjiPodpisujacejUmowe
+            organization.DaneAdresowe.AdresRejestrowy
+            organization.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc
+            organization.DaneAdresowe.AdresPlacowkiTrafiaZywnosc
+            organization.DaneAdresowe.GminaDzielnica
+            organization.DaneAdresowe.Powiat
         ]
         inputs.Length |> should equal 6
     }
