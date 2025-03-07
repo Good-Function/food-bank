@@ -22,7 +22,7 @@ let Template search =
             hxPushUrl = "true"
         )
 
-        div (class' = "overflow-auto") {
+        div (id = "OrganizationsList", style = "overflow-x: scroll; max-height: 85vh") {
             small () {
                 div (id = "OrganizationsList") {
                     div (
