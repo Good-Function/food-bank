@@ -41,6 +41,7 @@
       <Compile Include="Login\Router.fs" />
     </ItemGroup>
     <ItemGroup>
+      <Compile Include="Organizations\Templates\Funcs.fs" />
       <Compile Include="Organizations\Application\ReadModels.fs" />
       <Compile Include="Organizations\Application\Commands.fs" />
       <Content Include="Organizations\Database\migrations.sql">

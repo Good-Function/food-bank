@@ -6,8 +6,9 @@ open Oxpecker.Htmx
 open Web.Organizations
 open PageComposer
 
-let Template search =
+let Template search orderBy =
     div (id = "OrganizationsPage") {
+        input (name = "orderBy", value = orderBy, type' = "hidden")
         input (
             type' = "search",
             name = "search",
@@ -29,7 +30,7 @@ let Template search =
                         hxGet = "/organizations/summaries",
                         hxTrigger = "load",
                         hxTarget = "#OrganizationsList",
-                        hxInclude = "[name='search']"
+                        hxInclude = "[name='search'], [name='orderBy']"
                     )
 
                     for _ in 1..6 do
@@ -39,7 +40,7 @@ let Template search =
         }
     }
 
-let FullPage search =
+let FullPage search orderBy =
     composeFullPage
-        { Content = Template search
+        { Content = Template search orderBy
           CurrentPage = Page.Organizations }

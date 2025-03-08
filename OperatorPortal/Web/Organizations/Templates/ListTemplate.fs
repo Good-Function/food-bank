@@ -3,6 +3,7 @@ module Organizations.ListTemplate
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 open Organizations.Application.ReadModels
+open Organizations.Funcs
 
 let Template (data: OrganizationSummary list) =
     table (class' = "striped") {
@@ -21,6 +22,19 @@ let Template (data: OrganizationSummary list) =
                 th () { "Dostępność" }
                 th () { "Kateogria" }
                 th () { "Liczba Beneficjentów" }
+
+                th () {
+                    div (
+                        hxVals = """{"orderBy": "OstatnieOdwiedzinyData"}""",
+                        hxGet = "/organizations/summaries",
+                        hxTrigger = "click",
+                        hxTarget = "#OrganizationsList",
+                        hxInclude = "[name='search'], [name='orderBy']",
+                        hxPushUrl = "true"
+                    ) {
+                        "Ostanie odwiedziny"
+                    }
+                }
             }
         }
 
@@ -45,6 +59,8 @@ let Template (data: OrganizationSummary list) =
                     td () { row.Dostepnosc }
                     td () { row.Kategoria }
                     td () { $"%i{row.LiczbaBeneficjentow}" }
+                    td () { row.OstatnieOdwiedzinyData |> formatDate }
                 }
         }
     }
+

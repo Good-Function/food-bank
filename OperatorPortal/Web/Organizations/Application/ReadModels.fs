@@ -14,6 +14,7 @@ type OrganizationSummary = {
     TelefonOsobyKontaktowej: string
     LiczbaBeneficjentow: int
     Kategoria: string
+    OstatnieOdwiedzinyData: System.DateOnly option
 }
 
 type DaneAdresowe = {
@@ -69,5 +70,5 @@ type OrganizationDetails = {
     OstatnieOdwiedzinyData: System.DateOnly option 
 }
 
-type ReadOrganizationSummaries = string -> Async<OrganizationSummary list>
+type ReadOrganizationSummaries = string * string -> Async<OrganizationSummary list>
 type ReadOrganizationDetailsBy = int64 -> Async<OrganizationDetails>

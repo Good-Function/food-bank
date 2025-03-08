@@ -8,7 +8,7 @@ open Organizations.Application.ReadModels
 open Organizations.CompositionRoot
 
 let indexPage: EndpointHandler =
-    _.WriteHtmlView(SearchableListTemplate.FullPage "")
+    _.WriteHtmlView(SearchableListTemplate.FullPage "" "")
 
 let list: EndpointHandler =
     fun ctx ->
@@ -18,16 +18,25 @@ let list: EndpointHandler =
                 | None -> ""
                 | Some s -> s
 
+            let orderBy=
+                match ctx.TryGetQueryValue "orderBy" with
+                | None -> ""
+                | Some s -> s
+
+            printfn "OrderBy value: %s" orderBy
+
             return
                 ctx
-                |> render (SearchableListTemplate.Template search) (SearchableListTemplate.FullPage search)
+                |> render (SearchableListTemplate.Template search orderBy) (SearchableListTemplate.FullPage search orderBy)
         }
 
 let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
     fun ctx ->
         task {
             let search = ctx.TryGetQueryValue "search" |> Option.defaultValue ""
-            let! summaries = readSummaries search
+            let orderBy = ctx.TryGetQueryValue "orderBy" |> Option.defaultValue "teczka"
+            printfn "OrderBy value: %s" orderBy
+            let! summaries = readSummaries (search, orderBy)
             return ctx.WriteHtmlView(ListTemplate.Template summaries)
         }
 

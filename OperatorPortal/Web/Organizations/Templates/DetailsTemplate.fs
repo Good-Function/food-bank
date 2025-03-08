@@ -4,6 +4,7 @@ open System
 open Layout
 open Layout.Navigation
 open Organizations.Application.ReadModels
+open Organizations.Funcs
 open Oxpecker.ViewEngine
 open Web.Organizations
 open PageComposer
@@ -16,11 +17,6 @@ let field (labelText: string) (value: string) =
 
 let toTakNie (isTrue: bool) =
     $"""{if isTrue then "Tak" else "Nie"}"""
-
-let formatDate (dateOpt: DateOnly option) : string =
-    match dateOpt with
-    | Some date -> date.ToString("dd.MM.yyyy", System.Globalization.CultureInfo("pl-PL"))
-    | None -> "-"
 
 let editableHeader (name: string) =
     header (class' = "action-header") {
