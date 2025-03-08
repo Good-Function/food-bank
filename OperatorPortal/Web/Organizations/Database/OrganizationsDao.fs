@@ -175,41 +175,14 @@ FROM organizacje
 WHERE
    @searchTerm = '' 
    OR (similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.1 OR similarity(gminadzielnica, @searchTerm) > 0.1)
-ORDER BY @orderBy ASC;
+ORDER BY %s ASC;
 """
 
 let readSummaries (connectDB: unit -> Async<IDbConnection>) (searchTerm: string, orderBy: string) =
     async {
-        // ✅ Directly insert `orderBy` into SQL (⚠️ No validation!)
-        let searchOrgsSql1 = sprintf """SELECT 
-            teczka,
-            formaprawna,
-            nazwaplacowkitrafiazywnosc,
-            adresplacowkitrafiazywnosc,
-            gminadzielnica,
-            telefon,
-            kontakt,
-            email,
-            dostepnosc,
-            osobadokontaktu,
-            telefonosobykontaktowej,
-            liczbabeneficjentow,
-            kategoria,
-            OstatnieOdwiedzinyData 
-        FROM organizacje
-        WHERE
-            @searchTerm = '' 
-            OR (similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.1 
-            OR similarity(gminadzielnica, @searchTerm) > 0.1)
-        ORDER BY %s ASC;""" orderBy  // ⚠️ Direct insertion (No safety checks)
-
-        // ✅ Print SQL query before execution (for debugging)
-        printfn "Executing SQL Query:\n%s" searchOrgsSql1
-        printfn "With Parameters: searchTerm='%s'" searchTerm
-
-        // ✅ Execute the query
+        let filledSearchQuery = sprintf searchOrgsSql orderBy
         let! db = connectDB()
-        return! db.QueryBy<OrganizationSummary> searchOrgsSql1 {| searchTerm = searchTerm |}
+        return! db.QueryBy<OrganizationSummary> filledSearchQuery {| searchTerm = searchTerm |}
     }
     
 let modifyDaneAdresowe (connectDB: unit -> Async<IDbConnection>) (daneAdresowe: Commands.DaneAdresowe) =
