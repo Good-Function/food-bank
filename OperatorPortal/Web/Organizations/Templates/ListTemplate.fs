@@ -30,7 +30,7 @@ let Template (data: OrganizationSummary list) =
                         hxTrigger = "click",
                         hxTarget = "#OrganizationsList",
                         hxInclude = "[name='search'], [name='orderBy']",
-                        hxPushUrl = "true"
+                        hxPushUrl = "true" // I think we need here hxPushUrl = "/organizations/list?search=lala&orderBy=OstatnieOdwiedzinyData" and pass search down here to render proper href.
                     ) {
                         "Ostanie odwiedziny"
                     }

@@ -34,8 +34,7 @@ let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
     fun ctx ->
         task {
             let search = ctx.TryGetQueryValue "search" |> Option.defaultValue ""
-            let orderBy = ctx.TryGetQueryValue "orderBy" |> Option.defaultValue "teczka"
-            printfn "OrderBy value: %s" orderBy
+            let orderBy = ctx.TryGetQueryValue "orderBy" |> Option.defaultValue ""
             let! summaries = readSummaries (search, orderBy)
             return ctx.WriteHtmlView(ListTemplate.Template summaries)
         }

@@ -155,7 +155,7 @@ type OrganizationDetailsRow = {
         }
 
 
-let searchOrgsSql = """
+let prepareSearchSql orderBy = $"""
 SELECT 
     teczka,
     formaprawna,
@@ -174,15 +174,20 @@ SELECT
 FROM organizacje
 WHERE
    @searchTerm = '' 
+   OR (@searchTerm ~ '^\d+$' AND teczka = CAST(@searchTerm AS BIGINT))
    OR (similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.1 OR similarity(gminadzielnica, @searchTerm) > 0.1)
-ORDER BY %s ASC;
+ORDER BY %s{orderBy} ASC;
 """
 
 let readSummaries (connectDB: unit -> Async<IDbConnection>) (searchTerm: string, orderBy: string) =
     async {
-        let filledSearchQuery = sprintf searchOrgsSql orderBy
+        let allowedOrderColumns = ["teczka"; "ostatnieodwiedzinydata"; "nazwaplacowkitrafiazywnosc"; "gminadzielnica"]
+        let orderByWhitelisted = allowedOrderColumns 
+                                    |> List.tryFind ((=) (orderBy.ToLower()))
+                                    |> Option.defaultValue "teczka"
+        let filledSearchQuery = prepareSearchSql orderByWhitelisted
         let! db = connectDB()
-        return! db.QueryBy<OrganizationSummary> filledSearchQuery {| searchTerm = searchTerm |}
+        return! db.QueryBy<OrganizationSummary> filledSearchQuery {| searchTerm = searchTerm; orderBy = orderBy|}
     }
     
 let modifyDaneAdresowe (connectDB: unit -> Async<IDbConnection>) (daneAdresowe: Commands.DaneAdresowe) =

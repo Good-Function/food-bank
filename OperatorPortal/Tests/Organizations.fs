@@ -1,7 +1,7 @@
 module Organizations
 
 open System.Net
-open Organizations.Database
+open Organizations.Funcs
 open Tests
 open Xunit
 open Tools.TestServer
@@ -19,7 +19,7 @@ let ``POST /organizations/{id}/kontakty can edit organization``() =
 let ``/ogranizations/summaries displays organization's most important data `` () =
     task {
         // Arrange
-        let! dbSummaries = readSummaries Tools.DbConnection.connectDb ""
+        let! dbSummaries = readSummaries Tools.DbConnection.connectDb ("","")
         let dbSummaryTeczkaIds = dbSummaries |> List.map(fun summary -> $"%i{summary.Teczka}")
         let api = runTestApi() |> authenticate "TestUser"
         // Act
@@ -46,6 +46,7 @@ let ``/ogranizations/summaries displays organization's most important data `` ()
             dbSummary.Dostepnosc |> should equal (summary |> Seq.item 10)
             dbSummary.Kategoria |> should equal (summary |> Seq.item 11)
             $"%i{dbSummary.LiczbaBeneficjentow}" |> should equal (summary |> Seq.item 12)
+            formatDate dbSummary.OstatnieOdwiedzinyData |> should equal (summary |> Seq.item 13)
              ) 
     }
     
