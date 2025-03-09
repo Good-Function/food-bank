@@ -1,19 +1,15 @@
 module Organizations
 
+open System
 open System.Net
-open Organizations.Database
 open Tests
+open Tools.FormDataBuilder
 open Xunit
 open Tools.TestServer
 open FsUnit.Xunit
 open Tools.HttResponseMessageToHtml
 open Organizations.Database.OrganizationsDao
 open FSharp.Data
-
-[<Fact>]
-let ``POST /organizations/{id}/kontakty can edit organization``() =
-    //save 
-    ()
 
 [<Fact>]
 let ``/ogranizations/summaries displays organization's most important data `` () =
@@ -193,6 +189,41 @@ let ``GET /ogranizations/{id}/dane-adresowe returns fields from dane adresowe`` 
             organization.DaneAdresowe.AdresPlacowkiTrafiaZywnosc
             organization.DaneAdresowe.GminaDzielnica
             organization.DaneAdresowe.Powiat
+        ]
+        inputs.Length |> should equal 6
+    }
+    
+[<Fact>]
+let ``PUT /ogranizations/{id}/dane-adresowe returns modifies and returns updated data`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        let randomStuff = Guid.NewGuid().ToString()
+        let data = formData {
+            yield ("NazwaOrganizacjiPodpisujacejUmowe", randomStuff)
+            yield ("AdresRejestrowy", randomStuff)
+            yield ("NazwaPlacowkiTrafiaZywnosc", randomStuff)
+            yield ("AdresPlacowkiTrafiaZywnosc", randomStuff)
+            yield ("GminaDzielnica", randomStuff)
+            yield ("Powiat", randomStuff)
+        }
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.PutAsync($"/organizations/{organization.Teczka}/dane-adresowe", data)
+        // Assert
+        let! doc = response.HtmlContent()
+        let inputs =
+            doc.CssSelect "small" |> List.map _.InnerText()
+        response.StatusCode |> should equal HttpStatusCode.OK
+        inputs |> should equal [
+            randomStuff
+            randomStuff
+            randomStuff
+            randomStuff
+            randomStuff
+            randomStuff
         ]
         inputs.Length |> should equal 6
     }

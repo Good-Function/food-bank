@@ -179,13 +179,13 @@ ORDER BY teczka DESC;
 
 let readSummaries (connectDB: unit -> Async<IDbConnection>) (searchTerm: string) =
     async {
-        let! db = connectDB()
+        use! db = connectDB()
         return! db.QueryBy<OrganizationSummary> searchOrgsSql {| searchTerm = searchTerm |}
     }
     
 let modifyDaneAdresowe (connectDB: unit -> Async<IDbConnection>) (daneAdresowe: Commands.DaneAdresowe) =
     async {
-        let! db = connectDB()
+        use! db = connectDB()
         do! db.Execute """
 UPDATE organizacje
 SET 
@@ -200,14 +200,14 @@ WHERE Teczka = @Teczka;""" daneAdresowe
     
 let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: int64) =
     async {
-        let! db = connectDB()
+        use! db = connectDB()
         let! row = db.Single<OrganizationDetailsRow> "SELECT * FROM organizacje WHERE teczka = @teczka" {|teczka = teczka|}
         return row.ToReadModel()
     }
     
 let save (connectDB: unit -> Async<IDbConnection>) (org: OrganizationDetails)  =
     async {
-        let! db = connectDB()
+        use! db = connectDB()
         let a = OrganizationDetailsRow.From org
         do! a |> db.Execute """
 INSERT INTO organizacje (
