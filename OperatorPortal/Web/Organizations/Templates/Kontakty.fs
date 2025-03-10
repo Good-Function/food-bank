@@ -13,7 +13,7 @@ let View (kontakty: ReadModels.Kontakty) (teczka: int64) =
 
             div (class' = "action-header-actions") {
                 span (
-                    hxGet = $"/organizations/{teczka}/dane-adresowe/edit",
+                    hxGet = $"/organizations/{teczka}/kontakty/edit",
                     hxTarget = "closest article",
                     hxSwap = "outerHTML"
                 ) {
@@ -43,7 +43,7 @@ let Form (kontakty: ReadModels.Kontakty) (teczka: int64) =
 
                 div (class' = "action-header-actions") {
                     span (
-                        hxGet = $"/organizations/{teczka}/dane-adresowe",
+                        hxGet = $"/organizations/{teczka}/kontakty",
                         hxTarget = "closest article",
                         hxSwap = "outerHTML"
                     ) {
@@ -51,7 +51,7 @@ let Form (kontakty: ReadModels.Kontakty) (teczka: int64) =
                     }
 
                     span (
-                        hxPut = $"/organizations/{teczka}/dane-adresowe",
+                        hxPut = $"/organizations/{teczka}/kontakty",
                         hxTarget = "closest article",
                         hxSwap = "outerHTML"
                     ) {
