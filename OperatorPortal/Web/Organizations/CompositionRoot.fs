@@ -8,4 +8,6 @@ type Dependencies = {
     ReadOrganizationDetailsBy: ReadOrganizationDetailsBy
     ChangeDaneAdresowe: Commands.ChangeDaneAdresowe
     ChangeKontakty: Commands.ChangeKontakty
+    ChangeBeneficjenci: Commands.ChangeBeneficjenci
+    ChangeDokumenty: Commands.ChangeDokumenty
 }

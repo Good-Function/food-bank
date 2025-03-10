@@ -82,8 +82,8 @@ type OrganizationDetailsRow = {
             MailOsobyKontaktowej = org.Kontakty.MailOsobyKontaktowej
             OsobaOdbierajacaZywnosc = org.Kontakty.OsobaOdbierajacaZywnosc
             TelefonOsobyOdbierajacej = org.Kontakty.TelefonOsobyOdbierajacej
-            LiczbaBeneficjentow = org.LiczbaBeneficjentow
-            Beneficjenci = org.Beneficjenci
+            LiczbaBeneficjentow = org.Beneficjenci.LiczbaBeneficjentow
+            Beneficjenci = org.Beneficjenci.Beneficjenci
             Sieci = org.Sieci
             Bazarki = org.Bazarki
             Machfit = org.Machfit
@@ -96,11 +96,11 @@ type OrganizationDetailsRow = {
             Sanepid = org.Sanepid
             TransportOpis = org.TransportOpis
             TransportKategoria = org.TransportKategoria
-            Wniosek = org.Wniosek
-            UmowaZDn = org.UmowaZDn
-            UmowaRODO = org.UmowaRODO
-            KartyOrganizacjiData = org.KartyOrganizacjiData
-            OstatnieOdwiedzinyData = org.OstatnieOdwiedzinyData
+            Wniosek = org.Dokumenty.Wniosek
+            UmowaZDn = org.Dokumenty.UmowaZDn
+            UmowaRODO = org.Dokumenty.UmowaRODO
+            KartyOrganizacjiData = org.Dokumenty.KartyOrganizacjiData
+            OstatnieOdwiedzinyData = org.Dokumenty.OstatnieOdwiedzinyData
         }
     member this.ToReadModel () =
         {
@@ -135,8 +135,10 @@ type OrganizationDetailsRow = {
                 OsobaOdbierajacaZywnosc = this.OsobaOdbierajacaZywnosc
                 TelefonOsobyOdbierajacej = this.TelefonOsobyOdbierajacej
             }
-            LiczbaBeneficjentow = this.LiczbaBeneficjentow
-            Beneficjenci = this.Beneficjenci
+            Beneficjenci = {
+                Beneficjenci = this.Beneficjenci
+                LiczbaBeneficjentow = this.LiczbaBeneficjentow
+            }
             Sieci = this.Sieci
             Bazarki = this.Bazarki
             Machfit = this.Machfit
@@ -149,11 +151,13 @@ type OrganizationDetailsRow = {
             Sanepid = this.Sanepid
             TransportOpis = this.TransportOpis
             TransportKategoria = this.TransportKategoria
-            Wniosek = this.Wniosek
-            UmowaZDn = this.UmowaZDn
-            UmowaRODO = this.UmowaRODO
-            KartyOrganizacjiData = this.KartyOrganizacjiData
-            OstatnieOdwiedzinyData = this.OstatnieOdwiedzinyData
+            Dokumenty = {
+                Wniosek = this.Wniosek
+                UmowaZDn = this.UmowaZDn
+                UmowaRODO = this.UmowaRODO
+                KartyOrganizacjiData = this.KartyOrganizacjiData
+                OstatnieOdwiedzinyData = this.OstatnieOdwiedzinyData
+            }
         }
 
 
@@ -218,6 +222,31 @@ SET
     OsobaOdbierajacaZywnosc = @OsobaOdbierajacaZywnosc,
     TelefonOsobyOdbierajacej = @TelefonOsobyOdbierajacej
 WHERE Teczka = @Teczka;""" kontakty
+    }
+    
+let changeBeneficjenci (connectDB: unit -> Async<IDbConnection>) (beneficjenci: Commands.Beneficjenci) =
+    async {
+        use! db = connectDB()
+        do! db.Execute """
+UPDATE organizacje
+SET 
+    LiczbaBeneficjentow = @LiczbaBeneficjentow,
+    Beneficjenci = @Beneficjenci
+WHERE Teczka = @Teczka;""" beneficjenci
+    }
+    
+let changeDokumenty (connectDB: unit -> Async<IDbConnection>) (dokumenty: Commands.Dokumenty) =
+    async {
+        use! db = connectDB()
+        do! db.Execute """
+UPDATE organizacje
+SET 
+    Wniosek = @Wniosek,
+    UmowaZDn = @UmowaZDn,
+    UmowaRODO = @UmowaRODO,
+    KartyOrganizacjiData = @KartyOrganizacjiData,
+    OstatnieOdwiedzinyData = @OstatnieOdwiedzinyData
+WHERE Teczka = @Teczka;""" dokumenty
     }
     
 let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: int64) =

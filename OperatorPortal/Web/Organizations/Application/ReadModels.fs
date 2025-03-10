@@ -22,6 +22,19 @@ type DaneAdresowe =
       AdresPlacowkiTrafiaZywnosc: string
       GminaDzielnica: string
       Powiat: string }
+    
+type Beneficjenci = {
+      LiczbaBeneficjentow: int
+      Beneficjenci: string
+}
+
+type Dokumenty = {
+      Wniosek: System.DateOnly option
+      UmowaZDn: System.DateOnly option
+      UmowaRODO: System.DateOnly option
+      KartyOrganizacjiData: System.DateOnly option
+      OstatnieOdwiedzinyData: System.DateOnly option
+}
 
 type Kontakty =
     { WwwFacebook: string
@@ -49,8 +62,7 @@ type OrganizationDetails =
       NazwaOrganizacjiKsiegowanieDarowizn: string
       KsiegowanieAdres: string
       TelOrganProwadzacegoKsiegowosc: string
-      LiczbaBeneficjentow: int
-      Beneficjenci: string
+      Beneficjenci: Beneficjenci
       Sieci: bool
       Bazarki: bool
       Machfit: bool
@@ -63,11 +75,7 @@ type OrganizationDetails =
       Sanepid: bool // Zgoda sanepidu. Suche paczki mogą pójść bez sanepidu.
       TransportOpis: string
       TransportKategoria: string
-      Wniosek: System.DateOnly option
-      UmowaZDn: System.DateOnly option
-      UmowaRODO: System.DateOnly option
-      KartyOrganizacjiData: System.DateOnly option
-      OstatnieOdwiedzinyData: System.DateOnly option }
+      Dokumenty: Dokumenty }
 
 type ReadOrganizationSummaries = string -> Async<OrganizationSummary list>
 type ReadOrganizationDetailsBy = int64 -> Async<OrganizationDetails>

@@ -7,6 +7,7 @@ open Organizations.Application.ReadModels
 open Oxpecker.ViewEngine
 open Web.Organizations
 open PageComposer
+open Web.Organizations.Templates.Formatters
 
 let field (labelText: string) (value: string) =
     p () {
@@ -16,11 +17,6 @@ let field (labelText: string) (value: string) =
 
 let toTakNie (isTrue: bool) =
     $"""{if isTrue then "Tak" else "Nie"}"""
-
-let formatDate (dateOpt: DateOnly option) : string =
-    match dateOpt with
-    | Some date -> date.ToString("dd.MM.yyyy", System.Globalization.CultureInfo("pl-PL"))
-    | None -> "-"
 
 let editableHeader (name: string) =
     header (class' = "action-header") {
@@ -47,15 +43,7 @@ let Template (org: OrganizationDetails) =
                 }
                 
                 Kontakty.View org.Kontakty org.Teczka
-
-                article () {
-                    editableHeader "Dokumenty"
-                    field "Wniosek" (org.Wniosek |> formatDate)
-                    field "Umowa z dnia" (org.UmowaZDn |> formatDate)
-                    field "Umowa z RODO" (org.UmowaRODO |> formatDate)
-                    field "Karty organizacji" (org.KartyOrganizacjiData |> formatDate)
-                    field "Ostatnie odwiedziny" (org.OstatnieOdwiedzinyData |> formatDate)
-                }
+                Dokumenty.View org.Dokumenty org.Teczka
             }
 
             div () {
@@ -66,12 +54,7 @@ let Template (org: OrganizationDetails) =
                     field "Adres" org.KsiegowanieAdres
                     field "Telefon" org.TelOrganProwadzacegoKsiegowosc
                 }
-
-                article () {
-                    editableHeader "Beneficjenci"
-                    field "Liczba beneficjentów" $"{org.LiczbaBeneficjentow}"
-                    field "Beneficjenci" org.Beneficjenci
-                }
+                Beneficjenci.View org.Beneficjenci org.Teczka
 
                 article () {
                     editableHeader "Żródła żywności"

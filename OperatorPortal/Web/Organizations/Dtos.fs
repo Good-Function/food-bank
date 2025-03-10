@@ -68,3 +68,40 @@ type KontaktyForm =
           MailOsobyKontaktowej = this.MailOsobyKontaktowej
           OsobaOdbierajacaZywnosc = this.OsobaOdbierajacaZywnosc
           TelefonOsobyOdbierajacej = this.TelefonOsobyOdbierajacej }
+        
+[<CLIMutable>]
+type BeneficjenciForm =
+    { LiczbaBeneficjentow: int
+      Beneficjenci: string }
+
+    member this.toChangeBeneficjenci(id: int64) : Commands.Beneficjenci =
+        { Teczka = id
+          LiczbaBeneficjentow = this.LiczbaBeneficjentow
+          Beneficjenci = this.Beneficjenci }
+
+    member this.toBeneficjenci: ReadModels.Beneficjenci =
+        { LiczbaBeneficjentow = this.LiczbaBeneficjentow
+          Beneficjenci = this.Beneficjenci }
+
+[<CLIMutable>]
+type DokumentyForm =
+    { Wniosek: System.DateOnly option
+      UmowaZDn: System.DateOnly option
+      UmowaRODO: System.DateOnly option
+      KartyOrganizacjiData: System.DateOnly option
+      OstatnieOdwiedzinyData: System.DateOnly option }
+
+    member this.toChangeDokumenty(id: int64) : Commands.Dokumenty =
+        { Teczka = id
+          Wniosek = this.Wniosek
+          UmowaZDn = this.UmowaZDn
+          UmowaRODO = this.UmowaRODO
+          KartyOrganizacjiData = this.KartyOrganizacjiData
+          OstatnieOdwiedzinyData = this.OstatnieOdwiedzinyData }
+
+    member this.toDokumenty: ReadModels.Dokumenty =
+        { Wniosek = this.Wniosek
+          UmowaZDn = this.UmowaZDn
+          UmowaRODO = this.UmowaRODO
+          KartyOrganizacjiData = this.KartyOrganizacjiData
+          OstatnieOdwiedzinyData = this.OstatnieOdwiedzinyData }

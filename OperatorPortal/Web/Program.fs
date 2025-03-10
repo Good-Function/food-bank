@@ -45,6 +45,8 @@ let createServer () =
         ReadOrganizationDetailsBy = OrganizationsDao.readBy dbConnect
         ChangeDaneAdresowe = OrganizationsDao.changeDaneAdresowe dbConnect
         ChangeKontakty = OrganizationsDao.changeKontakty dbConnect
+        ChangeBeneficjenci = OrganizationsDao.changeBeneficjenci dbConnect
+        ChangeDokumenty = OrganizationsDao.changeDokumenty dbConnect
     }
     let appDeps: Applications.CompositionRoot.Dependencies = {
         TestRead = Applications.Database.readSchemas dbConnect

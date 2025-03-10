@@ -2,8 +2,10 @@ module OrganizationEditing
 
 open System
 open System.Net
+open Organizations.Templates.DetailsTemplate
 open Tests
 open Tools.FormDataBuilder
+open Web.Organizations.Templates.Formatters
 open Xunit
 open Tools.TestServer
 open FsUnit.Xunit
@@ -38,7 +40,7 @@ let ``GET /ogranizations/{id}/dane-adresowe/edit returns prefilled inputs to edi
     }
     
 [<Fact>]
-let ``PUT /ogranizations/{id}/dane-adresowe returns modifies and returns updated data`` () =
+let ``PUT /ogranizations/{id}/dane-adresowe modifies and returns updated data`` () =
     task {
         // Arrange
         let organization = Arranger.AnOrganization()
@@ -105,7 +107,7 @@ let ``GET /ogranizations/{id}/kontakty/edit returns prefilled inputs to edit the
     
     
 [<Fact>]
-let ``PUT /ogranizations/{id}/kontakt returns modifies and returns updated data`` () =
+let ``PUT /ogranizations/{id}/kontakty modifies and returns updated data`` () =
     task {
         // Arrange
         let organization = Arranger.AnOrganization()
@@ -145,5 +147,111 @@ let ``PUT /ogranizations/{id}/kontakt returns modifies and returns updated data`
             randomStuff
             randomStuff
             randomStuff
+        ]
+    }
+    
+[<Fact>]
+let ``GET /ogranizations/{id}/beneficjenci/edit returns prefilled inputs to edit the data`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.GetAsync $"/organizations/{organization.Teczka}/beneficjenci/edit"
+        // Assert
+        let! doc = response.HtmlContent()
+        let inputs =
+            doc.CssSelect "input" |> List.map _.AttributeValue("value")
+        response.StatusCode |> should equal HttpStatusCode.OK
+        inputs |> should equal [
+            $"{organization.Beneficjenci.LiczbaBeneficjentow}"
+            organization.Beneficjenci.Beneficjenci
+        ]
+    }
+    
+[<Fact>]
+let ``PUT /ogranizations/{id}/beneficjenci modifies and returns updated data`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        let expectedLiczbaBeneficjentow = organization.Beneficjenci.LiczbaBeneficjentow + 20 |> _.ToString()
+        let expectedBeneficjenci = $"{Guid.NewGuid()}"
+        let data = formData {
+            yield ("LiczbaBeneficjentow", expectedLiczbaBeneficjentow)
+            yield ("Beneficjenci", expectedBeneficjenci)
+        }
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.PutAsync($"/organizations/{organization.Teczka}/beneficjenci", data)
+        // Assert
+        let! doc = response.HtmlContent()
+        let inputs =
+            doc.CssSelect "small" |> List.map _.InnerText()
+        response.StatusCode |> should equal HttpStatusCode.OK
+        inputs |> should equal [
+            expectedLiczbaBeneficjentow
+            expectedBeneficjenci
+        ]
+    }
+    
+[<Fact>]
+let ``GET /ogranizations/{id}/dokumenty/edit returns prefilled inputs to edit the data`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.GetAsync $"/organizations/{organization.Teczka}/dokumenty/edit"
+        // Assert
+        let! doc = response.HtmlContent()
+        let inputs =
+            doc.CssSelect "input" |> List.map _.AttributeValue("value")
+        response.StatusCode |> should equal HttpStatusCode.OK
+        inputs |> should equal [
+            organization.Dokumenty.Wniosek |> formatDate
+            organization.Dokumenty.UmowaZDn |> formatDate
+            organization.Dokumenty.UmowaRODO |> formatDate
+            organization.Dokumenty.KartyOrganizacjiData |> formatDate
+            organization.Dokumenty.OstatnieOdwiedzinyData |> formatDate
+        ]
+        inputs.Length |> should equal 5
+    }
+    
+    
+[<Fact>]
+let ``PUT /ogranizations/{id}/dokumenty returns modifies and returns updated data`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        let expectedDocs = Arranger.AnOrganization().Dokumenty
+        do! organization |> (save Tools.DbConnection.connectDb)
+        let data = formData {
+            yield ("Wniosek", expectedDocs.Wniosek |> formatDate)
+            yield ("UmowaZDn", expectedDocs.Wniosek |> formatDate)
+            yield ("UmowaRODO", expectedDocs.Wniosek |> formatDate)
+            yield ("KartyOrganizacjiData", expectedDocs.Wniosek |> formatDate)
+            yield ("OstatnieOdwiedzinyData", expectedDocs.Wniosek |> formatDate)
+        }
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.PutAsync($"/organizations/{organization.Teczka}/dokumenty", data)
+        // Assert
+        let! doc = response.HtmlContent()
+        let inputs =
+            doc.CssSelect "small" |> List.map _.InnerText()
+        response.StatusCode |> should equal HttpStatusCode.OK
+        inputs |> should equal [
+            expectedDocs.Wniosek |> formatDate
+            expectedDocs.UmowaZDn |> formatDate
+            expectedDocs.UmowaRODO |> formatDate
+            expectedDocs.KartyOrganizacjiData |> formatDate
+            expectedDocs.OstatnieOdwiedzinyData |> formatDate
         ]
     }

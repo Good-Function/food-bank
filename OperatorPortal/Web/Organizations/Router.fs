@@ -78,6 +78,52 @@ let changeKontakty (handle: Commands.ChangeKontakty) (teczka: int64) :EndpointHa
             return ctx.WriteHtmlView(Kontakty.View form.toKontakty teczka)
         }
         
+let beneficjenci (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(Beneficjenci.View details.Beneficjenci teczka)
+        }
+
+let beneficjenciEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(Beneficjenci.Form details.Beneficjenci teczka)
+        }
+
+let changeBeneficjenci (handle: Commands.ChangeBeneficjenci) (teczka: int64) :EndpointHandler =
+    fun ctx ->
+        task {
+            let! form = ctx.BindForm<BeneficjenciForm>()
+            let cmd = form.toChangeBeneficjenci teczka
+            do! cmd |> handle
+            return ctx.WriteHtmlView(Beneficjenci.View form.toBeneficjenci teczka)
+        }
+        
+let dokumenty (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(Dokumenty.View details.Dokumenty teczka)
+        }
+
+let dokumentyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(Dokumenty.Form details.Dokumenty teczka)
+        }
+
+let changeDokumenty (handle: Commands.ChangeDokumenty) (teczka: int64) :EndpointHandler =
+    fun ctx ->
+        task {
+            let! form = ctx.BindForm<DokumentyForm>()
+            let cmd = form.toChangeDokumenty teczka
+            do! cmd |> handle
+            return ctx.WriteHtmlView(Dokumenty.View form.toDokumenty teczka)
+        }
+        
 let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
     fun ctx ->
         task {
@@ -96,8 +142,15 @@ let Endpoints (dependencies: Dependencies) =
             routef "/{%d}/dane-adresowe" (daneAdresowe dependencies.ReadOrganizationDetailsBy)
             routef "/{%d}/dane-adresowe/edit" (daneAdresoweEdit dependencies.ReadOrganizationDetailsBy) 
             routef "/{%d}/kontakty" (kontakty dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/kontakty/edit" (kontaktyEdit dependencies.ReadOrganizationDetailsBy) ]
+            routef "/{%d}/kontakty/edit" (kontaktyEdit dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/beneficjenci" (beneficjenci dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/beneficjenci/edit" (beneficjenciEdit dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/dokumenty" (dokumenty dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/dokumenty/edit" (dokumentyEdit dependencies.ReadOrganizationDetailsBy)
+          ]
       PUT [
           routef "/{%d}/dane-adresowe" (changeDaneAdresowe dependencies.ChangeDaneAdresowe)
           routef "/{%d}/kontakty" (changeKontakty dependencies.ChangeKontakty)
+          routef "/{%d}/beneficjenci" (changeBeneficjenci dependencies.ChangeBeneficjenci)
+          routef "/{%d}/dokumenty" (changeDokumenty dependencies.ChangeDokumenty)
       ] ]

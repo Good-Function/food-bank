@@ -98,11 +98,11 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             organization.Kontakty.TelefonOsobyOdbierajacej
         ]
         dokumenty[0..4] |> should equal [
-            (organization.Wniosek |> Formatters.toDate)
-            (organization.UmowaZDn |> Formatters.toDate)
-            (organization.UmowaRODO |> Formatters.toDate)
-            (organization.KartyOrganizacjiData |> Formatters.toDate)
-            (organization.OstatnieOdwiedzinyData |> Formatters.toDate)
+            (organization.Dokumenty.Wniosek |> Formatters.toDate)
+            (organization.Dokumenty.UmowaZDn |> Formatters.toDate)
+            (organization.Dokumenty.UmowaRODO |> Formatters.toDate)
+            (organization.Dokumenty.KartyOrganizacjiData |> Formatters.toDate)
+            (organization.Dokumenty.OstatnieOdwiedzinyData |> Formatters.toDate)
         ]
         adresy[0..5] |> should equal [
             organization.DaneAdresowe.NazwaOrganizacjiPodpisujacejUmowe
@@ -118,8 +118,8 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             organization.TelOrganProwadzacegoKsiegowosc
         ]
         beneficjenci[0..2] |> should equal [
-            $"%i{organization.LiczbaBeneficjentow}"
-            organization.Beneficjenci
+            $"%i{organization.Beneficjenci.LiczbaBeneficjentow}"
+            organization.Beneficjenci.Beneficjenci
         ]
         zrodlaZywnosci[0..3] |> should equal [
             (organization.Sieci |> Formatters.toTakNie)

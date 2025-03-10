@@ -72,8 +72,10 @@ let AnOrganization(): Organizations.Application.ReadModels.OrganizationDetails =
           OsobaOdbierajacaZywnosc = f.Person.FullName
           TelefonOsobyOdbierajacej = f.Person.Phone
       }
-      LiczbaBeneficjentow = f.Random.Number(5, 1000)
-      Beneficjenci = f.PickRandom [| "Rodziny wielodzietne"; "osoby starsze"; "dom dziecka" |]
+      Beneficjenci = {
+        LiczbaBeneficjentow = f.Random.Number(5, 1000)
+        Beneficjenci = f.PickRandom [| "Rodziny wielodzietne"; "osoby starsze"; "dom dziecka" |]
+      }
       Sieci = f.Random.Bool()
       Bazarki = f.Random.Bool()
       Machfit = f.Random.Bool()
@@ -92,8 +94,11 @@ let AnOrganization(): Organizations.Application.ReadModels.OrganizationDetails =
             [| "prywatny pracownika SUV 500 kg"
                "Pieniądze na transport w projekcie UM - wypożyczany" |]
       TransportKategoria = f.PickRandom [| "Własny"; "Potrzebny" |]
-      Wniosek = Some <| f.Date.PastDateOnly(2)
-      UmowaZDn = Some <| f.Date.PastDateOnly(2)
-      UmowaRODO = f.PickRandom([| Some <| f.Date.PastDateOnly(2); None |])
-      KartyOrganizacjiData = Some <| f.Date.PastDateOnly(2)
-      OstatnieOdwiedzinyData = Some <| f.Date.PastDateOnly(1) }
+      Dokumenty = {
+          Wniosek = Some <| f.Date.PastDateOnly(2)
+          UmowaZDn = Some <| f.Date.PastDateOnly(2)
+          UmowaRODO = f.PickRandom([| Some <| f.Date.PastDateOnly(2); None |])
+          KartyOrganizacjiData = Some <| f.Date.PastDateOnly(2)
+          OstatnieOdwiedzinyData = Some <| f.Date.PastDateOnly(1)
+      }
+    }
