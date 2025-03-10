@@ -59,17 +59,19 @@ let AnOrganization(): Organizations.Application.ReadModels.OrganizationDetails =
       NazwaOrganizacjiKsiegowanieDarowizn = f.Company.CompanyName()
       KsiegowanieAdres = f.Address.FullAddress()
       TelOrganProwadzacegoKsiegowosc = f.Phone.PhoneNumber()
-      WwwFacebook = f.Internet.UrlWithPath(protocol = "https", domain = "facebook.com")
-      Telefon = f.Phone.PhoneNumber()
-      Przedstawiciel = f.Person.FullName
-      Kontakt = f.Person.Email
-      Email = f.Person.Email
-      Dostepnosc = f.PickRandom([| "Pn-Pt 12:00-17:00"; "Wt, Śr, Czw: 11:00-16:00" |])
-      OsobaDoKontaktu = f.Person.FullName
-      TelefonOsobyKontaktowej = f.Person.Phone
-      MailOsobyKontaktowej = f.Person.Email
-      OsobaOdbierajacaZywnosc = f.Person.FullName
-      TelefonOsobyOdbierajacej = f.Person.Phone
+      Kontakty = {
+          WwwFacebook = f.Internet.UrlWithPath(protocol = "https", domain = "facebook.com")
+          Telefon = f.Phone.PhoneNumber()
+          Przedstawiciel = f.Person.FullName
+          Kontakt = f.Person.Email
+          Email = f.Person.Email
+          Dostepnosc = f.PickRandom([| "Pn-Pt 12:00-17:00"; "Wt, Śr, Czw: 11:00-16:00" |])
+          OsobaDoKontaktu = f.Person.FullName
+          TelefonOsobyKontaktowej = f.Person.Phone
+          MailOsobyKontaktowej = f.Person.Email
+          OsobaOdbierajacaZywnosc = f.Person.FullName
+          TelefonOsobyOdbierajacej = f.Person.Phone
+      }
       LiczbaBeneficjentow = f.Random.Number(5, 1000)
       Beneficjenci = f.PickRandom [| "Rodziny wielodzietne"; "osoby starsze"; "dom dziecka" |]
       Sieci = f.Random.Bool()

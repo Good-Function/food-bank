@@ -1,8 +1,7 @@
 module Tests.OrganizationsFromExcel.Tests
 
-open Organizations.Application.ReadModels
-open Xunit
 open Organizations.Database.csvLoader
+open Xunit
 open FsUnit.Xunit
 
 [<Literal>]
@@ -14,9 +13,8 @@ let sampleOrgs = Orgs.GetSample()
 let ``Sample excel can be parsed to organizations and saved`` () =
     async {
         // Arrange
-        let! db = Tools.DbConnection.connectDb()
         let row = sampleOrgs.Rows |> Seq.head
         // Act
         let parsedRow = parse row
-        parsedRow.Email |> should contain '@'
+        parsedRow.Kontakty.Email |> should contain '@'
     }

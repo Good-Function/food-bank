@@ -1,6 +1,7 @@
 module Organizations.Router
 
 open Organizations.Application
+open Organizations.Templates
 open Organizations.Dtos
 open Oxpecker
 open RenderBasedOnHtmx
@@ -53,13 +54,34 @@ let changeDaneAdresowe (handle: Commands.ChangeDaneAdresowe) (teczka: int64) :En
             do! cmd |> handle
             return ctx.WriteHtmlView(DaneAdresowe.View form.toDaneAdresowe teczka)
         }
-        
 
+let kontakty (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(Kontakty.View details.Kontakty teczka)
+        }
+
+let kontaktyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(Kontakty.Form details.Kontakty teczka)
+        }
+
+let changeKontakty (handle: Commands.ChangeKontakty) (teczka: int64) :EndpointHandler =
+    fun ctx ->
+        task {
+            let! form = ctx.BindForm<KontaktyForm>()
+            let cmd = form.toChangeKontakty teczka
+            do! cmd |> handle
+            return ctx.WriteHtmlView(Kontakty.View form.toKontakty teczka)
+        }
+        
 let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
     fun ctx ->
         task {
             let! details = readDetailsBy id
-
             return
                 ctx
                 |> render (DetailsTemplate.Template details) (DetailsTemplate.FullPage details)
@@ -72,5 +94,10 @@ let Endpoints (dependencies: Dependencies) =
             route "/summaries" (summaries dependencies.ReadOrganizationSummaries)
             routef "/{%d}" (details dependencies.ReadOrganizationDetailsBy)
             routef "/{%d}/dane-adresowe" (daneAdresowe dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/dane-adresowe/edit" (daneAdresoweEdit dependencies.ReadOrganizationDetailsBy) ]
-      PUT [ routef "/{%d}/dane-adresowe" (changeDaneAdresowe dependencies.ModifyDaneAdresowe)] ]
+            routef "/{%d}/dane-adresowe/edit" (daneAdresoweEdit dependencies.ReadOrganizationDetailsBy) 
+            routef "/{%d}/kontakty" (kontakty dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/kontakty/edit" (kontaktyEdit dependencies.ReadOrganizationDetailsBy) ]
+      PUT [
+          routef "/{%d}/dane-adresowe" (changeDaneAdresowe dependencies.ChangeDaneAdresowe)
+          routef "/{%d}/kontakty" (changeKontakty dependencies.ChangeKontakty)
+      ] ]

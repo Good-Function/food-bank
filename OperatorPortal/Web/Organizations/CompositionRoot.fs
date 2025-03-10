@@ -6,5 +6,6 @@ open Organizations.Application.ReadModels
 type Dependencies = {
     ReadOrganizationSummaries: ReadOrganizationSummaries
     ReadOrganizationDetailsBy: ReadOrganizationDetailsBy
-    ModifyDaneAdresowe: Commands.ChangeDaneAdresowe
+    ChangeDaneAdresowe: Commands.ChangeDaneAdresowe
+    ChangeKontakty: Commands.ChangeKontakty
 }

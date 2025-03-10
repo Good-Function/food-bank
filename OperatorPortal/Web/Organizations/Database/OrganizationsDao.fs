@@ -71,17 +71,17 @@ type OrganizationDetailsRow = {
             NazwaOrganizacjiKsiegowanieDarowizn = org.NazwaOrganizacjiKsiegowanieDarowizn
             KsiegowanieAdres = org.KsiegowanieAdres
             TelOrganProwadzacegoKsiegowosc = org.TelOrganProwadzacegoKsiegowosc
-            WwwFacebook = org.WwwFacebook
-            Telefon = org.Telefon
-            Przedstawiciel = org.Przedstawiciel
-            Kontakt = org.Kontakt
-            Email = org.Email
-            Dostepnosc = org.Dostepnosc
-            OsobaDoKontaktu = org.OsobaDoKontaktu
-            TelefonOsobyKontaktowej = org.TelefonOsobyKontaktowej
-            MailOsobyKontaktowej = org.MailOsobyKontaktowej
-            OsobaOdbierajacaZywnosc = org.OsobaOdbierajacaZywnosc
-            TelefonOsobyOdbierajacej = org.TelefonOsobyOdbierajacej
+            WwwFacebook = org.Kontakty.WwwFacebook
+            Telefon = org.Kontakty.Telefon
+            Przedstawiciel = org.Kontakty.Przedstawiciel
+            Kontakt = org.Kontakty.Kontakt
+            Email = org.Kontakty.Email
+            Dostepnosc = org.Kontakty.Dostepnosc
+            OsobaDoKontaktu = org.Kontakty.OsobaDoKontaktu
+            TelefonOsobyKontaktowej = org.Kontakty.TelefonOsobyKontaktowej
+            MailOsobyKontaktowej = org.Kontakty.MailOsobyKontaktowej
+            OsobaOdbierajacaZywnosc = org.Kontakty.OsobaOdbierajacaZywnosc
+            TelefonOsobyOdbierajacej = org.Kontakty.TelefonOsobyOdbierajacej
             LiczbaBeneficjentow = org.LiczbaBeneficjentow
             Beneficjenci = org.Beneficjenci
             Sieci = org.Sieci
@@ -122,17 +122,19 @@ type OrganizationDetailsRow = {
             NazwaOrganizacjiKsiegowanieDarowizn = this.NazwaOrganizacjiKsiegowanieDarowizn
             KsiegowanieAdres = this.KsiegowanieAdres
             TelOrganProwadzacegoKsiegowosc = this.TelOrganProwadzacegoKsiegowosc
-            WwwFacebook = this.WwwFacebook
-            Telefon = this.Telefon
-            Przedstawiciel = this.Przedstawiciel
-            Kontakt = this.Kontakt
-            Email = this.Email
-            Dostepnosc = this.Dostepnosc
-            OsobaDoKontaktu = this.OsobaDoKontaktu
-            TelefonOsobyKontaktowej = this.TelefonOsobyKontaktowej
-            MailOsobyKontaktowej = this.MailOsobyKontaktowej
-            OsobaOdbierajacaZywnosc = this.OsobaOdbierajacaZywnosc
-            TelefonOsobyOdbierajacej = this.TelefonOsobyOdbierajacej
+            Kontakty = {
+                WwwFacebook = this.WwwFacebook
+                Telefon = this.Telefon
+                Przedstawiciel = this.Przedstawiciel
+                Kontakt = this.Kontakt
+                Email = this.Email
+                Dostepnosc = this.Dostepnosc
+                OsobaDoKontaktu = this.OsobaDoKontaktu
+                TelefonOsobyKontaktowej = this.TelefonOsobyKontaktowej
+                MailOsobyKontaktowej = this.MailOsobyKontaktowej
+                OsobaOdbierajacaZywnosc = this.OsobaOdbierajacaZywnosc
+                TelefonOsobyOdbierajacej = this.TelefonOsobyOdbierajacej
+            }
             LiczbaBeneficjentow = this.LiczbaBeneficjentow
             Beneficjenci = this.Beneficjenci
             Sieci = this.Sieci
@@ -183,7 +185,7 @@ let readSummaries (connectDB: unit -> Async<IDbConnection>) (searchTerm: string)
         return! db.QueryBy<OrganizationSummary> searchOrgsSql {| searchTerm = searchTerm |}
     }
     
-let modifyDaneAdresowe (connectDB: unit -> Async<IDbConnection>) (daneAdresowe: Commands.DaneAdresowe) =
+let changeDaneAdresowe (connectDB: unit -> Async<IDbConnection>) (daneAdresowe: Commands.DaneAdresowe) =
     async {
         use! db = connectDB()
         do! db.Execute """
@@ -196,6 +198,26 @@ SET
     GminaDzielnica = @GminaDzielnica,
     Powiat = @Powiat
 WHERE Teczka = @Teczka;""" daneAdresowe
+    }
+    
+let changeKontakty (connectDB: unit -> Async<IDbConnection>) (kontakty: Commands.Kontakty) =
+    async {
+        use! db = connectDB()
+        do! db.Execute """
+UPDATE organizacje
+SET 
+    WwwFacebook = @WwwFacebook,
+    Telefon = @Telefon,
+    Przedstawiciel = @Przedstawiciel,
+    Kontakt = @Kontakt,
+    Email = @Email,
+    Dostepnosc = @Dostepnosc,
+    OsobaDoKontaktu = @OsobaDoKontaktu,
+    TelefonOsobyKontaktowej = @TelefonOsobyKontaktowej,
+    MailOsobyKontaktowej = @MailOsobyKontaktowej,
+    OsobaOdbierajacaZywnosc = @OsobaOdbierajacaZywnosc,
+    TelefonOsobyOdbierajacej = @TelefonOsobyOdbierajacej
+WHERE Teczka = @Teczka;""" kontakty
     }
     
 let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: int64) =

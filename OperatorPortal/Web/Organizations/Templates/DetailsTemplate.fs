@@ -1,4 +1,4 @@
-module Organizations.DetailsTemplate
+module Organizations.Templates.DetailsTemplate
 
 open System
 open Layout
@@ -45,21 +45,8 @@ let Template (org: OrganizationDetails) =
                     field "Forma Prawna" org.FormaPrawna
                     field "OPP" (org.OPP |> toTakNie)
                 }
-
-                article () {
-                    editableHeader "Kontakty"
-                    field "www / facebook" org.WwwFacebook
-                    field "Telefon" org.Telefon
-                    field "Przedstawiciel" org.Przedstawiciel
-                    field "Kontakt" org.Kontakt
-                    field "E-mail" org.Email
-                    field "Dostępność" org.Dostepnosc
-                    field "Osoba do kontaktu" org.OsobaDoKontaktu
-                    field "Telefon do os. kontaktowej" org.TelefonOsobyKontaktowej
-                    field "E-mail do osoby kontaktowej" org.MailOsobyKontaktowej
-                    field "Osoba odbierająca żywność" org.OsobaOdbierajacaZywnosc
-                    field "Telefon do os. odbierającej" org.TelefonOsobyOdbierajacej
-                }
+                
+                Kontakty.View org.Kontakty org.Teczka
 
                 article () {
                     editableHeader "Dokumenty"
