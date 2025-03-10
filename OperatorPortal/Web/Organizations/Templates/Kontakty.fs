@@ -39,7 +39,7 @@ let Form (kontakty: ReadModels.Kontakty) (teczka: int64) =
     form () {
         article (class' = "focus-dim") {
             header (class' = "action-header") {
-                span () { "Dane adresowe" }
+                span () { "Kontakty" }
 
                 div (class' = "action-header-actions") {
                     span (
