@@ -7,6 +7,12 @@ let editField (labelText: string) (value: string) (name: string) =
         label () { b () { labelText } }
         input (value = value, name = name)
     }
+    
+let dateField (labelText: string) (value: string) (name: string) =
+    p () {
+        label () { b () { labelText } }
+        input (value = value, name = name, type'="date")
+    }
 
 let field (labelText: string) (value: string) =
     p () {

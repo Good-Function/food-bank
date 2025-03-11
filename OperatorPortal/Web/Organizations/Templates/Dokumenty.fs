@@ -55,14 +55,14 @@ let Form (dokumenty: ReadModels.Dokumenty) (teczka: int64) =
                 }
             }
 
-            editField "Wniosek" (dokumenty.Wniosek |> formatDate) (nameof dokumenty.Wniosek)
-            editField "Umowa z dnia" (dokumenty.UmowaZDn |> formatDate) (nameof dokumenty.UmowaZDn)
-            editField "Umowa z RODO" (dokumenty.UmowaRODO |> formatDate) (nameof dokumenty.UmowaRODO)
-            editField
+            dateField "Wniosek" (dokumenty.Wniosek |> formatDate) (nameof dokumenty.Wniosek)
+            dateField "Umowa z dnia" (dokumenty.UmowaZDn |> formatDate) (nameof dokumenty.UmowaZDn)
+            dateField "Umowa z RODO" (dokumenty.UmowaRODO |> formatDate) (nameof dokumenty.UmowaRODO)
+            dateField
                 "Karty organizacji"
                 (dokumenty.KartyOrganizacjiData |> formatDate)
                 (nameof dokumenty.KartyOrganizacjiData)
-            editField
+            dateField
                 "Ostatnie odwiedziny"
                 (dokumenty.OstatnieOdwiedzinyData |> formatDate)
                 (nameof dokumenty.OstatnieOdwiedzinyData)
