@@ -2,6 +2,7 @@ module OrganizationViewing
 
 open System.Net
 open Tests
+open Tests.Arranger
 open Web.Organizations.Templates.Formatters
 open Xunit
 open Tools.TestServer
@@ -14,11 +15,13 @@ open FSharp.Data
 let ``/ogranizations/summaries displays organization's most important data `` () =
     task {
         // Arrange
-        let! dbSummaries = readSummaries Tools.DbConnection.connectDb ""
+        let org =  AnOrganization()
+        do! org |> (save Tools.DbConnection.connectDb)
+        let! dbSummaries = readSummaries Tools.DbConnection.connectDb org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc
         let dbSummaryTeczkaIds = dbSummaries |> List.map(fun summary -> $"%i{summary.Teczka}")
         let api = runTestApi() |> authenticate "TestUser"
         // Act
-        let! response = api.GetAsync "/organizations/summaries"
+        let! response = api.GetAsync $"/organizations/summaries?search={org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc}"
         // Assert
         let! doc = response.HtmlContent()
         let summaries =
