@@ -2,6 +2,7 @@ module OrganizationViewing
 
 open System.Net
 open Tests
+open Web.Organizations.Templates.Formatters
 open Xunit
 open Tools.TestServer
 open FsUnit.Xunit
@@ -98,11 +99,11 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             organization.Kontakty.TelefonOsobyOdbierajacej
         ]
         dokumenty[0..4] |> should equal [
-            (organization.Dokumenty.Wniosek |> Formatters.toDate)
-            (organization.Dokumenty.UmowaZDn |> Formatters.toDate)
-            (organization.Dokumenty.UmowaRODO |> Formatters.toDate)
-            (organization.Dokumenty.KartyOrganizacjiData |> Formatters.toDate)
-            (organization.Dokumenty.OstatnieOdwiedzinyData |> Formatters.toDate)
+            (organization.Dokumenty.Wniosek |> toDisplay)
+            (organization.Dokumenty.UmowaZDn |> toDisplay)
+            (organization.Dokumenty.UmowaRODO |> toDisplay)
+            (organization.Dokumenty.KartyOrganizacjiData |> toDisplay)
+            (organization.Dokumenty.OstatnieOdwiedzinyData |> toDisplay)
         ]
         adresy[0..5] |> should equal [
             organization.DaneAdresowe.NazwaOrganizacjiPodpisujacejUmowe

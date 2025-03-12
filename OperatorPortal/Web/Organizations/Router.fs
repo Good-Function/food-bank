@@ -1,5 +1,6 @@
 module Organizations.Router
 
+open Microsoft.AspNetCore.Localization
 open Organizations.Application
 open Organizations.Templates
 open Organizations.Dtos

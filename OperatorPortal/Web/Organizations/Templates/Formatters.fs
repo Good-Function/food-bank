@@ -1,8 +1,6 @@
 module Web.Organizations.Templates.Formatters
 
 open System
-
-let formatDate (dateOpt: DateOnly option) : string =
-    match dateOpt with
-    | Some date -> date.ToString("dd.MM.yyyy", System.Globalization.CultureInfo("pl-PL"))
-    | None -> "-"
+    
+let toInput = function | Some (date: DateOnly) -> date.ToString "yyyy-MM-dd" | _ -> ""
+let toDisplay =  function | Some (date: DateOnly) -> date.ToShortDateString() | _ -> "-"

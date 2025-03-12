@@ -189,10 +189,10 @@ let ``PUT /ogranizations/{id}/beneficjenci modifies and returns updated data`` (
         let! response = api.PutAsync($"/organizations/{organization.Teczka}/beneficjenci", data)
         // Assert
         let! doc = response.HtmlContent()
-        let inputs =
+        let dates =
             doc.CssSelect "small" |> List.map _.InnerText()
         response.StatusCode |> should equal HttpStatusCode.OK
-        inputs |> should equal [
+        dates |> should equal [
             expectedLiczbaBeneficjentow
             expectedBeneficjenci
         ]
@@ -214,11 +214,11 @@ let ``GET /ogranizations/{id}/dokumenty/edit returns prefilled inputs to edit th
             doc.CssSelect "input" |> List.map _.AttributeValue("value")
         response.StatusCode |> should equal HttpStatusCode.OK
         inputs |> should equal [
-            organization.Dokumenty.Wniosek |> formatDate
-            organization.Dokumenty.UmowaZDn |> formatDate
-            organization.Dokumenty.UmowaRODO |> formatDate
-            organization.Dokumenty.KartyOrganizacjiData |> formatDate
-            organization.Dokumenty.OstatnieOdwiedzinyData |> formatDate
+            organization.Dokumenty.Wniosek |> toInput
+            organization.Dokumenty.UmowaZDn |> toInput
+            organization.Dokumenty.UmowaRODO |> toInput
+            organization.Dokumenty.KartyOrganizacjiData |> toInput
+            organization.Dokumenty.OstatnieOdwiedzinyData |> toInput
         ]
         inputs.Length |> should equal 5
     }
@@ -229,14 +229,14 @@ let ``PUT /ogranizations/{id}/dokumenty returns modifies and returns updated dat
     task {
         // Arrange
         let organization = Arranger.AnOrganization()
-        let expectedDocs = Arranger.AnOrganization().Dokumenty
+        let expectedDate = Some <| DateOnly.FromDateTime(DateTime.Today)
         do! organization |> (save Tools.DbConnection.connectDb)
         let data = formData {
-            yield ("Wniosek", expectedDocs.Wniosek |> formatDate)
-            yield ("UmowaZDn", expectedDocs.Wniosek |> formatDate)
-            yield ("UmowaRODO", expectedDocs.Wniosek |> formatDate)
-            yield ("KartyOrganizacjiData", expectedDocs.Wniosek |> formatDate)
-            yield ("OstatnieOdwiedzinyData", expectedDocs.Wniosek |> formatDate)
+            yield ("Wniosek", expectedDate |> toInput)
+            yield ("UmowaZDn", "")
+            yield ("UmowaRODO", expectedDate |> toInput)
+            yield ("KartyOrganizacjiData", expectedDate |> toInput)
+            yield ("OstatnieOdwiedzinyData", expectedDate |> toInput)
         }
         // Arrange
         let api = runTestApi() |> authenticate "TestUser"
@@ -244,14 +244,14 @@ let ``PUT /ogranizations/{id}/dokumenty returns modifies and returns updated dat
         let! response = api.PutAsync($"/organizations/{organization.Teczka}/dokumenty", data)
         // Assert
         let! doc = response.HtmlContent()
-        let inputs =
+        let dates =
             doc.CssSelect "small" |> List.map _.InnerText()
         response.StatusCode |> should equal HttpStatusCode.OK
-        inputs |> should equal [
-            expectedDocs.Wniosek |> formatDate
-            expectedDocs.UmowaZDn |> formatDate
-            expectedDocs.UmowaRODO |> formatDate
-            expectedDocs.KartyOrganizacjiData |> formatDate
-            expectedDocs.OstatnieOdwiedzinyData |> formatDate
+        dates |> should equal [
+            expectedDate |> toDisplay
+            None |> toDisplay
+            expectedDate |> toDisplay
+            expectedDate |> toDisplay
+            expectedDate |> toDisplay
         ]
     }

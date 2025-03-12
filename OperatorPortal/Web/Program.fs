@@ -1,6 +1,7 @@
 module Program
 
 open System
+open System.Globalization
 open Microsoft.AspNetCore.Authentication.Cookies
 open PostgresPersistence.DapperFsharp
 open Microsoft.AspNetCore.Builder
@@ -60,6 +61,7 @@ let createServer () =
     let app = builder.Build()
     Migrations.main [|settings.DbConnectionString; AppDomain.CurrentDomain.BaseDirectory|] |> ignore
     if app.Environment.EnvironmentName <> "Production" then app.Use(Authentication.fakeAuthenticate) |> ignore
+    app.Use(Culture.middleware) |> ignore
     app
         .UseRouting()
         .UseStaticFiles()

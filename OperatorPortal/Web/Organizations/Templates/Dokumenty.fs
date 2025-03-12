@@ -23,11 +23,11 @@ let View (dokumenty: ReadModels.Dokumenty) (teczka: int64) =
             }
         }
 
-        field "Wniosek" (dokumenty.Wniosek |> formatDate)
-        field "Umowa z dnia" (dokumenty.UmowaZDn |> formatDate)
-        field "Umowa z RODO" (dokumenty.UmowaRODO |> formatDate)
-        field "Karty organizacji" (dokumenty.KartyOrganizacjiData |> formatDate)
-        field "Ostatnie odwiedziny" (dokumenty.OstatnieOdwiedzinyData |> formatDate)
+        field "Wniosek" (dokumenty.Wniosek |> toDisplay)
+        field "Umowa z dnia" (dokumenty.UmowaZDn |> toDisplay)
+        field "Umowa z RODO" (dokumenty.UmowaRODO |> toDisplay)
+        field "Karty organizacji" (dokumenty.KartyOrganizacjiData |> toDisplay)
+        field "Ostatnie odwiedziny" (dokumenty.OstatnieOdwiedzinyData |> toDisplay)
     }
 
 let Form (dokumenty: ReadModels.Dokumenty) (teczka: int64) =
@@ -55,16 +55,16 @@ let Form (dokumenty: ReadModels.Dokumenty) (teczka: int64) =
                 }
             }
 
-            dateField "Wniosek" (dokumenty.Wniosek |> formatDate) (nameof dokumenty.Wniosek)
-            dateField "Umowa z dnia" (dokumenty.UmowaZDn |> formatDate) (nameof dokumenty.UmowaZDn)
-            dateField "Umowa z RODO" (dokumenty.UmowaRODO |> formatDate) (nameof dokumenty.UmowaRODO)
+            dateField "Wniosek" dokumenty.Wniosek (nameof dokumenty.Wniosek)
+            dateField "Umowa z dnia" dokumenty.UmowaZDn (nameof dokumenty.UmowaZDn)
+            dateField "Umowa z RODO" dokumenty.UmowaRODO (nameof dokumenty.UmowaRODO)
             dateField
                 "Karty organizacji"
-                (dokumenty.KartyOrganizacjiData |> formatDate)
+                dokumenty.KartyOrganizacjiData
                 (nameof dokumenty.KartyOrganizacjiData)
             dateField
                 "Ostatnie odwiedziny"
-                (dokumenty.OstatnieOdwiedzinyData |> formatDate)
+                dokumenty.OstatnieOdwiedzinyData
                 (nameof dokumenty.OstatnieOdwiedzinyData)
         }
     }
