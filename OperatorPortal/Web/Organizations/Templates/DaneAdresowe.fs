@@ -1,21 +1,10 @@
-module Organizations.DaneAdresowe
+module Organizations.Templates.DaneAdresowe
 
 open Layout
 open Organizations.Application
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
-
-let private editField (labelText: string) (value: string) (name: string) =
-    p () {
-        label () { b () { labelText } }
-        input (value = value, name = name)
-    }
-
-let private field (labelText: string) (value: string) =
-    p () {
-        label () { b () { labelText } }
-        small () { value }
-    }
+open Fields
 
 let View (adresy: ReadModels.DaneAdresowe) (teczka: int64) =
     article () {

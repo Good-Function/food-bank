@@ -1,8 +1,9 @@
-module Organizations
+module OrganizationViewing
 
 open System.Net
-open Organizations.Database
 open Tests
+open Tests.Arranger
+open Web.Organizations.Templates.Formatters
 open Xunit
 open Tools.TestServer
 open FsUnit.Xunit
@@ -11,19 +12,16 @@ open Organizations.Database.OrganizationsDao
 open FSharp.Data
 
 [<Fact>]
-let ``POST /organizations/{id}/kontakty can edit organization``() =
-    //save 
-    ()
-
-[<Fact>]
 let ``/ogranizations/summaries displays organization's most important data `` () =
     task {
         // Arrange
-        let! dbSummaries = readSummaries Tools.DbConnection.connectDb ""
+        let org =  AnOrganization()
+        do! org |> (save Tools.DbConnection.connectDb)
+        let! dbSummaries = readSummaries Tools.DbConnection.connectDb org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc
         let dbSummaryTeczkaIds = dbSummaries |> List.map(fun summary -> $"%i{summary.Teczka}")
         let api = runTestApi() |> authenticate "TestUser"
         // Act
-        let! response = api.GetAsync "/organizations/summaries"
+        let! response = api.GetAsync $"/organizations/summaries?search={org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc}"
         // Assert
         let! doc = response.HtmlContent()
         let summaries =
@@ -91,24 +89,24 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             organization.FormaPrawna
         ]
         kontakty[0..10] |> should equal [
-            organization.WwwFacebook
-            organization.Telefon
-            organization.Przedstawiciel
-            organization.Kontakt
-            organization.Email
-            organization.Dostepnosc
-            organization.OsobaDoKontaktu
-            organization.TelefonOsobyKontaktowej
-            organization.MailOsobyKontaktowej
-            organization.OsobaOdbierajacaZywnosc
-            organization.TelefonOsobyOdbierajacej
+            organization.Kontakty.WwwFacebook
+            organization.Kontakty.Telefon
+            organization.Kontakty.Przedstawiciel
+            organization.Kontakty.Kontakt
+            organization.Kontakty.Email
+            organization.Kontakty.Dostepnosc
+            organization.Kontakty.OsobaDoKontaktu
+            organization.Kontakty.TelefonOsobyKontaktowej
+            organization.Kontakty.MailOsobyKontaktowej
+            organization.Kontakty.OsobaOdbierajacaZywnosc
+            organization.Kontakty.TelefonOsobyOdbierajacej
         ]
         dokumenty[0..4] |> should equal [
-            (organization.Wniosek |> Formatters.toDate)
-            (organization.UmowaZDn |> Formatters.toDate)
-            (organization.UmowaRODO |> Formatters.toDate)
-            (organization.KartyOrganizacjiData |> Formatters.toDate)
-            (organization.OstatnieOdwiedzinyData |> Formatters.toDate)
+            (organization.Dokumenty.Wniosek |> toDisplay)
+            (organization.Dokumenty.UmowaZDn |> toDisplay)
+            (organization.Dokumenty.UmowaRODO |> toDisplay)
+            (organization.Dokumenty.KartyOrganizacjiData |> toDisplay)
+            (organization.Dokumenty.OstatnieOdwiedzinyData |> toDisplay)
         ]
         adresy[0..5] |> should equal [
             organization.DaneAdresowe.NazwaOrganizacjiPodpisujacejUmowe
@@ -124,8 +122,8 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             organization.TelOrganProwadzacegoKsiegowosc
         ]
         beneficjenci[0..2] |> should equal [
-            $"%i{organization.LiczbaBeneficjentow}"
-            organization.Beneficjenci
+            $"%i{organization.Beneficjenci.LiczbaBeneficjentow}"
+            organization.Beneficjenci.Beneficjenci
         ]
         zrodlaZywnosci[0..3] |> should equal [
             (organization.Sieci |> Formatters.toTakNie)
@@ -143,32 +141,6 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             organization.TransportOpis
             organization.TransportKategoria
         ]
-    }
-    
-[<Fact>]
-let ``GET /ogranizations/{id}/dane-adresowe/edit returns prefilled inputs to edit the data`` () =
-    task {
-        // Arrange
-        let organization = Arranger.AnOrganization()
-        do! organization |> (save Tools.DbConnection.connectDb)
-        // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
-        // Act
-        let! response = api.GetAsync $"/organizations/{organization.Teczka}/dane-adresowe/edit"
-        // Assert
-        let! doc = response.HtmlContent()
-        let inputs =
-            doc.CssSelect "input" |> List.map _.AttributeValue("value")
-        response.StatusCode |> should equal HttpStatusCode.OK
-        inputs |> should equal [
-            organization.DaneAdresowe.NazwaOrganizacjiPodpisujacejUmowe
-            organization.DaneAdresowe.AdresRejestrowy
-            organization.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc
-            organization.DaneAdresowe.AdresPlacowkiTrafiaZywnosc
-            organization.DaneAdresowe.GminaDzielnica
-            organization.DaneAdresowe.Powiat
-        ]
-        inputs.Length |> should equal 6
     }
     
 [<Fact>]

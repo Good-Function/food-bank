@@ -19,7 +19,8 @@
         <Compile Include="E2E\E2EPlaywright.fs" />
         <Compile Include="Formatters.fs" />
         <Compile Include="Arranger.fs" />
-        <Compile Include="Organizations.fs" />
+        <Compile Include="OrganizationViewing.fs" />
+        <Compile Include="OrganizationsEditing.fs" />
         <Compile Include="Navigation.fs" />
         <Compile Include="Login.fs" />
     </ItemGroup>

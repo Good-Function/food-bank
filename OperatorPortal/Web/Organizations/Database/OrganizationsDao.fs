@@ -71,19 +71,19 @@ type OrganizationDetailsRow = {
             NazwaOrganizacjiKsiegowanieDarowizn = org.NazwaOrganizacjiKsiegowanieDarowizn
             KsiegowanieAdres = org.KsiegowanieAdres
             TelOrganProwadzacegoKsiegowosc = org.TelOrganProwadzacegoKsiegowosc
-            WwwFacebook = org.WwwFacebook
-            Telefon = org.Telefon
-            Przedstawiciel = org.Przedstawiciel
-            Kontakt = org.Kontakt
-            Email = org.Email
-            Dostepnosc = org.Dostepnosc
-            OsobaDoKontaktu = org.OsobaDoKontaktu
-            TelefonOsobyKontaktowej = org.TelefonOsobyKontaktowej
-            MailOsobyKontaktowej = org.MailOsobyKontaktowej
-            OsobaOdbierajacaZywnosc = org.OsobaOdbierajacaZywnosc
-            TelefonOsobyOdbierajacej = org.TelefonOsobyOdbierajacej
-            LiczbaBeneficjentow = org.LiczbaBeneficjentow
-            Beneficjenci = org.Beneficjenci
+            WwwFacebook = org.Kontakty.WwwFacebook
+            Telefon = org.Kontakty.Telefon
+            Przedstawiciel = org.Kontakty.Przedstawiciel
+            Kontakt = org.Kontakty.Kontakt
+            Email = org.Kontakty.Email
+            Dostepnosc = org.Kontakty.Dostepnosc
+            OsobaDoKontaktu = org.Kontakty.OsobaDoKontaktu
+            TelefonOsobyKontaktowej = org.Kontakty.TelefonOsobyKontaktowej
+            MailOsobyKontaktowej = org.Kontakty.MailOsobyKontaktowej
+            OsobaOdbierajacaZywnosc = org.Kontakty.OsobaOdbierajacaZywnosc
+            TelefonOsobyOdbierajacej = org.Kontakty.TelefonOsobyOdbierajacej
+            LiczbaBeneficjentow = org.Beneficjenci.LiczbaBeneficjentow
+            Beneficjenci = org.Beneficjenci.Beneficjenci
             Sieci = org.Sieci
             Bazarki = org.Bazarki
             Machfit = org.Machfit
@@ -96,11 +96,11 @@ type OrganizationDetailsRow = {
             Sanepid = org.Sanepid
             TransportOpis = org.TransportOpis
             TransportKategoria = org.TransportKategoria
-            Wniosek = org.Wniosek
-            UmowaZDn = org.UmowaZDn
-            UmowaRODO = org.UmowaRODO
-            KartyOrganizacjiData = org.KartyOrganizacjiData
-            OstatnieOdwiedzinyData = org.OstatnieOdwiedzinyData
+            Wniosek = org.Dokumenty.Wniosek
+            UmowaZDn = org.Dokumenty.UmowaZDn
+            UmowaRODO = org.Dokumenty.UmowaRODO
+            KartyOrganizacjiData = org.Dokumenty.KartyOrganizacjiData
+            OstatnieOdwiedzinyData = org.Dokumenty.OstatnieOdwiedzinyData
         }
     member this.ToReadModel () =
         {
@@ -122,19 +122,23 @@ type OrganizationDetailsRow = {
             NazwaOrganizacjiKsiegowanieDarowizn = this.NazwaOrganizacjiKsiegowanieDarowizn
             KsiegowanieAdres = this.KsiegowanieAdres
             TelOrganProwadzacegoKsiegowosc = this.TelOrganProwadzacegoKsiegowosc
-            WwwFacebook = this.WwwFacebook
-            Telefon = this.Telefon
-            Przedstawiciel = this.Przedstawiciel
-            Kontakt = this.Kontakt
-            Email = this.Email
-            Dostepnosc = this.Dostepnosc
-            OsobaDoKontaktu = this.OsobaDoKontaktu
-            TelefonOsobyKontaktowej = this.TelefonOsobyKontaktowej
-            MailOsobyKontaktowej = this.MailOsobyKontaktowej
-            OsobaOdbierajacaZywnosc = this.OsobaOdbierajacaZywnosc
-            TelefonOsobyOdbierajacej = this.TelefonOsobyOdbierajacej
-            LiczbaBeneficjentow = this.LiczbaBeneficjentow
-            Beneficjenci = this.Beneficjenci
+            Kontakty = {
+                WwwFacebook = this.WwwFacebook
+                Telefon = this.Telefon
+                Przedstawiciel = this.Przedstawiciel
+                Kontakt = this.Kontakt
+                Email = this.Email
+                Dostepnosc = this.Dostepnosc
+                OsobaDoKontaktu = this.OsobaDoKontaktu
+                TelefonOsobyKontaktowej = this.TelefonOsobyKontaktowej
+                MailOsobyKontaktowej = this.MailOsobyKontaktowej
+                OsobaOdbierajacaZywnosc = this.OsobaOdbierajacaZywnosc
+                TelefonOsobyOdbierajacej = this.TelefonOsobyOdbierajacej
+            }
+            Beneficjenci = {
+                Beneficjenci = this.Beneficjenci
+                LiczbaBeneficjentow = this.LiczbaBeneficjentow
+            }
             Sieci = this.Sieci
             Bazarki = this.Bazarki
             Machfit = this.Machfit
@@ -147,11 +151,13 @@ type OrganizationDetailsRow = {
             Sanepid = this.Sanepid
             TransportOpis = this.TransportOpis
             TransportKategoria = this.TransportKategoria
-            Wniosek = this.Wniosek
-            UmowaZDn = this.UmowaZDn
-            UmowaRODO = this.UmowaRODO
-            KartyOrganizacjiData = this.KartyOrganizacjiData
-            OstatnieOdwiedzinyData = this.OstatnieOdwiedzinyData
+            Dokumenty = {
+                Wniosek = this.Wniosek
+                UmowaZDn = this.UmowaZDn
+                UmowaRODO = this.UmowaRODO
+                KartyOrganizacjiData = this.KartyOrganizacjiData
+                OstatnieOdwiedzinyData = this.OstatnieOdwiedzinyData
+            }
         }
 
 
@@ -179,13 +185,13 @@ ORDER BY teczka DESC;
 
 let readSummaries (connectDB: unit -> Async<IDbConnection>) (searchTerm: string) =
     async {
-        let! db = connectDB()
+        use! db = connectDB()
         return! db.QueryBy<OrganizationSummary> searchOrgsSql {| searchTerm = searchTerm |}
     }
     
-let modifyDaneAdresowe (connectDB: unit -> Async<IDbConnection>) (daneAdresowe: Commands.DaneAdresowe) =
+let changeDaneAdresowe (connectDB: unit -> Async<IDbConnection>) (daneAdresowe: Commands.DaneAdresowe) =
     async {
-        let! db = connectDB()
+        use! db = connectDB()
         do! db.Execute """
 UPDATE organizacje
 SET 
@@ -198,16 +204,61 @@ SET
 WHERE Teczka = @Teczka;""" daneAdresowe
     }
     
+let changeKontakty (connectDB: unit -> Async<IDbConnection>) (kontakty: Commands.Kontakty) =
+    async {
+        use! db = connectDB()
+        do! db.Execute """
+UPDATE organizacje
+SET 
+    WwwFacebook = @WwwFacebook,
+    Telefon = @Telefon,
+    Przedstawiciel = @Przedstawiciel,
+    Kontakt = @Kontakt,
+    Email = @Email,
+    Dostepnosc = @Dostepnosc,
+    OsobaDoKontaktu = @OsobaDoKontaktu,
+    TelefonOsobyKontaktowej = @TelefonOsobyKontaktowej,
+    MailOsobyKontaktowej = @MailOsobyKontaktowej,
+    OsobaOdbierajacaZywnosc = @OsobaOdbierajacaZywnosc,
+    TelefonOsobyOdbierajacej = @TelefonOsobyOdbierajacej
+WHERE Teczka = @Teczka;""" kontakty
+    }
+    
+let changeBeneficjenci (connectDB: unit -> Async<IDbConnection>) (beneficjenci: Commands.Beneficjenci) =
+    async {
+        use! db = connectDB()
+        do! db.Execute """
+UPDATE organizacje
+SET 
+    LiczbaBeneficjentow = @LiczbaBeneficjentow,
+    Beneficjenci = @Beneficjenci
+WHERE Teczka = @Teczka;""" beneficjenci
+    }
+    
+let changeDokumenty (connectDB: unit -> Async<IDbConnection>) (dokumenty: Commands.Dokumenty) =
+    async {
+        use! db = connectDB()
+        do! db.Execute """
+UPDATE organizacje
+SET 
+    Wniosek = @Wniosek,
+    UmowaZDn = @UmowaZDn,
+    UmowaRODO = @UmowaRODO,
+    KartyOrganizacjiData = @KartyOrganizacjiData,
+    OstatnieOdwiedzinyData = @OstatnieOdwiedzinyData
+WHERE Teczka = @Teczka;""" dokumenty
+    }
+    
 let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: int64) =
     async {
-        let! db = connectDB()
+        use! db = connectDB()
         let! row = db.Single<OrganizationDetailsRow> "SELECT * FROM organizacje WHERE teczka = @teczka" {|teczka = teczka|}
         return row.ToReadModel()
     }
     
 let save (connectDB: unit -> Async<IDbConnection>) (org: OrganizationDetails)  =
     async {
-        let! db = connectDB()
+        use! db = connectDB()
         let a = OrganizationDetailsRow.From org
         do! a |> db.Execute """
 INSERT INTO organizacje (

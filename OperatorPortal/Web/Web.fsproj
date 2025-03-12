@@ -54,8 +54,13 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Compile Include="Organizations\Database\OrganizationsDao.fs" />
-      <Compile Include="Organizations\Templates\DaneAdresowe.fs" />
+      <Compile Include="Organizations\Templates\Formatters.fs" />
+      <Compile Include="Organizations\Templates\Fields.fs" />
       <Compile Include="Organizations\Templates\PageComposer.fs" />
+      <Compile Include="Organizations\Templates\DaneAdresowe.fs" />
+      <Compile Include="Organizations\Templates\Kontakty.fs" />
+      <Compile Include="Organizations\Templates\Beneficjenci.fs" />
+      <Compile Include="Organizations\Templates\Dokumenty.fs" />
       <Compile Include="Organizations\Templates\DetailsTemplate.fs" />
       <Compile Include="Organizations\Templates\SearchableListTemplate.fs" />
       <Compile Include="Organizations\Templates\ListTemplate.fs" />
@@ -67,6 +72,7 @@
       <Compile Include="Applications\CompositionRoot.fs" />
       <Compile Include="Applications\Router.fs" />
       <Compile Include="Authentication.fs" />
+      <Compile Include="Culture.fs" />
       <Compile Include="Settings.fs" />
       <Compile Include="Program.fs" />
     </ItemGroup>
