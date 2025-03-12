@@ -22,8 +22,8 @@ let Template search =
             hxPushUrl = "true"
         )
 
-        div (id = "OrganizationsList", style = "overflow-x: scroll; max-height: 85vh") {
-            small () {
+        small () {
+            div (id = "OrganizationsList", style = "overflow-x: scroll; max-height: 70vh") {
                 div (id = "OrganizationsList") {
                     div (
                         hxGet = "/organizations/summaries",

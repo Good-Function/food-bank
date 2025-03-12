@@ -17,7 +17,7 @@ let Template (data: OrganizationSummary list) =
                 th () { "Email" }
                 th (style = "min-width:200px") { "Kontakt" }
                 th () { "Osoba do kontaktu" }
-                th (style = "min-width:180px") { "Telefon do os. kontaktowej" }
+                th (style = "min-width:180px") { "Tel. osoby kontaktowej" }
                 th () { "Dostępność" }
                 th () { "Kateogria" }
                 th () { "Liczba Beneficjentów" }
