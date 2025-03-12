@@ -29,7 +29,7 @@ let View (kontakty: ReadModels.Kontakty) (teczka: int64) =
         field "E-mail" kontakty.Email
         field "Dostępność" kontakty.Dostepnosc
         field "Osoba do kontaktu" kontakty.OsobaDoKontaktu
-        field "Telefon do os. kontaktowej" kontakty.TelefonOsobyKontaktowej
+        field "Tel. osoby kontaktowej" kontakty.TelefonOsobyKontaktowej
         field "E-mail do osoby kontaktowej" kontakty.MailOsobyKontaktowej
         field "Osoba odbierająca żywność" kontakty.OsobaOdbierajacaZywnosc
         field "Telefon do os. odbierającej" kontakty.TelefonOsobyOdbierajacej
@@ -67,7 +67,7 @@ let Form (kontakty: ReadModels.Kontakty) (teczka: int64) =
             editField "E-mail" kontakty.Email (nameof kontakty.Email)
             editField "Dostępność" kontakty.Dostepnosc (nameof kontakty.Dostepnosc)
             editField "Osoba do kontaktu" kontakty.OsobaDoKontaktu (nameof kontakty.OsobaDoKontaktu)
-            editField "Telefon do os. kontaktowej" kontakty.TelefonOsobyKontaktowej (nameof kontakty.TelefonOsobyKontaktowej)
+            editField "Tel. osoby kontaktowej" kontakty.TelefonOsobyKontaktowej (nameof kontakty.TelefonOsobyKontaktowej)
             editField "E-mail do osoby kontaktowej" kontakty.MailOsobyKontaktowej (nameof kontakty.MailOsobyKontaktowej)
             editField "Osoba odbierająca żywność" kontakty.OsobaOdbierajacaZywnosc (nameof kontakty.OsobaOdbierajacaZywnosc)
             editField "Telefon do os. odbierającej" kontakty.TelefonOsobyOdbierajacej (nameof kontakty.TelefonOsobyOdbierajacej)
