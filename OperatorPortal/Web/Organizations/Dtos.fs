@@ -105,3 +105,42 @@ type DokumentyForm =
           UmowaRODO = this.UmowaRODO
           KartyOrganizacjiData = this.KartyOrganizacjiData
           OstatnieOdwiedzinyData = this.OstatnieOdwiedzinyData }
+        
+[<CLIMutable>]
+type ZrodlaZywnosciForm =
+    { Sieci: bool
+      Bazarki: bool
+      Machfit: bool
+      FEPZ2024: bool }
+
+    member this.toChangeZrodlaZywnosci(teczka: int64): Commands.ZrodlaZywnosci =
+        {
+          Teczka = teczka
+          Sieci = this.Sieci
+          Bazarki = this.Bazarki
+          Machfit = this.Machfit
+          FEPZ2024 = this.FEPZ2024 }
+
+    member this.toZrodlaZywnosci: ReadModels.ZrodlaZywnosci =
+        { Sieci = this.Sieci
+          Bazarki = this.Bazarki
+          Machfit = this.Machfit
+          FEPZ2024 = this.FEPZ2024 }
+
+[<CLIMutable>]
+type AdresyKsiegowosciForm =
+    { NazwaOrganizacjiKsiegowanieDarowizn: string
+      KsiegowanieAdres: string
+      TelOrganProwadzacegoKsiegowosc: string }
+
+    member this.toChangeAdresyKsiegowosci(teczka: int64): Commands.AdresyKsiegowosci =
+        { Teczka = teczka
+          NazwaOrganizacjiKsiegowanieDarowizn = this.NazwaOrganizacjiKsiegowanieDarowizn
+          KsiegowanieAdres = this.KsiegowanieAdres
+          TelOrganProwadzacegoKsiegowosc = this.TelOrganProwadzacegoKsiegowosc }
+
+    member this.toAdresyKsiegowosci: ReadModels.AdresyKsiegowosci =
+        { NazwaOrganizacjiKsiegowanieDarowizn = this.NazwaOrganizacjiKsiegowanieDarowizn
+          KsiegowanieAdres = this.KsiegowanieAdres
+          TelOrganProwadzacegoKsiegowosc = this.TelOrganProwadzacegoKsiegowosc }
+

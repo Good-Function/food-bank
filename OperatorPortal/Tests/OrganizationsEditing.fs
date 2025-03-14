@@ -225,7 +225,7 @@ let ``GET /ogranizations/{id}/dokumenty/edit returns prefilled inputs to edit th
     
     
 [<Fact>]
-let ``PUT /ogranizations/{id}/dokumenty returns modifies and returns updated data`` () =
+let ``PUT /ogranizations/{id}/dokumenty modifies and returns updated data`` () =
     task {
         // Arrange
         let organization = Arranger.AnOrganization()
@@ -253,5 +253,111 @@ let ``PUT /ogranizations/{id}/dokumenty returns modifies and returns updated dat
             expectedDate |> toDisplay
             expectedDate |> toDisplay
             expectedDate |> toDisplay
+        ]
+    }
+    
+[<Fact>]
+let ``GET /ogranizations/{id}/zroda-zywnosci/edit returns prefilled inputs to edit the data`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.GetAsync $"/organizations/{organization.Teczka}/zrodla-zywnosci/edit"
+        // Assert
+        let! doc = response.HtmlContent()
+        let inputs =
+            doc.CssSelect "input"
+                |> List.filter _.HasAttribute("checked", "")
+                |> List.map(fun input -> input.AttributeValue("value") |> Boolean.Parse)
+        response.StatusCode |> should equal HttpStatusCode.OK
+        inputs |> should equal [
+            organization.ZrodlaZywnosci.Sieci
+            organization.ZrodlaZywnosci.Bazarki
+            organization.ZrodlaZywnosci.Machfit
+            organization.ZrodlaZywnosci.FEPZ2024
+        ]
+        inputs.Length |> should equal 4
+    }
+    
+    
+[<Fact>]
+let ``PUT /ogranizations/{id}/zrodla-zywnosci modifies and returns updated data`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        let data = formData {
+            yield ("Sieci", "true")
+            yield ("Bazarki", "true")
+            yield ("Machfit", "true")
+            yield ("FEPZ2024", "true")
+        }
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.PutAsync($"/organizations/{organization.Teczka}/zrodla-zywnosci", data)
+        // Assert
+        let! doc = response.HtmlContent()
+        let takNie =
+            doc.CssSelect "small" |> List.map _.InnerText()
+        response.StatusCode |> should equal HttpStatusCode.OK
+        takNie |> should equal [
+            "Tak"
+            "Tak"
+            "Tak"
+            "Tak"
+        ]
+    }
+    
+[<Fact>]
+let ``GET /ogranizations/{id}/adresy-ksiegowosci/edit returns prefilled inputs to edit the data`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.GetAsync $"/organizations/{organization.Teczka}/adresy-ksiegowosci/edit"
+        // Assert
+        let! doc = response.HtmlContent()
+        let inputs =
+            doc.CssSelect "input" |> List.map _.AttributeValue("value")
+        response.StatusCode |> should equal HttpStatusCode.OK
+        inputs |> should equal [
+            organization.AdresyKsiegowosci.NazwaOrganizacjiKsiegowanieDarowizn
+            organization.AdresyKsiegowosci.KsiegowanieAdres
+            organization.AdresyKsiegowosci.TelOrganProwadzacegoKsiegowosc
+        ]
+    }
+    
+[<Fact>]
+let ``PUT /ogranizations/{id}/adresy-ksiegowosci modifies and returns updated data`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        let expectedText = $"{Guid.NewGuid()}"
+        let data = formData {
+            yield ("NazwaOrganizacjiKsiegowanieDarowizn", expectedText)
+            yield ("KsiegowanieAdres", expectedText)
+            yield ("TelOrganProwadzacegoKsiegowosc", expectedText)
+        }
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.PutAsync($"/organizations/{organization.Teczka}/adresy-ksiegowosci", data)
+        // Assert
+        let! doc = response.HtmlContent()
+        let dates =
+            doc.CssSelect "small" |> List.map _.InnerText()
+        response.StatusCode |> should equal HttpStatusCode.OK
+        dates |> should equal [
+            expectedText
+            expectedText
+            expectedText
         ]
     }
