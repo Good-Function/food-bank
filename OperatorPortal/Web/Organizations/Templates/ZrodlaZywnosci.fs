@@ -1,19 +1,20 @@
-module Organizations.Templates.Beneficjenci
+module Organizations.Templates.ZrodlaZywnosci
 
 open Layout
 open Organizations.Application
 open Organizations.Templates.Fields
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
+open Web.Organizations.Templates.Formatters
 
-let View (beneficjenci: ReadModels.Beneficjenci) (teczka: int64) =
+let View (zrodla: ReadModels.ZrodlaZywnosci) (teczka: int64) =
     article () {
         header (class' = "action-header") {
-            span () { "Beneficjenci" }
+            span () { "Źródła żywności" }
 
             div (class' = "action-header-actions") {
                 span (
-                    hxGet = $"/organizations/{teczka}/beneficjenci/edit",
+                    hxGet = $"/organizations/{teczka}/zrodla-zywnosci/edit",
                     hxTarget = "closest article",
                     hxSwap = "outerHTML"
                 ) {
@@ -22,19 +23,21 @@ let View (beneficjenci: ReadModels.Beneficjenci) (teczka: int64) =
             }
         }
 
-        field "Liczba Beneficjentów" $"{beneficjenci.LiczbaBeneficjentow}"
-        field "Beneficjenci" beneficjenci.Beneficjenci
+        field "Sieci" (zrodla.Sieci |> toTakNie)
+        field "Bazarki" (zrodla.Bazarki |> toTakNie)
+        field "Machfit" (zrodla.Machfit |> toTakNie)
+        field "FEPŻ 2024" (zrodla.FEPZ2024 |> toTakNie)
     }
 
-let Form (beneficjenci: ReadModels.Beneficjenci) (teczka: int64) =
+let Form (zrodla: ReadModels.ZrodlaZywnosci) (teczka: int64) =
     form () {
         article (class' = "focus-dim") {
             header (class' = "action-header") {
-                span () { "Beneficjenci" }
+                span () { "Źródła żywności" }
 
                 div (class' = "action-header-actions") {
                     span (
-                        hxGet = $"/organizations/{teczka}/beneficjenci",
+                        hxGet = $"/organizations/{teczka}/zrodla-zywnosci",
                         hxTarget = "closest article",
                         hxSwap = "outerHTML"
                     ) {
@@ -42,7 +45,7 @@ let Form (beneficjenci: ReadModels.Beneficjenci) (teczka: int64) =
                     }
 
                     span (
-                        hxPut = $"/organizations/{teczka}/beneficjenci",
+                        hxPut = $"/organizations/{teczka}/zrodla-zywnosci",
                         hxTarget = "closest article",
                         hxSwap = "outerHTML"
                     ) {
@@ -51,7 +54,9 @@ let Form (beneficjenci: ReadModels.Beneficjenci) (teczka: int64) =
                 }
             }
 
-            editField "Liczba Beneficjentów" $"{beneficjenci.LiczbaBeneficjentow}" (nameof beneficjenci.LiczbaBeneficjentow)
-            editField "Beneficjenci" beneficjenci.Beneficjenci (nameof beneficjenci.Beneficjenci)
+            booleanField "Sieci" zrodla.Sieci (nameof zrodla.Sieci)
+            booleanField "Bazarki" zrodla.Bazarki (nameof zrodla.Bazarki)
+            booleanField "Machfit" zrodla.Machfit (nameof zrodla.Machfit)
+            booleanField "FEPŻ 2024" zrodla.FEPZ2024 (nameof zrodla.FEPZ2024)
         }
     }

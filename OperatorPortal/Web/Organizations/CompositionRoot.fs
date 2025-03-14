@@ -10,4 +10,6 @@ type Dependencies = {
     ChangeKontakty: Commands.ChangeKontakty
     ChangeBeneficjenci: Commands.ChangeBeneficjenci
     ChangeDokumenty: Commands.ChangeDokumenty
+    ChangeAdresyKsiegowosci: Commands.ChangeAdresyKsiegowosci
+    ChangeZrodlaZywnosci: Commands.ChangeZrodlaZywnosci
 }

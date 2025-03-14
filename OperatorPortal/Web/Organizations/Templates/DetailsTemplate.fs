@@ -15,9 +15,6 @@ let field (labelText: string) (value: string) =
         small () { value }
     }
 
-let toTakNie (isTrue: bool) =
-    $"""{if isTrue then "Tak" else "Nie"}"""
-
 let editableHeader (name: string) =
     header (class' = "action-header") {
         span () { name }
@@ -33,7 +30,7 @@ let Template (org: OrganizationDetails) =
         div (class' = "grid") {
             div () {
                 article () {
-                    editableHeader "Identyfikatory"
+                    header() { "Identyfikatory" }
                     field "ENOVA" $"{org.IdentyfikatorEnova}"
                     field "NIP" $"{org.NIP}"
                     field "Regon" $"{org.Regon}"
@@ -48,21 +45,9 @@ let Template (org: OrganizationDetails) =
 
             div () {
                 DaneAdresowe.View org.DaneAdresowe org.Teczka
-                article () {
-                    editableHeader "Dane adresowe księgowości"
-                    field "Organizacja na którą wystawiamy WZ" org.NazwaOrganizacjiKsiegowanieDarowizn
-                    field "Adres" org.KsiegowanieAdres
-                    field "Telefon" org.TelOrganProwadzacegoKsiegowosc
-                }
+                AdresyKsiegowosci.View org.AdresyKsiegowosci org.Teczka
                 Beneficjenci.View org.Beneficjenci org.Teczka
-
-                article () {
-                    editableHeader "Żródła żywności"
-                    field "Sieci" (org.Sieci |> toTakNie)
-                    field "Bazarki" (org.Bazarki |> toTakNie)
-                    field "Machfit" (org.Machfit |> toTakNie)
-                    field "FEPŻ 2024" (org.FEPZ2024 |> toTakNie)
-                }
+                ZrodlaZywnosci.View org.ZrodlaZywnosci org.Teczka
 
                 article () {
                     editableHeader "Warunki udzielania pomocy żywnościowej"

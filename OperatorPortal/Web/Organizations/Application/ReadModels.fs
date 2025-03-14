@@ -36,6 +36,19 @@ type Dokumenty = {
       OstatnieOdwiedzinyData: System.DateOnly option
 }
 
+type ZrodlaZywnosci = {
+      Sieci: bool
+      Bazarki: bool
+      Machfit: bool
+      FEPZ2024: bool // Fundusze europejskie na pomoc żywnościową, program UE.
+}
+
+type AdresyKsiegowosci = {
+      NazwaOrganizacjiKsiegowanieDarowizn: string
+      KsiegowanieAdres: string
+      TelOrganProwadzacegoKsiegowosc: string
+}
+
 type Kontakty =
     { WwwFacebook: string
       Telefon: string
@@ -59,14 +72,9 @@ type OrganizationDetails =
       OPP: bool // szczegóły: Organizacja użytku publicznego
       DaneAdresowe: DaneAdresowe
       Kontakty: Kontakty
-      NazwaOrganizacjiKsiegowanieDarowizn: string
-      KsiegowanieAdres: string
-      TelOrganProwadzacegoKsiegowosc: string
+      ZrodlaZywnosci: ZrodlaZywnosci
+      AdresyKsiegowosci: AdresyKsiegowosci
       Beneficjenci: Beneficjenci
-      Sieci: bool
-      Bazarki: bool
-      Machfit: bool
-      FEPZ2024: bool // Fundusze europejskie na pomoc żywnościową, program UE.
       Kategoria: string
       RodzajPomocy: string
       SposobUdzielaniaPomocy: string

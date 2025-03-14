@@ -117,19 +117,19 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             organization.DaneAdresowe.Powiat
         ]
         adresyKsiegowosci[0..2] |> should equal [
-            organization.NazwaOrganizacjiKsiegowanieDarowizn
-            organization.KsiegowanieAdres
-            organization.TelOrganProwadzacegoKsiegowosc
+            organization.AdresyKsiegowosci.NazwaOrganizacjiKsiegowanieDarowizn
+            organization.AdresyKsiegowosci.KsiegowanieAdres
+            organization.AdresyKsiegowosci.TelOrganProwadzacegoKsiegowosc
         ]
         beneficjenci[0..2] |> should equal [
             $"%i{organization.Beneficjenci.LiczbaBeneficjentow}"
             organization.Beneficjenci.Beneficjenci
         ]
         zrodlaZywnosci[0..3] |> should equal [
-            (organization.Sieci |> Formatters.toTakNie)
-            (organization.Bazarki |> Formatters.toTakNie)
-            (organization.Machfit |> Formatters.toTakNie)
-            (organization.FEPZ2024 |> Formatters.toTakNie)
+            (organization.ZrodlaZywnosci.Sieci |> Formatters.toTakNie)
+            (organization.ZrodlaZywnosci.Bazarki |> Formatters.toTakNie)
+            (organization.ZrodlaZywnosci.Machfit |> Formatters.toTakNie)
+            (organization.ZrodlaZywnosci.FEPZ2024 |> Formatters.toTakNie)
         ]
         warunki[0..7] |> should equal [
             organization.Kategoria

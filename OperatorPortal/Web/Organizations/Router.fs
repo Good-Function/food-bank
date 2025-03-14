@@ -125,6 +125,52 @@ let changeDokumenty (handle: Commands.ChangeDokumenty) (teczka: int64) :Endpoint
             return ctx.WriteHtmlView(Dokumenty.View form.toDokumenty teczka)
         }
         
+let zrodlaZywnosci (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(ZrodlaZywnosci.View details.ZrodlaZywnosci teczka)
+        }
+
+let zrodlaZywnosciEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(ZrodlaZywnosci.Form details.ZrodlaZywnosci teczka)
+        }
+
+let changeZrodlaZywnosci (handle: Commands.ChangeZrodlaZywnosci) (teczka: int64) :EndpointHandler =
+    fun ctx ->
+        task {
+            let! form = ctx.BindForm<ZrodlaZywnosciForm>()
+            let cmd = form.toChangeZrodlaZywnosci teczka
+            do! cmd |> handle
+            return ctx.WriteHtmlView(ZrodlaZywnosci.View form.toZrodlaZywnosci teczka)
+        }
+        
+let adresyKsiegowosci (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64): EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(AdresyKsiegowosci.View details.AdresyKsiegowosci teczka)
+        }
+
+let adresyKsiegowosciEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64): EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(AdresyKsiegowosci.Form details.AdresyKsiegowosci teczka)
+        }
+
+let changeAdresyKsiegowosci (handle: Commands.ChangeAdresyKsiegowosci) (teczka: int64): EndpointHandler =
+    fun ctx ->
+        task {
+            let! form = ctx.BindForm<AdresyKsiegowosciForm>()
+            let cmd = form.toChangeAdresyKsiegowosci teczka
+            do! cmd |> handle
+            return ctx.WriteHtmlView(AdresyKsiegowosci.View form.toAdresyKsiegowosci teczka)
+        }
+        
 let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
     fun ctx ->
         task {
@@ -148,10 +194,16 @@ let Endpoints (dependencies: Dependencies) =
             routef "/{%d}/beneficjenci/edit" (beneficjenciEdit dependencies.ReadOrganizationDetailsBy)
             routef "/{%d}/dokumenty" (dokumenty dependencies.ReadOrganizationDetailsBy)
             routef "/{%d}/dokumenty/edit" (dokumentyEdit dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/zrodla-zywnosci" (zrodlaZywnosci dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/zrodla-zywnosci/edit" (zrodlaZywnosciEdit dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/adresy-ksiegowosci" (adresyKsiegowosci dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/adresy-ksiegowosci/edit" (adresyKsiegowosciEdit dependencies.ReadOrganizationDetailsBy)
           ]
       PUT [
           routef "/{%d}/dane-adresowe" (changeDaneAdresowe dependencies.ChangeDaneAdresowe)
           routef "/{%d}/kontakty" (changeKontakty dependencies.ChangeKontakty)
           routef "/{%d}/beneficjenci" (changeBeneficjenci dependencies.ChangeBeneficjenci)
           routef "/{%d}/dokumenty" (changeDokumenty dependencies.ChangeDokumenty)
+          routef "/{%d}/zrodla-zywnosci" (changeZrodlaZywnosci dependencies.ChangeZrodlaZywnosci)
+          routef "/{%d}/adresy-ksiegowosci" (changeAdresyKsiegowosci dependencies.ChangeAdresyKsiegowosci)
       ] ]

@@ -68,9 +68,9 @@ type OrganizationDetailsRow = {
             AdresPlacowkiTrafiaZywnosc = org.DaneAdresowe.AdresPlacowkiTrafiaZywnosc
             GminaDzielnica = org.DaneAdresowe.GminaDzielnica
             Powiat = org.DaneAdresowe.Powiat
-            NazwaOrganizacjiKsiegowanieDarowizn = org.NazwaOrganizacjiKsiegowanieDarowizn
-            KsiegowanieAdres = org.KsiegowanieAdres
-            TelOrganProwadzacegoKsiegowosc = org.TelOrganProwadzacegoKsiegowosc
+            NazwaOrganizacjiKsiegowanieDarowizn = org.AdresyKsiegowosci.NazwaOrganizacjiKsiegowanieDarowizn
+            KsiegowanieAdres = org.AdresyKsiegowosci.KsiegowanieAdres
+            TelOrganProwadzacegoKsiegowosc = org.AdresyKsiegowosci.TelOrganProwadzacegoKsiegowosc
             WwwFacebook = org.Kontakty.WwwFacebook
             Telefon = org.Kontakty.Telefon
             Przedstawiciel = org.Kontakty.Przedstawiciel
@@ -84,10 +84,10 @@ type OrganizationDetailsRow = {
             TelefonOsobyOdbierajacej = org.Kontakty.TelefonOsobyOdbierajacej
             LiczbaBeneficjentow = org.Beneficjenci.LiczbaBeneficjentow
             Beneficjenci = org.Beneficjenci.Beneficjenci
-            Sieci = org.Sieci
-            Bazarki = org.Bazarki
-            Machfit = org.Machfit
-            FEPZ2024 = org.FEPZ2024
+            Sieci = org.ZrodlaZywnosci.Sieci
+            Bazarki = org.ZrodlaZywnosci.Bazarki
+            Machfit = org.ZrodlaZywnosci.Machfit
+            FEPZ2024 = org.ZrodlaZywnosci.FEPZ2024
             Kategoria = org.Kategoria
             RodzajPomocy = org.RodzajPomocy
             SposobUdzielaniaPomocy = org.SposobUdzielaniaPomocy
@@ -119,9 +119,11 @@ type OrganizationDetailsRow = {
                 GminaDzielnica = this.GminaDzielnica
                 Powiat = this.Powiat
             }
-            NazwaOrganizacjiKsiegowanieDarowizn = this.NazwaOrganizacjiKsiegowanieDarowizn
-            KsiegowanieAdres = this.KsiegowanieAdres
-            TelOrganProwadzacegoKsiegowosc = this.TelOrganProwadzacegoKsiegowosc
+            AdresyKsiegowosci = {
+                NazwaOrganizacjiKsiegowanieDarowizn = this.NazwaOrganizacjiKsiegowanieDarowizn
+                KsiegowanieAdres = this.KsiegowanieAdres
+                TelOrganProwadzacegoKsiegowosc = this.TelOrganProwadzacegoKsiegowosc      
+            }
             Kontakty = {
                 WwwFacebook = this.WwwFacebook
                 Telefon = this.Telefon
@@ -139,10 +141,12 @@ type OrganizationDetailsRow = {
                 Beneficjenci = this.Beneficjenci
                 LiczbaBeneficjentow = this.LiczbaBeneficjentow
             }
-            Sieci = this.Sieci
-            Bazarki = this.Bazarki
-            Machfit = this.Machfit
-            FEPZ2024 = this.FEPZ2024
+            ZrodlaZywnosci = {
+                Sieci = this.Sieci
+                Bazarki = this.Bazarki
+                Machfit = this.Machfit
+                FEPZ2024 = this.FEPZ2024
+            }
             Kategoria = this.Kategoria
             RodzajPomocy = this.RodzajPomocy
             SposobUdzielaniaPomocy = this.SposobUdzielaniaPomocy
@@ -247,6 +251,31 @@ SET
     KartyOrganizacjiData = @KartyOrganizacjiData,
     OstatnieOdwiedzinyData = @OstatnieOdwiedzinyData
 WHERE Teczka = @Teczka;""" dokumenty
+    }
+    
+let changeZrodlaZywnosci (connectDB: unit -> Async<IDbConnection>) (zrodlaZywnosci: Commands.ZrodlaZywnosci) =
+    async {
+        use! db = connectDB()
+        do! db.Execute """
+UPDATE organizacje
+SET 
+    bazarki = @Bazarki,
+    machfit = @Machfit,
+    sieci = @Sieci,
+    fepz2024 = @FEPZ2024
+WHERE Teczka = @Teczka;""" zrodlaZywnosci
+    }
+    
+let changeAdresyKsiegowosci (connectDB: unit -> Async<IDbConnection>) (adresy: Commands.AdresyKsiegowosci) =
+    async {
+        use! db = connectDB()
+        do! db.Execute """
+UPDATE organizacje
+SET 
+    KsiegowanieAdres = @KsiegowanieAdres,
+    NazwaOrganizacjiKsiegowanieDarowizn = @NazwaOrganizacjiKsiegowanieDarowizn,
+    TelOrganProwadzacegoKsiegowosc = @TelOrganProwadzacegoKsiegowosc
+WHERE Teczka = @Teczka;""" adresy
     }
     
 let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: int64) =

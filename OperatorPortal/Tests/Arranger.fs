@@ -4,19 +4,11 @@ open IdGen
 open System
 
 let IdGenerator =
-    IdGenerator(
-        0,
-        IdGeneratorOptions(
-            timeSource =
-                DefaultTimeSource(
-                    DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-                )
-        )
-    )
+    IdGenerator(0, IdGeneratorOptions(timeSource = DefaultTimeSource(DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc))))
 
 let f = Bogus.Faker()
 
-let AnOrganization(): Organizations.Application.ReadModels.OrganizationDetails =
+let AnOrganization () : Organizations.Application.ReadModels.OrganizationDetails =
     { Teczka = IdGenerator.CreateId()
       IdentyfikatorEnova = IdGenerator.CreateId()
       NIP = IdGenerator.CreateId()
@@ -24,8 +16,8 @@ let AnOrganization(): Organizations.Application.ReadModels.OrganizationDetails =
       KrsNr = IdGenerator.CreateId().ToString()
       FormaPrawna = f.PickRandomParam([| "Fundacja" |])
       OPP = f.Random.Bool()
-      DaneAdresowe = {
-          NazwaOrganizacjiPodpisujacejUmowe = f.Company.CompanyName()
+      DaneAdresowe =
+        { NazwaOrganizacjiPodpisujacejUmowe = f.Company.CompanyName()
           AdresRejestrowy = f.Address.FullAddress()
           NazwaPlacowkiTrafiaZywnosc = f.Company.CompanyName()
           AdresPlacowkiTrafiaZywnosc = f.Address.FullAddress()
@@ -54,13 +46,13 @@ let AnOrganization(): Organizations.Application.ReadModels.OrganizationDetails =
                    "Warszawa"
                    "Radom"
                    "Płock" |]
-            )
-      }
-      NazwaOrganizacjiKsiegowanieDarowizn = f.Company.CompanyName()
-      KsiegowanieAdres = f.Address.FullAddress()
-      TelOrganProwadzacegoKsiegowosc = f.Phone.PhoneNumber()
-      Kontakty = {
-          WwwFacebook = f.Internet.UrlWithPath(protocol = "https", domain = "facebook.com")
+            ) }
+      AdresyKsiegowosci =
+        { NazwaOrganizacjiKsiegowanieDarowizn = f.Company.CompanyName()
+          KsiegowanieAdres = f.Address.FullAddress()
+          TelOrganProwadzacegoKsiegowosc = f.Phone.PhoneNumber() }
+      Kontakty =
+        { WwwFacebook = f.Internet.UrlWithPath(protocol = "https", domain = "facebook.com")
           Telefon = f.Phone.PhoneNumber()
           Przedstawiciel = f.Person.FullName
           Kontakt = f.Person.Email
@@ -70,16 +62,15 @@ let AnOrganization(): Organizations.Application.ReadModels.OrganizationDetails =
           TelefonOsobyKontaktowej = f.Person.Phone
           MailOsobyKontaktowej = f.Person.Email
           OsobaOdbierajacaZywnosc = f.Person.FullName
-          TelefonOsobyOdbierajacej = f.Person.Phone
-      }
-      Beneficjenci = {
-        LiczbaBeneficjentow = f.Random.Number(5, 1000)
-        Beneficjenci = f.PickRandom [| "Rodziny wielodzietne"; "osoby starsze"; "dom dziecka" |]
-      }
-      Sieci = f.Random.Bool()
-      Bazarki = f.Random.Bool()
-      Machfit = f.Random.Bool()
-      FEPZ2024 = f.Random.Bool()
+          TelefonOsobyOdbierajacej = f.Person.Phone }
+      Beneficjenci =
+        { LiczbaBeneficjentow = f.Random.Number(5, 1000)
+          Beneficjenci = f.PickRandom [| "Rodziny wielodzietne"; "osoby starsze"; "dom dziecka" |] }
+      ZrodlaZywnosci =
+        { Sieci = f.Random.Bool()
+          Bazarki = f.Random.Bool()
+          Machfit = f.Random.Bool()
+          FEPZ2024 = f.Random.Bool() }
       Kategoria = f.PickRandom [| "Dystrybucja paczek żywnościowych"; "Pomoc żywnościowa" |]
       RodzajPomocy = f.PickRandom [| "P"; "S"; "K" |]
       SposobUdzielaniaPomocy = "Wydawanie paczek 3 razy w tygodniu dla 10-15 osób dziennie"
@@ -94,11 +85,9 @@ let AnOrganization(): Organizations.Application.ReadModels.OrganizationDetails =
             [| "prywatny pracownika SUV 500 kg"
                "Pieniądze na transport w projekcie UM - wypożyczany" |]
       TransportKategoria = f.PickRandom [| "Własny"; "Potrzebny" |]
-      Dokumenty = {
-          Wniosek = Some <| f.Date.PastDateOnly(2)
+      Dokumenty =
+        { Wniosek = Some <| f.Date.PastDateOnly(2)
           UmowaZDn = Some <| f.Date.PastDateOnly(2)
           UmowaRODO = f.PickRandom([| Some <| f.Date.PastDateOnly(2); None |])
           KartyOrganizacjiData = Some <| f.Date.PastDateOnly(2)
-          OstatnieOdwiedzinyData = Some <| f.Date.PastDateOnly(1)
-      }
-    }
+          OstatnieOdwiedzinyData = Some <| f.Date.PastDateOnly(1) } }
