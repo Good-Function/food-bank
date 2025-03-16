@@ -9,55 +9,21 @@ open Web.Organizations.Templates.Formatters
 
 let View (warunki: ReadModels.WarunkiPomocy) (teczka: int64) =
     article () {
-        header (class' = "action-header") {
-            span () { "Warunki udzielania pomocy żywnościowej" }
-
-            div (class' = "action-header-actions") {
-                span (
-                    hxGet = $"/organizations/{teczka}/warunki-pomocy/edit",
-                    hxTarget = "closest article",
-                    hxSwap = "outerHTML"
-                ) {
-                    Icons.Pen
-                }
-            }
-        }
-
-        field "Kategoria" warunki.Kategoria
-        field "Rodzaj pomocy" warunki.RodzajPomocy
-        field "Sposób udzielania pomocy" warunki.SposobUdzielaniaPomocy
-        field "Warunki magazynowe" warunki.WarunkiMagazynowe
-        field "HACCP" (warunki.HACCP |> toTakNie)
-        field "Sanepid" (warunki.Sanepid |> toTakNie)
-        field "Transport - opis" warunki.TransportOpis
-        field "Transport - kategoria" warunki.TransportKategoria
+        editableHeader "Warunki udzielania pomocy żywnościowej"  $"/organizations/{teczka}/warunki-pomocy/edit"
+        readonlyField "Kategoria" warunki.Kategoria
+        readonlyField "Rodzaj pomocy" warunki.RodzajPomocy
+        readonlyField "Sposób udzielania pomocy" warunki.SposobUdzielaniaPomocy
+        readonlyField "Warunki magazynowe" warunki.WarunkiMagazynowe
+        readonlyField "HACCP" (warunki.HACCP |> toTakNie)
+        readonlyField "Sanepid" (warunki.Sanepid |> toTakNie)
+        readonlyField "Transport - opis" warunki.TransportOpis
+        readonlyField "Transport - kategoria" warunki.TransportKategoria
     }
 
 let Form (warunki: ReadModels.WarunkiPomocy) (teczka: int64) =
     form () {
         article (class' = "focus-dim") {
-            header (class' = "action-header") {
-                span () { "Warunki udzielania pomocy żywnościowej" }
-
-                div (class' = "action-header-actions") {
-                    span (
-                        hxGet = $"/organizations/{teczka}/waurnki-pomocy",
-                        hxTarget = "closest article",
-                        hxSwap = "outerHTML"
-                    ) {
-                        Icons.Cancel
-                    }
-
-                    span (
-                        hxPut = $"/organizations/{teczka}/warunki-pomocy",
-                        hxTarget = "closest article",
-                        hxSwap = "outerHTML"
-                    ) {
-                        Icons.Ok
-                    }
-                }
-            }
-            
+            activeEditableHeader "Warunki udzielania pomocy żywnościowej" $"/organizations/{teczka}/waurnki-pomocy"
             editField "Kategoria" warunki.Kategoria (nameof warunki.Kategoria)
             editField "Rodzaj pomocy" warunki.RodzajPomocy (nameof warunki.RodzajPomocy)
             editField "Sposób udzielania pomocy" warunki.SposobUdzielaniaPomocy (nameof warunki.SposobUdzielaniaPomocy)

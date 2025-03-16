@@ -69,6 +69,7 @@
       <Compile Include="Organizations\Templates\ListTemplate.fs" />
       <Compile Include="Organizations\Dtos.fs" />
       <Compile Include="Organizations\CompositionRoot.fs" />
+      <Compile Include="Organizations\SectionsRouter.fs" />
       <Compile Include="Organizations\Router.fs" />
       <Compile Include="Applications\Template.fs" />
       <Compile Include="Applications\Database.fs" />

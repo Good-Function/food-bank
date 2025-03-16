@@ -1,27 +1,13 @@
 module Organizations.Templates.DetailsTemplate
 
 open System
-open Layout
 open Layout.Navigation
 open Organizations.Application.ReadModels
+open Organizations.Templates.Fields
 open Oxpecker.ViewEngine
 open Web.Organizations
 open PageComposer
 open Web.Organizations.Templates.Formatters
-
-let field (labelText: string) (value: string) =
-    p () {
-        label () { b () { labelText } }
-        small () { value }
-    }
-
-let editableHeader (name: string) =
-    header (class' = "action-header") {
-        span () { name }
-        div(class' = "action-header-actions") {
-            span () { Icons.Pen }
-        }
-    }
 
 let Template (org: OrganizationDetails) =
     Fragment() {
@@ -31,12 +17,12 @@ let Template (org: OrganizationDetails) =
             div () {
                 article () {
                     header() { "Identyfikatory" }
-                    field "ENOVA" $"{org.IdentyfikatorEnova}"
-                    field "NIP" $"{org.NIP}"
-                    field "Regon" $"{org.Regon}"
-                    field "KRS" org.KrsNr
-                    field "Forma Prawna" org.FormaPrawna
-                    field "OPP" (org.OPP |> toTakNie)
+                    readonlyField "ENOVA" $"{org.IdentyfikatorEnova}"
+                    readonlyField "NIP" $"{org.NIP}"
+                    readonlyField "Regon" $"{org.Regon}"
+                    readonlyField "KRS" org.KrsNr
+                    readonlyField "Forma Prawna" org.FormaPrawna
+                    readonlyField "OPP" (org.OPP |> toTakNie)
                 }
                 
                 Kontakty.View org.Kontakty org.Teczka

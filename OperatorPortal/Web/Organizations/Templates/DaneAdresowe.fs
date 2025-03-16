@@ -1,60 +1,24 @@
 module Organizations.Templates.DaneAdresowe
 
-open Layout
 open Organizations.Application
 open Oxpecker.ViewEngine
-open Oxpecker.Htmx
 open Fields
 
 let View (adresy: ReadModels.DaneAdresowe) (teczka: int64) =
     article () {
-        header (class' = "action-header") {
-            span () { "Dane adresowe" }
-
-            div (class' = "action-header-actions") {
-                span (
-                    hxGet = $"/organizations/{teczka}/dane-adresowe/edit",
-                    hxTarget = "closest article",
-                    hxSwap = "outerHTML"
-                ) {
-                    Icons.Pen
-                }
-            }
-        }
-
-        field "Organizacja, która podpisała umowę" adresy.NazwaOrganizacjiPodpisujacejUmowe
-        field "Adres rejestrowy" adresy.AdresRejestrowy
-        field "Placówka do której trafia żywność" adresy.NazwaPlacowkiTrafiaZywnosc
-        field "Adres dostawy żywności" adresy.AdresPlacowkiTrafiaZywnosc
-        field "Gmina / Dzielnica" adresy.GminaDzielnica
-        field "Powiat" adresy.Powiat
+        editableHeader "Dane adresowe" $"/organizations/{teczka}/dane-adresowe/edit"
+        readonlyField "Organizacja, która podpisała umowę" adresy.NazwaOrganizacjiPodpisujacejUmowe
+        readonlyField "Adres rejestrowy" adresy.AdresRejestrowy
+        readonlyField "Placówka do której trafia żywność" adresy.NazwaPlacowkiTrafiaZywnosc
+        readonlyField "Adres dostawy żywności" adresy.AdresPlacowkiTrafiaZywnosc
+        readonlyField "Gmina / Dzielnica" adresy.GminaDzielnica
+        readonlyField "Powiat" adresy.Powiat
     }
 
 let Form (adresy: ReadModels.DaneAdresowe) (teczka: int64) =
     form () {
         article (class' = "focus-dim") {
-            header (class' = "action-header") {
-                span () { "Dane adresowe" }
-
-                div (class' = "action-header-actions") {
-                    span (
-                        hxGet = $"/organizations/{teczka}/dane-adresowe",
-                        hxTarget = "closest article",
-                        hxSwap = "outerHTML"
-                    ) {
-                        Icons.Cancel
-                    }
-
-                    span (
-                        hxPut = $"/organizations/{teczka}/dane-adresowe",
-                        hxTarget = "closest article",
-                        hxSwap = "outerHTML"
-                    ) {
-                        Icons.Ok
-                    }
-                }
-            }
-
+            activeEditableHeader "Dane adresowe" $"/organizations/{teczka}/dane-adresowe"
             editField "Organizacja, która podpisała umowę" adresy.NazwaOrganizacjiPodpisujacejUmowe (nameof adresy.NazwaOrganizacjiPodpisujacejUmowe)
             editField "Adres rejestrowy" adresy.AdresRejestrowy (nameof adresy.AdresRejestrowy)
             editField "Placówka do której trafia żywność" adresy.NazwaPlacowkiTrafiaZywnosc (nameof adresy.NazwaPlacowkiTrafiaZywnosc)
