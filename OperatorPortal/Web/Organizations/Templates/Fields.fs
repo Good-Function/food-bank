@@ -1,7 +1,45 @@
 module Organizations.Templates.Fields
 
 open System
+open Layout
 open Oxpecker.ViewEngine
+open Oxpecker.Htmx
+
+let editableHeader (title: string) (formPath: string) =
+    header (class' = "action-header") {
+        span () { title }
+        div (class' = "action-header-actions") {
+            span (
+                hxGet = formPath,
+                hxTarget = "closest article",
+                hxSwap = "outerHTML"
+            ) {
+                Icons.Pen
+            }
+        }
+    }
+
+let activeEditableHeader (title: string) (formPath: string) =
+     header (class' = "action-header") {
+        span () { title }
+        div (class' = "action-header-actions") {
+            span (
+                hxGet = formPath,
+                hxTarget = "closest article",
+                hxSwap = "outerHTML"
+            ) {
+                Icons.Cancel
+            }
+
+            span (
+                hxPut = formPath,
+                hxTarget = "closest article",
+                hxSwap = "outerHTML"
+            ) {
+                Icons.Ok
+            }
+        }
+    }
 
 let editField (labelText: string) (value: string) (name: string) =
     p () {
@@ -31,7 +69,7 @@ let dateField (labelText: string) (value: DateOnly option) (name: string) =
         input (value = value , name = name, type'="date")
     }
 
-let field (labelText: string) (value: string) =
+let readonlyField (labelText: string) (value: string) =
     p () {
         label () { b () { labelText } }
         small () { value }
