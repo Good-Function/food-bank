@@ -185,7 +185,8 @@ SELECT
 FROM organizacje
 WHERE
    @searchTerm = '' 
-   OR (similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.1 OR similarity(gminadzielnica, @searchTerm) > 0.1)
+   OR teczka = CASE WHEN @searchTerm ~ '^\d+$' THEN @searchTerm::bigint  END
+   OR (similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.2 OR similarity(gminadzielnica, @searchTerm) > 0.2)
 ORDER BY teczka DESC;
 """
 
