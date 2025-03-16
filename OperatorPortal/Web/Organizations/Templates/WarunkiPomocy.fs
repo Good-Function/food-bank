@@ -23,7 +23,7 @@ let View (warunki: ReadModels.WarunkiPomocy) (teczka: int64) =
 let Form (warunki: ReadModels.WarunkiPomocy) (teczka: int64) =
     form () {
         article (class' = "focus-dim") {
-            activeEditableHeader "Warunki udzielania pomocy żywnościowej" $"/organizations/{teczka}/waurnki-pomocy"
+            activeEditableHeader "Warunki udzielania pomocy żywnościowej" $"/organizations/{teczka}/warunki-pomocy"
             editField "Kategoria" warunki.Kategoria (nameof warunki.Kategoria)
             editField "Rodzaj pomocy" warunki.RodzajPomocy (nameof warunki.RodzajPomocy)
             editField "Sposób udzielania pomocy" warunki.SposobUdzielaniaPomocy (nameof warunki.SposobUdzielaniaPomocy)
