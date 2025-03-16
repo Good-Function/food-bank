@@ -2,7 +2,7 @@ module OrganizationEditing
 
 open System
 open System.Net
-open Organizations.Templates.DetailsTemplate
+open Oxpecker.ViewEngine
 open Tests
 open Tools.FormDataBuilder
 open Web.Organizations.Templates.Formatters
@@ -357,6 +357,77 @@ let ``PUT /ogranizations/{id}/adresy-ksiegowosci modifies and returns updated da
         response.StatusCode |> should equal HttpStatusCode.OK
         dates |> should equal [
             expectedText
+            expectedText
+            expectedText
+        ]
+    }
+    
+[<Fact>]
+let ``GET /ogranizations/{id}/warunki-pomocy/edit returns prefilled inputs to edit the data`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.GetAsync $"/organizations/{organization.Teczka}/warunki-pomocy/edit"
+        // Assert
+        let! doc = response.HtmlContent()
+        let inputs =
+            doc.CssSelect "input" |> List.filter(fun elem -> elem.AttributeValue("type") <> "radio") |> List.map _.AttributeValue("value")
+        let radios =
+            doc.CssSelect "input"
+                |> List.filter _.HasAttribute("checked", "")
+                |> List.map(fun input -> input.AttributeValue("value") |> Boolean.Parse)
+        response.StatusCode |> should equal HttpStatusCode.OK
+        inputs |> should equal [
+            organization.WarunkiPomocy.Kategoria
+            organization.WarunkiPomocy.RodzajPomocy
+            organization.WarunkiPomocy.SposobUdzielaniaPomocy
+            organization.WarunkiPomocy.WarunkiMagazynowe
+            organization.WarunkiPomocy.TransportOpis
+            organization.WarunkiPomocy.TransportKategoria
+        ]
+        radios |> should equal [
+            organization.WarunkiPomocy.HACCP
+            organization.WarunkiPomocy.Sanepid
+        ]
+    }
+    
+[<Fact>]
+let ``PUT /ogranizations/{id}/warunki-pomocy modifies and returns updated data`` () =
+    task {
+        // Arrange
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        let expectedText = $"{Guid.NewGuid()}"
+        let data = formData {
+            yield ("Kategoria", expectedText)
+            yield ("RodzajPomocy", expectedText)
+            yield ("SposobUdzielaniaPomocy", expectedText)
+            yield ("WarunkiMagazynowe", expectedText)
+            yield ("HACCP", "true")
+            yield ("Sanepid", "true")
+            yield ("TransportOpis", expectedText)
+            yield ("TransportKategoria", expectedText)
+        }
+        // Arrange
+        let api = runTestApi() |> authenticate "TestUser"
+        // Act
+        let! response = api.PutAsync($"/organizations/{organization.Teczka}/warunki-pomocy", data)
+        // Assert
+        let! doc = response.HtmlContent()
+        let warunkiPomocy =
+            doc.CssSelect "small" |> List.map _.InnerText()
+        response.StatusCode |> should equal HttpStatusCode.OK
+        warunkiPomocy |> should equal [
+            expectedText
+            expectedText
+            expectedText
+            expectedText
+            "Tak"
+            "Tak"
             expectedText
             expectedText
         ]

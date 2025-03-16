@@ -1,6 +1,5 @@
 module Organizations.Router
 
-open Microsoft.AspNetCore.Localization
 open Organizations.Application
 open Organizations.Templates
 open Organizations.Dtos
@@ -170,6 +169,29 @@ let changeAdresyKsiegowosci (handle: Commands.ChangeAdresyKsiegowosci) (teczka: 
             do! cmd |> handle
             return ctx.WriteHtmlView(AdresyKsiegowosci.View form.toAdresyKsiegowosci teczka)
         }
+     
+let warunkiPomocy (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64): EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(WarunkiPomocy.View details.WarunkiPomocy teczka)
+        }
+        
+let warunkiPomocyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64): EndpointHandler =
+    fun ctx ->
+        task {
+            let! details = readDetailsBy teczka
+            return ctx.WriteHtmlView(WarunkiPomocy.Form details.WarunkiPomocy teczka)
+        }
+        
+let changeWarunkiPomocy (handle: Commands.ChangeWarunkiPomocy) (teczka: int64): EndpointHandler =
+    fun ctx ->
+        task {
+            let! form = ctx.BindForm<WarunkiPomocyForm>()
+            let cmd = form.toChangeWarunkiPomocy teczka
+            do! cmd |> handle
+            return ctx.WriteHtmlView(WarunkiPomocy.View form.toWarunkiPomocy teczka)
+        }
         
 let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
     fun ctx ->
@@ -198,6 +220,8 @@ let Endpoints (dependencies: Dependencies) =
             routef "/{%d}/zrodla-zywnosci/edit" (zrodlaZywnosciEdit dependencies.ReadOrganizationDetailsBy)
             routef "/{%d}/adresy-ksiegowosci" (adresyKsiegowosci dependencies.ReadOrganizationDetailsBy)
             routef "/{%d}/adresy-ksiegowosci/edit" (adresyKsiegowosciEdit dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/warunki-pomocy" (warunkiPomocy dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/warunki-pomocy/edit" (warunkiPomocyEdit dependencies.ReadOrganizationDetailsBy)
           ]
       PUT [
           routef "/{%d}/dane-adresowe" (changeDaneAdresowe dependencies.ChangeDaneAdresowe)
@@ -206,4 +230,5 @@ let Endpoints (dependencies: Dependencies) =
           routef "/{%d}/dokumenty" (changeDokumenty dependencies.ChangeDokumenty)
           routef "/{%d}/zrodla-zywnosci" (changeZrodlaZywnosci dependencies.ChangeZrodlaZywnosci)
           routef "/{%d}/adresy-ksiegowosci" (changeAdresyKsiegowosci dependencies.ChangeAdresyKsiegowosci)
+          routef "/{%d}/warunki-pomocy" (changeWarunkiPomocy dependencies.ChangeWarunkiPomocy)
       ] ]

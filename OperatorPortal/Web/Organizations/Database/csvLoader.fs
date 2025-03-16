@@ -62,14 +62,16 @@ let parse (org: Orgs.Row) : OrganizationDetails =
           Machfit = org.Machfit |> polishToBool
           FEPZ2024 = org.``FEPŻ 2024`` |> polishToBool
       }
-      Kategoria = org.Kategoria
-      RodzajPomocy = org.``RODZAJ POMOCY``
-      SposobUdzielaniaPomocy = org.``Sposób udzielania pomocy``
-      WarunkiMagazynowe = org.``Warunki magazynowe``
-      HACCP = org.Haccp |> polishToBool
-      Sanepid = org.SANEPID |> polishToBool
-      TransportOpis = org.``Transport - opis``
-      TransportKategoria = org.``Transport - kategoria``
+      WarunkiPomocy = {
+          Kategoria = org.Kategoria
+          RodzajPomocy = org.``RODZAJ POMOCY``
+          SposobUdzielaniaPomocy = org.``Sposób udzielania pomocy``
+          WarunkiMagazynowe = org.``Warunki magazynowe``
+          HACCP = org.Haccp |> polishToBool
+          Sanepid = org.SANEPID |> polishToBool
+          TransportOpis = org.``Transport - opis``
+          TransportKategoria = org.``Transport - kategoria``
+      }
       Dokumenty =
         { Wniosek = org.Wniosek |> Option.map DateOnly.FromDateTime
           UmowaZDn = org.``Umowa z dnia`` |> Option.map DateOnly.FromDateTime

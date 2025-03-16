@@ -144,3 +144,34 @@ type AdresyKsiegowosciForm =
           KsiegowanieAdres = this.KsiegowanieAdres
           TelOrganProwadzacegoKsiegowosc = this.TelOrganProwadzacegoKsiegowosc }
 
+[<CLIMutable>]
+type WarunkiPomocyForm =
+    { Kategoria: string
+      RodzajPomocy: string
+      SposobUdzielaniaPomocy: string
+      WarunkiMagazynowe: string
+      HACCP: bool
+      Sanepid: bool
+      TransportOpis: string
+      TransportKategoria: string }
+
+    member this.toChangeWarunkiPomocy(id: int64) : Commands.WarunkiPomocy =
+        { Teczka = id
+          Kategoria = this.Kategoria
+          RodzajPomocy = this.RodzajPomocy
+          SposobUdzielaniaPomocy = this.SposobUdzielaniaPomocy
+          WarunkiMagazynowe = this.WarunkiMagazynowe
+          HACCP = this.HACCP
+          Sanepid = this.Sanepid
+          TransportOpis = this.TransportOpis
+          TransportKategoria = this.TransportKategoria }
+
+    member this.toWarunkiPomocy: ReadModels.WarunkiPomocy =
+        { Kategoria = this.Kategoria
+          RodzajPomocy = this.RodzajPomocy
+          SposobUdzielaniaPomocy = this.SposobUdzielaniaPomocy
+          WarunkiMagazynowe = this.WarunkiMagazynowe
+          HACCP = this.HACCP
+          Sanepid = this.Sanepid
+          TransportOpis = this.TransportOpis
+          TransportKategoria = this.TransportKategoria }

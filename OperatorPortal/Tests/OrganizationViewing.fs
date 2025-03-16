@@ -132,14 +132,14 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             (organization.ZrodlaZywnosci.FEPZ2024 |> Formatters.toTakNie)
         ]
         warunki[0..7] |> should equal [
-            organization.Kategoria
-            organization.RodzajPomocy
-            organization.SposobUdzielaniaPomocy
-            organization.WarunkiMagazynowe
-            (organization.HACCP |> Formatters.toTakNie) 
-            (organization.Sanepid |> Formatters.toTakNie)
-            organization.TransportOpis
-            organization.TransportKategoria
+            organization.WarunkiPomocy.Kategoria
+            organization.WarunkiPomocy.RodzajPomocy
+            organization.WarunkiPomocy.SposobUdzielaniaPomocy
+            organization.WarunkiPomocy.WarunkiMagazynowe
+            (organization.WarunkiPomocy.HACCP |> Formatters.toTakNie) 
+            (organization.WarunkiPomocy.Sanepid |> Formatters.toTakNie)
+            organization.WarunkiPomocy.TransportOpis
+            organization.WarunkiPomocy.TransportKategoria
         ]
     }
     

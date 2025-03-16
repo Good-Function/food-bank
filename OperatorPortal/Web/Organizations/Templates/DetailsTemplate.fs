@@ -48,18 +48,7 @@ let Template (org: OrganizationDetails) =
                 AdresyKsiegowosci.View org.AdresyKsiegowosci org.Teczka
                 Beneficjenci.View org.Beneficjenci org.Teczka
                 ZrodlaZywnosci.View org.ZrodlaZywnosci org.Teczka
-
-                article () {
-                    editableHeader "Warunki udzielania pomocy żywnościowej"
-                    field "Kategoria" org.Kategoria
-                    field "Rodzaj pomocy" org.RodzajPomocy
-                    field "Sposób udzielania pomocy" org.SposobUdzielaniaPomocy
-                    field "Warunki magazynowe" org.WarunkiMagazynowe
-                    field "HACCP" (org.HACCP |> toTakNie)
-                    field "Sanepid" (org.Sanepid |> toTakNie)
-                    field "Transport - opis" org.TransportOpis
-                    field "Transport - kategoria" org.TransportKategoria
-                }
+                WarunkiPomocy.View org.WarunkiPomocy org.Teczka
             }
         }
     }

@@ -50,6 +50,7 @@ let createServer () =
         ChangeDokumenty = OrganizationsDao.changeDokumenty dbConnect
         ChangeAdresyKsiegowosci = OrganizationsDao.changeAdresyKsiegowosci dbConnect
         ChangeZrodlaZywnosci = OrganizationsDao.changeZrodlaZywnosci dbConnect
+        ChangeWarunkiPomocy = OrganizationsDao.changeWarunkiPomocy dbConnect
     }
     let appDeps: Applications.CompositionRoot.Dependencies = {
         TestRead = Applications.Database.readSchemas dbConnect

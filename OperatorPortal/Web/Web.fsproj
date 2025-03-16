@@ -63,6 +63,7 @@
       <Compile Include="Organizations\Templates\Dokumenty.fs" />
       <Compile Include="Organizations\Templates\AdresyKsiegowosci.fs" />
       <Compile Include="Organizations\Templates\ZrodlaZywnosci.fs" />
+      <Compile Include="Organizations\Templates\WarunkiPomocy.fs" />
       <Compile Include="Organizations\Templates\DetailsTemplate.fs" />
       <Compile Include="Organizations\Templates\SearchableListTemplate.fs" />
       <Compile Include="Organizations\Templates\ListTemplate.fs" />

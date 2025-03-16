@@ -61,6 +61,17 @@ type Kontakty =
       MailOsobyKontaktowej: string
       OsobaOdbierajacaZywnosc: string
       TelefonOsobyOdbierajacej: string }
+    
+type WarunkiPomocy = {
+      Kategoria: string
+      RodzajPomocy: string
+      SposobUdzielaniaPomocy: string
+      WarunkiMagazynowe: string
+      HACCP: bool // Hard analysis and critical control point - system bezpieczenstwa zywnosci. Np podpisujesz sie ze sprawdziles temperatura w chlodni. Teoretycznie kazda org powinna to miec.
+      Sanepid: bool // Zgoda sanepidu. Suche paczki mogą pójść bez sanepidu.
+      TransportOpis: string
+      TransportKategoria: string
+}
 
 type OrganizationDetails =
     { Teczka: int64
@@ -75,15 +86,8 @@ type OrganizationDetails =
       ZrodlaZywnosci: ZrodlaZywnosci
       AdresyKsiegowosci: AdresyKsiegowosci
       Beneficjenci: Beneficjenci
-      Kategoria: string
-      RodzajPomocy: string
-      SposobUdzielaniaPomocy: string
-      WarunkiMagazynowe: string
-      HACCP: bool // Hard analysis and critical control point - system bezpieczenstwa zywnosci. Np podpisujesz sie ze sprawdziles temperatura w chlodni. Teoretycznie kazda org powinna to miec.
-      Sanepid: bool // Zgoda sanepidu. Suche paczki mogą pójść bez sanepidu.
-      TransportOpis: string
-      TransportKategoria: string
-      Dokumenty: Dokumenty }
+      Dokumenty: Dokumenty
+      WarunkiPomocy: WarunkiPomocy }
 
 type ReadOrganizationSummaries = string -> Async<OrganizationSummary list>
 type ReadOrganizationDetailsBy = int64 -> Async<OrganizationDetails>

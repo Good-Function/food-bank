@@ -88,14 +88,14 @@ type OrganizationDetailsRow = {
             Bazarki = org.ZrodlaZywnosci.Bazarki
             Machfit = org.ZrodlaZywnosci.Machfit
             FEPZ2024 = org.ZrodlaZywnosci.FEPZ2024
-            Kategoria = org.Kategoria
-            RodzajPomocy = org.RodzajPomocy
-            SposobUdzielaniaPomocy = org.SposobUdzielaniaPomocy
-            WarunkiMagazynowe = org.WarunkiMagazynowe
-            HACCP = org.HACCP
-            Sanepid = org.Sanepid
-            TransportOpis = org.TransportOpis
-            TransportKategoria = org.TransportKategoria
+            Kategoria = org.WarunkiPomocy.Kategoria
+            RodzajPomocy = org.WarunkiPomocy.RodzajPomocy
+            SposobUdzielaniaPomocy = org.WarunkiPomocy.SposobUdzielaniaPomocy
+            WarunkiMagazynowe = org.WarunkiPomocy.WarunkiMagazynowe
+            HACCP = org.WarunkiPomocy.HACCP
+            Sanepid = org.WarunkiPomocy.Sanepid
+            TransportOpis = org.WarunkiPomocy.TransportOpis
+            TransportKategoria = org.WarunkiPomocy.TransportKategoria
             Wniosek = org.Dokumenty.Wniosek
             UmowaZDn = org.Dokumenty.UmowaZDn
             UmowaRODO = org.Dokumenty.UmowaRODO
@@ -147,14 +147,16 @@ type OrganizationDetailsRow = {
                 Machfit = this.Machfit
                 FEPZ2024 = this.FEPZ2024
             }
-            Kategoria = this.Kategoria
-            RodzajPomocy = this.RodzajPomocy
-            SposobUdzielaniaPomocy = this.SposobUdzielaniaPomocy
-            WarunkiMagazynowe = this.WarunkiMagazynowe
-            HACCP = this.HACCP
-            Sanepid = this.Sanepid
-            TransportOpis = this.TransportOpis
-            TransportKategoria = this.TransportKategoria
+            WarunkiPomocy = {
+                Kategoria = this.Kategoria
+                RodzajPomocy = this.RodzajPomocy
+                SposobUdzielaniaPomocy = this.SposobUdzielaniaPomocy
+                WarunkiMagazynowe = this.WarunkiMagazynowe
+                HACCP = this.HACCP
+                Sanepid = this.Sanepid
+                TransportOpis = this.TransportOpis
+                TransportKategoria = this.TransportKategoria
+            }
             Dokumenty = {
                 Wniosek = this.Wniosek
                 UmowaZDn = this.UmowaZDn
@@ -264,6 +266,23 @@ SET
     sieci = @Sieci,
     fepz2024 = @FEPZ2024
 WHERE Teczka = @Teczka;""" zrodlaZywnosci
+    }
+    
+let changeWarunkiPomocy (connectDB: unit -> Async<IDbConnection>) (warunkiPomocy: Commands.WarunkiPomocy) =
+    async {
+        use! db = connectDB()
+        do! db.Execute """
+UPDATE organizacje
+SET 
+    kategoria = @Kategoria,
+    sanepid = @Sanepid,
+    rodzajPomocy = @RodzajPomocy,
+    transportKategoria = @TransportKategoria,
+    TransportOpis = @TransportOpis,
+    WarunkiMagazynowe = @WarunkiMagazynowe,
+    SposobUdzielaniaPomocy = @SposobUdzielaniaPomocy,
+    HACCP = @HACCP
+WHERE Teczka = @Teczka;""" warunkiPomocy
     }
     
 let changeAdresyKsiegowosci (connectDB: unit -> Async<IDbConnection>) (adresy: Commands.AdresyKsiegowosci) =
