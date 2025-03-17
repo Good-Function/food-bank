@@ -30,9 +30,10 @@
         <Compile Include="PostgresPersistence\DapperFsharp.fs" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Layout\Icons\Pen.fs" />
+        <Compile Include="Layout\Icons\Icons.fs" />
         <Compile Include="Layout\ThemeToggler.fs" />
         <Compile Include="Layout\Head.fs" />
+        <Compile Include="Layout\ProfilePopover.fs" />
         <Compile Include="Layout\Navigation.fs" />
         <Compile Include="Layout\Body.fs" />
         <Compile Include="Layout\NotFound.fs" />
@@ -79,6 +80,7 @@
       <Compile Include="Culture.fs" />
       <Compile Include="Settings.fs" />
       <Compile Include="Program.fs" />
+      <Folder Include="Profile\" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Migrations\Migrations.fsproj" />

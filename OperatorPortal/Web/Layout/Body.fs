@@ -10,7 +10,13 @@ let Template (content: HtmlElement) (currentPath: Navigation.Page) =
             div (style = "display: flex; align-items: center; justify-content: space-between;") {
                 div ( class'="bzsos-logo" )
                 Navigation.Template currentPath
-                div () { ThemeToggler.Component }
+                div () {
+                    button(id="ProfilePopoverTrigger").attr("popovertarget", "ProfilePopover") {
+                        Icons.Profile
+                    }
+                    ProfilePopover.Template
+                    ThemeToggler.Component
+                }
             }
             hr ()
         }
