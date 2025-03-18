@@ -4,7 +4,7 @@ open Layout
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 
-let Template (content: HtmlElement) (currentPath: Navigation.Page) =
+let Template (content: HtmlElement) (currentPath: Navigation.Page option) =
     body (class' = "container", hxBoost = true) {
         header () {
             div (style = "display: flex; align-items: center; justify-content: space-between;") {

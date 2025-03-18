@@ -76,11 +76,13 @@
       <Compile Include="Applications\Database.fs" />
       <Compile Include="Applications\CompositionRoot.fs" />
       <Compile Include="Applications\Router.fs" />
+      <Compile Include="Configuration\ImportCsvTemplate.fs" />
+      <Compile Include="Configuration\ResetPasswordTemplate.fs" />
+      <Compile Include="Configuration\Router.fs" />
       <Compile Include="Authentication.fs" />
       <Compile Include="Culture.fs" />
       <Compile Include="Settings.fs" />
       <Compile Include="Program.fs" />
-      <Folder Include="Profile\" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Migrations\Migrations.fsproj" />
