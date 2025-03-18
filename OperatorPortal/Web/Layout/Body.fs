@@ -4,13 +4,19 @@ open Layout
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 
-let Template (content: HtmlElement) (currentPath: Navigation.Page) =
+let Template (content: HtmlElement) (currentPath: Navigation.Page option) =
     body (class' = "container", hxBoost = true) {
         header () {
             div (style = "display: flex; align-items: center; justify-content: space-between;") {
                 div ( class'="bzsos-logo" )
                 Navigation.Template currentPath
-                div () { ThemeToggler.Component }
+                div () {
+                    button(id="ProfilePopoverTrigger").attr("popovertarget", "ProfilePopover") {
+                        Icons.Profile
+                    }
+                    ProfilePopover.Template
+                    ThemeToggler.Component
+                }
             }
             hr ()
         }

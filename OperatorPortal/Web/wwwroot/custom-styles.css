@@ -44,6 +44,25 @@ main {
     height: 80px;
 }
 
+#ProfilePopoverTrigger {
+    anchor-name: --ProfilePopover;  /* chrome popover */
+    background:none;
+    outline:none;
+    box-shadow: none;
+    border:none;
+}
+
+#ProfilePopover {
+    margin: 0;
+    position-anchor: --ProfilePopover; /* chrome popover */
+    position-area: block-end span-inline-end; /* chrome popover */
+    inset: unset; /* firefox popover */
+    background-color: var(--pico-contrast-focus);
+    border-radius: var(--pico-border-radius);
+    border:0;
+    padding: var(--pico-spacing);
+}
+
 @media screen and (max-width: 770px) {
     .bzsos-logo {
         display: none;

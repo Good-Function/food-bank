@@ -10,4 +10,4 @@ type PageOptions = {
 }
 
 let composeFullPage (page: PageOptions) =
-    Head.Template (Body.Template page.Content page.CurrentPage) (page.CurrentPage.ToTitle()) 
+    Head.Template (Body.Template page.Content (Some page.CurrentPage)) (page.CurrentPage.ToTitle()) 

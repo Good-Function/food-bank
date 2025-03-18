@@ -25,14 +25,14 @@ let unionToArray<'T> =
     FSharpType.GetUnionCases(typeof<'T>)
     |> Array.map (fun case -> FSharpValue.MakeUnion(case, [||]) :?> 'T)
 
-let Template (currentPath: Page) =
+let Template (currentPath: Page option) =
     nav (hxBoost = true) {
         ul () {
             for path in unionToArray<Page> do
                 li () {
                     a (
                         href = path.ToPath(),
-                        class' = "nav-link " + if path = currentPath then "active" else ""
+                        class' = "nav-link " + if Some path = currentPath then "active" else ""
                     ) {
                         path.ToTitle()
                     }

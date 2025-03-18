@@ -24,6 +24,7 @@ let endpoints
         subRoute "/login" Login.Router.Endpoints
         subRoute "/organizations" (Organizations.Router.Endpoints orgDeps) |> protect
         subRoute "/applications" (Applications.Router.Endpoints appDeps) |> protect
+        subRoute "/settings" Configuration.Router.Endpoints |> protect
     ]
 
 let notFoundHandler (ctx: HttpContext) =
