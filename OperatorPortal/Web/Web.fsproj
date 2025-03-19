@@ -80,6 +80,9 @@
       <Compile Include="Configuration\ImportCsvTemplate.fs" />
       <Compile Include="Configuration\ResetPasswordTemplate.fs" />
       <Compile Include="Configuration\Router.fs" />
+      <Content Include="Configuration\Database\migrations.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Compile Include="Authentication.fs" />
       <Compile Include="Culture.fs" />
       <Compile Include="Settings.fs" />
