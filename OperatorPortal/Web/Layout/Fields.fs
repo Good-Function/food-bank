@@ -1,4 +1,4 @@
-module Organizations.Templates.Fields
+module Layout.Fields
 
 open System
 open Layout
@@ -45,6 +45,12 @@ let editField (labelText: string) (value: string) (name: string) =
     p () {
         label () { b () { labelText } }
         input (value = value, name = name)
+    }
+    
+let passwordField (labelText: string) (name: string) =
+    p () {
+        label () { b () { labelText } }
+        input (name = name, type'="password")
     }
     
 let booleanField (labelText: string) (value: bool) (name: string) =

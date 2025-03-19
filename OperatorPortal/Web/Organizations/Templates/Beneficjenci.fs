@@ -1,7 +1,7 @@
 module Organizations.Templates.Beneficjenci
 
 open Organizations.Application
-open Organizations.Templates.Fields
+open Layout.Fields
 open Oxpecker.ViewEngine
 
 let View (beneficjenci: ReadModels.Beneficjenci) (teczka: int64) =

@@ -3,11 +3,11 @@ module Organizations.Templates.DetailsTemplate
 open System
 open Layout.Navigation
 open Organizations.Application.ReadModels
-open Organizations.Templates.Fields
+open Layout.Fields
 open Oxpecker.ViewEngine
 open Web.Organizations
 open PageComposer
-open Web.Organizations.Templates.Formatters
+open Organizations.Templates.Formatters
 
 let Template (org: OrganizationDetails) =
     Fragment() {

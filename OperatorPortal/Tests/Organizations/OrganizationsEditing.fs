@@ -5,7 +5,7 @@ open System.Net
 open Oxpecker.ViewEngine
 open Tests
 open Tools.FormDataBuilder
-open Web.Organizations.Templates.Formatters
+open Organizations.Templates.Formatters
 open Xunit
 open Tools.TestServer
 open FsUnit.Xunit

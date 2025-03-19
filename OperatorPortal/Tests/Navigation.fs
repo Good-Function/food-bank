@@ -8,7 +8,7 @@ open Tools.HttResponseMessageToHtml
 open FSharp.Data
 
 [<Fact>]
-let ``Navigations contains /ogranizations, /applications, /team links`` () =
+let ``Navigations contains /ogranizations, /applications, /team links, /settings/password-reset, /settings/csv-import`` () =
     task {
         // Arrange
         let api = runTestApi() |> authenticate "TestUser"
@@ -21,5 +21,10 @@ let ``Navigations contains /ogranizations, /applications, /team links`` () =
         let navLinks = document.CssSelect "nav ul li a"
                        |> Seq.map(_.Attribute("href").Value())
                        |> Seq.toList
-        navLinks |> should equal [ "/organizations"; "/applications"; "/team" ]    
+        navLinks |> should equal [ "/organizations"
+                                   "/applications"
+                                   "/team"
+                                   "/settings/password-reset"
+                                   "/settings/csv-import"
+                                 ]    
     }

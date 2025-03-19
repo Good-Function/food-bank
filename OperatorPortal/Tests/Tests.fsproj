@@ -18,9 +18,6 @@
         <Compile Include="E2E\KestrelTestServer.fs" />
         <Compile Include="E2E\E2EPlaywright.fs" />
         <Compile Include="Formatters.fs" />
-        <Compile Include="Arranger.fs" />
-        <Compile Include="OrganizationViewing.fs" />
-        <Compile Include="OrganizationsEditing.fs" />
         <Compile Include="Navigation.fs" />
         <Compile Include="Login.fs" />
     </ItemGroup>
@@ -47,5 +44,11 @@
       <Content Include="OrganizationsFromExcel\db_sample.csv">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Include="Organizations\Arranger.fs" />
+      <Compile Include="Organizations\OrganizationViewing.fs" />
+      <Compile Include="Organizations\OrganizationsEditing.fs" />
+      <Compile Include="Configuration\ResetPassword.fs" />
     </ItemGroup>
 </Project>

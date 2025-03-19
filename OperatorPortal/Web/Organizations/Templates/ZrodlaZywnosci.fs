@@ -1,9 +1,9 @@
 module Organizations.Templates.ZrodlaZywnosci
 
 open Organizations.Application
-open Organizations.Templates.Fields
+open Layout.Fields
 open Oxpecker.ViewEngine
-open Web.Organizations.Templates.Formatters
+open Organizations.Templates.Formatters
 
 let View (zrodla: ReadModels.ZrodlaZywnosci) (teczka: int64) =
     article () {

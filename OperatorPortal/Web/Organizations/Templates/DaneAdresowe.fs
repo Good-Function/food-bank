@@ -2,7 +2,7 @@ module Organizations.Templates.DaneAdresowe
 
 open Organizations.Application
 open Oxpecker.ViewEngine
-open Fields
+open Layout.Fields
 
 let View (adresy: ReadModels.DaneAdresowe) (teczka: int64) =
     article () {

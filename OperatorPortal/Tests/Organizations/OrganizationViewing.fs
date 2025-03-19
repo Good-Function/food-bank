@@ -3,7 +3,7 @@ module OrganizationViewing
 open System.Net
 open Tests
 open Tests.Arranger
-open Web.Organizations.Templates.Formatters
+open Organizations.Templates.Formatters
 open Xunit
 open Tools.TestServer
 open FsUnit.Xunit

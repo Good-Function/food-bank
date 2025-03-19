@@ -37,6 +37,7 @@
         <Compile Include="Layout\Navigation.fs" />
         <Compile Include="Layout\Body.fs" />
         <Compile Include="Layout\NotFound.fs" />
+        <Compile Include="Layout\Fields.fs" />
       <Compile Include="Login\Template.fs" />
       <Compile Include="Login\LoginDto.fs" />
       <Compile Include="Login\Router.fs" />
@@ -56,7 +57,6 @@
       </Content>
       <Compile Include="Organizations\Database\OrganizationsDao.fs" />
       <Compile Include="Organizations\Templates\Formatters.fs" />
-      <Compile Include="Organizations\Templates\Fields.fs" />
       <Compile Include="Organizations\Templates\PageComposer.fs" />
       <Compile Include="Organizations\Templates\DaneAdresowe.fs" />
       <Compile Include="Organizations\Templates\Kontakty.fs" />
@@ -76,6 +76,7 @@
       <Compile Include="Applications\Database.fs" />
       <Compile Include="Applications\CompositionRoot.fs" />
       <Compile Include="Applications\Router.fs" />
+      <Compile Include="Configuration\Dtos.fs" />
       <Compile Include="Configuration\ImportCsvTemplate.fs" />
       <Compile Include="Configuration\ResetPasswordTemplate.fs" />
       <Compile Include="Configuration\Router.fs" />

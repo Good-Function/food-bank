@@ -1,4 +1,4 @@
-module Web.Organizations.Templates.Formatters
+module Organizations.Templates.Formatters
 
 open System
     

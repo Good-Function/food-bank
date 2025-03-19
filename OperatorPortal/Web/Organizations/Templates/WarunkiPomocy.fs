@@ -1,11 +1,9 @@
 module Organizations.Templates.WarunkiPomocy
 
-open Layout
 open Organizations.Application
-open Organizations.Templates.Fields
+open Layout.Fields
 open Oxpecker.ViewEngine
-open Oxpecker.Htmx
-open Web.Organizations.Templates.Formatters
+open Organizations.Templates.Formatters
 
 let View (warunki: ReadModels.WarunkiPomocy) (teczka: int64) =
     article () {

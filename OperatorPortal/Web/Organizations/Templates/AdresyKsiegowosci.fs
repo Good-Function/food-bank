@@ -1,7 +1,7 @@
 module Organizations.Templates.AdresyKsiegowosci
 
 open Organizations.Application
-open Organizations.Templates.Fields
+open Layout.Fields
 open Oxpecker.ViewEngine
 
 let View (adresy: ReadModels.AdresyKsiegowosci) (teczka: int64) =

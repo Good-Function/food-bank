@@ -1,7 +1,7 @@
 module Organizations.Templates.Kontakty
 
 open Organizations.Application
-open Organizations.Templates.Fields
+open Layout.Fields
 open Oxpecker.ViewEngine
 
 let View (kontakty: ReadModels.Kontakty) (teczka: int64) =
