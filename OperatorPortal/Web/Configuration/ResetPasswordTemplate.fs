@@ -5,14 +5,14 @@ open Oxpecker.ViewEngine
 
 let private page =
     div () {
-        "Zmiana hasła"
+       "Zmiana hasła"
     }
 
 let Partial =
     Fragment() {
         Body.Template page None
-        "Ustawienia" |> Head.ReplaceTitle 
+        "Zmiana hasła" |> Head.ReplaceTitle 
     }
 
 let FullPage  =
-    Body.Template Partial None
+    Head.Template Partial "Zmiana hasła"

@@ -15,4 +15,4 @@ let Partial =
     }
 
 let FullPage  =
-    Body.Template Partial None
+    Head.Template Partial "Import CSV"

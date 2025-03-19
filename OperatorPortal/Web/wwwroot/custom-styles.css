@@ -57,7 +57,7 @@ main {
     position-anchor: --ProfilePopover; /* chrome popover */
     position-area: block-end span-inline-end; /* chrome popover */
     inset: unset; /* firefox popover */
-    background-color: var(--pico-contrast-focus);
+    background-color: var(--pico-code-background-color);
     border-radius: var(--pico-border-radius);
     border:0;
     padding: var(--pico-spacing);
