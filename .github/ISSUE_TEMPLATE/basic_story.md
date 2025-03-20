@@ -1,5 +1,5 @@
 ---
-name: User Story
+name: Basic User Story
 about: 'User Story related to obvious things, like reset password.'
 labels: 'story'
 ---
