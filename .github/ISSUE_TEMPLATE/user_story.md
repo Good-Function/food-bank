@@ -1,10 +1,7 @@
 ---
 name: User Story
-about: 
-title: ''
+about: 'User Story'
 labels: 'story'
-assignees: ''
-
 ---
 
 ## 📝 User Story  
