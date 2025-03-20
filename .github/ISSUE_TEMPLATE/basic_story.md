@@ -1,3 +1,9 @@
+---
+name: User Story
+about: 'User Story related to obvious things, like reset password.'
+labels: 'story'
+---
+
 ## 📝 User Story  
 **As a** [user],  
 **I want** [feature],  
