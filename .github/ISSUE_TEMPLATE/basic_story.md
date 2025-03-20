@@ -1,12 +1,3 @@
----
-name: Basic Story
-about: Obvious thing
-title: ''
-labels: 'basic'
-assignees: ''
-
----
-
 ## 📝 User Story  
 **As a** [user],  
 **I want** [feature],  
