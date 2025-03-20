@@ -1,6 +1,6 @@
 ---
 name: User Story
-about: 'User Story'
+about: 'User Story with hypothesis'
 labels: 'story'
 ---
 
