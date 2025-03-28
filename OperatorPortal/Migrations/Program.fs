@@ -30,7 +30,7 @@ let main argv =
         | Some path -> path
         | _ -> Path.GetFullPath(Path.Combine(__SOURCE_DIRECTORY__, @"../", "Web"))
     let options =
-        FileSystemScriptOptions(Filter = (fun sqlFilePath -> true), IncludeSubDirectories = true)
+        FileSystemScriptOptions(Filter = (fun sqlFilePath -> not <| sqlFilePath.EndsWith("sample.sql")), IncludeSubDirectories = true)
 
     DeployChanges.To
         .PostgresqlDatabase(connectionString)
