@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS users; -- This is only for now, when production data doesn't exist.
 CREATE TABLE IF NOT EXISTS users
 (
     Id BIGINT CONSTRAINT users_pk PRIMARY KEY,

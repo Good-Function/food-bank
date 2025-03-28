@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS organizacje; -- This is only for now, when production data doesn't exist.
 CREATE TABLE IF NOT EXISTS organizacje
 (
     Teczka                              BIGINT CONSTRAINT organizacje_pk PRIMARY KEY,
