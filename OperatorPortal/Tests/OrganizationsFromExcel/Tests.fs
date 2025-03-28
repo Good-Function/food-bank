@@ -1,4 +1,4 @@
-module Tests.OrganizationsFromExcel.Tests
+module OrganizationsFromExcel.Tests
 
 open Organizations.Database.csvLoader
 open Xunit

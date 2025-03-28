@@ -1,4 +1,4 @@
-module Tests.Configuration.ResetPassword
+module Login.ResetPassword
 
 open System
 open System.Net

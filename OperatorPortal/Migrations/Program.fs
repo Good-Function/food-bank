@@ -21,6 +21,7 @@ let logAndParseEngineResult (result: Engine.DatabaseUpgradeResult) =
 
 [<EntryPoint>]
 let main argv =
+    let isDev = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") <> "Production"
     let connectionString =
         match argv |> Array.tryHead with
         | Some connectionString -> connectionString
@@ -30,12 +31,14 @@ let main argv =
         | Some path -> path
         | _ -> Path.GetFullPath(Path.Combine(__SOURCE_DIRECTORY__, @"../", "Web"))
     let options =
-        FileSystemScriptOptions(Filter = (fun sqlFilePath -> not <| sqlFilePath.EndsWith("sample.sql")), IncludeSubDirectories = true)
+        FileSystemScriptOptions(Filter =
+            (fun sqlFilePath -> isDev || not <| sqlFilePath.EndsWith("sample.sql")), IncludeSubDirectories = true)
 
     DeployChanges.To
         .PostgresqlDatabase(connectionString)
         .WithScriptsFromFileSystem(path, options)
         .LogToConsole()
+        .WithVariable("FirstPassword", "$2a$11$/tUlXGocZ/FWGgs/SrKZlupPUiFi4PIu4LXhD5MfaO49PF9.1ZyfK")
         .Build()
         .PerformUpgrade()
     |> logAndParseEngineResult
