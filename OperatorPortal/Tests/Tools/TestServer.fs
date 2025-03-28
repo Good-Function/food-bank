@@ -7,7 +7,6 @@ open Program
 let runTestApi () =
     (new WebApplicationFactory<Program>()).Server.CreateClient()
     
-let authenticate (user: string) (client: HttpClient)=
-    client.DefaultRequestHeaders.Add(Authentication.FakeAuthenticationHeader, user)
+let authenticate (client: HttpClient)=
     client
     

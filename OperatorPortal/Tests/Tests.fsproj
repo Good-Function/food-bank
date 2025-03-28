@@ -19,7 +19,6 @@
         <Compile Include="E2E\E2EPlaywright.fs" />
         <Compile Include="Formatters.fs" />
         <Compile Include="Navigation.fs" />
-        <Compile Include="Login.fs" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Bogus" Version="35.6.2" />
@@ -49,6 +48,9 @@
       <Compile Include="Organizations\Arranger.fs" />
       <Compile Include="Organizations\OrganizationViewing.fs" />
       <Compile Include="Organizations\OrganizationsEditing.fs" />
-      <Compile Include="Configuration\ResetPassword.fs" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Include="Login\ResetPassword.fs" />
+      <Compile Include="Login\Login.fs" />
     </ItemGroup>
 </Project>

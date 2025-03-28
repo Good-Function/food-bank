@@ -8,10 +8,10 @@ open Tools.HttResponseMessageToHtml
 open FSharp.Data
 
 [<Fact>]
-let ``Navigations contains /ogranizations, /applications, /team links, /settings/password-reset, /settings/csv-import`` () =
+let ``Navigations contains /ogranizations, /applications, /team links, /settings/password-change, /settings/csv-import`` () =
     task {
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync "/organizations"
         // Assert
@@ -24,7 +24,7 @@ let ``Navigations contains /ogranizations, /applications, /team links, /settings
         navLinks |> should equal [ "/organizations"
                                    "/applications"
                                    "/team"
-                                   "/settings/password-reset"
-                                   "/settings/csv-import"
+                                   "/login/password-change"
+                                   "/import"
                                  ]    
     }

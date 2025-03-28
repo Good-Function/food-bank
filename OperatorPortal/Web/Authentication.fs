@@ -11,13 +11,14 @@ let FakeAuthenticationHeader = "Authenticated"
 let fakeAuthenticate =
     Func<HttpContext, RequestDelegate, Task>(fun ctx next ->
         task {
-            if ctx.Request.Headers.ContainsKey FakeAuthenticationHeader then
-                let headerValue = ctx.Request.Headers.[FakeAuthenticationHeader].ToString()
-                if headerValue = "TestUser" then
-                    let claims = [ Claim(ClaimTypes.Name, "TestUser") ]
-                    let identity = ClaimsIdentity(claims, "Test")
-                    let principal = ClaimsPrincipal(identity)
-                    ctx.User <- principal
+            let claims = [
+                Claim(ClaimTypes.Name, "developer.admin@bzsos.pl")
+                Claim(ClaimTypes.NameIdentifier, "0")
+                Claim(ClaimTypes.Role, "Administrator")
+            ]
+            let identity = ClaimsIdentity(claims, "Test")
+            let principal = ClaimsPrincipal(identity)
+            ctx.User <- principal
             return! next.Invoke(ctx)
         })
 

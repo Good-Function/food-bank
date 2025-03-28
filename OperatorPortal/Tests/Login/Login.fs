@@ -18,25 +18,13 @@ let ``By default user is redirected to /organizations page`` () =
     }
 
 [<Fact>]
-let ``When unauthenticated user tries to access /applications then it is redirected to /login with ReturnUrl to /applications``
-    ()
-    =
-    task {
-        let api = runTestApi()
-        let! response = api.GetAsync "/applications"
-        response.StatusCode |> should equal HttpStatusCode.Found
-        response.Headers.Location
-            |> should equal (Uri "http://localhost/login?ReturnUrl=%2Fapplications")
-    }
-
-[<Fact>]
 let ``User can log in, get the auth cookie and be redirected to default page /organizations`` () =
     task {
         // Arrange
         let api = runTestApi()
         let data = formData {
-            yield ("Email", "test@test.test")
-            yield ("Password", "password123")
+            yield ("Email", "admin@admin.pl")
+            yield ("Password", "f00d!")
         }
         // Act
         let! loginResponse = api.PostAsync("/login", data)

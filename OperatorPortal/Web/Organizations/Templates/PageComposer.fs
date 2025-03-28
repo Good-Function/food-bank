@@ -9,5 +9,5 @@ type PageOptions = {
     CurrentPage: Page
 }
 
-let composeFullPage (page: PageOptions) =
-    Head.Template (Body.Template page.Content (Some page.CurrentPage)) (page.CurrentPage.ToTitle()) 
+let composeFullPage (page: PageOptions) (userName: string) =
+    Head.Template (Body.Template page.Content (Some page.CurrentPage) userName) (page.CurrentPage.ToTitle()) 

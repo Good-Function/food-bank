@@ -4,8 +4,10 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
     <ItemGroup>
+      <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
       <PackageReference Include="Dapper" Version="2.1.66" />
       <PackageReference Include="FSharp.Data" Version="6.4.1" />
+      <PackageReference Include="FsToolkit.ErrorHandling" Version="4.18.0" />
       <PackageReference Include="Npgsql" Version="9.0.3" />
       <PackageReference Include="Oxpecker" Version="1.2.0" />
       <PackageReference Include="Oxpecker.Htmx" Version="1.0.0" />
@@ -17,6 +19,7 @@
         <Link>.dockerignore</Link>
       </Content>
       <Content Include="Dockerfile" />
+      <Compile Include="HttpContextExtensions.fs" />
       <Compile Include="renderBasedOnHtmx.fs" />
       <Content Include="postgres_extensions.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -38,8 +41,21 @@
         <Compile Include="Layout\Body.fs" />
         <Compile Include="Layout\NotFound.fs" />
         <Compile Include="Layout\Fields.fs" />
-      <Compile Include="Login\Template.fs" />
-      <Compile Include="Login\LoginDto.fs" />
+        <Compile Include="Login\Domain.fs" />
+      <Compile Include="Login\Templates\Template.fs" />
+      <Compile Include="Login\Templates\ChangePasswordTemplate.fs" />
+      <Compile Include="Login\Commands.fs" />
+      <Compile Include="Login\Database\PasswordDao.fs" />
+      <Compile Include="Login\Database\LoginDao.fs" />
+      <Content Include="Login\Database\migrations.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Login\Database\sample.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Compile Include="Login\Dtos.fs" />
+      <Compile Include="Login\CompositionRoot.fs" />
+      <Compile Include="Login\SignInHandler.fs" />
       <Compile Include="Login\Router.fs" />
     </ItemGroup>
     <ItemGroup>
@@ -76,13 +92,8 @@
       <Compile Include="Applications\Database.fs" />
       <Compile Include="Applications\CompositionRoot.fs" />
       <Compile Include="Applications\Router.fs" />
-      <Compile Include="Configuration\Dtos.fs" />
-      <Compile Include="Configuration\ImportCsvTemplate.fs" />
-      <Compile Include="Configuration\ResetPasswordTemplate.fs" />
-      <Compile Include="Configuration\Router.fs" />
-      <Content Include="Configuration\Database\migrations.sql">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
+      <Compile Include="Import\ImportCsvTemplate.fs" />
+      <Compile Include="Import\Router.fs" />
       <Compile Include="Authentication.fs" />
       <Compile Include="Culture.fs" />
       <Compile Include="Settings.fs" />

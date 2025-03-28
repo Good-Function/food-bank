@@ -1,4 +1,4 @@
-module Configuration.Dtos
+module Login.Dtos
 
 [<CLIMutable>]
 type PasswordChangeDto = {
@@ -6,3 +6,6 @@ type PasswordChangeDto = {
     NewPassword: string
     NewPasswordConfirmation: string
 }
+
+[<CLIMutable>]
+type LoginFormDto = { Email: string; Password: string }

@@ -8,14 +8,14 @@ let Template =
             nav () {
                 ul () {
                     li (style = "display: block;") {
-                        a (href = "/settings/password-reset") {
+                        a (href = "/login/password-change") {
                             Icons.PassReset
                             "Zmiana hasła"
                         }
                     }
 
                     li (style = "display: block;") {
-                        a (href = "/settings/csv-import") {
+                        a (href = "/import") {
                             Icons.UploadFile
                             "Import csv"
                         }

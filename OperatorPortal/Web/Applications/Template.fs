@@ -13,11 +13,11 @@ let private page (testList: string list) =
             h2 () { row }
     }
 
-let Partial (testList: string list) =
+let Partial (testList: string list) (userName: string) =
     Fragment() {
-        Body.Template (page testList) (Some Page.Applications)
+        Body.Template (page testList) (Some Page.Applications) userName
         ReplaceTitle <| Page.Applications.ToTitle()
     }
 
-let FullPage (testList: string list) =
-    Head.Template (Partial testList) (Page.Applications.ToTitle())
+let FullPage (testList: string list) (userName: string) =
+    Head.Template (Partial testList userName) (Page.Applications.ToTitle())

@@ -3,6 +3,7 @@ module Layout.Fields
 open System
 open Layout
 open Oxpecker.ViewEngine
+open Oxpecker.ViewEngine.Aria
 open Oxpecker.Htmx
 
 let editableHeader (title: string) (formPath: string) =
@@ -47,10 +48,16 @@ let editField (labelText: string) (value: string) (name: string) =
         input (value = value, name = name)
     }
     
-let passwordField (labelText: string) (name: string) =
+let passwordField (labelText: string) (name: string) (errorMsg: string option) =
     p () {
         label () { b () { labelText } }
-        input (name = name, type'="password")
+        match errorMsg with
+        | Some msg ->
+            Fragment() {
+                input (name = name, type' = "password", ariaInvalid = "true", ariaDescribedBy = name + "-error")
+                small (id = name + "-error") { msg }
+            }
+        | None -> input (name = name, type' = "password")
     }
     
 let booleanField (labelText: string) (value: bool) (name: string) =

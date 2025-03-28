@@ -1,7 +1,6 @@
 module Program
 
 open System
-open System.Globalization
 open Microsoft.AspNetCore.Authentication.Cookies
 open PostgresPersistence.DapperFsharp
 open Microsoft.AspNetCore.Builder
@@ -16,15 +15,16 @@ let protect =  configureEndpoint _.RequireAuthorization()
 
 let endpoints 
     (orgDeps: Organizations.CompositionRoot.Dependencies)
-    (appDeps: Applications.CompositionRoot.Dependencies) =
+    (loginDeps: Login.CompositionRoot.Dependencies)
+    (appDeps: Applications.CompositionRoot.Dependencies)=
     [
         GET [
             route "/" <| redirectTo "/organizations" false
         ]
-        subRoute "/login" Login.Router.Endpoints
+        subRoute "/login" (Login.Router.Endpoints loginDeps) 
         subRoute "/organizations" (Organizations.Router.Endpoints orgDeps) |> protect
         subRoute "/applications" (Applications.Router.Endpoints appDeps) |> protect
-        subRoute "/settings" Configuration.Router.Endpoints |> protect
+        subRoute "/import" (Import.Router.Endpoints) |> protect
     ]
 
 let notFoundHandler (ctx: HttpContext) =
@@ -71,7 +71,10 @@ let createServer () =
         .UseStaticFiles()
         .UseAuthentication()
         .UseAuthorization()
-        .UseOxpecker(endpoints orgDeps appDeps)
+        .UseOxpecker(endpoints
+                        orgDeps
+                        (Login.CompositionRoot.build(dbConnect))
+                        appDeps)
         .Run(notFoundHandler)
     app
    

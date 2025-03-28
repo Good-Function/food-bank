@@ -6,7 +6,7 @@ open Oxpecker.ViewEngine
 
 let View (kontakty: ReadModels.Kontakty) (teczka: int64) =
     article () {
-        editableHeader "Kontaty" $"/organizations/{teczka}/kontakty/edit"
+        editableHeader "Kontakty" $"/organizations/{teczka}/kontakty/edit"
         readonlyField "www / facebook" kontakty.WwwFacebook
         readonlyField "Telefon" kontakty.Telefon
         readonlyField "Przedstawiciel" kontakty.Przedstawiciel

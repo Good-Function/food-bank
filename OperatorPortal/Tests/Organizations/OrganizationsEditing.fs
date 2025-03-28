@@ -20,7 +20,7 @@ let ``GET /ogranizations/{id}/dane-adresowe/edit returns prefilled inputs to edi
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka}/dane-adresowe/edit"
         // Assert
@@ -55,7 +55,7 @@ let ``PUT /ogranizations/{id}/dane-adresowe modifies and returns updated data`` 
             yield ("Powiat", randomStuff)
         }
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka}/dane-adresowe", data)
         // Assert
@@ -81,7 +81,7 @@ let ``GET /ogranizations/{id}/kontakty/edit returns prefilled inputs to edit the
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka}/kontakty/edit"
         // Assert
@@ -127,7 +127,7 @@ let ``PUT /ogranizations/{id}/kontakty modifies and returns updated data`` () =
             yield ("TelefonOsobyOdbierajacej", randomStuff)
         }
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka}/kontakty", data)
         // Assert
@@ -157,7 +157,7 @@ let ``GET /ogranizations/{id}/beneficjenci/edit returns prefilled inputs to edit
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka}/beneficjenci/edit"
         // Assert
@@ -184,7 +184,7 @@ let ``PUT /ogranizations/{id}/beneficjenci modifies and returns updated data`` (
             yield ("Beneficjenci", expectedBeneficjenci)
         }
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka}/beneficjenci", data)
         // Assert
@@ -205,7 +205,7 @@ let ``GET /ogranizations/{id}/dokumenty/edit returns prefilled inputs to edit th
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka}/dokumenty/edit"
         // Assert
@@ -239,7 +239,7 @@ let ``PUT /ogranizations/{id}/dokumenty modifies and returns updated data`` () =
             yield ("OstatnieOdwiedzinyData", expectedDate |> toInput)
         }
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka}/dokumenty", data)
         // Assert
@@ -263,7 +263,7 @@ let ``GET /ogranizations/{id}/zroda-zywnosci/edit returns prefilled inputs to ed
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka}/zrodla-zywnosci/edit"
         // Assert
@@ -296,7 +296,7 @@ let ``PUT /ogranizations/{id}/zrodla-zywnosci modifies and returns updated data`
             yield ("FEPZ2024", "true")
         }
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka}/zrodla-zywnosci", data)
         // Assert
@@ -319,7 +319,7 @@ let ``GET /ogranizations/{id}/adresy-ksiegowosci/edit returns prefilled inputs t
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka}/adresy-ksiegowosci/edit"
         // Assert
@@ -347,7 +347,7 @@ let ``PUT /ogranizations/{id}/adresy-ksiegowosci modifies and returns updated da
             yield ("TelOrganProwadzacegoKsiegowosc", expectedText)
         }
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka}/adresy-ksiegowosci", data)
         // Assert
@@ -369,7 +369,7 @@ let ``GET /ogranizations/{id}/warunki-pomocy/edit returns prefilled inputs to ed
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka}/warunki-pomocy/edit"
         // Assert
@@ -413,7 +413,7 @@ let ``PUT /ogranizations/{id}/warunki-pomocy modifies and returns updated data``
             yield ("TransportKategoria", expectedText)
         }
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka}/warunki-pomocy", data)
         // Assert

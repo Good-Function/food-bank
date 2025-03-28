@@ -2,7 +2,6 @@ module OrganizationViewing
 
 open System.Net
 open Tests
-open Tests.Arranger
 open Organizations.Templates.Formatters
 open Xunit
 open Tools.TestServer
@@ -15,11 +14,11 @@ open FSharp.Data
 let ``/ogranizations/summaries displays organization's most important data `` () =
     task {
         // Arrange
-        let org =  AnOrganization()
+        let org =  Arranger.AnOrganization()
         do! org |> (save Tools.DbConnection.connectDb)
         let! dbSummaries = readSummaries Tools.DbConnection.connectDb org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc
         let dbSummaryTeczkaIds = dbSummaries |> List.map(fun summary -> $"%i{summary.Teczka}")
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/summaries?search={org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc}"
         // Assert
@@ -53,7 +52,7 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka}"
         // Assert
@@ -150,7 +149,7 @@ let ``GET /ogranizations/{id}/dane-adresowe returns fields from dane adresowe`` 
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate "TestUser"
+        let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka}/dane-adresowe"
         // Assert
