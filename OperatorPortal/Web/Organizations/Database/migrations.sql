@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS  organizacje;
 CREATE TABLE IF NOT EXISTS organizacje
 (
     Teczka                              BIGINT CONSTRAINT organizacje_pk PRIMARY KEY,
@@ -33,6 +34,8 @@ CREATE TABLE IF NOT EXISTS organizacje
     Bazarki                             BOOLEAN NOT NULL,
     Machfit                             BOOLEAN NOT NULL,
     FEPZ2024                            BOOLEAN NOT NULL,
+    OdbiorKrotkiTermin                  BOOLEAN NOT NULL,
+    TylkoNaszMagazyn                    BOOLEAN NOT NULL,
     Kategoria                           TEXT    NOT NULL,
     RodzajPomocy                        TEXT    NOT NULL,
     SposobUdzielaniaPomocy              TEXT    NOT NULL,

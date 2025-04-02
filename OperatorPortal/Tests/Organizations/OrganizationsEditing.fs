@@ -278,8 +278,10 @@ let ``GET /ogranizations/{id}/zroda-zywnosci/edit returns prefilled inputs to ed
             organization.ZrodlaZywnosci.Bazarki
             organization.ZrodlaZywnosci.Machfit
             organization.ZrodlaZywnosci.FEPZ2024
+            organization.ZrodlaZywnosci.OdbiórKrotkiTermin
+            organization.ZrodlaZywnosci.TylkoNaszMagazyn
         ]
-        inputs.Length |> should equal 4
+        inputs.Length |> should equal 6
     }
     
     
@@ -294,6 +296,8 @@ let ``PUT /ogranizations/{id}/zrodla-zywnosci modifies and returns updated data`
             yield ("Bazarki", "true")
             yield ("Machfit", "true")
             yield ("FEPZ2024", "true")
+            yield ("OdbiorKrotkiTermin", "true")
+            yield ("TylkoNaszMagazyn", "true")
         }
         // Arrange
         let api = runTestApi() |> authenticate
@@ -305,6 +309,8 @@ let ``PUT /ogranizations/{id}/zrodla-zywnosci modifies and returns updated data`
             doc.CssSelect "small" |> List.map _.InnerText()
         response.StatusCode |> should equal HttpStatusCode.OK
         takNie |> should equal [
+            "Tak"
+            "Tak"
             "Tak"
             "Tak"
             "Tak"

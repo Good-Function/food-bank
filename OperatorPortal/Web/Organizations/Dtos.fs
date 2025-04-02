@@ -111,7 +111,9 @@ type ZrodlaZywnosciForm =
     { Sieci: bool
       Bazarki: bool
       Machfit: bool
-      FEPZ2024: bool }
+      FEPZ2024: bool
+      OdbiorKrotkiTermin: bool
+      TylkoNaszMagazyn: bool }
 
     member this.toChangeZrodlaZywnosci(teczka: int64): Commands.ZrodlaZywnosci =
         {
@@ -119,13 +121,18 @@ type ZrodlaZywnosciForm =
           Sieci = this.Sieci
           Bazarki = this.Bazarki
           Machfit = this.Machfit
-          FEPZ2024 = this.FEPZ2024 }
+          FEPZ2024 = this.FEPZ2024
+          OdbiorKrotkiTermin = this.OdbiorKrotkiTermin
+          TylkoNaszMagazyn = this.TylkoNaszMagazyn
+          }
 
     member this.toZrodlaZywnosci: ReadModels.ZrodlaZywnosci =
         { Sieci = this.Sieci
           Bazarki = this.Bazarki
           Machfit = this.Machfit
-          FEPZ2024 = this.FEPZ2024 }
+          FEPZ2024 = this.FEPZ2024
+          OdbiórKrotkiTermin = this.OdbiorKrotkiTermin
+          TylkoNaszMagazyn = this.TylkoNaszMagazyn }
 
 [<CLIMutable>]
 type AdresyKsiegowosciForm =

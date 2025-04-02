@@ -63,8 +63,10 @@ let createServer () =
         .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(Authentication.configureAuthenticationCookie) |> ignore
     let app = builder.Build()
-    Migrations.main [|settings.DbConnectionString; AppDomain.CurrentDomain.BaseDirectory|] |> ignore
-    if app.Environment.EnvironmentName <> "Production" then app.Use(Authentication.fakeAuthenticate) |> ignore
+    if app.Environment.EnvironmentName <> "Production"
+        then app.Use(Authentication.fakeAuthenticate) |> ignore
+    else
+        Migrations.main [|settings.DbConnectionString; AppDomain.CurrentDomain.BaseDirectory|] |> ignore
     app.Use(Culture.middleware) |> ignore
     app
         .UseRouting()

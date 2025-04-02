@@ -15,7 +15,8 @@ type Setup() =
                             .WithPortBinding(5432, false)
                             .Build();
         container.StartAsync() |> Async.AwaitTask |> Async.RunSynchronously
-        Migrations.main([||]) |> ignore
+        let code = Migrations.main([||])
+        code |> ignore
     
     interface IDisposable with
         member _.Dispose() = ()

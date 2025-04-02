@@ -124,11 +124,13 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             $"%i{organization.Beneficjenci.LiczbaBeneficjentow}"
             organization.Beneficjenci.Beneficjenci
         ]
-        zrodlaZywnosci[0..3] |> should equal [
+        zrodlaZywnosci[0..5] |> should equal [
             (organization.ZrodlaZywnosci.Sieci |> Formatters.toTakNie)
             (organization.ZrodlaZywnosci.Bazarki |> Formatters.toTakNie)
             (organization.ZrodlaZywnosci.Machfit |> Formatters.toTakNie)
             (organization.ZrodlaZywnosci.FEPZ2024 |> Formatters.toTakNie)
+            (organization.ZrodlaZywnosci.OdbiórKrotkiTermin |> Formatters.toTakNie)
+            (organization.ZrodlaZywnosci.TylkoNaszMagazyn |> Formatters.toTakNie)
         ]
         warunki[0..7] |> should equal [
             organization.WarunkiPomocy.Kategoria

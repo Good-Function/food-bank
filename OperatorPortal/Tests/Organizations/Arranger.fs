@@ -70,23 +70,24 @@ let AnOrganization () : Organizations.Application.ReadModels.OrganizationDetails
         { Sieci = f.Random.Bool()
           Bazarki = f.Random.Bool()
           Machfit = f.Random.Bool()
-          FEPZ2024 = f.Random.Bool() }
-      WarunkiPomocy = {
-        Kategoria = f.PickRandom [| "Dystrybucja paczek żywnościowych"; "Pomoc żywnościowa" |]
-        WarunkiMagazynowe =
-          f.PickRandom
-              [| "magazyn 10m2, regały, 1 lodówka 1,2 m"
-                 "Magazyn 4 palety, pokój wydawania - regały, wiele pomieszczeń w podziemiach" |]
-        HACCP = f.Random.Bool()
-        Sanepid = f.Random.Bool()
-        TransportOpis =
-          f.PickRandom
-              [| "prywatny pracownika SUV 500 kg"
-                 "Pieniądze na transport w projekcie UM - wypożyczany" |]
-        TransportKategoria = f.PickRandom [| "Własny"; "Potrzebny" |]
-        RodzajPomocy = f.PickRandom [| "P"; "S"; "K" |]
-        SposobUdzielaniaPomocy = "Wydawanie paczek 3 razy w tygodniu dla 10-15 osób dziennie"
-      }
+          FEPZ2024 = f.Random.Bool()
+          OdbiórKrotkiTermin = f.Random.Bool()
+          TylkoNaszMagazyn = f.Random.Bool() }
+      WarunkiPomocy =
+        { Kategoria = f.PickRandom [| "Dystrybucja paczek żywnościowych"; "Pomoc żywnościowa" |]
+          WarunkiMagazynowe =
+            f.PickRandom
+                [| "magazyn 10m2, regały, 1 lodówka 1,2 m"
+                   "Magazyn 4 palety, pokój wydawania - regały, wiele pomieszczeń w podziemiach" |]
+          HACCP = f.Random.Bool()
+          Sanepid = f.Random.Bool()
+          TransportOpis =
+            f.PickRandom
+                [| "prywatny pracownika SUV 500 kg"
+                   "Pieniądze na transport w projekcie UM - wypożyczany" |]
+          TransportKategoria = f.PickRandom [| "Własny"; "Potrzebny" |]
+          RodzajPomocy = f.PickRandom [| "P"; "S"; "K" |]
+          SposobUdzielaniaPomocy = "Wydawanie paczek 3 razy w tygodniu dla 10-15 osób dziennie" }
       Dokumenty =
         { Wniosek = Some <| f.Date.PastDateOnly(2)
           UmowaZDn = Some <| f.Date.PastDateOnly(2)

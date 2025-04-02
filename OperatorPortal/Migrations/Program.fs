@@ -3,6 +3,7 @@
 open System
 open System.IO
 open DbUp
+open DbUp.Helpers
 open DbUp.ScriptProviders
 
 let logAndParseEngineResult (result: Engine.DatabaseUpgradeResult) =
@@ -36,6 +37,7 @@ let main argv =
 
     DeployChanges.To
         .PostgresqlDatabase(connectionString)
+        .JournalTo(NullJournal())
         .WithScriptsFromFileSystem(path, options)
         .LogToConsole()
         .WithVariable("FirstPassword", "$2a$11$/tUlXGocZ/FWGgs/SrKZlupPUiFi4PIu4LXhD5MfaO49PF9.1ZyfK")

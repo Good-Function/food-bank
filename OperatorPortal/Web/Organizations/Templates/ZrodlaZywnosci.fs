@@ -12,6 +12,8 @@ let View (zrodla: ReadModels.ZrodlaZywnosci) (teczka: int64) =
         readonlyField "Bazarki" (zrodla.Bazarki |> toTakNie)
         readonlyField "Machfit" (zrodla.Machfit |> toTakNie)
         readonlyField "FEPŻ 2024" (zrodla.FEPZ2024 |> toTakNie)
+        readonlyField "Odbiór Krótki Termin" (zrodla.OdbiórKrotkiTermin |> toTakNie)
+        readonlyField "Tylko nasz magazyn" (zrodla.TylkoNaszMagazyn |> toTakNie)
     }
 
 let Form (zrodla: ReadModels.ZrodlaZywnosci) (teczka: int64) =
@@ -22,5 +24,7 @@ let Form (zrodla: ReadModels.ZrodlaZywnosci) (teczka: int64) =
             booleanField "Bazarki" zrodla.Bazarki (nameof zrodla.Bazarki)
             booleanField "Machfit" zrodla.Machfit (nameof zrodla.Machfit)
             booleanField "FEPŻ 2024" zrodla.FEPZ2024 (nameof zrodla.FEPZ2024)
+            booleanField "Odbiór Krótki Termin" zrodla.OdbiórKrotkiTermin (nameof zrodla.OdbiórKrotkiTermin)
+            booleanField "Tylko nasz magazyn" zrodla.TylkoNaszMagazyn (nameof zrodla.TylkoNaszMagazyn)
         }
     }

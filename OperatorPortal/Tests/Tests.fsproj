@@ -39,11 +39,7 @@
       <ProjectReference Include="..\Web\Web.fsproj" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Include="OrganizationsFromExcel\Tests.fs" />
       <Compile Include="OrganizationsFromExcel\Learning_ClosedXMLReading.fs" />
-      <Content Include="OrganizationsFromExcel\db_sample.csv">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
       <Content Include="OrganizationsFromExcel\bank.xlsx" />
     </ItemGroup>
     <ItemGroup>

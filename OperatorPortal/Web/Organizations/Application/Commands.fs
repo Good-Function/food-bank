@@ -41,7 +41,9 @@ type ZrodlaZywnosci =
       Sieci: bool
       Bazarki: bool
       Machfit: bool
-      FEPZ2024: bool }
+      FEPZ2024: bool
+      OdbiorKrotkiTermin: bool
+      TylkoNaszMagazyn: bool }
 
 type AdresyKsiegowosci =
     { Teczka: int64

@@ -38,7 +38,9 @@ type OrganizationDetailsRow = {
     Sieci: bool 
     Bazarki: bool
     Machfit: bool
-    FEPZ2024: bool 
+    FEPZ2024: bool
+    OdbiorKrotkiTermin: bool
+    TylkoNaszMagazyn: bool
     Kategoria: string 
     RodzajPomocy: string 
     SposobUdzielaniaPomocy: string 
@@ -88,6 +90,8 @@ type OrganizationDetailsRow = {
             Bazarki = org.ZrodlaZywnosci.Bazarki
             Machfit = org.ZrodlaZywnosci.Machfit
             FEPZ2024 = org.ZrodlaZywnosci.FEPZ2024
+            OdbiorKrotkiTermin = org.ZrodlaZywnosci.OdbiórKrotkiTermin
+            TylkoNaszMagazyn = org.ZrodlaZywnosci.TylkoNaszMagazyn
             Kategoria = org.WarunkiPomocy.Kategoria
             RodzajPomocy = org.WarunkiPomocy.RodzajPomocy
             SposobUdzielaniaPomocy = org.WarunkiPomocy.SposobUdzielaniaPomocy
@@ -146,6 +150,8 @@ type OrganizationDetailsRow = {
                 Bazarki = this.Bazarki
                 Machfit = this.Machfit
                 FEPZ2024 = this.FEPZ2024
+                OdbiórKrotkiTermin = this.OdbiorKrotkiTermin
+                TylkoNaszMagazyn = this.TylkoNaszMagazyn
             }
             WarunkiPomocy = {
                 Kategoria = this.Kategoria
@@ -265,7 +271,9 @@ SET
     bazarki = @Bazarki,
     machfit = @Machfit,
     sieci = @Sieci,
-    fepz2024 = @FEPZ2024
+    fepz2024 = @FEPZ2024,
+    odbiorkrotkitermin = @OdbiorKrotkiTermin,
+    tylkonaszmagazyn = @TylkoNaszMagazyn
 WHERE Teczka = @Teczka;""" zrodlaZywnosci
     }
     
@@ -311,28 +319,104 @@ let save (connectDB: unit -> Async<IDbConnection>) (org: OrganizationDetails)  =
         let a = OrganizationDetailsRow.From org
         do! a |> db.Execute """
 INSERT INTO organizacje (
-    Teczka, IdentyfikatorEnova, NIP, Regon, KrsNr, FormaPrawna, OPP,
-    NazwaOrganizacjiPodpisujacejUmowe, AdresRejestrowy, NazwaPlacowkiTrafiaZywnosc,
-    AdresPlacowkiTrafiaZywnosc, GminaDzielnica, Powiat, NazwaOrganizacjiKsiegowanieDarowizn,
-    KsiegowanieAdres, TelOrganProwadzacegoKsiegowosc, WwwFacebook, Telefon, Przedstawiciel,
-    Kontakt, Email, Dostepnosc, OsobaDoKontaktu, TelefonOsobyKontaktowej,
-    MailOsobyKontaktowej, OsobaOdbierajacaZywnosc, TelefonOsobyOdbierajacej,
-    LiczbaBeneficjentow, Beneficjenci, Sieci, Bazarki, Machfit, FEPZ2024, Kategoria,
-    RodzajPomocy, SposobUdzielaniaPomocy, WarunkiMagazynowe, HACCP, Sanepid,
-    TransportOpis, TransportKategoria, Wniosek, UmowaZDn, UmowaRODO, KartyOrganizacjiData,
+    Teczka,
+    IdentyfikatorEnova,
+    NIP,
+    Regon,
+    KrsNr,
+    FormaPrawna,
+    OPP,
+    NazwaOrganizacjiPodpisujacejUmowe,
+    AdresRejestrowy,
+    NazwaPlacowkiTrafiaZywnosc,
+    AdresPlacowkiTrafiaZywnosc,
+    GminaDzielnica,
+    Powiat,
+    NazwaOrganizacjiKsiegowanieDarowizn,
+    KsiegowanieAdres,
+    TelOrganProwadzacegoKsiegowosc,
+    WwwFacebook,
+    Telefon,
+    Przedstawiciel,
+    Kontakt,
+    Email,
+    Dostepnosc,
+    OsobaDoKontaktu,
+    TelefonOsobyKontaktowej,
+    MailOsobyKontaktowej,
+    OsobaOdbierajacaZywnosc,
+    TelefonOsobyOdbierajacej,
+    LiczbaBeneficjentow,
+    Beneficjenci,
+    Sieci,
+    Bazarki,
+    Machfit,
+    FEPZ2024,
+    OdbiorKrotkiTermin,
+    TylkoNaszMagazyn,
+    Kategoria,
+    RodzajPomocy,
+    SposobUdzielaniaPomocy,
+    WarunkiMagazynowe,
+    HACCP,
+    Sanepid,
+    TransportOpis,
+    TransportKategoria,
+    Wniosek,
+    UmowaZDn,
+    UmowaRODO,
+    KartyOrganizacjiData,
     OstatnieOdwiedzinyData
-) 
+)
 VALUES (
-    @Teczka, @IdentyfikatorEnova, @NIP, @Regon, @KrsNr, @FormaPrawna, @OPP,
-    @NazwaOrganizacjiPodpisujacejUmowe, @AdresRejestrowy, @NazwaPlacowkiTrafiaZywnosc,
-    @AdresPlacowkiTrafiaZywnosc, @GminaDzielnica, @Powiat, @NazwaOrganizacjiKsiegowanieDarowizn,
-    @KsiegowanieAdres, @TelOrganProwadzacegoKsiegowosc, @WwwFacebook, @Telefon, @Przedstawiciel,
-    @Kontakt, @Email, @Dostepnosc, @OsobaDoKontaktu, @TelefonOsobyKontaktowej,
-    @MailOsobyKontaktowej, @OsobaOdbierajacaZywnosc, @TelefonOsobyOdbierajacej,
-    @LiczbaBeneficjentow, @Beneficjenci, @Sieci, @Bazarki, @Machfit, @FEPZ2024, @Kategoria,
-    @RodzajPomocy, @SposobUdzielaniaPomocy, @WarunkiMagazynowe, @HACCP, @Sanepid,
-    @TransportOpis, @TransportKategoria, @Wniosek, @UmowaZDn, @UmowaRODO, @KartyOrganizacjiData,
+    @Teczka,
+    @IdentyfikatorEnova,
+    @NIP,
+    @Regon,
+    @KrsNr,
+    @FormaPrawna,
+    @OPP,
+    @NazwaOrganizacjiPodpisujacejUmowe,
+    @AdresRejestrowy,
+    @NazwaPlacowkiTrafiaZywnosc,
+    @AdresPlacowkiTrafiaZywnosc,
+    @GminaDzielnica,
+    @Powiat,
+    @NazwaOrganizacjiKsiegowanieDarowizn,
+    @KsiegowanieAdres,
+    @TelOrganProwadzacegoKsiegowosc,
+    @WwwFacebook,
+    @Telefon,
+    @Przedstawiciel,
+    @Kontakt,
+    @Email,
+    @Dostepnosc,
+    @OsobaDoKontaktu,
+    @TelefonOsobyKontaktowej,
+    @MailOsobyKontaktowej,
+    @OsobaOdbierajacaZywnosc,
+    @TelefonOsobyOdbierajacej,
+    @LiczbaBeneficjentow,
+    @Beneficjenci,
+    @Sieci,
+    @Bazarki,
+    @Machfit,
+    @FEPZ2024,
+    @OdbiorKrotkiTermin,
+    @TylkoNaszMagazyn,
+    @Kategoria,
+    @RodzajPomocy,
+    @SposobUdzielaniaPomocy,
+    @WarunkiMagazynowe,
+    @HACCP,
+    @Sanepid,
+    @TransportOpis,
+    @TransportKategoria,
+    @Wniosek,
+    @UmowaZDn,
+    @UmowaRODO,
+    @KartyOrganizacjiData,
     @OstatnieOdwiedzinyData
 )
-""" 
+"""
     }
