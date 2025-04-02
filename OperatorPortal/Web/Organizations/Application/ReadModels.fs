@@ -41,7 +41,7 @@ type ZrodlaZywnosci = {
       Bazarki: bool
       Machfit: bool
       FEPZ2024: bool // Fundusze europejskie na pomoc żywnościową, program UE.
-      OdbiórKrotkiTermin: bool
+      OdbiorKrotkiTermin: bool
       TylkoNaszMagazyn: bool
 }
 

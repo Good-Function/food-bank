@@ -278,7 +278,7 @@ let ``GET /ogranizations/{id}/zroda-zywnosci/edit returns prefilled inputs to ed
             organization.ZrodlaZywnosci.Bazarki
             organization.ZrodlaZywnosci.Machfit
             organization.ZrodlaZywnosci.FEPZ2024
-            organization.ZrodlaZywnosci.OdbiórKrotkiTermin
+            organization.ZrodlaZywnosci.OdbiorKrotkiTermin
             organization.ZrodlaZywnosci.TylkoNaszMagazyn
         ]
         inputs.Length |> should equal 6

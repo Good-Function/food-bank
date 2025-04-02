@@ -129,7 +129,7 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             (organization.ZrodlaZywnosci.Bazarki |> Formatters.toTakNie)
             (organization.ZrodlaZywnosci.Machfit |> Formatters.toTakNie)
             (organization.ZrodlaZywnosci.FEPZ2024 |> Formatters.toTakNie)
-            (organization.ZrodlaZywnosci.OdbiórKrotkiTermin |> Formatters.toTakNie)
+            (organization.ZrodlaZywnosci.OdbiorKrotkiTermin |> Formatters.toTakNie)
             (organization.ZrodlaZywnosci.TylkoNaszMagazyn |> Formatters.toTakNie)
         ]
         warunki[0..7] |> should equal [

@@ -71,7 +71,7 @@ let AnOrganization () : Organizations.Application.ReadModels.OrganizationDetails
           Bazarki = f.Random.Bool()
           Machfit = f.Random.Bool()
           FEPZ2024 = f.Random.Bool()
-          OdbiórKrotkiTermin = f.Random.Bool()
+          OdbiorKrotkiTermin = f.Random.Bool()
           TylkoNaszMagazyn = f.Random.Bool() }
       WarunkiPomocy =
         { Kategoria = f.PickRandom [| "Dystrybucja paczek żywnościowych"; "Pomoc żywnościowa" |]

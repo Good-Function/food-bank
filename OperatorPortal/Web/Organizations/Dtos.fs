@@ -131,7 +131,7 @@ type ZrodlaZywnosciForm =
           Bazarki = this.Bazarki
           Machfit = this.Machfit
           FEPZ2024 = this.FEPZ2024
-          OdbiórKrotkiTermin = this.OdbiorKrotkiTermin
+          OdbiorKrotkiTermin = this.OdbiorKrotkiTermin
           TylkoNaszMagazyn = this.TylkoNaszMagazyn }
 
 [<CLIMutable>]

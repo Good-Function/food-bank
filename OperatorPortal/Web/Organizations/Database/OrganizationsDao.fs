@@ -90,7 +90,7 @@ type OrganizationDetailsRow = {
             Bazarki = org.ZrodlaZywnosci.Bazarki
             Machfit = org.ZrodlaZywnosci.Machfit
             FEPZ2024 = org.ZrodlaZywnosci.FEPZ2024
-            OdbiorKrotkiTermin = org.ZrodlaZywnosci.OdbiórKrotkiTermin
+            OdbiorKrotkiTermin = org.ZrodlaZywnosci.OdbiorKrotkiTermin
             TylkoNaszMagazyn = org.ZrodlaZywnosci.TylkoNaszMagazyn
             Kategoria = org.WarunkiPomocy.Kategoria
             RodzajPomocy = org.WarunkiPomocy.RodzajPomocy
@@ -150,7 +150,7 @@ type OrganizationDetailsRow = {
                 Bazarki = this.Bazarki
                 Machfit = this.Machfit
                 FEPZ2024 = this.FEPZ2024
-                OdbiórKrotkiTermin = this.OdbiorKrotkiTermin
+                OdbiorKrotkiTermin = this.OdbiorKrotkiTermin
                 TylkoNaszMagazyn = this.TylkoNaszMagazyn
             }
             WarunkiPomocy = {
