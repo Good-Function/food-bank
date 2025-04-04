@@ -225,5 +225,5 @@ let ``Parsing excel file`` () =
         use stream = File.OpenRead(Path.Combine(__SOURCE_DIRECTORY__, "bank.xlsx"))
         let rows = readExcelRows stream
         // Assert
-        rows.Length |> should equal 11s
+        rows.Length |> should equal 11
     }
