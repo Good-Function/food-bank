@@ -1,58 +1,26 @@
 module OrganizationsFromExcel.Learning_ClosedXMLReading
 
+open System
+open System.Globalization
 open System.IO
 open ClosedXML.Excel
 open Xunit
 open FsUnit.Xunit
+open Organizations.Database.OrganizationsDao
+open FsToolkit.ErrorHandling
 
-type OrganizationExcelRow =
-    { Teczka: string
-      IdentyfikatorEnova: string
-      NIP: string
-      Regon: string
-      KrsNr: string
-      FormaPrawna: string
-      OPP: string
-      NazwaOrganizacjiPodpisujacejUmowe: string
-      AdresRejestrowy: string
-      NazwaPlacowkiTrafiaZywnosc: string
-      AdresPlacowkiTrafiaZywnosc: string
-      GminaDzielnica: string
-      Powiat: string
-      NazwaOrganizacjiKsiegowanieDarowizn: string
-      KsiegowanieAdres: string
-      TelOrganProwadzacegoKsiegowosc: string
-      WwwFacebook: string
-      Telefon: string
-      Przedstawiciel: string
-      Kontakt: string
-      Fax: string
-      Email: string
-      Dostepnosc: string
-      OsobaDoKontaktu: string
-      TelefonOsobyKontaktowej: string
-      MailOsobyKontaktowej: string
-      OsobaOdbierajacaZywnosc: string
-      TelefonOsobyOdbierajacej: string
-      LiczbaBeneficjentow: string
-      Beneficjenci: string
-      Sieci: string
-      Bazarki: string
-      Machfit: string
-      FEPZ2024: string
-      Kategoria: string
-      RodzajPomocy: string
-      SposobUdzielaniaPomocy: string
-      WarunkiMagazynowe: string
-      HACCP: string
-      Sanepid: string
-      TransportOpis: string
-      TransportKategoria: string
-      Wniosek: string
-      UmowaZDn: string
-      UmowaRODO: string
-      KartyOrganizacjiData: string
-      OstatnieOdwiedzinyData: string }
+
+let trueValues = set ["tak"; "v"]
+let falseValues = set ["nie"; "nie dotyczy"; ""]
+
+let getExcelColumnName number =
+    let rec computeColumnName num acc =
+        if num <= 0 then acc
+        else
+            let modulo = (num - 1) % 26
+            let char = char (65 + modulo) 
+            computeColumnName ((num - 1) / 26) (string char + acc)
+    computeColumnName number ""
 
 let expectedHeaders =
     [ "teczka"
@@ -86,8 +54,10 @@ let expectedHeaders =
       "Liczba beneficjentów"
       "Beneficjenci"
       "sieci"
+      "Odbior krotki termin"
       "Bazarki"
       "Machfit"
+      "Tylko nasz magazyn"
       "FEPŻ 2024"
       "Kategoria"
       "RODZAJ POMOCY"
@@ -101,12 +71,12 @@ let expectedHeaders =
       "Umowa z dnia"
       "Umowa RODO"
       "Karty organizacji data"
-      "Ostatnie odwiedziny data" ]
+      "Ostatnie odwiedziny data" ] |> List.map(_.ToLowerInvariant())
     
 let validateHeaders (headerRow: IXLRow): Result<unit, string> =
     let actualHeaders = 
         headerRow.CellsUsed() 
-        |> Seq.map _.GetValue<string>().Trim() 
+        |> Seq.map _.GetValue<string>().Trim().ToLowerInvariant() 
         |> Seq.toList
     if actualHeaders <> expectedHeaders then
         Error <| $"Header mismatch! Expected: %A{expectedHeaders}, but got: %A{actualHeaders}"
@@ -115,57 +85,122 @@ let validateHeaders (headerRow: IXLRow): Result<unit, string> =
 
 let mapRow (row: IXLRow) =
     let getCellValue (index: int) =
-        let value = row.Cell(index).GetValue<string>()
-        value
+        row.Cell(index).GetValue<string>().Trim()
 
-    { Teczka = getCellValue 1
-      IdentyfikatorEnova = getCellValue 2
-      NIP = getCellValue 3
-      Regon = getCellValue 4
-      KrsNr = getCellValue 5
-      FormaPrawna = getCellValue 6
-      OPP = getCellValue 7
-      NazwaOrganizacjiPodpisujacejUmowe = getCellValue 8
-      AdresRejestrowy = getCellValue 9
-      NazwaPlacowkiTrafiaZywnosc = getCellValue 10
-      AdresPlacowkiTrafiaZywnosc = getCellValue 11
-      GminaDzielnica = getCellValue 12
-      Powiat = getCellValue 13
-      NazwaOrganizacjiKsiegowanieDarowizn = getCellValue 14
-      KsiegowanieAdres = getCellValue 15
-      TelOrganProwadzacegoKsiegowosc = getCellValue 16
-      WwwFacebook = getCellValue 17
-      Telefon = getCellValue 18
-      Przedstawiciel = getCellValue 19
-      Kontakt = getCellValue 20
-      Fax = getCellValue 21
-      Email = getCellValue 22
-      Dostepnosc = getCellValue 23
-      OsobaDoKontaktu = getCellValue 24
-      TelefonOsobyKontaktowej = getCellValue 25
-      MailOsobyKontaktowej = getCellValue 26
-      OsobaOdbierajacaZywnosc = getCellValue 27
-      TelefonOsobyOdbierajacej = getCellValue 28
-      LiczbaBeneficjentow = getCellValue 29
-      Beneficjenci = getCellValue 30
-      Sieci = getCellValue 31
-      Bazarki = getCellValue 32
-      Machfit = getCellValue 33
-      FEPZ2024 = getCellValue 34
-      Kategoria = getCellValue 35
-      RodzajPomocy = getCellValue 36
-      SposobUdzielaniaPomocy = getCellValue 37
-      WarunkiMagazynowe = getCellValue 38
-      HACCP = getCellValue 39
-      Sanepid = getCellValue 40
-      TransportOpis = getCellValue 41
-      TransportKategoria = getCellValue 42
-      Wniosek = getCellValue 43
-      UmowaZDn = getCellValue 44
-      UmowaRODO = getCellValue 45
-      KartyOrganizacjiData = getCellValue 46
-      OstatnieOdwiedzinyData = getCellValue 47 }
+    let columntToInt64 (column: int) =
+        let value = getCellValue column
+        match Int64.TryParse(value) with
+        | true, result -> Ok result
+        | false, _ -> Error $"Invalid value: %s{value} at column {expectedHeaders[column - 1]}. Should be number."
 
+    let columnToBool column =
+        match (getCellValue column).ToLowerInvariant() with
+        | v when trueValues.Contains v -> Ok true
+        | v when falseValues.Contains v -> Ok false
+        | v -> Error $"""Invalid boolean: "%s{v}" at column {expectedHeaders[column - 1]}. Should be 'tak' or 'nie'"""
+
+    let columnToDate (column: int) = 
+        let value = getCellValue column
+        match value, DateTime.TryParse(value, CultureInfo.InvariantCulture) with
+        | "", _ | "brak", _ -> Ok None
+        | _, (true, result) ->  Ok (Some <| DateOnly.FromDateTime result)
+        | _ -> Error $"""Invalid date: "%s{value}" at column {expectedHeaders[column - 1]}."""
+
+    let parsedColumns = validation {
+        let! teczka = 1 |> columntToInt64
+        and! identyfikatorEnova = 2 |> columntToInt64
+        and! nip = 3 |> columntToInt64
+        and! regon = 4 |> columntToInt64
+        and! krsNr = 4 |> columntToInt64
+        and! opp = 7 |> columnToBool
+        and! sieci = 31 |> columnToBool
+        and! bazarki = 33 |> columnToBool
+        and! machfit = 34 |> columnToBool
+        and! fepz2024 = 36 |> columnToBool
+        and! odbiorKrotkiTermin = 32 |> columnToBool
+        and! tylkoNaszMagazyn = 35 |> columnToBool
+        and! haccp = 41 |> columnToBool
+        and! sanepid = 42 |> columnToBool
+        and! wniosek = 45 |> columnToDate
+        and! umowaZDn = 46 |> columnToDate
+        and! umowaRODO = 47 |> columnToDate
+        and! kartyOrganizacjiData = 48 |> columnToDate
+        and! ostatnieOdwiedzinyData = 49 |> columnToDate
+        return {|
+                  teczka = teczka
+                  identyfikatorEnova = identyfikatorEnova
+                  nip = nip
+                  regon = regon
+                  krsNr = krsNr
+                  opp = opp
+                  sieci = sieci
+                  bazarki = bazarki
+                  machfit = machfit
+                  fepz2024 = fepz2024
+                  odbiorKrotkiTermin = odbiorKrotkiTermin
+                  tylkoNaszMagazyn = tylkoNaszMagazyn
+                  haccp = haccp
+                  sanepid = sanepid
+                  wniosek = wniosek
+                  umowaZDn = umowaZDn
+                  umowaRODO = umowaRODO
+                  kartyOrganizacjiData = kartyOrganizacjiData
+                  ostatnieOdwiedzinyData = ostatnieOdwiedzinyData
+                  |}
+    }
+    result {
+        let! columns = parsedColumns
+        return {
+            Teczka = columns.teczka
+            IdentyfikatorEnova = columns.identyfikatorEnova
+            NIP = columns.nip
+            Regon = columns.regon
+            KrsNr = getCellValue 5
+            FormaPrawna = getCellValue 6
+            OPP = columns.opp
+            NazwaOrganizacjiPodpisujacejUmowe = getCellValue 8
+            AdresRejestrowy = getCellValue 9
+            NazwaPlacowkiTrafiaZywnosc = getCellValue 10
+            AdresPlacowkiTrafiaZywnosc = getCellValue 11
+            GminaDzielnica = getCellValue 12
+            Powiat = getCellValue 13
+            NazwaOrganizacjiKsiegowanieDarowizn = getCellValue 14
+            KsiegowanieAdres = getCellValue 15
+            TelOrganProwadzacegoKsiegowosc = getCellValue 16
+            WwwFacebook = getCellValue 17
+            Telefon = getCellValue 18
+            Przedstawiciel = getCellValue 19
+            Kontakt = getCellValue 20
+            Email = getCellValue 22
+            Dostepnosc = getCellValue 23
+            OsobaDoKontaktu = getCellValue 24
+            TelefonOsobyKontaktowej = getCellValue 25
+            MailOsobyKontaktowej = getCellValue 26
+            OsobaOdbierajacaZywnosc = getCellValue 27
+            TelefonOsobyOdbierajacej = getCellValue 28
+            LiczbaBeneficjentow = getCellValue 29 |> System.Int32.Parse
+            Beneficjenci = getCellValue 30
+            Sieci = columns.sieci
+            Bazarki = columns.bazarki
+            Machfit = columns.machfit
+            FEPZ2024 = columns.fepz2024
+            OdbiorKrotkiTermin = columns.odbiorKrotkiTermin
+            TylkoNaszMagazyn = columns.tylkoNaszMagazyn
+            Kategoria = getCellValue 37
+            RodzajPomocy = getCellValue 38
+            SposobUdzielaniaPomocy = getCellValue 39
+            WarunkiMagazynowe = getCellValue 40
+            HACCP = columns.haccp
+            Sanepid = columns.sanepid
+            TransportOpis = getCellValue 43
+            TransportKategoria = getCellValue 44
+            Wniosek = columns.wniosek
+            UmowaZDn = columns.umowaZDn
+            UmowaRODO = columns.umowaRODO
+            KartyOrganizacjiData = columns.kartyOrganizacjiData
+            OstatnieOdwiedzinyData = columns.ostatnieOdwiedzinyData
+        }
+    }
 
 let readExcelRows (stream: FileStream) =
     use workbook = new XLWorkbook(stream)
@@ -175,8 +210,12 @@ let readExcelRows (stream: FileStream) =
     let validation = validateHeaders headerRow
 
     worksheet.RowsUsed()
+    |> Seq.takeWhile (fun row -> not (row.Cell(1).IsEmpty()))
     |> Seq.skip 1 // Skip header row
-    |> Seq.map mapRow
+    |> Seq.mapi (fun index row -> 
+        match mapRow row with
+        | Ok result -> Ok result
+        | Error errors -> Error ($"Errors in Row {index + 1}", errors))
     |> Seq.toList
 
 [<Fact>]
@@ -186,5 +225,5 @@ let ``Parsing excel file`` () =
         use stream = File.OpenRead(Path.Combine(__SOURCE_DIRECTORY__, "bank.xlsx"))
         let rows = readExcelRows stream
         // Assert
-        rows.Length |> should equal 12
+        rows.Length |> should equal 11s
     }
