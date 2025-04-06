@@ -206,17 +206,18 @@ let readExcelRows (stream: FileStream) =
     use workbook = new XLWorkbook(stream)
     let worksheet = workbook.Worksheet(1)
     let headerRow = worksheet.FirstRowUsed()
-
-    let validation = validateHeaders headerRow
-
-    worksheet.RowsUsed()
-    |> Seq.takeWhile (fun row -> not (row.Cell(1).IsEmpty()))
-    |> Seq.skip 1 // Skip header row
-    |> Seq.mapi (fun index row -> 
-        match mapRow row with
-        | Ok result -> Ok result
-        | Error errors -> Error ($"Errors in Row {index + 1}", errors))
-    |> Seq.toList
+    let parseHeadersResult = validateHeaders headerRow
+    match parseHeadersResult with
+    | Error err -> [Error (err, [])]
+    | Ok _ -> 
+        worksheet.RowsUsed()
+        |> Seq.takeWhile (fun row -> not (row.Cell(1).IsEmpty()))
+        |> Seq.skip 1 // Skip header row
+        |> Seq.mapi (fun index row -> 
+            match mapRow row with
+            | Ok result -> Ok result
+            | Error errors -> Error ($"Errors in Row {index + 1}", errors))
+        |> Seq.toList
 
 [<Fact>]
 let ``Parsing excel file`` () =
