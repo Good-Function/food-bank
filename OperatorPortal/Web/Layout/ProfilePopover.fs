@@ -15,7 +15,7 @@ let Template =
                     }
 
                     li (style = "display: block;") {
-                        a (href = "/import") {
+                        a (href = "/organizations/import") {
                             Icons.UploadFile
                             "Import csv"
                         }

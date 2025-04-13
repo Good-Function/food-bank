@@ -27,9 +27,16 @@ let private login (returnUrl: string option) =
                     ariaLabel = "Email",
                     placeholder = "Email",
                     name = "Email",
-                    type' = "Email"
+                    type' = "Email",
+                    required=true
                 )
-                input (ariaLabel = "Password", placeholder = "Password", name = "Password", type' = "password")
+                input (
+                    ariaLabel = "Password",
+                    placeholder = "Password",
+                    name = "Password",
+                    type' = "password",
+                    required=true
+                )
                 input (type'="submit", name="Login", value="Zaloguj")
                 div(id="ErrorContainer") 
             }

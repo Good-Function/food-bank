@@ -25,6 +25,6 @@ let ``Navigations contains /ogranizations, /applications, /team links, /settings
                                    "/applications"
                                    "/team"
                                    "/login/password-change"
-                                   "/import"
+                                   "/organizations/import"
                                  ]    
     }

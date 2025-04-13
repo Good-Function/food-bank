@@ -1,5 +1,7 @@
+@import "ring-chart.css";
+
 main {
-    padding-block:0 !important;
+    padding-block: 0 !important;
 }
 
 .action-header {
@@ -45,12 +47,12 @@ main {
 }
 
 #ProfilePopoverTrigger {
-    anchor-name: --ProfilePopover;  /* chrome popover */
-    background:none;
-    outline:none;
+    anchor-name: --ProfilePopover; /* chrome popover */
+    background: none;
+    outline: none;
     box-shadow: none;
-    border:none;
-    padding:0;
+    border: none;
+    padding: 0;
 }
 
 #ProfilePopover {
@@ -60,9 +62,9 @@ main {
     inset: unset; /* firefox popover */
     background-color: var(--pico-code-background-color);
     border-radius: var(--pico-border-radius);
-    border:0;
+    border: 0;
     padding: var(--pico-spacing);
-    text-align:left;
+    text-align: left;
 }
 
 @media screen and (max-width: 770px) {
@@ -78,19 +80,19 @@ main {
 
 thead th {
     position: sticky;
-    top:0;
+    top: 0;
     z-index: 1;
 }
 
 thead th:first-child {
-    left:0;
+    left: 0;
     position: sticky;
     z-index: 2;
 }
 
 tr > td:first-child {
     position: sticky;
-    left:0;
-    z-index:1;
+    left: 0;
+    z-index: 1;
     background-color: var(--pico-background-color) !important;
 }

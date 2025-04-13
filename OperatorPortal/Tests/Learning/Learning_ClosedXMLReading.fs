@@ -1,4 +1,4 @@
-module OrganizationsFromExcel.Learning_ClosedXMLReading
+module Learning.Learning_ClosedXMLReading
 
 open System
 open System.Globalization
@@ -8,7 +8,6 @@ open Xunit
 open FsUnit.Xunit
 open Organizations.Database.OrganizationsDao
 open FsToolkit.ErrorHandling
-
 
 let trueValues = set ["tak"; "v"]
 let falseValues = set ["nie"; "nie dotyczy"; ""]

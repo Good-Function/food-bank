@@ -24,7 +24,6 @@ let endpoints
         subRoute "/login" (Login.Router.Endpoints loginDeps) 
         subRoute "/organizations" (Organizations.Router.Endpoints orgDeps) |> protect
         subRoute "/applications" (Applications.Router.Endpoints appDeps) |> protect
-        subRoute "/import" (Import.Router.Endpoints) |> protect
     ]
 
 let notFoundHandler (ctx: HttpContext) =
@@ -52,6 +51,7 @@ let createServer () =
         ChangeAdresyKsiegowosci = OrganizationsDao.changeAdresyKsiegowosci dbConnect
         ChangeZrodlaZywnosci = OrganizationsDao.changeZrodlaZywnosci dbConnect
         ChangeWarunkiPomocy = OrganizationsDao.changeWarunkiPomocy dbConnect
+        Import = Organizations.ClosedXmlExcelImport.import
     }
     let appDeps: Applications.CompositionRoot.Dependencies = {
         TestRead = Applications.Database.readSchemas dbConnect

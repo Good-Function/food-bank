@@ -39,13 +39,16 @@
       <ProjectReference Include="..\Web\Web.fsproj" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Include="OrganizationsFromExcel\Learning_ClosedXMLReading.fs" />
-      <Content Include="OrganizationsFromExcel\bank.xlsx" />
+      <Compile Include="Learning\Learning_ClosedXMLReading.fs" />
+      <Content Include="Learning\bank.xlsx" />
     </ItemGroup>
     <ItemGroup>
       <Compile Include="Organizations\Arranger.fs" />
       <Compile Include="Organizations\OrganizationViewing.fs" />
       <Compile Include="Organizations\OrganizationsEditing.fs" />
+      <Compile Include="Organizations\ImportFromExcel.fs" />
+      <Content Include="Organizations\bank.xlsx" />
+      <Content Include="Organizations\notExcel.txt" />
     </ItemGroup>
     <ItemGroup>
       <Compile Include="Login\ResetPassword.fs" />

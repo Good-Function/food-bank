@@ -1,0 +1,49 @@
+.ring-chart {
+    --ring-size: 200;
+    --ring-stroke-width: 20;
+    --ring-color: var(--pico-primary-background);
+
+    width: calc(1px * var(--ring-size));
+    height: calc(1px * var(--ring-size));
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ring-chart::before {
+    box-sizing: border-box;
+    content: '';
+    border: calc(1px * var(--ring-stroke-width)) solid var(--pico-code-background-color);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.ring-chart::after {
+    content: attr(data-value) "/" attr(data-max);
+    font: bold 30px sans-serif;
+}
+
+.ring-chart svg {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    transform: rotate(-90deg);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.ring-chart circle {
+    fill: none;
+    stroke-width: calc(1px * (var(--ring-stroke-width) * 2) / (var(--ring-size) / 100));
+    stroke: var(--ring-color);
+    stroke-dasharray: 314;
+    stroke-dashoffset: calc(314px * (1 - (var(--ring-value) / var(--ring-max))));
+}

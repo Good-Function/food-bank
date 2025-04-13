@@ -57,7 +57,7 @@ let passwordField (labelText: string) (name: string) (errorMsg: string option) =
                 input (name = name, type' = "password", ariaInvalid = "true", ariaDescribedBy = name + "-error")
                 small (id = name + "-error") { msg }
             }
-        | None -> input (name = name, type' = "password")
+        | None -> input (name = name, type' = "password", required=true)
     }
     
 let booleanField (labelText: string) (value: bool) (name: string) =

@@ -1,5 +1,13 @@
 module Organizations.Application.Commands
 
+open System.IO
+
+type CellError = string
+type RowError = int * CellError list
+type ImportError =
+    | InvalidFile of string
+    | InvalidHeaders of {| ExpectedHeaders: string list; ActualHeaders: string list |}
+
 type DaneAdresowe =
     { Teczka: int64
       NazwaOrganizacjiPodpisujacejUmowe: string
@@ -69,3 +77,4 @@ type ChangeKontakty = Kontakty -> Async<unit>
 type ChangeBeneficjenci = Beneficjenci -> Async<unit>
 type ChangeDokumenty = Dokumenty -> Async<unit>
 type ChangeWarunkiPomocy = WarunkiPomocy -> Async<unit>
+type ImportOrganizations = Stream ->  Result<int * RowError list, ImportError>

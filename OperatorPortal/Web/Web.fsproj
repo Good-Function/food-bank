@@ -8,6 +8,7 @@
       <PackageReference Include="Dapper" Version="2.1.66" />
       <PackageReference Include="FSharp.Data" Version="6.4.1" />
       <PackageReference Include="FsToolkit.ErrorHandling" Version="4.18.0" />
+      <PackageReference Include="ClosedXML" Version="0.104.2" />  
       <PackageReference Include="Npgsql" Version="9.0.3" />
       <PackageReference Include="Oxpecker" Version="1.2.0" />
       <PackageReference Include="Oxpecker.Htmx" Version="1.0.0" />
@@ -41,6 +42,7 @@
         <Compile Include="Layout\Body.fs" />
         <Compile Include="Layout\NotFound.fs" />
         <Compile Include="Layout\Fields.fs" />
+        <Compile Include="Layout\RingChart.fs" />
         <Compile Include="Login\Domain.fs" />
       <Compile Include="Login\Templates\Template.fs" />
       <Compile Include="Login\Templates\ChangePasswordTemplate.fs" />
@@ -80,6 +82,8 @@
       <Compile Include="Organizations\Templates\DetailsTemplate.fs" />
       <Compile Include="Organizations\Templates\SearchableListTemplate.fs" />
       <Compile Include="Organizations\Templates\ListTemplate.fs" />
+      <Compile Include="Organizations\Templates\ImportCsvTemplate.fs" />
+      <Compile Include="Organizations\ClosedXmlExcelImport.fs" />
       <Compile Include="Organizations\Dtos.fs" />
       <Compile Include="Organizations\CompositionRoot.fs" />
       <Compile Include="Organizations\SectionsRouter.fs" />
@@ -88,8 +92,6 @@
       <Compile Include="Applications\Database.fs" />
       <Compile Include="Applications\CompositionRoot.fs" />
       <Compile Include="Applications\Router.fs" />
-      <Compile Include="Import\ImportCsvTemplate.fs" />
-      <Compile Include="Import\Router.fs" />
       <Compile Include="Authentication.fs" />
       <Compile Include="Culture.fs" />
       <Compile Include="Settings.fs" />

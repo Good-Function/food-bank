@@ -13,4 +13,5 @@ type Dependencies = {
     ChangeAdresyKsiegowosci: Commands.ChangeAdresyKsiegowosci
     ChangeZrodlaZywnosci: Commands.ChangeZrodlaZywnosci
     ChangeWarunkiPomocy: Commands.ChangeWarunkiPomocy
+    Import: Commands.ImportOrganizations
 }
