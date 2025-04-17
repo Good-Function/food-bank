@@ -80,34 +80,34 @@ let mapRow (row: IXLRow) =
         let value = getCellValue column
         match Int64.TryParse(value) with
         | true, result -> Ok result
-        | false, _ -> Error $"Invalid value: %s{value} at column {expectedHeaders[column - 1]}. Should be number."
+        | false, _ -> Error $"""Niepoprawna wartość: "%s{value}" w kolumnie [{expectedHeaders[column - 1]}]. Oczekiwana jest liczba."""
 
     let toBool column =
         match (getCellValue column).ToLowerInvariant() with
         | v when trueValues.Contains v -> Ok true
         | v when falseValues.Contains v -> Ok false
-        | v -> Error $"""Invalid boolean: "%s{v}" at column {expectedHeaders[column - 1]}. Should be 'tak' or 'nie'"""
+        | v -> Error $"""Niepoprawna wartość: "%s{v}" w kolumnie {expectedHeaders[column - 1]}. Oczekiwane jest 'tak' albo 'nie'"""
 
     let toDate (column: int) = 
         let value = getCellValue column
         match value, DateTime.TryParseExact(value, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None) with
         | "", _ | "brak", _ -> Ok None
         | _, (true, result) ->  Ok (Some <| DateOnly.FromDateTime result)
-        | _ -> Error $"""Invalid date: "%s{value}" at column {expectedHeaders[column - 1]}."""
+        | _ -> Error $"""Niepoprawna data: "%s{value}" w kolumnie {expectedHeaders[column - 1]}."""
 
     let parsedColumns = validation {
         let! teczka = 1 |> toInt64
         and! identyfikatorEnova = 2 |> toInt64
         and! nip = 3 |> toInt64
         and! regon = 4 |> toInt64
-        and! krsNr = 4 |> toInt64
+        and! krsNr = 5 |> toInt64
         and! opp = 7 |> toBool
         and! sieci = 31 |> toBool
+        and! odbiorKrotkiTermin = 32 |> toBool
         and! bazarki = 33 |> toBool
         and! machfit = 34 |> toBool
-        and! fepz2024 = 36 |> toBool
-        and! odbiorKrotkiTermin = 32 |> toBool
         and! tylkoNaszMagazyn = 35 |> toBool
+        and! fepz2024 = 36 |> toBool
         and! haccp = 41 |> toBool
         and! sanepid = 42 |> toBool
         and! wniosek = 45 |> toDate

@@ -90,20 +90,20 @@ let mapRow (row: IXLRow) =
         let value = getCellValue column
         match Int64.TryParse(value) with
         | true, result -> Ok result
-        | false, _ -> Error $"Invalid value: %s{value} at column {expectedHeaders[column - 1]}. Should be number."
+        | false, _ -> Error $"Niepoprawna wartość: %s{value} w kolumnie '{expectedHeaders[column - 1]}'. Oczekiwana jest liczba."
 
     let columnToBool column =
         match (getCellValue column).ToLowerInvariant() with
         | v when trueValues.Contains v -> Ok true
         | v when falseValues.Contains v -> Ok false
-        | v -> Error $"""Invalid boolean: "%s{v}" at column {expectedHeaders[column - 1]}. Should be 'tak' or 'nie'"""
+        | v -> Error $"""Niepoprawna wartość: "%s{v}" w kolumnie '{expectedHeaders[column - 1]}'. Oczekiwane jest 'tak' lub 'nie'"""
 
     let columnToDate (column: int) = 
         let value = getCellValue column
         match value, DateTime.TryParse(value, CultureInfo.InvariantCulture) with
         | "", _ | "brak", _ -> Ok None
         | _, (true, result) ->  Ok (Some <| DateOnly.FromDateTime result)
-        | _ -> Error $"""Invalid date: "%s{value}" at column {expectedHeaders[column - 1]}."""
+        | _ -> Error $"""Niepoprawna data: "%s{value}" w kolumnie '{expectedHeaders[column - 1]}'."""
 
     let parsedColumns = validation {
         let! teczka = 1 |> columntToInt64

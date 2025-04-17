@@ -96,3 +96,19 @@ tr > td:first-child {
     z-index: 1;
     background-color: var(--pico-background-color) !important;
 }
+
+.htmx-indicator svg {
+    height: 100%;
+    width: 100%;
+    display: block;
+}
+
+@keyframes easeIn {
+    from {margin-top:90px; opacity:0}
+    to {margin-top:0px; opacity:1}
+}
+
+.ease-in {
+    animation-name: easeIn;
+    animation-duration: .5s;
+}

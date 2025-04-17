@@ -1,4 +1,4 @@
-module Organizations.ImportFileTemplate
+module Organizations.ImportExcelTemplate
 
 open Layout
 open Oxpecker.ViewEngine
@@ -6,7 +6,7 @@ open Oxpecker.Htmx
 open Oxpecker.ViewEngine.Aria
 
 let Upload (error: string option) =
-    form (style = "max-width:650px; margin:auto;", hxEncoding = "multipart/form-data", hxPost = "import/upload") {
+    form (style = "max-width:650px; margin:auto;", hxEncoding = "multipart/form-data", hxPost = "import/upload", hxIndicator="#spinner") {
         match error with
         | Some error ->
             Fragment() {
@@ -25,13 +25,15 @@ let Upload (error: string option) =
         | None -> input (type' = "file", name = "file", required = true, accept = ".xlsx, .pdf")
 
         input (type' = "submit", value = "Importuj")
+        div(id="spinner", class'="htmx-indicator", style="text-align:center; height:50px;") {
+            Icons.Spinner
+        }
     }
 
 let Partial (userName: string) (error: string option) =
     Fragment() {
         Body.Template (Upload error) None userName
         "Import File" |> Head.ReplaceTitle
-        //RingChart.plot(2,30)
     }
 
 let FullPage (userName: string) (error: string option) =

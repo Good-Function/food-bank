@@ -10,13 +10,6 @@ open Organizations.Application.ReadModels
 open Organizations.CompositionRoot
 open type Microsoft.AspNetCore.Http.TypedResults
 
-// todo
-// 1. Move this to organizations vertical slice ✅
-// 2. Add Command handler which returns Result<Ok, Errors> ✅
-// 3. Add proper validation (if closed xml fails, return info to UI that incorrect excel) 
-// 4. Return errors as plain text
-// 5. Add different error for headers
-
 let indexPage: EndpointHandler =
     fun ctx ->
         let username = ctx.User.FindFirstValue(ClaimTypes.Name)
@@ -60,7 +53,7 @@ let tryGetFirstFormFile (ctx: HttpContext) =
 let import: EndpointHandler =
     fun ctx -> task {
         let username = ctx.User.FindFirstValue(ClaimTypes.Name)
-        return ctx |> render (ImportFileTemplate.Partial username None) (ImportFileTemplate.FullPage username None)
+        return ctx |> render (ImportExcelTemplate.Partial username None) (ImportExcelTemplate.FullPage username None)
     }
     
 let upload (import: Commands.ImportOrganizations): EndpointHandler =
@@ -68,13 +61,13 @@ let upload (import: Commands.ImportOrganizations): EndpointHandler =
         match tryGetFirstFormFile ctx with
         | Some file ->
             match import (file.OpenReadStream()) with
-            | Ok output -> return! ctx.WriteText $"%A{output}"
+            | Ok output -> return! ctx.WriteHtmlView (ImportExcelResultTemplate.Template output)
             | Error err ->
                 ctx.SetStatusCode(StatusCodes.Status400BadRequest)
-                return! ctx.WriteHtmlView (ImportFileTemplate.Upload (Some $"%A{err}"))
+                return! ctx.WriteHtmlView (ImportExcelTemplate.Upload (Some $"%A{err}"))
         | None ->
             ctx.SetStatusCode(StatusCodes.Status400BadRequest)
-            return! ctx.WriteHtmlView (ImportFileTemplate.Upload (Some "Niepoprawny plik excel (.xlsx)"))
+            return! ctx.WriteHtmlView (ImportExcelTemplate.Upload (Some "Niepoprawny plik excel (.xlsx)"))
     }
 
 let Endpoints (dependencies: Dependencies) =

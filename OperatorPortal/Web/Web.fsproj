@@ -82,7 +82,8 @@
       <Compile Include="Organizations\Templates\DetailsTemplate.fs" />
       <Compile Include="Organizations\Templates\SearchableListTemplate.fs" />
       <Compile Include="Organizations\Templates\ListTemplate.fs" />
-      <Compile Include="Organizations\Templates\ImportCsvTemplate.fs" />
+      <Compile Include="Organizations\Templates\ImportExcelTemplate.fs" />
+      <Compile Include="Organizations\Templates\ImportExcelResult.fs" />
       <Compile Include="Organizations\ClosedXmlExcelImport.fs" />
       <Compile Include="Organizations\Dtos.fs" />
       <Compile Include="Organizations\CompositionRoot.fs" />

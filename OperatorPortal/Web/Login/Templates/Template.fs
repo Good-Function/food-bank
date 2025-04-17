@@ -21,7 +21,7 @@ let private login (returnUrl: string option) =
         }
 
         main (style = "max-width:450px; margin:auto") {
-            form (action = actionWithReturnUrl, method = "POST", hxTarget="#ErrorContainer" ) {
+            form (action = actionWithReturnUrl, method = "POST", hxTarget="#ErrorContainer", hxIndicator="#spinner" ) {
                 input (
                     autocomplete = "email",
                     ariaLabel = "Email",
@@ -38,7 +38,10 @@ let private login (returnUrl: string option) =
                     required=true
                 )
                 input (type'="submit", name="Login", value="Zaloguj")
-                div(id="ErrorContainer") 
+                div(id="ErrorContainer")
+                div(id="spinner", class'="htmx-indicator", style="text-align:center; height:50px;") {
+                    Icons.Spinner
+                }
             }
         }
     }
