@@ -19,7 +19,6 @@ let renderLogin: EndpointHandler =
 let handleLogin (readUser: Email -> Async<User option>) : EndpointHandler =
     fun ctx ->
         task {
-            Thread.Sleep(1000)
             let! form = ctx.BindForm<Dtos.LoginFormDto>()
             let email, password = form.Email, form.Password
             let! user = getUser readUser email
