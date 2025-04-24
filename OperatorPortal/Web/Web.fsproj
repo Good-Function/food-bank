@@ -62,7 +62,9 @@
     </ItemGroup>
     <ItemGroup>
       <Compile Include="Organizations\Application\ReadModels.fs" />
-      <Compile Include="Organizations\Application\Commands.fs" />
+      <Compile Include="Organizations\Application\WriteModels.fs" />
+      <Compile Include="Organizations\Application\ChangeOrgazniationCommands.fs" />
+      <Compile Include="Organizations\Application\CreateOrganizationCommands.fs" />
       <Content Include="Organizations\Database\migrations.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>

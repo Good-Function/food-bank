@@ -7,7 +7,6 @@ open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Configuration
-open Organizations.Database
 open Oxpecker
 open Settings
 
@@ -41,21 +40,6 @@ let createServer () =
           .Build()
           .Get<Settings>()
     let dbConnect = connectDB(settings.DbConnectionString)
-    let orgDeps: Organizations.CompositionRoot.Dependencies = {
-        ReadOrganizationSummaries = OrganizationsDao.readSummaries dbConnect
-        ReadOrganizationDetailsBy = OrganizationsDao.readBy dbConnect
-        ChangeDaneAdresowe = OrganizationsDao.changeDaneAdresowe dbConnect
-        ChangeKontakty = OrganizationsDao.changeKontakty dbConnect
-        ChangeBeneficjenci = OrganizationsDao.changeBeneficjenci dbConnect
-        ChangeDokumenty = OrganizationsDao.changeDokumenty dbConnect
-        ChangeAdresyKsiegowosci = OrganizationsDao.changeAdresyKsiegowosci dbConnect
-        ChangeZrodlaZywnosci = OrganizationsDao.changeZrodlaZywnosci dbConnect
-        ChangeWarunkiPomocy = OrganizationsDao.changeWarunkiPomocy dbConnect
-        Import = Organizations.ClosedXmlExcelImport.import
-    }
-    let appDeps: Applications.CompositionRoot.Dependencies = {
-        TestRead = Applications.Database.readSchemas dbConnect
-    }
     builder.Services
         .AddRouting()
         .AddOxpecker()
@@ -74,9 +58,10 @@ let createServer () =
         .UseAuthentication()
         .UseAuthorization()
         .UseOxpecker(endpoints
-                        orgDeps
-                        (Login.CompositionRoot.build(dbConnect))
-                        appDeps)
+                        (Organizations.CompositionRoot.build dbConnect)
+                        (Login.CompositionRoot.build dbConnect)
+                        (Applications.CompositionRoot.build dbConnect)
+                    )
         .Run(notFoundHandler)
     app
    

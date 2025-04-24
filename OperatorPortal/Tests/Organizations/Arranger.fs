@@ -8,7 +8,7 @@ let IdGenerator =
 
 let f = Bogus.Faker()
 
-let AnOrganization () : Organizations.Application.ReadModels.OrganizationDetails =
+let AnOrganization () : Organizations.Application.WriteModels.Organization =
     { Teczka = IdGenerator.CreateId()
       IdentyfikatorEnova = IdGenerator.CreateId()
       NIP = IdGenerator.CreateId()

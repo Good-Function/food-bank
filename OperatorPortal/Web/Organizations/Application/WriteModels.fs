@@ -1,16 +1,9 @@
-module Organizations.Application.Commands
+module Organizations.Application.WriteModels
 
-open System.IO
-
-type CellError = string
-type RowError = int * CellError list
-type ImportError =
-    | InvalidFile of string
-    | InvalidHeaders of {| ExpectedHeaders: string list; ActualHeaders: string list |}
+type TeczkaId = int64
 
 type DaneAdresowe =
-    { Teczka: int64
-      NazwaOrganizacjiPodpisujacejUmowe: string
+    { NazwaOrganizacjiPodpisujacejUmowe: string
       AdresRejestrowy: string
       NazwaPlacowkiTrafiaZywnosc: string
       AdresPlacowkiTrafiaZywnosc: string
@@ -18,8 +11,7 @@ type DaneAdresowe =
       Powiat: string }
 
 type Kontakty =
-    { Teczka: int64
-      WwwFacebook: string
+    { WwwFacebook: string
       Telefon: string
       Przedstawiciel: string
       Kontakt: string
@@ -32,21 +24,18 @@ type Kontakty =
       TelefonOsobyOdbierajacej: string }
 
 type Dokumenty =
-    { Teczka: int64
-      Wniosek: System.DateOnly option
+    { Wniosek: System.DateOnly option
       UmowaZDn: System.DateOnly option
       UmowaRODO: System.DateOnly option
       KartyOrganizacjiData: System.DateOnly option
       OstatnieOdwiedzinyData: System.DateOnly option }
 
 type Beneficjenci =
-    { Teczka: int64
-      LiczbaBeneficjentow: int
+    { LiczbaBeneficjentow: int
       Beneficjenci: string }
 
 type ZrodlaZywnosci =
-    { Teczka: int64
-      Sieci: bool
+    { Sieci: bool
       Bazarki: bool
       Machfit: bool
       FEPZ2024: bool
@@ -54,14 +43,12 @@ type ZrodlaZywnosci =
       TylkoNaszMagazyn: bool }
 
 type AdresyKsiegowosci =
-    { Teczka: int64
-      NazwaOrganizacjiKsiegowanieDarowizn: string
+    { NazwaOrganizacjiKsiegowanieDarowizn: string
       KsiegowanieAdres: string
       TelOrganProwadzacegoKsiegowosc: string }
 
 type WarunkiPomocy =
-    { Teczka: int64
-      Kategoria: string
+    { Kategoria: string
       RodzajPomocy: string
       SposobUdzielaniaPomocy: string
       WarunkiMagazynowe: string
@@ -70,11 +57,18 @@ type WarunkiPomocy =
       TransportOpis: string
       TransportKategoria: string }
 
-type ChangeZrodlaZywnosci = ZrodlaZywnosci -> Async<unit>
-type ChangeAdresyKsiegowosci = AdresyKsiegowosci -> Async<unit>
-type ChangeDaneAdresowe = DaneAdresowe -> Async<unit>
-type ChangeKontakty = Kontakty -> Async<unit>
-type ChangeBeneficjenci = Beneficjenci -> Async<unit>
-type ChangeDokumenty = Dokumenty -> Async<unit>
-type ChangeWarunkiPomocy = WarunkiPomocy -> Async<unit>
-type ImportOrganizations = Stream ->  Result<int * RowError list, ImportError>
+type Organization =
+    { Teczka: TeczkaId
+      IdentyfikatorEnova: int64
+      NIP: int64
+      Regon: int64
+      KrsNr: string
+      FormaPrawna: string // fundacja, stowarzyszenie, org koscielna
+      OPP: bool // szczegóły: Organizacja użytku publicznego
+      DaneAdresowe: DaneAdresowe
+      Kontakty: Kontakty
+      ZrodlaZywnosci: ZrodlaZywnosci
+      AdresyKsiegowosci: AdresyKsiegowosci
+      Beneficjenci: Beneficjenci
+      Dokumenty: Dokumenty
+      WarunkiPomocy: WarunkiPomocy }

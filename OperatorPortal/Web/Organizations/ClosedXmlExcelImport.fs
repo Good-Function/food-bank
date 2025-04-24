@@ -1,15 +1,17 @@
 module Organizations.ClosedXmlExcelImport
 
 open System
-open System.Globalization
 open System.IO
-open Application.Commands
 open ClosedXML.Excel
 open FsToolkit.ErrorHandling
-open Organizations.Database.OrganizationsDao
+open Organizations.Application.CreateOrganizationCommands
+open Organizations.Application.WriteModels
 
 let trueValues = set ["tak"; "v"]
 let falseValues = set ["nie"; "nie dotyczy"; ""]
+
+let getCellText (index: int) (row: IXLRow) =
+    row.Cell(index).GetValue<string>().Trim()
 
 let expectedHeaders =
     [ "teczka"
@@ -72,35 +74,36 @@ let validateHeaders (headerRow: IXLRow): Result<unit, ImportError> =
     else
         Ok ()
         
-let mapRow (row: IXLRow) =
-    let getCellValue (index: int) =
-        row.Cell(index).GetValue<string>().Trim()
-
+let mapRow (row: IXLRow): Result<Organization, string list> =
     let toInt64 (column: int) =
-        let value = getCellValue column
+        let value = row |> getCellText column
         match Int64.TryParse(value) with
         | true, result -> Ok result
         | false, _ -> Error $"""Niepoprawna wartość: "%s{value}" w kolumnie [{expectedHeaders[column - 1]}]. Oczekiwana jest liczba."""
 
     let toBool column =
-        match (getCellValue column).ToLowerInvariant() with
+        match (row |> getCellText column).ToLowerInvariant() with
         | v when trueValues.Contains v -> Ok true
         | v when falseValues.Contains v -> Ok false
-        | v -> Error $"""Niepoprawna wartość: "%s{v}" w kolumnie {expectedHeaders[column - 1]}. Oczekiwane jest 'tak' albo 'nie'"""
+        | v -> Error $"""Niepoprawna wartość: "%s{v}" w kolumnie [{expectedHeaders[column - 1]}]. Oczekiwane jest 'tak' albo 'nie'."""
 
-    let toDate (column: int) = 
-        let value = getCellValue column
-        match value, DateTime.TryParseExact(value, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None) with
-        | "", _ | "brak", _ -> Ok None
-        | _, (true, result) ->  Ok (Some <| DateOnly.FromDateTime result)
-        | _ -> Error $"""Niepoprawna data: "%s{value}" w kolumnie {expectedHeaders[column - 1]}."""
+    let toDate (column: int) =
+        let value = row |> getCellText column
+        match value with
+        | "" | "brak" -> Ok None
+        | _ ->
+            try 
+                let date = row.Cell(column).GetDateTime()
+                date |> DateOnly.FromDateTime |> Some |> Ok
+            with
+                | _ -> Error $"""Niepoprawna data: "%s{value}" w kolumnie [{expectedHeaders[column - 1]}]."""
 
     let parsedColumns = validation {
         let! teczka = 1 |> toInt64
         and! identyfikatorEnova = 2 |> toInt64
         and! nip = 3 |> toInt64
-        and! regon = 4 |> toInt64
-        and! krsNr = 5 |> toInt64
+        and! krs = 3 |> toInt64
+        and! regon = 5 |> toInt64
         and! opp = 7 |> toBool
         and! sieci = 31 |> toBool
         and! odbiorKrotkiTermin = 32 |> toBool
@@ -120,7 +123,7 @@ let mapRow (row: IXLRow) =
                   identyfikatorEnova = identyfikatorEnova
                   nip = nip
                   regon = regon
-                  krsNr = krsNr
+                  krs = krs
                   opp = opp
                   sieci = sieci
                   bazarki = bazarki
@@ -144,50 +147,64 @@ let mapRow (row: IXLRow) =
             IdentyfikatorEnova = columns.identyfikatorEnova
             NIP = columns.nip
             Regon = columns.regon
-            KrsNr = getCellValue 5
-            FormaPrawna = getCellValue 6
+            KrsNr = columns.krs |> _.ToString()
+            FormaPrawna = row |> getCellText 6
             OPP = columns.opp
-            NazwaOrganizacjiPodpisujacejUmowe = getCellValue 8
-            AdresRejestrowy = getCellValue 9
-            NazwaPlacowkiTrafiaZywnosc = getCellValue 10
-            AdresPlacowkiTrafiaZywnosc = getCellValue 11
-            GminaDzielnica = getCellValue 12
-            Powiat = getCellValue 13
-            NazwaOrganizacjiKsiegowanieDarowizn = getCellValue 14
-            KsiegowanieAdres = getCellValue 15
-            TelOrganProwadzacegoKsiegowosc = getCellValue 16
-            WwwFacebook = getCellValue 17
-            Telefon = getCellValue 18
-            Przedstawiciel = getCellValue 19
-            Kontakt = getCellValue 20
-            Email = getCellValue 22
-            Dostepnosc = getCellValue 23
-            OsobaDoKontaktu = getCellValue 24
-            TelefonOsobyKontaktowej = getCellValue 25
-            MailOsobyKontaktowej = getCellValue 26
-            OsobaOdbierajacaZywnosc = getCellValue 27
-            TelefonOsobyOdbierajacej = getCellValue 28
-            LiczbaBeneficjentow = getCellValue 29 |> Int32.Parse
-            Beneficjenci = getCellValue 30
-            Sieci = columns.sieci
-            Bazarki = columns.bazarki
-            Machfit = columns.machfit
-            FEPZ2024 = columns.fepz2024
-            OdbiorKrotkiTermin = columns.odbiorKrotkiTermin
-            TylkoNaszMagazyn = columns.tylkoNaszMagazyn
-            Kategoria = getCellValue 37
-            RodzajPomocy = getCellValue 38
-            SposobUdzielaniaPomocy = getCellValue 39
-            WarunkiMagazynowe = getCellValue 40
-            HACCP = columns.haccp
-            Sanepid = columns.sanepid
-            TransportOpis = getCellValue 43
-            TransportKategoria = getCellValue 44
-            Wniosek = columns.wniosek
-            UmowaZDn = columns.umowaZDn
-            UmowaRODO = columns.umowaRODO
-            KartyOrganizacjiData = columns.kartyOrganizacjiData
-            OstatnieOdwiedzinyData = columns.ostatnieOdwiedzinyData
+            DaneAdresowe = {
+                NazwaOrganizacjiPodpisujacejUmowe = row |> getCellText 8
+                AdresRejestrowy = row |> getCellText 9
+                NazwaPlacowkiTrafiaZywnosc = row |> getCellText 10
+                AdresPlacowkiTrafiaZywnosc = row |> getCellText 11
+                GminaDzielnica = row |> getCellText 12
+                Powiat = row |> getCellText 13
+            }
+            AdresyKsiegowosci = {
+                NazwaOrganizacjiKsiegowanieDarowizn = row |> getCellText 14
+                KsiegowanieAdres = row |> getCellText 15
+                TelOrganProwadzacegoKsiegowosc = row |> getCellText 16 
+            }
+            Kontakty = {
+                WwwFacebook = row |> getCellText 17
+                Telefon = row |> getCellText 18
+                Przedstawiciel = row |> getCellText 19
+                Kontakt = row |> getCellText 20
+                Email = row |> getCellText 22
+                Dostepnosc = row |> getCellText 23
+                OsobaDoKontaktu = row |> getCellText 24
+                TelefonOsobyKontaktowej = row |> getCellText 25
+                MailOsobyKontaktowej = row |> getCellText 26
+                OsobaOdbierajacaZywnosc = row |> getCellText 27
+                TelefonOsobyOdbierajacej = row |> getCellText 28
+            }
+            Beneficjenci = {
+                LiczbaBeneficjentow = row |> getCellText 29 |> Int32.Parse
+                Beneficjenci = row |> getCellText 30
+            }
+            ZrodlaZywnosci = {
+                Sieci = columns.sieci
+                Bazarki = columns.bazarki
+                Machfit = columns.machfit
+                FEPZ2024 = columns.fepz2024
+                OdbiorKrotkiTermin = columns.odbiorKrotkiTermin
+                TylkoNaszMagazyn = columns.tylkoNaszMagazyn
+            }
+            WarunkiPomocy = {
+                Kategoria = row |> getCellText 37
+                RodzajPomocy = row |> getCellText 38
+                SposobUdzielaniaPomocy = row |> getCellText 39
+                WarunkiMagazynowe = row |> getCellText 40
+                HACCP = columns.haccp
+                Sanepid = columns.sanepid
+                TransportOpis = row |> getCellText 43
+                TransportKategoria = row |> getCellText 44
+            }
+            Dokumenty = {
+                Wniosek = columns.wniosek 
+                UmowaZDn = columns.umowaZDn 
+                UmowaRODO = columns.umowaRODO
+                KartyOrganizacjiData = columns.kartyOrganizacjiData
+                OstatnieOdwiedzinyData = columns.ostatnieOdwiedzinyData
+            }
         }
     }
 
@@ -216,10 +233,10 @@ let parseExcel (stream: Stream)=
     }
         
 
-let import: ImportOrganizations = fun stream ->
+let import: ParseOrganizations = fun stream ->
     result {
         let! parsedOrganizations = parseExcel stream
         let errors = parsedOrganizations |> List.choose (function Error err -> Some err | _ -> None)
         let orgs = parsedOrganizations |> List.choose (function Ok org -> Some org | _ -> None)
-        return (orgs.Length, errors)
+        return orgs, errors
     }

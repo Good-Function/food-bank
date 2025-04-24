@@ -11,9 +11,8 @@ type DaneAdresoweForm =
       GminaDzielnica: string
       Powiat: string }
 
-    member this.toChangeDaneAdresowe(id: int64) : Commands.DaneAdresowe =
-        { Teczka = id
-          NazwaOrganizacjiPodpisujacejUmowe = this.NazwaOrganizacjiPodpisujacejUmowe
+    member this.toChangeDaneAdresowe: WriteModels.DaneAdresowe =
+        { NazwaOrganizacjiPodpisujacejUmowe = this.NazwaOrganizacjiPodpisujacejUmowe
           AdresRejestrowy = this.AdresRejestrowy
           NazwaPlacowkiTrafiaZywnosc = this.NazwaPlacowkiTrafiaZywnosc
           AdresPlacowkiTrafiaZywnosc = this.AdresPlacowkiTrafiaZywnosc
@@ -42,9 +41,8 @@ type KontaktyForm =
       OsobaOdbierajacaZywnosc: string
       TelefonOsobyOdbierajacej: string }
 
-    member this.toChangeKontakty(id: int64) : Commands.Kontakty =
-        { Teczka = id
-          WwwFacebook = this.WwwFacebook
+    member this.toChangeKontakty: WriteModels.Kontakty =
+        { WwwFacebook = this.WwwFacebook
           Telefon = this.Telefon
           Przedstawiciel = this.Przedstawiciel
           Kontakt = this.Kontakt
@@ -68,15 +66,14 @@ type KontaktyForm =
           MailOsobyKontaktowej = this.MailOsobyKontaktowej
           OsobaOdbierajacaZywnosc = this.OsobaOdbierajacaZywnosc
           TelefonOsobyOdbierajacej = this.TelefonOsobyOdbierajacej }
-        
+
 [<CLIMutable>]
 type BeneficjenciForm =
     { LiczbaBeneficjentow: int
       Beneficjenci: string }
 
-    member this.toChangeBeneficjenci(id: int64) : Commands.Beneficjenci =
-        { Teczka = id
-          LiczbaBeneficjentow = this.LiczbaBeneficjentow
+    member this.toChangeBeneficjenci: WriteModels.Beneficjenci =
+        { LiczbaBeneficjentow = this.LiczbaBeneficjentow
           Beneficjenci = this.Beneficjenci }
 
     member this.toBeneficjenci: ReadModels.Beneficjenci =
@@ -91,9 +88,8 @@ type DokumentyForm =
       KartyOrganizacjiData: System.DateOnly option
       OstatnieOdwiedzinyData: System.DateOnly option }
 
-    member this.toChangeDokumenty(id: int64) : Commands.Dokumenty =
-        { Teczka = id
-          Wniosek = this.Wniosek
+    member this.toChangeDokumenty: WriteModels.Dokumenty =
+        { Wniosek = this.Wniosek
           UmowaZDn = this.UmowaZDn
           UmowaRODO = this.UmowaRODO
           KartyOrganizacjiData = this.KartyOrganizacjiData
@@ -105,7 +101,7 @@ type DokumentyForm =
           UmowaRODO = this.UmowaRODO
           KartyOrganizacjiData = this.KartyOrganizacjiData
           OstatnieOdwiedzinyData = this.OstatnieOdwiedzinyData }
-        
+
 [<CLIMutable>]
 type ZrodlaZywnosciForm =
     { Sieci: bool
@@ -115,16 +111,13 @@ type ZrodlaZywnosciForm =
       OdbiorKrotkiTermin: bool
       TylkoNaszMagazyn: bool }
 
-    member this.toChangeZrodlaZywnosci(teczka: int64): Commands.ZrodlaZywnosci =
-        {
-          Teczka = teczka
-          Sieci = this.Sieci
+    member this.toChangeZrodlaZywnosci: WriteModels.ZrodlaZywnosci =
+        { Sieci = this.Sieci
           Bazarki = this.Bazarki
           Machfit = this.Machfit
           FEPZ2024 = this.FEPZ2024
           OdbiorKrotkiTermin = this.OdbiorKrotkiTermin
-          TylkoNaszMagazyn = this.TylkoNaszMagazyn
-          }
+          TylkoNaszMagazyn = this.TylkoNaszMagazyn }
 
     member this.toZrodlaZywnosci: ReadModels.ZrodlaZywnosci =
         { Sieci = this.Sieci
@@ -140,9 +133,8 @@ type AdresyKsiegowosciForm =
       KsiegowanieAdres: string
       TelOrganProwadzacegoKsiegowosc: string }
 
-    member this.toChangeAdresyKsiegowosci(teczka: int64): Commands.AdresyKsiegowosci =
-        { Teczka = teczka
-          NazwaOrganizacjiKsiegowanieDarowizn = this.NazwaOrganizacjiKsiegowanieDarowizn
+    member this.toChangeAdresyKsiegowosci : WriteModels.AdresyKsiegowosci =
+        { NazwaOrganizacjiKsiegowanieDarowizn = this.NazwaOrganizacjiKsiegowanieDarowizn
           KsiegowanieAdres = this.KsiegowanieAdres
           TelOrganProwadzacegoKsiegowosc = this.TelOrganProwadzacegoKsiegowosc }
 
@@ -162,9 +154,8 @@ type WarunkiPomocyForm =
       TransportOpis: string
       TransportKategoria: string }
 
-    member this.toChangeWarunkiPomocy(id: int64) : Commands.WarunkiPomocy =
-        { Teczka = id
-          Kategoria = this.Kategoria
+    member this.toChangeWarunkiPomocy: WriteModels.WarunkiPomocy =
+        { Kategoria = this.Kategoria
           RodzajPomocy = this.RodzajPomocy
           SposobUdzielaniaPomocy = this.SposobUdzielaniaPomocy
           WarunkiMagazynowe = this.WarunkiMagazynowe

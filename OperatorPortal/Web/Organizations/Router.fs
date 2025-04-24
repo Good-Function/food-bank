@@ -56,11 +56,11 @@ let import: EndpointHandler =
         return ctx |> render (ImportExcelTemplate.Partial username None) (ImportExcelTemplate.FullPage username None)
     }
     
-let upload (import: Commands.ImportOrganizations): EndpointHandler =
+let upload (import: CreateOrganizationCommands.Import): EndpointHandler =
     fun ctx -> task {
         match tryGetFirstFormFile ctx with
         | Some file ->
-            match import (file.OpenReadStream()) with
+            match! import (file.OpenReadStream()) with
             | Ok output -> return! ctx.WriteHtmlView (ImportExcelResultTemplate.Template output)
             | Error err ->
                 ctx.SetStatusCode(StatusCodes.Status400BadRequest)

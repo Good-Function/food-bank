@@ -10,7 +10,7 @@ open FsUnit.Xunit
 open Xunit
 
 [<Fact>]
-let ``GET /organizations/import/upload returns bad request when file is not xlsx`` () =
+let ``POST /organizations/import/upload returns bad request when file is not xlsx`` () =
     task {
         // Arrange
         let api = runTestApi() |> authenticate
@@ -28,7 +28,7 @@ let ``GET /organizations/import/upload returns bad request when file is not xlsx
     }
 
 [<Fact>]
-let ``GET /organizations/import/upload returns success message when xlsx is correct`` () =
+let ``POST /organizations/import/upload returns info with how many rows were important along with errors.`` () =
     task {
         // Arrange
         let api = runTestApi() |> authenticate
@@ -40,7 +40,16 @@ let ``GET /organizations/import/upload returns success message when xlsx is corr
         let! response = api.PostAsync("/organizations/import/upload", form)
         // Assert
         response.StatusCode |> should equal HttpStatusCode.OK
-        // todomg
-        ()
+        let! doc = response.HtmlContent()
+        let ringNode = doc.CssSelect ".ring-chart" |> List.head
+        let value = (ringNode.Attribute "data-value").Value()
+        let total = (ringNode.Attribute "data-max").Value()
+        let errors = doc.CssSelect "li" |> List.map(_.InnerText())
+        value |> should equal "10"
+        total |> should equal "11"
+        errors |> should equal [
+            """Niepoprawna wartość: "nd" w kolumnie [krs/ nr w rejestrze]. Oczekiwana jest liczba."""
+            """Niepoprawna data: "wysłana 26.06.2024" w kolumnie [umowa z dnia]."""
+        ]
     }
 

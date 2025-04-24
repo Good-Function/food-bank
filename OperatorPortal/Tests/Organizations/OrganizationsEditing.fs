@@ -150,6 +150,7 @@ let ``PUT /ogranizations/{id}/kontakty modifies and returns updated data`` () =
         ]
     }
     
+// todomg
 [<Fact>]
 let ``GET /ogranizations/{id}/beneficjenci/edit returns prefilled inputs to edit the data`` () =
     task {
@@ -189,10 +190,10 @@ let ``PUT /ogranizations/{id}/beneficjenci modifies and returns updated data`` (
         let! response = api.PutAsync($"/organizations/{organization.Teczka}/beneficjenci", data)
         // Assert
         let! doc = response.HtmlContent()
-        let dates =
+        let beneficjenciValues =
             doc.CssSelect "small" |> List.map _.InnerText()
         response.StatusCode |> should equal HttpStatusCode.OK
-        dates |> should equal [
+        beneficjenciValues |> should equal [
             expectedLiczbaBeneficjentow
             expectedBeneficjenci
         ]
