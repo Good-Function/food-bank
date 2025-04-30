@@ -61,10 +61,12 @@
       <Compile Include="Login\Router.fs" />
     </ItemGroup>
     <ItemGroup>
+      <Compile Include="Organizations\Domain\Identifiers.fs" />
+      <Compile Include="Organizations\Domain\Organization.fs" />
+      <Compile Include="Organizations\Application\Commands.fs" />
+      <Compile Include="Organizations\Application\CommandHandlers.fs" />
       <Compile Include="Organizations\Application\ReadModels.fs" />
-      <Compile Include="Organizations\Application\WriteModels.fs" />
-      <Compile Include="Organizations\Application\ChangeOrgazniationCommands.fs" />
-      <Compile Include="Organizations\Application\CreateOrganizationCommands.fs" />
+      <Compile Include="Organizations\Application\CreateOrganizationCommandHandler.fs" />
       <Content Include="Organizations\Database\migrations.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
@@ -87,7 +89,6 @@
       <Compile Include="Organizations\Templates\ImportExcelTemplate.fs" />
       <Compile Include="Organizations\Templates\ImportExcelResult.fs" />
       <Compile Include="Organizations\ClosedXmlExcelImport.fs" />
-      <Compile Include="Organizations\Dtos.fs" />
       <Compile Include="Organizations\CompositionRoot.fs" />
       <Compile Include="Organizations\SectionsRouter.fs" />
       <Compile Include="Organizations\Router.fs" />

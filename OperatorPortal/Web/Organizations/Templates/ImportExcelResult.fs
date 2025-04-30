@@ -1,7 +1,7 @@
 module Organizations.ImportExcelResultTemplate
 
 open Layout
-open Organizations.Application.CreateOrganizationCommands
+open Organizations.Application.CreateOrganizationCommandHandler
 open Oxpecker.ViewEngine
 open Oxpecker.ViewEngine.Aria
 

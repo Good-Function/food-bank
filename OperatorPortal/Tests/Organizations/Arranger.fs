@@ -1,19 +1,29 @@
 module Tests.Arranger
 
+open Bogus.Extensions.Poland
 open IdGen
 open System
+open Organizations.Domain.Identifiers
+open Organizations.Domain.Organization
+open FsToolkit.ErrorHandling
 
 let IdGenerator =
     IdGenerator(0, IdGeneratorOptions(timeSource = DefaultTimeSource(DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc))))
 
 let f = Bogus.Faker()
 
-let AnOrganization () : Organizations.Application.WriteModels.Organization =
-    { Teczka = IdGenerator.CreateId()
-      IdentyfikatorEnova = IdGenerator.CreateId()
-      NIP = IdGenerator.CreateId()
-      Regon = IdGenerator.CreateId()
-      KrsNr = IdGenerator.CreateId().ToString()
+
+let getOrThrow (result: Result<'T, 'Error>) =
+    Result.mapError (fun error -> InvalidOperationException(sprintf "%A" error)) result
+    |> function Ok v -> v | Error e -> failwith $"%A{e}"
+
+
+let AnOrganization () : Organization =
+    { Teczka = IdGenerator.CreateId() |> TeczkaId.create |> getOrThrow
+      IdentyfikatorEnova = f.Random.Replace("##########")
+      NIP = f.Company.Nip() |> Nip.create |> getOrThrow
+      Regon = f.Company.Regon() |> Regon.create |> getOrThrow
+      KrsNr = f.Random.Replace("##########") |> Krs.create |> getOrThrow
       FormaPrawna = f.PickRandomParam([| "Fundacja" |])
       OPP = f.Random.Bool()
       DaneAdresowe =

@@ -2,14 +2,16 @@ module Organizations.Database.OrganizationsDao
 
 open System.Data
 open Organizations.Application.ReadModels
+open Organizations.Domain.Identifiers
+open Organizations.Domain.Organization
 open PostgresPersistence.DapperFsharp
-open Organizations.Application.WriteModels
+open Organizations.Application.Commands
 
 type OrganizationDetailsRow = {
     Teczka: int64
-    IdentyfikatorEnova: int64
-    NIP: int64 
-    Regon: int64 
+    IdentyfikatorEnova: string
+    NIP: string 
+    Regon: string 
     KrsNr: string 
     FormaPrawna: string 
     OPP: bool 
@@ -57,11 +59,11 @@ type OrganizationDetailsRow = {
 } with 
     static member From (org: Organization) =
         {
-            Teczka = org.Teczka
+            Teczka = org.Teczka |> TeczkaId.unwrap
             IdentyfikatorEnova = org.IdentyfikatorEnova
-            NIP = org.NIP
-            Regon = org.Regon
-            KrsNr = org.KrsNr 
+            NIP = org.NIP |> Nip.unwrap
+            Regon = org.Regon |> Regon.unwrap
+            KrsNr = org.KrsNr |> Krs.unwrap
             FormaPrawna = org.FormaPrawna
             OPP = org.OPP
             NazwaOrganizacjiPodpisujacejUmowe = org.DaneAdresowe.NazwaOrganizacjiPodpisujacejUmowe

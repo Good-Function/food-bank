@@ -2,6 +2,7 @@ module OrganizationEditing
 
 open System
 open System.Net
+open Organizations.Domain.Identifiers
 open Oxpecker.ViewEngine
 open Tests
 open Tools.FormDataBuilder
@@ -22,7 +23,7 @@ let ``GET /ogranizations/{id}/dane-adresowe/edit returns prefilled inputs to edi
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.GetAsync $"/organizations/{organization.Teczka}/dane-adresowe/edit"
+        let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/dane-adresowe/edit"
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -57,7 +58,7 @@ let ``PUT /ogranizations/{id}/dane-adresowe modifies and returns updated data`` 
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka}/dane-adresowe", data)
+        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/dane-adresowe", data)
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -83,7 +84,7 @@ let ``GET /ogranizations/{id}/kontakty/edit returns prefilled inputs to edit the
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.GetAsync $"/organizations/{organization.Teczka}/kontakty/edit"
+        let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/kontakty/edit"
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -129,7 +130,7 @@ let ``PUT /ogranizations/{id}/kontakty modifies and returns updated data`` () =
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka}/kontakty", data)
+        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/kontakty", data)
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -160,7 +161,7 @@ let ``GET /ogranizations/{id}/beneficjenci/edit returns prefilled inputs to edit
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.GetAsync $"/organizations/{organization.Teczka}/beneficjenci/edit"
+        let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/beneficjenci/edit"
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -187,7 +188,7 @@ let ``PUT /ogranizations/{id}/beneficjenci modifies and returns updated data`` (
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka}/beneficjenci", data)
+        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/beneficjenci", data)
         // Assert
         let! doc = response.HtmlContent()
         let beneficjenciValues =
@@ -208,7 +209,7 @@ let ``GET /ogranizations/{id}/dokumenty/edit returns prefilled inputs to edit th
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.GetAsync $"/organizations/{organization.Teczka}/dokumenty/edit"
+        let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/dokumenty/edit"
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -242,7 +243,7 @@ let ``PUT /ogranizations/{id}/dokumenty modifies and returns updated data`` () =
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka}/dokumenty", data)
+        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/dokumenty", data)
         // Assert
         let! doc = response.HtmlContent()
         let dates =
@@ -266,7 +267,7 @@ let ``GET /ogranizations/{id}/zroda-zywnosci/edit returns prefilled inputs to ed
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.GetAsync $"/organizations/{organization.Teczka}/zrodla-zywnosci/edit"
+        let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/zrodla-zywnosci/edit"
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -303,7 +304,7 @@ let ``PUT /ogranizations/{id}/zrodla-zywnosci modifies and returns updated data`
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka}/zrodla-zywnosci", data)
+        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/zrodla-zywnosci", data)
         // Assert
         let! doc = response.HtmlContent()
         let takNie =
@@ -328,7 +329,7 @@ let ``GET /ogranizations/{id}/adresy-ksiegowosci/edit returns prefilled inputs t
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.GetAsync $"/organizations/{organization.Teczka}/adresy-ksiegowosci/edit"
+        let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/adresy-ksiegowosci/edit"
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -356,7 +357,7 @@ let ``PUT /ogranizations/{id}/adresy-ksiegowosci modifies and returns updated da
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka}/adresy-ksiegowosci", data)
+        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/adresy-ksiegowosci", data)
         // Assert
         let! doc = response.HtmlContent()
         let dates =
@@ -378,7 +379,7 @@ let ``GET /ogranizations/{id}/warunki-pomocy/edit returns prefilled inputs to ed
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.GetAsync $"/organizations/{organization.Teczka}/warunki-pomocy/edit"
+        let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/warunki-pomocy/edit"
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -422,7 +423,7 @@ let ``PUT /ogranizations/{id}/warunki-pomocy modifies and returns updated data``
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka}/warunki-pomocy", data)
+        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/warunki-pomocy", data)
         // Assert
         let! doc = response.HtmlContent()
         let warunkiPomocy =

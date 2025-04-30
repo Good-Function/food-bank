@@ -8,14 +8,14 @@ open Organizations.Database
 type Dependencies =
     { ReadOrganizationSummaries: ReadOrganizationSummaries
       ReadOrganizationDetailsBy: ReadOrganizationDetailsBy
-      ChangeDaneAdresowe: ChangeOrgazniationCommands.ChangeDaneAdresowe
-      ChangeKontakty: ChangeOrgazniationCommands.ChangeKontakty
-      ChangeBeneficjenci: ChangeOrgazniationCommands.ChangeBeneficjenci
-      ChangeDokumenty: ChangeOrgazniationCommands.ChangeDokumenty
-      ChangeAdresyKsiegowosci: ChangeOrgazniationCommands.ChangeAdresyKsiegowosci
-      ChangeZrodlaZywnosci: ChangeOrgazniationCommands.ChangeZrodlaZywnosci
-      ChangeWarunkiPomocy: ChangeOrgazniationCommands.ChangeWarunkiPomocy
-      Import: CreateOrganizationCommands.Import }
+      ChangeDaneAdresowe: CommandHandlers.ChangeDaneAdresowe
+      ChangeKontakty: CommandHandlers.ChangeKontakty
+      ChangeBeneficjenci: CommandHandlers.ChangeBeneficjenci
+      ChangeDokumenty: CommandHandlers.ChangeDokumenty
+      ChangeAdresyKsiegowosci: CommandHandlers.ChangeAdresyKsiegowosci
+      ChangeZrodlaZywnosci: CommandHandlers.ChangeZrodlaZywnosci
+      ChangeWarunkiPomocy: CommandHandlers.ChangeWarunkiPomocy
+      Import: CreateOrganizationCommandHandler.Import }
 
 let build (connectDb: unit -> Async<IDbConnection>) : Dependencies =
     { ReadOrganizationSummaries = OrganizationsDao.readSummaries connectDb
@@ -27,7 +27,7 @@ let build (connectDb: unit -> Async<IDbConnection>) : Dependencies =
       ChangeAdresyKsiegowosci = OrganizationsDao.changeAdresyKsiegowosci connectDb
       ChangeZrodlaZywnosci = OrganizationsDao.changeZrodlaZywnosci connectDb
       ChangeWarunkiPomocy = OrganizationsDao.changeWarunkiPomocy connectDb
-      Import = CreateOrganizationCommands.importOrganizations
+      Import = CreateOrganizationCommandHandler.importOrganizations
                 ClosedXmlExcelImport.import
                 (OrganizationsDao.saveMany connectDb)
        }

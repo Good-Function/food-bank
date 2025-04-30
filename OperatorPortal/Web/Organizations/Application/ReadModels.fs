@@ -22,34 +22,60 @@ type DaneAdresowe =
       AdresPlacowkiTrafiaZywnosc: string
       GminaDzielnica: string
       Powiat: string }
-    
-type Beneficjenci = {
-      LiczbaBeneficjentow: int
-      Beneficjenci: string
-}
+    static member FromCommand(cmd: Commands.DaneAdresowe) =
+        { NazwaOrganizacjiPodpisujacejUmowe = cmd.NazwaOrganizacjiPodpisujacejUmowe
+          AdresRejestrowy = cmd.AdresRejestrowy
+          NazwaPlacowkiTrafiaZywnosc = cmd.NazwaPlacowkiTrafiaZywnosc
+          AdresPlacowkiTrafiaZywnosc = cmd.AdresPlacowkiTrafiaZywnosc
+          GminaDzielnica = cmd.GminaDzielnica
+          Powiat = cmd.Powiat }
 
-type Dokumenty = {
-      Wniosek: System.DateOnly option
+type Beneficjenci =
+    { LiczbaBeneficjentow: int
+      Beneficjenci: string }
+    static member FromCommand(cmd: Commands.Beneficjenci) =
+        { LiczbaBeneficjentow = cmd.LiczbaBeneficjentow
+          Beneficjenci = cmd.Beneficjenci }
+
+type Dokumenty =
+    { Wniosek: System.DateOnly option
       UmowaZDn: System.DateOnly option
       UmowaRODO: System.DateOnly option
       KartyOrganizacjiData: System.DateOnly option
-      OstatnieOdwiedzinyData: System.DateOnly option
-}
+      OstatnieOdwiedzinyData: System.DateOnly option }
+    static member FromCommand(cmd: Commands.Dokumenty) =
+        { Wniosek = cmd.Wniosek
+          UmowaZDn = cmd.UmowaZDn
+          UmowaRODO = cmd.UmowaRODO
+          KartyOrganizacjiData = cmd.KartyOrganizacjiData
+          OstatnieOdwiedzinyData = cmd.OstatnieOdwiedzinyData }
 
-type ZrodlaZywnosci = {
-      Sieci: bool
+type ZrodlaZywnosci =
+    { Sieci: bool
       Bazarki: bool
       Machfit: bool
       FEPZ2024: bool // Fundusze europejskie na pomoc żywnościową, program UE.
       OdbiorKrotkiTermin: bool
-      TylkoNaszMagazyn: bool
-}
+      TylkoNaszMagazyn: bool }
 
-type AdresyKsiegowosci = {
-      NazwaOrganizacjiKsiegowanieDarowizn: string
+    static member FromCommand(cmd: Commands.ZrodlaZywnosci) =
+        { Sieci = cmd.Sieci
+          Bazarki = cmd.Bazarki
+          Machfit = cmd.Machfit
+          FEPZ2024 = cmd.FEPZ2024
+          OdbiorKrotkiTermin = cmd.OdbiorKrotkiTermin
+          TylkoNaszMagazyn = cmd.TylkoNaszMagazyn }
+
+type AdresyKsiegowosci =
+    { NazwaOrganizacjiKsiegowanieDarowizn: string
       KsiegowanieAdres: string
-      TelOrganProwadzacegoKsiegowosc: string
-}
+      TelOrganProwadzacegoKsiegowosc: string }
+
+    static member FromCommand(cmd: Commands.AdresyKsiegowosci) =
+        { NazwaOrganizacjiKsiegowanieDarowizn = cmd.NazwaOrganizacjiKsiegowanieDarowizn
+          KsiegowanieAdres = cmd.KsiegowanieAdres
+          TelOrganProwadzacegoKsiegowosc = cmd.TelOrganProwadzacegoKsiegowosc }
+
 
 type Kontakty =
     { WwwFacebook: string
@@ -63,23 +89,45 @@ type Kontakty =
       MailOsobyKontaktowej: string
       OsobaOdbierajacaZywnosc: string
       TelefonOsobyOdbierajacej: string }
-    
-type WarunkiPomocy = {
-      Kategoria: string
+
+    static member FromCommand(cmd: Commands.Kontakty) =
+        { WwwFacebook = cmd.WwwFacebook
+          Telefon = cmd.Telefon
+          Przedstawiciel = cmd.Przedstawiciel
+          Kontakt = cmd.Kontakt
+          Email = cmd.Email
+          Dostepnosc = cmd.Dostepnosc
+          OsobaDoKontaktu = cmd.OsobaDoKontaktu
+          TelefonOsobyKontaktowej = cmd.TelefonOsobyKontaktowej
+          MailOsobyKontaktowej = cmd.MailOsobyKontaktowej
+          OsobaOdbierajacaZywnosc = cmd.OsobaOdbierajacaZywnosc
+          TelefonOsobyOdbierajacej = cmd.TelefonOsobyOdbierajacej }
+
+type WarunkiPomocy =
+    { Kategoria: string
       RodzajPomocy: string
       SposobUdzielaniaPomocy: string
       WarunkiMagazynowe: string
       HACCP: bool // Hard analysis and critical control point - system bezpieczenstwa zywnosci. Np podpisujesz sie ze sprawdziles temperatura w chlodni. Teoretycznie kazda org powinna to miec.
       Sanepid: bool // Zgoda sanepidu. Suche paczki mogą pójść bez sanepidu.
       TransportOpis: string
-      TransportKategoria: string
-}
+      TransportKategoria: string }
+
+    static member FromCommand(cmd: Commands.WarunkiPomocy) =
+        { Kategoria = cmd.Kategoria
+          RodzajPomocy = cmd.RodzajPomocy
+          SposobUdzielaniaPomocy = cmd.SposobUdzielaniaPomocy
+          WarunkiMagazynowe = cmd.WarunkiMagazynowe
+          HACCP = cmd.HACCP
+          Sanepid = cmd.Sanepid
+          TransportOpis = cmd.TransportOpis
+          TransportKategoria = cmd.TransportKategoria }
 
 type OrganizationDetails =
     { Teczka: int64
-      IdentyfikatorEnova: int64
-      NIP: int64
-      Regon: int64
+      IdentyfikatorEnova: string
+      NIP: string
+      Regon: string
       KrsNr: string
       FormaPrawna: string // fundacja, stowarzyszenie, org koscielna
       OPP: bool // szczegóły: Organizacja użytku publicznego

@@ -48,7 +48,7 @@ let ``POST /organizations/import/upload returns info with how many rows were imp
         value |> should equal "10"
         total |> should equal "11"
         errors |> should equal [
-            """Niepoprawna wartość: "nd" w kolumnie [krs/ nr w rejestrze]. Oczekiwana jest liczba."""
+            """Niepoprawna wartość: "nd" w kolumnie [krs/ nr w rejestrze]."""
             """Niepoprawna data: "wysłana 26.06.2024" w kolumnie [umowa z dnia]."""
         ]
     }

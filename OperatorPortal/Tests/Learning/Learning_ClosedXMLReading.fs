@@ -107,7 +107,6 @@ let mapRow (row: IXLRow) =
 
     let parsedColumns = validation {
         let! teczka = 1 |> columntToInt64
-        and! identyfikatorEnova = 2 |> columntToInt64
         and! nip = 3 |> columntToInt64
         and! regon = 4 |> columntToInt64
         and! krsNr = 4 |> columntToInt64
@@ -127,7 +126,6 @@ let mapRow (row: IXLRow) =
         and! ostatnieOdwiedzinyData = 49 |> columnToDate
         return {|
                   teczka = teczka
-                  identyfikatorEnova = identyfikatorEnova
                   nip = nip
                   regon = regon
                   krsNr = krsNr
@@ -151,9 +149,9 @@ let mapRow (row: IXLRow) =
         let! columns = parsedColumns
         return {
             Teczka = columns.teczka
-            IdentyfikatorEnova = columns.identyfikatorEnova
-            NIP = columns.nip
-            Regon = columns.regon
+            IdentyfikatorEnova = getCellValue 2
+            NIP = getCellValue 3
+            Regon = getCellValue 4
             KrsNr = getCellValue 5
             FormaPrawna = getCellValue 6
             OPP = columns.opp

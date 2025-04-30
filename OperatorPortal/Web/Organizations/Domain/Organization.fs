@@ -1,6 +1,6 @@
-module Organizations.Application.WriteModels
+module Organizations.Domain.Organization
 
-type TeczkaId = int64
+open Organizations.Domain.Identifiers
 
 type DaneAdresowe =
     { NazwaOrganizacjiPodpisujacejUmowe: string
@@ -59,10 +59,10 @@ type WarunkiPomocy =
 
 type Organization =
     { Teczka: TeczkaId
-      IdentyfikatorEnova: int64
-      NIP: int64
-      Regon: int64
-      KrsNr: string
+      IdentyfikatorEnova: string
+      NIP: Nip
+      Regon: Regon
+      KrsNr: Krs
       FormaPrawna: string // fundacja, stowarzyszenie, org koscielna
       OPP: bool // szczegóły: Organizacja użytku publicznego
       DaneAdresowe: DaneAdresowe

@@ -1,6 +1,7 @@
 module OrganizationViewing
 
 open System.Net
+open Organizations.Domain.Identifiers
 open Tests
 open Organizations.Templates.Formatters
 open Xunit
@@ -50,11 +51,12 @@ let ``/ogranizations/summaries displays organization's most important data `` ()
 let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adresy, adresy ksiegowosci, beneficjenci, zrodla zywnosci, warunku sections`` () =
     task {
         let organization = Arranger.AnOrganization()
+        let teczkaid = organization.Teczka |> TeczkaId.unwrap
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.GetAsync $"/organizations/{organization.Teczka}"
+        let! response = api.GetAsync $"/organizations/{teczkaid}"
         // Assert
         response.StatusCode |> should equal HttpStatusCode.OK
         let! doc = response.HtmlContent()
@@ -81,10 +83,10 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
                 sections[7] |> extractSmallText
                 )
         identyfikatory[0..4] |> should equal [
-            $"%i{organization.IdentyfikatorEnova}"
-            $"%i{organization.NIP}"
-            $"%i{organization.Regon}"
-            organization.KrsNr
+            $"{organization.IdentyfikatorEnova}"
+            organization.NIP |> Nip.unwrap
+            organization.Regon |> Regon.unwrap
+            organization.KrsNr |> Krs.unwrap
             organization.FormaPrawna
         ]
         kontakty[0..10] |> should equal [
@@ -149,11 +151,12 @@ let ``GET /ogranizations/{id}/dane-adresowe returns fields from dane adresowe`` 
     task {
         // Arrange
         let organization = Arranger.AnOrganization()
+        let teczkaid = organization.Teczka |> TeczkaId.unwrap
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
         let api = runTestApi() |> authenticate
         // Act
-        let! response = api.GetAsync $"/organizations/{organization.Teczka}/dane-adresowe"
+        let! response = api.GetAsync $"/organizations/{teczkaid}/dane-adresowe"
         // Assert
         let! doc = response.HtmlContent()
         let inputs =

@@ -1,9 +1,9 @@
-module Organizations.Application.CreateOrganizationCommands
+module Organizations.Application.CreateOrganizationCommandHandler
 
 open System.IO
 open System.Transactions
 open FsToolkit.ErrorHandling
-open Organizations.Application.WriteModels
+open Organizations.Domain.Organization
 
 type RowParsingError = int * string list
 
@@ -22,7 +22,7 @@ type SaveMany = Organization list -> Async<unit>
 type ParseOrganizations = Stream -> Result<Organization list * RowParsingError list, ImportError>
 type Import = Stream -> Async<Result<ImportResult, ImportError>>
 
-let importOrganizations: ParseOrganizations -> SaveMany -> Stream -> Async<Result<ImportResult, ImportError>> =
+let importOrganizations: ParseOrganizations -> SaveMany -> Import =
     fun parse saveMany stream ->
         asyncResult {
             let! organizations, errors = stream |> parse

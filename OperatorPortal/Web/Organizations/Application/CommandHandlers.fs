@@ -1,6 +1,6 @@
-module Organizations.Application.ChangeOrgazniationCommands
+module Organizations.Application.CommandHandlers
 
-open Organizations.Application.WriteModels
+open Organizations.Application.Commands
 
 type ChangeZrodlaZywnosci = TeczkaId * ZrodlaZywnosci -> Async<unit>
 type ChangeAdresyKsiegowosci = TeczkaId * AdresyKsiegowosci -> Async<unit>

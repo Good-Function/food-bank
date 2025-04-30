@@ -2,9 +2,9 @@ DROP TABLE IF EXISTS  organizacje;
 CREATE TABLE IF NOT EXISTS organizacje
 (
     Teczka                              BIGINT CONSTRAINT organizacje_pk PRIMARY KEY,
-    IdentyfikatorEnova                  BIGINT  NOT NULL,
-    NIP                                 BIGINT  NOT NULL,
-    Regon                               BIGINT  NOT NULL,
+    IdentyfikatorEnova                  TEXT    NOT NULL,
+    NIP                                 TEXT    NOT NULL,
+    Regon                               TEXT    NOT NULL,
     KrsNr                               TEXT    NOT NULL,
     FormaPrawna                         TEXT    NOT NULL,
     OPP                                 BOOLEAN NOT NULL,

@@ -56,7 +56,7 @@ let import: EndpointHandler =
         return ctx |> render (ImportExcelTemplate.Partial username None) (ImportExcelTemplate.FullPage username None)
     }
     
-let upload (import: CreateOrganizationCommands.Import): EndpointHandler =
+let upload (import: CreateOrganizationCommandHandler.Import): EndpointHandler =
     fun ctx -> task {
         match tryGetFirstFormFile ctx with
         | Some file ->

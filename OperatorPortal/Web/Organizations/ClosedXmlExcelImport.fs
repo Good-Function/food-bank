@@ -4,8 +4,9 @@ open System
 open System.IO
 open ClosedXML.Excel
 open FsToolkit.ErrorHandling
-open Organizations.Application.CreateOrganizationCommands
-open Organizations.Application.WriteModels
+open Organizations.Application.CreateOrganizationCommandHandler
+open Organizations.Domain.Identifiers
+open Organizations.Domain.Organization
 
 let trueValues = set ["tak"; "v"]
 let falseValues = set ["nie"; "nie dotyczy"; ""]
@@ -75,12 +76,6 @@ let validateHeaders (headerRow: IXLRow): Result<unit, ImportError> =
         Ok ()
         
 let mapRow (row: IXLRow): Result<Organization, string list> =
-    let toInt64 (column: int) =
-        let value = row |> getCellText column
-        match Int64.TryParse(value) with
-        | true, result -> Ok result
-        | false, _ -> Error $"""Niepoprawna wartość: "%s{value}" w kolumnie [{expectedHeaders[column - 1]}]. Oczekiwana jest liczba."""
-
     let toBool column =
         match (row |> getCellText column).ToLowerInvariant() with
         | v when trueValues.Contains v -> Ok true
@@ -97,13 +92,16 @@ let mapRow (row: IXLRow): Result<Organization, string list> =
                 date |> DateOnly.FromDateTime |> Some |> Ok
             with
                 | _ -> Error $"""Niepoprawna data: "%s{value}" w kolumnie [{expectedHeaders[column - 1]}]."""
+                
+    let parseColumn (col: int) (parse: string -> Result<'T, 'E>): Result<'T, string> =
+        let textValue = getCellText col row
+        parse textValue |> Result.mapError(fun _ -> $"""Niepoprawna wartość: "%s{textValue}" w kolumnie [%s{expectedHeaders[col-1]}].""")
 
     let parsedColumns = validation {
-        let! teczka = 1 |> toInt64
-        and! identyfikatorEnova = 2 |> toInt64
-        and! nip = 3 |> toInt64
-        and! krs = 3 |> toInt64
-        and! regon = 5 |> toInt64
+        let! teczkaId = parseColumn 1 TeczkaId.parse
+        and! nip = parseColumn 3 Nip.create
+        and! regon = parseColumn 4 Regon.create
+        and! krs = parseColumn 5 Krs.create
         and! opp = 7 |> toBool
         and! sieci = 31 |> toBool
         and! odbiorKrotkiTermin = 32 |> toBool
@@ -119,8 +117,7 @@ let mapRow (row: IXLRow): Result<Organization, string list> =
         and! kartyOrganizacjiData = 48 |> toDate
         and! ostatnieOdwiedzinyData = 49 |> toDate
         return {|
-                  teczka = teczka
-                  identyfikatorEnova = identyfikatorEnova
+                  teczka = teczkaId
                   nip = nip
                   regon = regon
                   krs = krs
@@ -144,10 +141,10 @@ let mapRow (row: IXLRow): Result<Organization, string list> =
         let! columns = parsedColumns
         return {
             Teczka = columns.teczka
-            IdentyfikatorEnova = columns.identyfikatorEnova
+            IdentyfikatorEnova = row |> getCellText 2
             NIP = columns.nip
             Regon = columns.regon
-            KrsNr = columns.krs |> _.ToString()
+            KrsNr = columns.krs 
             FormaPrawna = row |> getCellText 6
             OPP = columns.opp
             DaneAdresowe = {
