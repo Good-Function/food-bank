@@ -288,7 +288,8 @@ SET
     UmowaZDn = @UmowaZDn,
     UmowaRODO = @UmowaRODO,
     KartyOrganizacjiData = @KartyOrganizacjiData,
-    OstatnieOdwiedzinyData = @OstatnieOdwiedzinyData
+    OstatnieOdwiedzinyData = @OstatnieOdwiedzinyData,
+    DataUpowaznieniaDoOdbioru = @DataUpowaznieniaDoOdbioru
 WHERE Teczka = @Teczka;""" {|
                 Teczka = teczkaId
                 Wniosek = dokumenty.Wniosek
@@ -296,6 +297,7 @@ WHERE Teczka = @Teczka;""" {|
                 UmowaRODO = dokumenty.UmowaRODO
                 KartyOrganizacjiData = dokumenty.KartyOrganizacjiData
                 OstatnieOdwiedzinyData = dokumenty.OstatnieOdwiedzinyData
+                DataUpowaznieniaDoOdbioru = dokumenty.DataUpowaznieniaDoOdbioru
             |}
     }
     
