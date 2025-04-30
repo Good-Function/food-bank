@@ -42,13 +42,15 @@ type Dokumenty =
       UmowaZDn: System.DateOnly option
       UmowaRODO: System.DateOnly option
       KartyOrganizacjiData: System.DateOnly option
-      OstatnieOdwiedzinyData: System.DateOnly option }
+      OstatnieOdwiedzinyData: System.DateOnly option
+      DataUpowaznieniaDoOdbioru: System.DateOnly option }
     static member FromCommand(cmd: Commands.Dokumenty) =
         { Wniosek = cmd.Wniosek
           UmowaZDn = cmd.UmowaZDn
           UmowaRODO = cmd.UmowaRODO
           KartyOrganizacjiData = cmd.KartyOrganizacjiData
-          OstatnieOdwiedzinyData = cmd.OstatnieOdwiedzinyData }
+          OstatnieOdwiedzinyData = cmd.OstatnieOdwiedzinyData
+          DataUpowaznieniaDoOdbioru = cmd.DataUpowaznieniaDoOdbioru }
 
 type ZrodlaZywnosci =
     { Sieci: bool

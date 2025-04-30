@@ -63,7 +63,8 @@ let expectedHeaders =
       "Umowa z dnia"
       "Umowa RODO"
       "Karty organizacji data"
-      "Ostatnie odwiedziny data" ] |> List.map(_.ToLowerInvariant())
+      "Ostatnie odwiedziny data"
+      "upowaznienie"] |> List.map(_.ToLowerInvariant())
     
 let validateHeaders (headerRow: IXLRow): Result<unit, ImportError> =
     let actualHeaders = 
@@ -116,6 +117,7 @@ let mapRow (row: IXLRow): Result<Organization, string list> =
         and! umowaRODO = 47 |> toDate
         and! kartyOrganizacjiData = 48 |> toDate
         and! ostatnieOdwiedzinyData = 49 |> toDate
+        and! dataUpowaznieniaDoOdbioru = 50 |> toDate
         return {|
                   teczka = teczkaId
                   nip = nip
@@ -135,6 +137,7 @@ let mapRow (row: IXLRow): Result<Organization, string list> =
                   umowaRODO = umowaRODO
                   kartyOrganizacjiData = kartyOrganizacjiData
                   ostatnieOdwiedzinyData = ostatnieOdwiedzinyData
+                  dataUpowaznieniaDoOdbioru = dataUpowaznieniaDoOdbioru
                   |}
     }
     result {
@@ -201,6 +204,7 @@ let mapRow (row: IXLRow): Result<Organization, string list> =
                 UmowaRODO = columns.umowaRODO
                 KartyOrganizacjiData = columns.kartyOrganizacjiData
                 OstatnieOdwiedzinyData = columns.ostatnieOdwiedzinyData
+                DataUpowaznieniaDoOdbioru = columns.dataUpowaznieniaDoOdbioru
             }
         }
     }

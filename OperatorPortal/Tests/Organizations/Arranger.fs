@@ -103,4 +103,5 @@ let AnOrganization () : Organization =
           UmowaZDn = Some <| f.Date.PastDateOnly(2)
           UmowaRODO = f.PickRandom([| Some <| f.Date.PastDateOnly(2); None |])
           KartyOrganizacjiData = Some <| f.Date.PastDateOnly(2)
-          OstatnieOdwiedzinyData = Some <| f.Date.PastDateOnly(1) } }
+          OstatnieOdwiedzinyData = Some <| f.Date.PastDateOnly(1)
+          DataUpowaznieniaDoOdbioru = Some <| f.Date.PastDateOnly(2)} }

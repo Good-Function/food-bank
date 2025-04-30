@@ -13,6 +13,7 @@ let View (dokumenty: ReadModels.Dokumenty) (teczka: int64) =
         readonlyField "Umowa z RODO" (dokumenty.UmowaRODO |> toDisplay)
         readonlyField "Karty organizacji" (dokumenty.KartyOrganizacjiData |> toDisplay)
         readonlyField "Ostatnie odwiedziny" (dokumenty.OstatnieOdwiedzinyData |> toDisplay)
+        readonlyField "Upoważnienie do odbioru" (dokumenty.DataUpowaznieniaDoOdbioru |> toDisplay)
     }
 
 let Form (dokumenty: ReadModels.Dokumenty) (teczka: int64) =
@@ -30,5 +31,9 @@ let Form (dokumenty: ReadModels.Dokumenty) (teczka: int64) =
                 "Ostatnie odwiedziny"
                 dokumenty.OstatnieOdwiedzinyData
                 (nameof dokumenty.OstatnieOdwiedzinyData)
+            dateField
+                "Upoważnienie do odbioru"
+                dokumenty.DataUpowaznieniaDoOdbioru
+                (nameof dokumenty.DataUpowaznieniaDoOdbioru)
         }
     }

@@ -56,6 +56,7 @@ type OrganizationDetailsRow = {
     UmowaRODO: System.DateOnly option 
     KartyOrganizacjiData: System.DateOnly option 
     OstatnieOdwiedzinyData: System.DateOnly option 
+    DataUpowaznieniaDoOdbioru: System.DateOnly option 
 } with 
     static member From (org: Organization) =
         {
@@ -107,6 +108,7 @@ type OrganizationDetailsRow = {
             UmowaRODO = org.Dokumenty.UmowaRODO
             KartyOrganizacjiData = org.Dokumenty.KartyOrganizacjiData
             OstatnieOdwiedzinyData = org.Dokumenty.OstatnieOdwiedzinyData
+            DataUpowaznieniaDoOdbioru = org.Dokumenty.DataUpowaznieniaDoOdbioru
         }
     member this.ToReadModel (): OrganizationDetails =
         {
@@ -171,6 +173,7 @@ type OrganizationDetailsRow = {
                 UmowaRODO = this.UmowaRODO
                 KartyOrganizacjiData = this.KartyOrganizacjiData
                 OstatnieOdwiedzinyData = this.OstatnieOdwiedzinyData
+                DataUpowaznieniaDoOdbioru = this.DataUpowaznieniaDoOdbioru
             }
         }
 
@@ -422,7 +425,8 @@ let private saveOnConnection (dbConnection: IDbConnection) (org: Organization) =
         UmowaZDn,
         UmowaRODO,
         KartyOrganizacjiData,
-        OstatnieOdwiedzinyData
+        OstatnieOdwiedzinyData,
+        DataUpowaznieniaDoOdbioru
     )
     VALUES (
         @Teczka,
@@ -472,7 +476,8 @@ let private saveOnConnection (dbConnection: IDbConnection) (org: Organization) =
         @UmowaZDn,
         @UmowaRODO,
         @KartyOrganizacjiData,
-        @OstatnieOdwiedzinyData
+        @OstatnieOdwiedzinyData,
+        @DataUpowaznieniaDoOdbioru
     )
 ON CONFLICT DO NOTHING;
     """

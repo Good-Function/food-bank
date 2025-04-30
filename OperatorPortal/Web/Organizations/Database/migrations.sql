@@ -48,5 +48,6 @@ CREATE TABLE IF NOT EXISTS organizacje
     UmowaZDn                            DATE    NULL,
     UmowaRODO                           DATE    NULL,
     KartyOrganizacjiData                DATE    NULL,
-    OstatnieOdwiedzinyData              DATE    NULL
+    OstatnieOdwiedzinyData              DATE    NULL,
+    DataUpowaznieniaDoOdbioru           DATE    NULL
 );

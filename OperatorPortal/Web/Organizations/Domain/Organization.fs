@@ -28,7 +28,8 @@ type Dokumenty =
       UmowaZDn: System.DateOnly option
       UmowaRODO: System.DateOnly option
       KartyOrganizacjiData: System.DateOnly option
-      OstatnieOdwiedzinyData: System.DateOnly option }
+      OstatnieOdwiedzinyData: System.DateOnly option
+      DataUpowaznieniaDoOdbioru: System.DateOnly option }
 
 type Beneficjenci =
     { LiczbaBeneficjentow: int

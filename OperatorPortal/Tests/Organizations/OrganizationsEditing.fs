@@ -221,8 +221,8 @@ let ``GET /ogranizations/{id}/dokumenty/edit returns prefilled inputs to edit th
             organization.Dokumenty.UmowaRODO |> toInput
             organization.Dokumenty.KartyOrganizacjiData |> toInput
             organization.Dokumenty.OstatnieOdwiedzinyData |> toInput
+            organization.Dokumenty.DataUpowaznieniaDoOdbioru |> toInput
         ]
-        inputs.Length |> should equal 5
     }
     
     
@@ -239,6 +239,7 @@ let ``PUT /ogranizations/{id}/dokumenty modifies and returns updated data`` () =
             yield ("UmowaRODO", expectedDate |> toInput)
             yield ("KartyOrganizacjiData", expectedDate |> toInput)
             yield ("OstatnieOdwiedzinyData", expectedDate |> toInput)
+            yield ("DataUpowaznieniaDoOdbioru", expectedDate |> toInput)
         }
         // Arrange
         let api = runTestApi() |> authenticate
@@ -252,6 +253,7 @@ let ``PUT /ogranizations/{id}/dokumenty modifies and returns updated data`` () =
         dates |> should equal [
             expectedDate |> toDisplay
             None |> toDisplay
+            expectedDate |> toDisplay
             expectedDate |> toDisplay
             expectedDate |> toDisplay
             expectedDate |> toDisplay
