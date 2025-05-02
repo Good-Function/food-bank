@@ -1,7 +1,6 @@
 module Organizations.Router
 
 open System.Security.Claims
-open System.Threading
 open Microsoft.AspNetCore.Http
 open Organizations.Application
 open Organizations.Application.ReadModels
@@ -40,7 +39,6 @@ let list: EndpointHandler =
 let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
     fun ctx ->
         task {
-            Thread.Sleep(2000)
             let filter = ctx |> parseFilter
             let! summaries = readSummaries filter
             return ctx.WriteHtmlView(ListTemplate.Template summaries)
