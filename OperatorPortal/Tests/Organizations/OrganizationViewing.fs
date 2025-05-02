@@ -68,20 +68,18 @@ let ``/ogranizations/summaries?search=xxx&sort=OstatnieOdwiedziny&dir=asc filter
         let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/summaries?search={id}&sort=OstatnieOdwiedzinyData&dir={dir}"
+        let! headersResponse = api.GetAsync "/organizations/list"
         // Assert
         let! doc = response.HtmlContent()
-        let headers = doc.CssSelect("thead th")
-                      |> List.map _.InnerText()
-                      |> List.indexed
-        let indexOfNazwaPlacowki =
-            headers |> List.find(fun (_, text) -> text = "Nazwa placówki") |> fst
-        let indexOfOstatnieOdwiedziny =
-            headers |> List.find(fun (_, text) -> text = "Ostatnie odwiedziny") |> fst
+        let! headersDoc = headersResponse.HtmlContent()
+        let indexOfOstatnieOdwiedziny = headersDoc.CssSelect("th")
+                                        |> List.map _.InnerText()
+                                        |> List.indexed
+                                        |> List.find(fun(_, text) -> text.Contains "Ostatnie odwiedziny")
+                                        |> fst
         let summaries =
             doc.CssSelect "tbody tr"
-            |> Seq.choose (fun row ->
-                let cells = row.Descendants "td" |> Seq.map _.InnerText() |> Seq.toList
-                if cells[indexOfNazwaPlacowki].StartsWith id then Some cells else None)
+            |> List.map(fun tr -> tr.Descendants "td" |> Seq.map(_.InnerText()) |> Seq.toList)  
             |> Seq.toList
         response.StatusCode |> should equal HttpStatusCode.OK
         summaries.Length |> should equal 2
