@@ -24,17 +24,15 @@ let Template search =
 
         small () {
             div (id = "OrganizationsList", style = "overflow-x: scroll; max-height: 70vh") {
-                div (id = "OrganizationsList") {
-                    div (
-                        hxGet = "/organizations/summaries",
-                        hxTrigger = "load",
-                        hxTarget = "#OrganizationsList",
-                        hxInclude = "[name='search']"
-                    )
+                div (
+                    hxGet = "/organizations/summaries",
+                    hxTrigger = "load",
+                    hxTarget = "#OrganizationsList",
+                    hxInclude = "[name='search']"
+                )
 
-                    for _ in 1..6 do
-                        div (class' = "shimmer")
-                }
+                for _ in 1..6 do
+                    div (class' = "shimmer")
             }
         }
     }
