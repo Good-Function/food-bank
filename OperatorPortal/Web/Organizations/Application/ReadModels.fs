@@ -1,5 +1,7 @@
 module Organizations.Application.ReadModels
 
+open System
+
 type OrganizationSummary =
     { Teczka: int64
       FormaPrawna: string
@@ -13,7 +15,8 @@ type OrganizationSummary =
       OsobaDoKontaktu: string
       TelefonOsobyKontaktowej: string
       LiczbaBeneficjentow: int
-      Kategoria: string }
+      Kategoria: string
+      OstatnieOdwiedzinyData: DateOnly option }
 
 type DaneAdresowe =
     { NazwaOrganizacjiPodpisujacejUmowe: string
@@ -22,6 +25,7 @@ type DaneAdresowe =
       AdresPlacowkiTrafiaZywnosc: string
       GminaDzielnica: string
       Powiat: string }
+
     static member FromCommand(cmd: Commands.DaneAdresowe) =
         { NazwaOrganizacjiPodpisujacejUmowe = cmd.NazwaOrganizacjiPodpisujacejUmowe
           AdresRejestrowy = cmd.AdresRejestrowy
@@ -33,17 +37,19 @@ type DaneAdresowe =
 type Beneficjenci =
     { LiczbaBeneficjentow: int
       Beneficjenci: string }
+
     static member FromCommand(cmd: Commands.Beneficjenci) =
         { LiczbaBeneficjentow = cmd.LiczbaBeneficjentow
           Beneficjenci = cmd.Beneficjenci }
 
 type Dokumenty =
-    { Wniosek: System.DateOnly option
-      UmowaZDn: System.DateOnly option
-      UmowaRODO: System.DateOnly option
-      KartyOrganizacjiData: System.DateOnly option
-      OstatnieOdwiedzinyData: System.DateOnly option
-      DataUpowaznieniaDoOdbioru: System.DateOnly option }
+    { Wniosek: DateOnly option
+      UmowaZDn: DateOnly option
+      UmowaRODO: DateOnly option
+      KartyOrganizacjiData: DateOnly option
+      OstatnieOdwiedzinyData: DateOnly option
+      DataUpowaznieniaDoOdbioru: DateOnly option }
+
     static member FromCommand(cmd: Commands.Dokumenty) =
         { Wniosek = cmd.Wniosek
           UmowaZDn = cmd.UmowaZDn
@@ -141,5 +147,21 @@ type OrganizationDetails =
       Dokumenty: Dokumenty
       WarunkiPomocy: WarunkiPomocy }
 
-type ReadOrganizationSummaries = string -> Async<OrganizationSummary list>
+type Direction =
+    | Asc
+    | Desc
+
+    override this.ToString() =
+        this
+        |> function
+            | Asc -> "asc"
+            | Desc -> "desc"
+
+    static member FromString(str: string) = if str = "desc" then Desc else Asc
+
+type Filter =
+    { searchTerm: string
+      sortBy: (string * Direction) option}
+
+type ReadOrganizationSummaries = Filter -> Async<OrganizationSummary list>
 type ReadOrganizationDetailsBy = int64 -> Async<OrganizationDetails>

@@ -178,7 +178,7 @@ type OrganizationDetailsRow = {
         }
 
 
-let searchOrgsSql = """
+let searchOrgsSql sortBy dir = $"""
 SELECT 
     teczka,
     formaprawna,
@@ -192,19 +192,24 @@ SELECT
     osobadokontaktu,
     telefonosobykontaktowej,
     liczbabeneficjentow,
-    kategoria
+    kategoria,
+    ostatnieodwiedzinydata
 FROM organizacje
 WHERE
    @searchTerm = '' 
    OR teczka = CASE WHEN @searchTerm ~ '^\d+$' THEN @searchTerm::bigint  END
    OR (similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.2 OR similarity(gminadzielnica, @searchTerm) > 0.2)
-ORDER BY teczka DESC;
+ORDER BY %s{sortBy} %s{dir};
 """
 
-let readSummaries (connectDB: unit -> Async<IDbConnection>) (searchTerm: string) =
+let readSummaries (connectDB: unit -> Async<IDbConnection>) (filter: Filter) =
     async {
         use! db = connectDB()
-        return! db.QueryBy<OrganizationSummary> searchOrgsSql {| searchTerm = searchTerm |}
+        let sortBy, dir = match filter.sortBy with
+                            | Some (sortBy, dir) -> (sortBy, dir.ToString())
+                            | None -> ("teczka", "desc")
+        let query = (searchOrgsSql sortBy dir)
+        return! db.QueryBy<OrganizationSummary> query {| searchTerm = filter.searchTerm |}
     }
     
 let changeDaneAdresowe (connectDB: unit -> Async<IDbConnection>) (teczkaId: TeczkaId, daneAdresowe: DaneAdresowe) =

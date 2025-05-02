@@ -4,6 +4,7 @@ open System.Security.Claims
 open Microsoft.AspNetCore.Http
 open Organizations.Application
 open Organizations.Templates
+open FsToolkit.ErrorHandling
 open Oxpecker
 open RenderBasedOnHtmx
 open Organizations.Application.ReadModels
@@ -30,7 +31,12 @@ let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
     fun ctx ->
         task {
             let search = ctx.TryGetQueryValue "search" |> Option.defaultValue ""
-            let! summaries = readSummaries search
+            let sortBy = option {
+                let! sortBy = ctx.TryGetQueryValue "sort"
+                let! dir = ctx.TryGetQueryValue "dir"
+                return sortBy, dir |> Direction.FromString
+            }
+            let! summaries = readSummaries {searchTerm = search; sortBy = sortBy}
             return ctx.WriteHtmlView(ListTemplate.Template summaries)
         }
         

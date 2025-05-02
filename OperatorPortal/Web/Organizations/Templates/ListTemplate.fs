@@ -1,5 +1,6 @@
 module Organizations.ListTemplate
 
+open Organizations.Templates.Formatters
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 open Organizations.Application.ReadModels
@@ -21,6 +22,7 @@ let Template (data: OrganizationSummary list) =
                 th () { "Dostępność" }
                 th () { "Kateogria" }
                 th () { "Liczba Beneficjentów" }
+                th () { "Ostatnie odwiedziny" }
             }
         }
 
@@ -45,6 +47,7 @@ let Template (data: OrganizationSummary list) =
                     td () { row.Dostepnosc }
                     td () { row.Kategoria }
                     td () { $"%i{row.LiczbaBeneficjentow}" }
+                    td () { row.OstatnieOdwiedzinyData |> toDisplay }
                 }
         }
     }

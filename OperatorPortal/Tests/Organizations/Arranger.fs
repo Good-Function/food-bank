@@ -15,7 +15,9 @@ let f = Bogus.Faker()
 
 let getOrThrow (result: Result<'T, 'Error>) =
     Result.mapError (fun error -> InvalidOperationException(sprintf "%A" error)) result
-    |> function Ok v -> v | Error e -> failwith $"%A{e}"
+    |> function
+        | Ok v -> v
+        | Error e -> failwith $"%A{e}"
 
 
 let AnOrganization () : Organization =
@@ -104,4 +106,12 @@ let AnOrganization () : Organization =
           UmowaRODO = f.PickRandom([| Some <| f.Date.PastDateOnly(2); None |])
           KartyOrganizacjiData = Some <| f.Date.PastDateOnly(2)
           OstatnieOdwiedzinyData = Some <| f.Date.PastDateOnly(1)
-          DataUpowaznieniaDoOdbioru = Some <| f.Date.PastDateOnly(2)} }
+          DataUpowaznieniaDoOdbioru = Some <| f.Date.PastDateOnly(2) } }
+
+let setOstatnieOdwiedziny (newDate: DateOnly) (org: Organization) =
+    { org with
+        Organization.Dokumenty.OstatnieOdwiedzinyData = Some newDate }
+
+let setNazwaPlacowki (newName: string) (org: Organization) =
+    { org with
+        Organization.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc = newName }

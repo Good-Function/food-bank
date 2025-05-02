@@ -1,6 +1,8 @@
 module OrganizationViewing
 
+open System
 open System.Net
+open DocumentFormat.OpenXml.Drawing.Wordprocessing
 open Organizations.Domain.Identifiers
 open Tests
 open Organizations.Templates.Formatters
@@ -12,12 +14,12 @@ open Organizations.Database.OrganizationsDao
 open FSharp.Data
 
 [<Fact>]
-let ``/ogranizations/summaries displays organization's most important data `` () =
+let ``/ogranizations/summaries?search filters out and displays organization's most important data `` () =
     task {
         // Arrange
         let org =  Arranger.AnOrganization()
         do! org |> (save Tools.DbConnection.connectDb)
-        let! dbSummaries = readSummaries Tools.DbConnection.connectDb org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc
+        let! dbSummaries = readSummaries Tools.DbConnection.connectDb { searchTerm = org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc; sortBy = None }
         let dbSummaryTeczkaIds = dbSummaries |> List.map(fun summary -> $"%i{summary.Teczka}")
         let api = runTestApi() |> authenticate
         // Act
@@ -44,7 +46,51 @@ let ``/ogranizations/summaries displays organization's most important data `` ()
             dbSummary.Dostepnosc |> should equal (summary |> Seq.item 10)
             dbSummary.Kategoria |> should equal (summary |> Seq.item 11)
             $"%i{dbSummary.LiczbaBeneficjentow}" |> should equal (summary |> Seq.item 12)
+            dbSummary.OstatnieOdwiedzinyData |> toDisplay |> should equal (summary |> Seq.item 13)
              ) 
+    }
+
+[<Theory>]
+[<InlineData("asc")>]
+[<InlineData("desc")>]
+let ``/ogranizations/summaries?search=xxx&sort=OstatnieOdwiedziny&dir=asc filters out and displays organizations sorted data`` (dir: string) =
+    task {
+        // Arrange
+        let id = Guid.NewGuid().ToString()
+        let orgVisitedToday =  Arranger.AnOrganization()
+                               |> Arranger.setOstatnieOdwiedziny(DateOnly.FromDateTime(DateTime.Today))
+                               |> Arranger.setNazwaPlacowki $"{id}org1"
+        let orgVisitedYesterday = Arranger.AnOrganization()
+                                    |> Arranger.setOstatnieOdwiedziny(DateOnly.FromDateTime(DateTime.Today.AddDays(-1)))
+                                    |> Arranger.setNazwaPlacowki $"{id}org1"
+        do! orgVisitedToday |> (save Tools.DbConnection.connectDb)
+        do! orgVisitedYesterday |> (save Tools.DbConnection.connectDb)
+        let api = runTestApi() |> authenticate
+        // Act
+        let! response = api.GetAsync $"/organizations/summaries?search={id}&sort=OstatnieOdwiedzinyData&dir={dir}"
+        // Assert
+        let! doc = response.HtmlContent()
+        let headers = doc.CssSelect("thead th")
+                      |> List.map _.InnerText()
+                      |> List.indexed
+        let indexOfNazwaPlacowki =
+            headers |> List.find(fun (_, text) -> text = "Nazwa placówki") |> fst
+        let indexOfOstatnieOdwiedziny =
+            headers |> List.find(fun (_, text) -> text = "Ostatnie odwiedziny") |> fst
+        let summaries =
+            doc.CssSelect "tbody tr"
+            |> Seq.choose (fun row ->
+                let cells = row.Descendants "td" |> Seq.map _.InnerText() |> Seq.toList
+                if cells[indexOfNazwaPlacowki].StartsWith id then Some cells else None)
+            |> Seq.toList
+        response.StatusCode |> should equal HttpStatusCode.OK
+        summaries.Length |> should equal 2
+        let dateFrom1stRow = summaries[0][indexOfOstatnieOdwiedziny] |> DateOnly.Parse
+        let dateFrom2ndRow = summaries[1][indexOfOstatnieOdwiedziny] |> DateOnly.Parse
+        if dir = "asc" then
+            dateFrom1stRow |> should lessThan dateFrom2ndRow
+        else
+            dateFrom1stRow |> should greaterThan dateFrom2ndRow
     }
     
 [<Fact>]
