@@ -156,6 +156,10 @@ type Direction =
         |> function
             | Asc -> "asc"
             | Desc -> "desc"
+    member this.Reverse() =
+        if this = Asc then
+            Desc
+        else Asc
 
     static member FromString(str: string) = if str = "desc" then Desc else Asc
 
