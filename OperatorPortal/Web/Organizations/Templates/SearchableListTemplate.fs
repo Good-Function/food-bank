@@ -56,7 +56,27 @@ let Template (filter: Filter) =
                 table (class' = "striped", style = "table-layout:fixed") {
                     thead () {
                         tr () {
-                            th (style = "width: 95px;") { "Tecz." }
+                            th (style = "width: 80px;") {
+                                div (style="display:flex;") {
+                                    a (
+                                        hxGet = $"""/organizations/list{buildQueryForSorting ("Teczka", filter)}""",
+                                        href = $"""/organizations/list{buildQueryForSorting ("Teczka", filter)}""",
+                                        hxTarget = "#OrganizationsPage",
+                                        hxTrigger = "click",
+                                        hxPushUrl = "true",
+                                        style = "color:unset;"
+                                    ) {
+                                        div () { "Tecz." }
+                                    }
+                                    div (style = "text-decoration: none;") {
+                                        match filter.sortBy with
+                                        | Some(sort, dir) when sort = "Teczka" && dir = Direction.Asc -> "▲"
+                                        | Some(sort, _) when sort = "Teczka" -> "▼"
+                                        | _ -> ""
+                                    }
+                                }
+                            }
+
                             th (style = "width: 200px;") { "Nazwa placówki" }
                             th (style = "width: 300px;") { "Adres placówki" }
                             th (style = "width: 200px;") { "Gmina/Dzielnica" }
@@ -71,19 +91,20 @@ let Template (filter: Filter) =
                             th (style = "width: 155px;") { "Liczba Beneficjentów" }
 
                             th (style = "width: 150px;") {
-                                a (
-                                    hxGet =
-                                        $"""/organizations/list{buildQueryForSorting ("OstatnieOdwiedzinyData", filter)}""",
-                                    href =
-                                        $"""/organizations/list{buildQueryForSorting ("OstatnieOdwiedzinyData", filter)}""",
-                                    hxTarget = "#OrganizationsPage",
-                                    hxTrigger = "click",
-                                    hxPushUrl = "true",
-                                    style = "display:flex; color:unset; text-decoration: none;"
-                                ) {
-                                    div () { "Ostatnie odwiedziny" }
-
-                                    div () {
+                                div (style = "display:flex; ") {
+                                    a (
+                                        hxGet =
+                                            $"""/organizations/list{buildQueryForSorting ("OstatnieOdwiedzinyData", filter)}""",
+                                        href =
+                                            $"""/organizations/list{buildQueryForSorting ("OstatnieOdwiedzinyData", filter)}""",
+                                        hxTarget = "#OrganizationsPage",
+                                        hxTrigger = "click",
+                                        hxPushUrl = "true",
+                                        style = "color:unset;"
+                                    ) {
+                                        div () { "Ostatnie odwiedziny" }
+                                    }
+                                    div (style = "text-decoration: none;--pico-text-decoration: none;") {
                                         match filter.sortBy with
                                         | Some(sort, dir) when sort = "OstatnieOdwiedzinyData" && dir = Direction.Asc ->
                                             "▲"
