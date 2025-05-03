@@ -8,25 +8,25 @@ open Oxpecker.Htmx
 open Web.Organizations
 open PageComposer
 
-let buildQueryForSearch (filter: Filter): string =
+let buildQueryForSearch (filter: Filter) : string =
     let queryParams = Map.empty
-    let queryParams = match filter.sortBy with
-                        | Some (sort, dir) -> queryParams
-                                             |> Map.add "sort" sort
-                                             |> Map.add "dir" (dir.ToString())
-                        | _ -> queryParams
+
+    let queryParams =
+        match filter.sortBy with
+        | Some(sort, dir) -> queryParams |> Map.add "sort" sort |> Map.add "dir" (dir.ToString())
+        | _ -> queryParams
+
     QueryHelpers.AddQueryString("", queryParams)
 
 let buildQueryForSorting (column: string, filter: Filter) : string =
     let queryParams = Map.empty |> Map.add "search" filter.searchTerm
+
     let queryParams =
         match filter.sortBy with
-        | Some (sort, dir) when sort = column -> queryParams
-                                                 |> Map.add "sort" sort
-                                                 |> Map.add "dir" (dir.Reverse().ToString())
-        | _ -> queryParams
-             |> Map.add "sort" column
-             |> Map.add "dir" (Direction.Asc.ToString())
+        | Some(sort, dir) when sort = column ->
+            queryParams |> Map.add "sort" sort |> Map.add "dir" (dir.Reverse().ToString())
+        | _ -> queryParams |> Map.add "sort" column |> Map.add "dir" (Direction.Asc.ToString())
+
     QueryHelpers.AddQueryString("", queryParams)
 
 let Template (filter: Filter) =
@@ -38,7 +38,7 @@ let Template (filter: Filter) =
             id = "OrganizationSearch",
             style = "transition:none;",
             title = "Szukaj po: Teczka, Nazwa placówki",
-            hxGet = $"/organizations/list{buildQueryForSearch(filter)}",
+            hxGet = $"/organizations/list{buildQueryForSearch (filter)}",
             placeholder = "Szukaj po teczce, nazwie placówki...",
             hxTrigger = "input changed delay:300ms, keyup[key=='Enter']",
             hxTarget = "#OrganizationsPage",
@@ -56,7 +56,7 @@ let Template (filter: Filter) =
                 table (class' = "striped", style = "table-layout:fixed") {
                     thead () {
                         tr () {
-                            th (style = "width: 100px;") { "Teczka" }
+                            th (style = "width: 95px;") { "Tecz." }
                             th (style = "width: 200px;") { "Nazwa placówki" }
                             th (style = "width: 300px;") { "Adres placówki" }
                             th (style = "width: 200px;") { "Gmina/Dzielnica" }
@@ -68,19 +68,27 @@ let Template (filter: Filter) =
                             th (style = "width: 200px;") { "Tel. osoby kontaktowej" }
                             th (style = "width: 200px;") { "Dostępność" }
                             th (style = "width: 200px;") { "Kateogria" }
-                            th (style = "width: 150px;") { "Liczba Beneficjentów" }
+                            th (style = "width: 155px;") { "Liczba Beneficjentów" }
 
                             th (style = "width: 150px;") {
-                                div () {
-                                    "Ostatnie odwiedziny"
+                                a (
+                                    hxGet =
+                                        $"""/organizations/list{buildQueryForSorting ("OstatnieOdwiedzinyData", filter)}""",
+                                    href =
+                                        $"""/organizations/list{buildQueryForSorting ("OstatnieOdwiedzinyData", filter)}""",
+                                    hxTarget = "#OrganizationsPage",
+                                    hxTrigger = "click",
+                                    hxPushUrl = "true",
+                                    style = "display:flex; color:unset; text-decoration: none;"
+                                ) {
+                                    div () { "Ostatnie odwiedziny" }
 
-                                    button (
-                                        hxGet = $"""/organizations/list{buildQueryForSorting("OstatnieOdwiedzinyData", filter)}""",
-                                        hxTarget = "#OrganizationsPage",
-                                        hxTrigger = "click",
-                                        hxPushUrl = "true"
-                                    ) {
-                                        "Sortuj"
+                                    div () {
+                                        match filter.sortBy with
+                                        | Some(sort, dir) when sort = "OstatnieOdwiedzinyData" && dir = Direction.Asc ->
+                                            "▲"
+                                        | Some(sort, _) when sort = "OstatnieOdwiedzinyData" -> "▼"
+                                        | _ -> ""
                                     }
                                 }
                             }
