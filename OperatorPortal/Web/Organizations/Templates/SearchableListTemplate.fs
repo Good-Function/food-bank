@@ -21,10 +21,11 @@ let buildQueryForSorting (column: string, filter: Filter) : string =
 
 let Template (filter: Filter) =
     let createSortableBy (columnName: string) (label: string) =
+        let url = $"""/organizations/list{buildQueryForSorting (columnName, filter)}"""
         div (style="display:flex;") {
             a (
-                hxGet = $"""/organizations/list{buildQueryForSorting (columnName, filter)}""",
-                href = $"""/organizations/list{buildQueryForSorting (columnName, filter)}""",
+                hxGet = url,
+                href = url,
                 hxTarget = "#OrganizationsPage",
                 hxTrigger = "click",
                 hxPushUrl = "true",
@@ -53,7 +54,7 @@ let Template (filter: Filter) =
             id = "OrganizationSearch",
             style = "transition:none;",
             title = "Szukaj po: Teczka, Nazwa placówki",
-            hxGet = $"/organizations/list",
+            hxGet = "/organizations/list",
             hxInclude = "[name='sort'], [name='dir']",
             placeholder = "Szukaj po teczce, nazwie placówki...",
             hxTrigger = "input changed delay:300ms, keyup[key=='Enter']",
@@ -81,8 +82,8 @@ let Template (filter: Filter) =
                             th (style = "width: 200px;") { "Osoba do kontaktu" }
                             th (style = "width: 200px;") { "Tel. osoby kontaktowej" }
                             th (style = "width: 200px;") { "Dostępność" }
-                            th (style = "width: 200px;") { "Kateogria" }
-                            th (style = "width: 155px;") { "Liczba Beneficjentów" }
+                            th (style = "width: 200px;") { "Kategoria" }
+                            th (style = "width: 165px;") { "Liczba Beneficjentów" }
                             th (style = "width: 150px;") {
                                 "Ostatnie odwiedziny" |> createSortableBy "OstatnieOdwiedzinyData"
                             }
