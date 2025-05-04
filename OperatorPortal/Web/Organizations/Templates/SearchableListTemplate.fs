@@ -8,16 +8,6 @@ open Oxpecker.Htmx
 open Web.Organizations
 open PageComposer
 
-let buildQueryForSearch (filter: Filter) : string =
-    let queryParams = Map.empty
-
-    let queryParams =
-        match filter.sortBy with
-        | Some(sort, dir) -> queryParams |> Map.add "sort" sort |> Map.add "dir" (dir.ToString())
-        | _ -> queryParams
-
-    QueryHelpers.AddQueryString("", queryParams)
-
 let buildQueryForSorting (column: string, filter: Filter) : string =
     let queryParams = Map.empty |> Map.add "search" filter.searchTerm
 
@@ -51,6 +41,11 @@ let Template (filter: Filter) =
         }
         
     div (id = "OrganizationsPage") {
+        match filter.sortBy with
+            | None -> ()
+            | Some(sort, dir) ->
+                input (type' = "hidden", name = "sort", value = sort)
+                input (type' = "hidden", name = "dir", value = dir.ToString())
         input (
             type' = "search",
             name = "search",
@@ -58,18 +53,13 @@ let Template (filter: Filter) =
             id = "OrganizationSearch",
             style = "transition:none;",
             title = "Szukaj po: Teczka, Nazwa placówki",
-            hxGet = $"/organizations/list{buildQueryForSearch filter}",
+            hxGet = $"/organizations/list",
+            hxInclude = "[name='sort'], [name='dir']",
             placeholder = "Szukaj po teczce, nazwie placówki...",
             hxTrigger = "input changed delay:300ms, keyup[key=='Enter']",
             hxTarget = "#OrganizationsPage",
             hxPushUrl = "true"
         )
-
-        match filter.sortBy with
-        | None -> ()
-        | Some(sort, dir) ->
-            input (type' = "hidden", name = "sort", value = sort)
-            input (type' = "hidden", name = "dir", value = dir.ToString())
 
         small () {
             div (style = "overflow-x: scroll; max-height: 70vh") {
