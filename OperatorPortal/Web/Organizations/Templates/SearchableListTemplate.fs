@@ -30,6 +30,26 @@ let buildQueryForSorting (column: string, filter: Filter) : string =
     QueryHelpers.AddQueryString("", queryParams)
 
 let Template (filter: Filter) =
+    let createSortableBy (columnName: string) (label: string) =
+        div (style="display:flex;") {
+            a (
+                hxGet = $"""/organizations/list{buildQueryForSorting (columnName, filter)}""",
+                href = $"""/organizations/list{buildQueryForSorting (columnName, filter)}""",
+                hxTarget = "#OrganizationsPage",
+                hxTrigger = "click",
+                hxPushUrl = "true",
+                style = "color:unset;"
+            ) {
+                div () { label }
+            }
+            div (style = "text-decoration: none;") {
+                match filter.sortBy with
+                | Some(sort, dir) when sort = columnName && dir = Direction.Asc -> "▲"
+                | Some(sort, _) when sort = columnName -> "▼"
+                | _ -> ""
+            }
+        }
+        
     div (id = "OrganizationsPage") {
         input (
             type' = "search",
@@ -38,7 +58,7 @@ let Template (filter: Filter) =
             id = "OrganizationSearch",
             style = "transition:none;",
             title = "Szukaj po: Teczka, Nazwa placówki",
-            hxGet = $"/organizations/list{buildQueryForSearch (filter)}",
+            hxGet = $"/organizations/list{buildQueryForSearch filter}",
             placeholder = "Szukaj po teczce, nazwie placówki...",
             hxTrigger = "input changed delay:300ms, keyup[key=='Enter']",
             hxTarget = "#OrganizationsPage",
@@ -57,29 +77,13 @@ let Template (filter: Filter) =
                     thead () {
                         tr () {
                             th (style = "width: 80px;") {
-                                div (style="display:flex;") {
-                                    a (
-                                        hxGet = $"""/organizations/list{buildQueryForSorting ("Teczka", filter)}""",
-                                        href = $"""/organizations/list{buildQueryForSorting ("Teczka", filter)}""",
-                                        hxTarget = "#OrganizationsPage",
-                                        hxTrigger = "click",
-                                        hxPushUrl = "true",
-                                        style = "color:unset;"
-                                    ) {
-                                        div () { "Tecz." }
-                                    }
-                                    div (style = "text-decoration: none;") {
-                                        match filter.sortBy with
-                                        | Some(sort, dir) when sort = "Teczka" && dir = Direction.Asc -> "▲"
-                                        | Some(sort, _) when sort = "Teczka" -> "▼"
-                                        | _ -> ""
-                                    }
-                                }
+                                "Tecz." |> createSortableBy "Teczka"
                             }
-
                             th (style = "width: 200px;") { "Nazwa placówki" }
                             th (style = "width: 300px;") { "Adres placówki" }
-                            th (style = "width: 200px;") { "Gmina/Dzielnica" }
+                            th (style = "width: 200px;") {
+                                "Gmina/Dzielnica" |> createSortableBy "GminaDzielnica"
+                            }
                             th (style = "width: 150px;") { "Forma prawna" }
                             th (style = "width: 200px;") { "Telefon" }
                             th (style = "width: 200px;") { "Email" }
@@ -89,29 +93,8 @@ let Template (filter: Filter) =
                             th (style = "width: 200px;") { "Dostępność" }
                             th (style = "width: 200px;") { "Kateogria" }
                             th (style = "width: 155px;") { "Liczba Beneficjentów" }
-
                             th (style = "width: 150px;") {
-                                div (style = "display:flex; ") {
-                                    a (
-                                        hxGet =
-                                            $"""/organizations/list{buildQueryForSorting ("OstatnieOdwiedzinyData", filter)}""",
-                                        href =
-                                            $"""/organizations/list{buildQueryForSorting ("OstatnieOdwiedzinyData", filter)}""",
-                                        hxTarget = "#OrganizationsPage",
-                                        hxTrigger = "click",
-                                        hxPushUrl = "true",
-                                        style = "color:unset;"
-                                    ) {
-                                        div () { "Ostatnie odwiedziny" }
-                                    }
-                                    div (style = "text-decoration: none;--pico-text-decoration: none;") {
-                                        match filter.sortBy with
-                                        | Some(sort, dir) when sort = "OstatnieOdwiedzinyData" && dir = Direction.Asc ->
-                                            "▲"
-                                        | Some(sort, _) when sort = "OstatnieOdwiedzinyData" -> "▼"
-                                        | _ -> ""
-                                    }
-                                }
+                                "Ostatnie odwiedziny" |> createSortableBy "OstatnieOdwiedzinyData"
                             }
                         }
                     }
