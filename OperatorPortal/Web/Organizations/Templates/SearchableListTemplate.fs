@@ -70,7 +70,7 @@ let Template (filter: Filter) =
                             th (style = "width: 80px;") {
                                 "Tecz." |> createSortableBy "Teczka"
                             }
-                            th (style = "width: 200px;") { "Nazwa placówki" }
+                            th (style = "width: 290px;") { "Nazwa placówki" }
                             th (style = "width: 300px;") { "Adres placówki" }
                             th (style = "width: 200px;") {
                                 "Gmina/Dzielnica" |> createSortableBy "GminaDzielnica"
