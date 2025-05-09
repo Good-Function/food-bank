@@ -197,10 +197,6 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
           name: 'dbconnectionstringref'
           value: 'Host=${dbServerName}.postgres.database.azure.com;Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
         }
-        {
-          name: 'blobstorageconnectionref'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value};EndpointSuffix=core.windows.net'
-        }
       ]
       ingress: {
         external: true
