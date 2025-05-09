@@ -36,6 +36,33 @@ param dbServerName string = 'foodbank-postgres'
 @description('PostgreSQL Database Name')
 param dbName string = 'foodbankdb'
 
+@description('Storage Account Name')
+param storageAccountName string = 'foodbank-storage'
+
+@description('Blob Container Name')
+param blobContainerName string = 'uploads'
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+  name: storageAccountName
+  location: location
+  kind: 'StorageV2'
+  sku: {
+    name: 'Standard_LRS'
+  }
+  properties: {
+    accessTier: 'Hot'
+    minimumTlsVersion: 'TLS1_2'
+    supportsHttpsTrafficOnly: true
+  }
+}
+
+resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
+  name: '${storageAccount.name}/default/${blobContainerName}'
+  properties: {
+    publicAccess: 'None'
+  }
+}
+
 resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
   name: vnetName
   location: location
@@ -170,6 +197,10 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
           name: 'dbconnectionstringref'
           value: 'Host=${dbServerName}.postgres.database.azure.com;Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
         }
+        {
+          name: 'blobstorageconnectionref'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value};EndpointSuffix=core.windows.net'
+        }
       ]
       ingress: {
         external: true
@@ -196,6 +227,10 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
             {
               name: 'DbConnectionString'
               secretRef: 'dbconnectionstringref'
+            }
+            {
+              name: 'BlobStorageConnectionString'
+              secretRef: 'blobstorageconnectionref'
             }
           ]
         }
