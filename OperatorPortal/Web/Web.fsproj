@@ -4,6 +4,7 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
     <ItemGroup>
+      <PackageReference Include="Azure.Storage.Blobs" Version="12.24.0" />
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
       <PackageReference Include="Dapper" Version="2.1.66" />
       <PackageReference Include="FSharp.Data" Version="6.4.1" />

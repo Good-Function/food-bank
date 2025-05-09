@@ -30,6 +30,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.1" />
         <PackageReference Update="FSharp.Core" Version="9.0.201" />
         <PackageReference Include="Testcontainers" Version="4.1.0" />
+        <PackageReference Include="Testcontainers.Azurite" Version="4.4.0" />
         <PackageReference Include="Testcontainers.PostgreSql" Version="4.1.0" />
         <PackageReference Include="xunit.v3" Version="1.0.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1" />
@@ -49,5 +50,9 @@
     <ItemGroup>
       <Compile Include="Login\ResetPassword.fs" />
       <Compile Include="Login\Login.fs" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Include="Learning\BlobUpload.fs" />
+      <Content Include="Learning\file.txt" />
     </ItemGroup>
 </Project>

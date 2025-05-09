@@ -9,6 +9,9 @@
 6. `dotnet test` 
 7. dotnet run --project Web
 
+## Extras
+TestContainers manages local dependencies. It may be useful to install https://azure.microsoft.com/en-us/products/storage/storage-explorer#Download-4 to view data from emulator: Azurite.
+
 ## 2. Backlog
 Can be found here: 
 https://github.com/orgs/Good-Function/projects/2/views/1
