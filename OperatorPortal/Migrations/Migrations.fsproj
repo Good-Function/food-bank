@@ -7,7 +7,7 @@
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="dbup" Version="5.0.41" />
-      <PackageReference Include="dbup-postgresql" Version="6.0.0-beta.44" />
+      <PackageReference Include="dbup-postgresql" Version="6.0.3" />
       <PackageReference Update="FSharp.Core" Version="9.0.201" />
     </ItemGroup>
 </Project>

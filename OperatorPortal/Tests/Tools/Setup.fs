@@ -25,13 +25,10 @@ type Setup() =
                 .WithPortBinding(10000, 10000)
                 .Build()
 
-        [ azurite.StartAsync() |> Async.AwaitTask
-          postgres.StartAsync() |> Async.AwaitTask ]
-        |> Async.Parallel
-        |> Async.RunSynchronously
-        |> ignore
+        postgres.StartAsync() |> Async.AwaitTask |> Async.RunSynchronously
+        azurite.StartAsync() |> Async.AwaitTask |> Async.RunSynchronously
 
-        let code = Migrations.main ([||])
+        let code = Migrations.main [||]
         code |> ignore
 
     interface IDisposable with
