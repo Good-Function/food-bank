@@ -37,7 +37,7 @@ param dbServerName string = 'foodbank-postgres'
 param dbName string = 'foodbankdb'
 
 @description('Storage Account Name')
-param storageAccountName string = 'blobstorage0${uniqueString(resourceGroup().id)}'
+param storageAccountName string = 'storage0${uniqueString(resourceGroup().id)}'
 
 @description('Blob Container Name')
 param blobContainerName string = 'uploads'
