@@ -199,8 +199,9 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
         }
         {
           name: 'blobstorageconnectionref'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value};EndpointSuffix=core.windows.net'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${storageAccount.listKeys().keys[0].value};EndpointSuffix=core.windows.net'
         }
+        
       ]
       ingress: {
         external: true
