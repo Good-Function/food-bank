@@ -43,9 +43,11 @@
       <Compile Include="Organizations\Arranger.fs" />
       <Compile Include="Organizations\OrganizationViewing.fs" />
       <Compile Include="Organizations\OrganizationsEditing.fs" />
+      <Compile Include="Organizations\OrganizationsFileUpload.fs" />
       <Compile Include="Organizations\ImportFromExcel.fs" />
       <Content Include="Organizations\bank.xlsx" />
       <Content Include="Organizations\notExcel.txt" />
+      <Content Include="Organizations\doc.pdf" />
     </ItemGroup>
     <ItemGroup>
       <Compile Include="Login\ResetPassword.fs" />
