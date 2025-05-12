@@ -24,7 +24,7 @@ type Kontakty =
       TelefonOsobyOdbierajacej: string }
 
 type Dokumenty =
-    { Wniosek: System.DateOnly option
+    { Wniosek: System.DateOnly option 
       UmowaZDn: System.DateOnly option
       UmowaRODO: System.DateOnly option
       KartyOrganizacjiData: System.DateOnly option

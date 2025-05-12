@@ -9,3 +9,4 @@ type ChangeKontakty = TeczkaId * Kontakty -> Async<unit>
 type ChangeBeneficjenci = TeczkaId * Beneficjenci -> Async<unit>
 type ChangeDokumenty = TeczkaId * Dokumenty -> Async<unit>
 type ChangeWarunkiPomocy = TeczkaId * WarunkiPomocy -> Async<unit>
+type UploadDocument = TeczkaId * DocumentUpload -> Async<unit>

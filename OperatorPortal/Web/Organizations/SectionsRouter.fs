@@ -1,10 +1,12 @@
 module Organizations.SectionsRouter
 
+open Microsoft.AspNetCore.Http
 open Organizations.Application
 open Organizations.Templates
 open Oxpecker
 open Organizations.Application.ReadModels
 open Organizations.CompositionRoot
+open HttpContextExtensions
 
 let daneAdresowe (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
@@ -93,6 +95,17 @@ let changeDokumenty (handle: CommandHandlers.ChangeDokumenty) (teczka: int64) :E
             do! handle(teczka, cmd)
             return ctx.WriteHtmlView(Dokumenty.View (cmd |> ReadModels.Dokumenty.FromCommand) teczka)
         }
+        
+let uploadWniosek (handle: CommandHandlers.UploadDocument) (teczka: int64) :EndpointHandler =
+    fun ctx -> task {
+        match ctx.TryGetFirstFile with
+        | Some file ->
+            do! handle (teczka, { Name = file.FileName; ContentStream = file.OpenReadStream() })
+            return! ctx.WriteHtmlString ("OK")
+        | None ->
+            ctx.SetStatusCode(StatusCodes.Status400BadRequest)
+            return! ctx.WriteHtmlString ("Błąd")
+    }
         
 let zrodlaZywnosci (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
@@ -183,6 +196,7 @@ let Endpoints (dependencies: Dependencies) =
           routef "/{%d}/kontakty" (changeKontakty dependencies.ChangeKontakty)
           routef "/{%d}/beneficjenci" (changeBeneficjenci dependencies.ChangeBeneficjenci)
           routef "/{%d}/dokumenty" (changeDokumenty dependencies.ChangeDokumenty)
+          routef "/{%d}/dokumenty/wniosek" (uploadWniosek dependencies.UploadDocument)
           routef "/{%d}/zrodla-zywnosci" (changeZrodlaZywnosci dependencies.ChangeZrodlaZywnosci)
           routef "/{%d}/adresy-ksiegowosci" (changeAdresyKsiegowosci dependencies.ChangeAdresyKsiegowosci)
           routef "/{%d}/warunki-pomocy" (changeWarunkiPomocy dependencies.ChangeWarunkiPomocy)

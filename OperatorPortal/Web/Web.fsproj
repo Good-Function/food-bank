@@ -90,6 +90,7 @@
       <Compile Include="Organizations\Templates\ImportExcelTemplate.fs" />
       <Compile Include="Organizations\Templates\ImportExcelResult.fs" />
       <Compile Include="Organizations\ClosedXmlExcelImport.fs" />
+      <Compile Include="Organizations\BlobStorage.fs" />
       <Compile Include="Organizations\CompositionRoot.fs" />
       <Compile Include="Organizations\SectionsRouter.fs" />
       <Compile Include="Organizations\Router.fs" />

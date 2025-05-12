@@ -2,4 +2,6 @@ module Settings
 
 
 [<CLIMutable>]
-type Settings = { DbConnectionString: string }
+type Settings =
+    { DbConnectionString: string
+      BlobStorageConnectionString: string }

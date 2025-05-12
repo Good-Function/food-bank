@@ -9,6 +9,7 @@ open FsToolkit.ErrorHandling
 open Oxpecker
 open RenderBasedOnHtmx
 open Organizations.CompositionRoot
+open HttpContextExtensions
 open type Microsoft.AspNetCore.Http.TypedResults
 
 let parseFilter (ctx: HttpContext) : Filter =
@@ -53,12 +54,6 @@ let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHan
                 ctx
                 |> render (DetailsTemplate.Template details) (DetailsTemplate.FullPage details username)
         }
-        
-let tryGetFirstFormFile (ctx: HttpContext) =
-    if ctx.Request.HasFormContentType then
-        ctx.Request.Form.Files |> Seq.tryHead
-    else
-        None
     
 let import: EndpointHandler =
     fun ctx -> task {
@@ -68,7 +63,7 @@ let import: EndpointHandler =
     
 let upload (import: CreateOrganizationCommandHandler.Import): EndpointHandler =
     fun ctx -> task {
-        match tryGetFirstFormFile ctx with
+        match ctx.TryGetFirstFile with
         | Some file ->
             match! import (file.OpenReadStream()) with
             | Ok output -> return! ctx.WriteHtmlView (ImportExcelResultTemplate.Template output)

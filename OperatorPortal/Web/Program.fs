@@ -1,6 +1,7 @@
 module Program
 
 open System
+open Azure.Storage.Blobs
 open Microsoft.AspNetCore.Authentication.Cookies
 open PostgresPersistence.DapperFsharp
 open Microsoft.AspNetCore.Builder
@@ -40,6 +41,7 @@ let createServer () =
           .Build()
           .Get<Settings>()
     let dbConnect = connectDB(settings.DbConnectionString)
+    let blobServiceClient = (BlobServiceClient settings.BlobStorageConnectionString)
     builder.Services
         .AddRouting()
         .AddOxpecker()
@@ -58,7 +60,7 @@ let createServer () =
         .UseAuthentication()
         .UseAuthorization()
         .UseOxpecker(endpoints
-                        (Organizations.CompositionRoot.build dbConnect)
+                        (Organizations.CompositionRoot.build(dbConnect, blobServiceClient))
                         (Login.CompositionRoot.build dbConnect)
                         (Applications.CompositionRoot.build dbConnect)
                     )

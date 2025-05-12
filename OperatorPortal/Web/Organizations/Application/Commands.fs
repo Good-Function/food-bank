@@ -1,5 +1,7 @@
 module Organizations.Application.Commands
 
+open System.IO
+
 type TeczkaId = int64
 
 [<CLIMutable>]
@@ -80,3 +82,8 @@ type NewOrganization =
       Beneficjenci: Beneficjenci
       Dokumenty: Dokumenty
       WarunkiPomocy: WarunkiPomocy }
+
+type DocumentUpload = {
+    ContentStream: Stream
+    Name: string
+}

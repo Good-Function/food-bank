@@ -26,11 +26,11 @@ let ``PUT /organizations/{id}/wniosek returns 200 OK with link to document`` () 
         let api = runTestApi() |> authenticate
         let fileContent = new ByteArrayContent(File.ReadAllBytes(Path.Combine(__SOURCE_DIRECTORY__, "doc.pdf")))
         use form = new MultipartFormDataContent()
-        form.Add(fileContent, "file", "bank.doc")
+        form.Add(fileContent, "doc", "doc.pdf")
         // Acts
-        let! response = api.PostAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/wniosek", form)
+        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/dokumenty/wniosek", form)
         // Assert
-        response.StatusCode |> should equal HttpStatusCode.NotFound
-        // response.StatusCode |> should equal HttpStatusCode.OK
+        // response.StatusCode |> should equal HttpStatusCode.NotFound
+        response.StatusCode |> should equal HttpStatusCode.OK
     }
 
