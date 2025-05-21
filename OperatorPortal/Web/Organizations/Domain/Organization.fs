@@ -1,5 +1,6 @@
 module Organizations.Domain.Organization
 
+open System
 open Organizations.Domain.Identifiers
 
 type DaneAdresowe =
@@ -23,13 +24,19 @@ type Kontakty =
       OsobaOdbierajacaZywnosc: string
       TelefonOsobyOdbierajacej: string }
 
-type Dokumenty =
-    { Wniosek: System.DateOnly option 
-      UmowaZDn: System.DateOnly option
-      UmowaRODO: System.DateOnly option
-      KartyOrganizacjiData: System.DateOnly option
-      OstatnieOdwiedzinyData: System.DateOnly option
-      DataUpowaznieniaDoOdbioru: System.DateOnly option }
+type Document = {
+    Date: DateOnly option
+    FileName: string option
+}
+
+type Documents = {
+    Wniosek: Document
+    Umowa: Document
+    Rodo: Document
+    Odwiedziny: Document
+    UpowaznienieDoOdbioru: Document
+}
+
 
 type Beneficjenci =
     { LiczbaBeneficjentow: int
@@ -71,5 +78,5 @@ type Organization =
       ZrodlaZywnosci: ZrodlaZywnosci
       AdresyKsiegowosci: AdresyKsiegowosci
       Beneficjenci: Beneficjenci
-      Dokumenty: Dokumenty
+      Dokumenty: Documents
       WarunkiPomocy: WarunkiPomocy }

@@ -3,10 +3,10 @@ module Learning.BlobUpload
 open System
 open System.IO
 open Azure.Storage.Sas
+open Azure.Storage.Blobs
 open FSharp.Data
 open FsUnit.Xunit
 open Xunit
-open Azure.Storage.Blobs
 
 let connectionString = "UseDevelopmentStorage=true"
 let containerName = "organization-files"

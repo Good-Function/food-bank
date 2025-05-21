@@ -1,6 +1,7 @@
 module Organizations.Application.ReadModels
 
 open System
+open Organizations.Application.DocumentType
 
 type OrganizationSummary =
     { Teczka: int64
@@ -42,21 +43,11 @@ type Beneficjenci =
         { LiczbaBeneficjentow = cmd.LiczbaBeneficjentow
           Beneficjenci = cmd.Beneficjenci }
 
-type Dokumenty =
-    { Wniosek: DateOnly option
-      UmowaZDn: DateOnly option
-      UmowaRODO: DateOnly option
-      KartyOrganizacjiData: DateOnly option
-      OstatnieOdwiedzinyData: DateOnly option
-      DataUpowaznieniaDoOdbioru: DateOnly option }
-
-    static member FromCommand(cmd: Commands.Dokumenty) =
-        { Wniosek = cmd.Wniosek
-          UmowaZDn = cmd.UmowaZDn
-          UmowaRODO = cmd.UmowaRODO
-          KartyOrganizacjiData = cmd.KartyOrganizacjiData
-          OstatnieOdwiedzinyData = cmd.OstatnieOdwiedzinyData
-          DataUpowaznieniaDoOdbioru = cmd.DataUpowaznieniaDoOdbioru }
+type Document = {
+    Date: DateOnly option
+    FileName: string option
+    Type: DocumentType
+}
 
 type ZrodlaZywnosci =
     { Sieci: bool
@@ -144,7 +135,7 @@ type OrganizationDetails =
       ZrodlaZywnosci: ZrodlaZywnosci
       AdresyKsiegowosci: AdresyKsiegowosci
       Beneficjenci: Beneficjenci
-      Dokumenty: Dokumenty
+      Dokumenty: Document list
       WarunkiPomocy: WarunkiPomocy }
 
 type Direction =

@@ -199,12 +199,26 @@ let mapRow (row: IXLRow): Result<Organization, string list> =
                 TransportKategoria = row |> getCellText 44
             }
             Dokumenty = {
-                Wniosek = columns.wniosek 
-                UmowaZDn = columns.umowaZDn 
-                UmowaRODO = columns.umowaRODO
-                KartyOrganizacjiData = columns.kartyOrganizacjiData
-                OstatnieOdwiedzinyData = columns.ostatnieOdwiedzinyData
-                DataUpowaznieniaDoOdbioru = columns.dataUpowaznieniaDoOdbioru
+                Wniosek = {
+                    FileName = None
+                    Date = columns.wniosek
+                }
+                Umowa = {
+                    FileName = None
+                    Date = columns.umowaZDn
+                }
+                Rodo = {
+                    FileName = None
+                    Date = columns.umowaRODO
+                }
+                Odwiedziny = {
+                    FileName = None
+                    Date = columns.ostatnieOdwiedzinyData
+                }
+                UpowaznienieDoOdbioru = {
+                    FileName = None
+                    Date = columns.dataUpowaznieniaDoOdbioru
+                }
             }
         }
     }

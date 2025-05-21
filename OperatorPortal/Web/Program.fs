@@ -2,6 +2,7 @@ module Program
 
 open System
 open Azure.Storage.Blobs
+open Layout
 open Microsoft.AspNetCore.Authentication.Cookies
 open PostgresPersistence.DapperFsharp
 open Microsoft.AspNetCore.Builder
@@ -21,7 +22,8 @@ let endpoints
         GET [
             route "/" <| redirectTo "/organizations" false
         ]
-        subRoute "/login" (Login.Router.Endpoints loginDeps) 
+        subRoute "/login" (Login.Router.Endpoints loginDeps)
+        subRoute "/fragments" FragmentsRouter.Endpoints
         subRoute "/organizations" (Organizations.Router.Endpoints orgDeps) |> protect
         subRoute "/applications" (Applications.Router.Endpoints appDeps) |> protect
     ]
