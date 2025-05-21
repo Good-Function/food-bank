@@ -101,16 +101,21 @@ let AnOrganization () : Organization =
           RodzajPomocy = f.PickRandom [| "P"; "S"; "K" |]
           SposobUdzielaniaPomocy = "Wydawanie paczek 3 razy w tygodniu dla 10-15 osób dziennie" }
       Dokumenty =
-        { Wniosek = Some <| f.Date.PastDateOnly(2)
-          UmowaZDn = Some <| f.Date.PastDateOnly(2)
-          UmowaRODO = f.PickRandom([| Some <| f.Date.PastDateOnly(2); None |])
-          KartyOrganizacjiData = Some <| f.Date.PastDateOnly(2)
-          OstatnieOdwiedzinyData = Some <| f.Date.PastDateOnly(1)
-          DataUpowaznieniaDoOdbioru = Some <| f.Date.PastDateOnly(2) } }
+        { Wniosek =
+            { Date = Some <| f.Date.PastDateOnly(1)
+              FileName = None }
+          Umowa =
+            { Date = Some <| f.Date.PastDateOnly(1)
+              FileName = None }
+          Rodo =
+            { Date = Some <| f.Date.PastDateOnly(3)
+              FileName = None }
+          Odwiedziny = { Date = None; FileName = None }
+          UpowaznienieDoOdbioru = { Date = None; FileName = None } } }
 
 let setOstatnieOdwiedziny (newDate: DateOnly) (org: Organization) =
     { org with
-        Organization.Dokumenty.OstatnieOdwiedzinyData = Some newDate }
+        Organization.Dokumenty.Odwiedziny = { Date = Some <| newDate; FileName = None } }
 
 let setNazwaPlacowki (newName: string) (org: Organization) =
     { org with

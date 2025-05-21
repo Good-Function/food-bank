@@ -44,10 +44,5 @@ CREATE TABLE IF NOT EXISTS organizacje
     Sanepid                             BOOLEAN NOT NULL,
     TransportOpis                       TEXT    NOT NULL,
     TransportKategoria                  TEXT    NOT NULL,
-    Wniosek                             DATE    NULL,
-    UmowaZDn                            DATE    NULL,
-    UmowaRODO                           DATE    NULL,
-    KartyOrganizacjiData                DATE    NULL,
-    OstatnieOdwiedzinyData              DATE    NULL,
-    DataUpowaznieniaDoOdbioru           DATE    NULL
+    Documents                           JSONB   NULL
 );
