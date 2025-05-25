@@ -113,7 +113,7 @@ tr > td:first-child {
     animation-duration: .5s;
 }
 
-.in-table-file-input [role="button"], [type="button"], [type="file"]::file-selector-button, [type="reset"], [type="submit"], button {
+.in-table-file-input [role="button"], [type="file"]::file-selector-button, [type="reset"], [type="submit"] {
     font-size: .7rem !important;
     padding: .2rem .5rem !important;
 }
