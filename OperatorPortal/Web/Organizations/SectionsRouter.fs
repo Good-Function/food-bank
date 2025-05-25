@@ -131,8 +131,34 @@ let changeDokumenty (saveDocument: DocumentHandlers.SaveFile) (teczka: int64) :E
                 ContentStream = umowa |> Option.map(_.OpenReadStream())
                 FileName = umowa |> Option.map(_.FileName) |> Option.orElse cmd.Umowa
             })
-            
-            return ctx.WriteHtmlString "OK"
+            let documents: Document list = [
+                {
+                    Date = cmd.WniosekDate
+                    FileName = wniosek |> Option.map _.FileName |> Option.orElse cmd.Wniosek
+                    Type = Wniosek
+                }
+                {
+                    Date = cmd.UmowaDate
+                    FileName = umowa |> Option.map _.FileName |> Option.orElse cmd.Umowa
+                    Type = Umowa
+                }
+                {
+                    Date = cmd.OdwiedzinyDate
+                    FileName = odwiedziny |> Option.map _.FileName |> Option.orElse cmd.Odwiedziny
+                    Type = Odwiedziny
+                }
+                {
+                    Date = cmd.RODODate
+                    FileName = rodo |> Option.map _.FileName |> Option.orElse cmd.RODO
+                    Type = RODO
+                }
+                {
+                    Date = cmd.UpowaznienieDoOdbioruDate
+                    FileName = upowaznienie |> Option.map _.FileName |> Option.orElse cmd.UpowaznienieDoOdbioru
+                    Type = UpowaznienieDoOdbioru
+                }
+            ]
+            return ctx.WriteHtmlView(Dokumenty.View documents teczka)
         }
         
 let zrodlaZywnosci (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
