@@ -1,12 +1,11 @@
 module Organizations.SectionsRouter
 
-open Microsoft.AspNetCore.Http
 open Organizations.Application
+open Organizations.Application.DocumentType
 open Organizations.Templates
 open Oxpecker
 open Organizations.Application.ReadModels
 open Organizations.CompositionRoot
-open HttpContextExtensions
 
 let daneAdresowe (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
@@ -22,7 +21,7 @@ let daneAdresoweEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) 
             return ctx.WriteHtmlView(DaneAdresowe.Form details.DaneAdresowe teczka)
         }
 
-let changeDaneAdresowe (handle: CommandHandlers.ChangeDaneAdresowe) (teczka: int64) :EndpointHandler =
+let changeDaneAdresowe (handle: Handlers.ChangeDaneAdresowe) (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
             let! cmd = ctx.BindForm<Commands.DaneAdresowe>()
@@ -44,7 +43,7 @@ let kontaktyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : En
             return ctx.WriteHtmlView(Kontakty.Form details.Kontakty teczka)
         }
 
-let changeKontakty (handle: CommandHandlers.ChangeKontakty) (teczka: int64) :EndpointHandler =
+let changeKontakty (handle: Handlers.ChangeKontakty) (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
             let! cmd = ctx.BindForm<Commands.Kontakty>()
@@ -66,7 +65,7 @@ let beneficjenciEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) 
             return ctx.WriteHtmlView(Beneficjenci.Form details.Beneficjenci teczka)
         }
 
-let changeBeneficjenci (handle: CommandHandlers.ChangeBeneficjenci) (teczka: int64) :EndpointHandler =
+let changeBeneficjenci (handle: Handlers.ChangeBeneficjenci) (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
             let! cmd = ctx.BindForm<Commands.Beneficjenci>()
@@ -80,6 +79,10 @@ let dokumenty (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : Endpo
             let! details = readDetailsBy teczka
             return ctx.WriteHtmlView(Dokumenty.View details.Dokumenty teczka)
         }
+        
+let downloadFile (handle: Handlers.GenerateDownloadUri) (teczka: int64) (fileName:string): EndpointHandler =
+    let uri = handle (teczka, fileName)
+    redirectTo (uri.ToString()) false
 
 let dokumentyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
@@ -88,24 +91,75 @@ let dokumentyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : E
             return ctx.WriteHtmlView(Dokumenty.Form details.Dokumenty teczka)
         }
 
-let changeDokumenty (handle: CommandHandlers.ChangeDokumenty) (teczka: int64) :EndpointHandler =
+let changeDokumenty (saveDocument: DocumentHandlers.SaveFile) (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
             let! cmd = ctx.BindForm<Commands.Dokumenty>()
-            do! handle(teczka, cmd)
-            return ctx.WriteHtmlView(Dokumenty.View (cmd |> ReadModels.Dokumenty.FromCommand) teczka)
+            let wniosek = ctx.Request.Form.Files.Item $"{Wniosek}" |> Option.ofObj
+            let umowa = ctx.Request.Form.Files.Item $"{Umowa}" |> Option.ofObj
+            let rodo = ctx.Request.Form.Files.Item $"{RODO}" |> Option.ofObj
+            let odwiedziny = ctx.Request.Form.Files.Item $"{Odwiedziny}" |> Option.ofObj
+            let upowaznienie = ctx.Request.Form.Files.Item $"{UpowaznienieDoOdbioru}" |> Option.ofObj
+            
+            do! saveDocument(teczka, {
+                Date = cmd.WniosekDate
+                Type = Wniosek
+                ContentStream = wniosek |> Option.map(_.OpenReadStream())
+                FileName = wniosek |> Option.map _.FileName |> Option.orElse cmd.Wniosek
+            })
+            do! saveDocument(teczka, {
+                Date = cmd.RODODate
+                Type = RODO
+                ContentStream = rodo |> Option.map(_.OpenReadStream())
+                FileName = rodo |> Option.map(_.FileName) |> Option.orElse cmd.RODO
+            })
+            do! saveDocument(teczka, {
+                Date = cmd.OdwiedzinyDate
+                Type = Odwiedziny
+                ContentStream = odwiedziny |> Option.map(_.OpenReadStream())
+                FileName = odwiedziny |> Option.map(_.FileName) |> Option.orElse cmd.Odwiedziny
+            })
+            do! saveDocument(teczka, {
+                Date = cmd.UpowaznienieDoOdbioruDate
+                Type = UpowaznienieDoOdbioru
+                ContentStream = upowaznienie |> Option.map(_.OpenReadStream())
+                FileName = upowaznienie |> Option.map(_.FileName) |> Option.orElse cmd.UpowaznienieDoOdbioru
+            })
+            do! saveDocument(teczka, {
+                Date = cmd.UmowaDate
+                Type = Umowa
+                ContentStream = umowa |> Option.map(_.OpenReadStream())
+                FileName = umowa |> Option.map(_.FileName) |> Option.orElse cmd.Umowa
+            })
+            let documents: Document list = [
+                {
+                    Date = cmd.WniosekDate
+                    FileName = wniosek |> Option.map _.FileName |> Option.orElse cmd.Wniosek
+                    Type = Wniosek
+                }
+                {
+                    Date = cmd.UmowaDate
+                    FileName = umowa |> Option.map _.FileName |> Option.orElse cmd.Umowa
+                    Type = Umowa
+                }
+                {
+                    Date = cmd.OdwiedzinyDate
+                    FileName = odwiedziny |> Option.map _.FileName |> Option.orElse cmd.Odwiedziny
+                    Type = Odwiedziny
+                }
+                {
+                    Date = cmd.RODODate
+                    FileName = rodo |> Option.map _.FileName |> Option.orElse cmd.RODO
+                    Type = RODO
+                }
+                {
+                    Date = cmd.UpowaznienieDoOdbioruDate
+                    FileName = upowaznienie |> Option.map _.FileName |> Option.orElse cmd.UpowaznienieDoOdbioru
+                    Type = UpowaznienieDoOdbioru
+                }
+            ]
+            return ctx.WriteHtmlView(Dokumenty.View documents teczka)
         }
-        
-let uploadWniosek (handle: CommandHandlers.UploadDocument) (teczka: int64) :EndpointHandler =
-    fun ctx -> task {
-        match ctx.TryGetFirstFile with
-        | Some file ->
-            do! handle (teczka, { Name = file.FileName; ContentStream = file.OpenReadStream() })
-            return! ctx.WriteHtmlString ("OK")
-        | None ->
-            ctx.SetStatusCode(StatusCodes.Status400BadRequest)
-            return! ctx.WriteHtmlString ("Błąd")
-    }
         
 let zrodlaZywnosci (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
@@ -121,7 +175,7 @@ let zrodlaZywnosciEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64
             return ctx.WriteHtmlView(ZrodlaZywnosci.Form details.ZrodlaZywnosci teczka)
         }
 
-let changeZrodlaZywnosci (handle: CommandHandlers.ChangeZrodlaZywnosci) (teczka: int64) :EndpointHandler =
+let changeZrodlaZywnosci (handle: Handlers.ChangeZrodlaZywnosci) (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
             let! cmd = ctx.BindForm<Commands.ZrodlaZywnosci>()
@@ -143,7 +197,7 @@ let adresyKsiegowosciEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: in
             return ctx.WriteHtmlView(AdresyKsiegowosci.Form details.AdresyKsiegowosci teczka)
         }
 
-let changeAdresyKsiegowosci (handle: CommandHandlers.ChangeAdresyKsiegowosci) (teczka: int64): EndpointHandler =
+let changeAdresyKsiegowosci (handle: Handlers.ChangeAdresyKsiegowosci) (teczka: int64): EndpointHandler =
     fun ctx ->
         task {
             let! cmd = ctx.BindForm<Commands.AdresyKsiegowosci>()
@@ -165,7 +219,7 @@ let warunkiPomocyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64)
             return ctx.WriteHtmlView(WarunkiPomocy.Form details.WarunkiPomocy teczka)
         }
         
-let changeWarunkiPomocy (handle: CommandHandlers.ChangeWarunkiPomocy) (teczka: int64): EndpointHandler =
+let changeWarunkiPomocy (handle: Handlers.ChangeWarunkiPomocy) (teczka: int64): EndpointHandler =
     fun ctx ->
         task {
             let! cmd = ctx.BindForm<Commands.WarunkiPomocy>()
@@ -184,6 +238,7 @@ let Endpoints (dependencies: Dependencies) =
             routef "/{%d}/beneficjenci/edit" (beneficjenciEdit dependencies.ReadOrganizationDetailsBy)
             routef "/{%d}/dokumenty" (dokumenty dependencies.ReadOrganizationDetailsBy)
             routef "/{%d}/dokumenty/edit" (dokumentyEdit dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/dokumenty/{%s}" (downloadFile dependencies.GenerateDownloadUri)
             routef "/{%d}/zrodla-zywnosci" (zrodlaZywnosci dependencies.ReadOrganizationDetailsBy)
             routef "/{%d}/zrodla-zywnosci/edit" (zrodlaZywnosciEdit dependencies.ReadOrganizationDetailsBy)
             routef "/{%d}/adresy-ksiegowosci" (adresyKsiegowosci dependencies.ReadOrganizationDetailsBy)
@@ -195,8 +250,7 @@ let Endpoints (dependencies: Dependencies) =
           routef "/{%d}/dane-adresowe" (changeDaneAdresowe dependencies.ChangeDaneAdresowe)
           routef "/{%d}/kontakty" (changeKontakty dependencies.ChangeKontakty)
           routef "/{%d}/beneficjenci" (changeBeneficjenci dependencies.ChangeBeneficjenci)
-          routef "/{%d}/dokumenty" (changeDokumenty dependencies.ChangeDokumenty)
-          routef "/{%d}/dokumenty/wniosek" (uploadWniosek dependencies.UploadDocument)
+          routef "/{%d}/dokumenty" (changeDokumenty dependencies.SaveDocument)
           routef "/{%d}/zrodla-zywnosci" (changeZrodlaZywnosci dependencies.ChangeZrodlaZywnosci)
           routef "/{%d}/adresy-ksiegowosci" (changeAdresyKsiegowosci dependencies.ChangeAdresyKsiegowosci)
           routef "/{%d}/warunki-pomocy" (changeWarunkiPomocy dependencies.ChangeWarunkiPomocy)

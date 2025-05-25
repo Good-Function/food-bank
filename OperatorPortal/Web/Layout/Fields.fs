@@ -34,6 +34,7 @@ let activeEditableHeader (title: string) (formPath: string) =
 
             span (
                 hxPut = formPath,
+                hxEncoding = "multipart/form-data",
                 hxTarget = "closest article",
                 hxSwap = "outerHTML"
             ) {
@@ -75,12 +76,9 @@ let booleanField (labelText: string) (value: bool) (name: string) =
         }
     }
     
-let dateField (labelText: string) (value: DateOnly option) (name: string) =
+let dateField (value: DateOnly option) (name: string) =
     let value = value |> function | Some date -> date.ToString "yyyy-MM-dd" | _ -> ""
-    p () {
-        label () { b () { labelText } }
-        input (value = value , name = name, type'="date")
-    }
+    input (value = value , name = name, type'="date", style="padding: 5px; margin: 0; height: 40px;")
 
 let readonlyField (labelText: string) (value: string) =
     p () {

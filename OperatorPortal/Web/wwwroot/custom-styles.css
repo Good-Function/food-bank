@@ -112,3 +112,11 @@ tr > td:first-child {
     animation-name: easeIn;
     animation-duration: .5s;
 }
+
+.in-table-file-input [role="button"], [type="button"], [type="file"]::file-selector-button, [type="reset"], [type="submit"], button {
+    font-size: .7rem !important;
+    padding: .2rem .5rem !important;
+}
+.in-table-file-input {
+    font-size: .7rem !important;
+}

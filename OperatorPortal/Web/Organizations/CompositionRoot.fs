@@ -9,14 +9,14 @@ open Organizations.Database
 type Dependencies =
     { ReadOrganizationSummaries: ReadOrganizationSummaries
       ReadOrganizationDetailsBy: ReadOrganizationDetailsBy
-      ChangeDaneAdresowe: CommandHandlers.ChangeDaneAdresowe
-      ChangeKontakty: CommandHandlers.ChangeKontakty
-      ChangeBeneficjenci: CommandHandlers.ChangeBeneficjenci
-      ChangeDokumenty: CommandHandlers.ChangeDokumenty
-      UploadDocument: CommandHandlers.UploadDocument
-      ChangeAdresyKsiegowosci: CommandHandlers.ChangeAdresyKsiegowosci
-      ChangeZrodlaZywnosci: CommandHandlers.ChangeZrodlaZywnosci
-      ChangeWarunkiPomocy: CommandHandlers.ChangeWarunkiPomocy
+      ChangeDaneAdresowe: Handlers.ChangeDaneAdresowe
+      ChangeKontakty: Handlers.ChangeKontakty
+      ChangeBeneficjenci: Handlers.ChangeBeneficjenci
+      SaveDocument: DocumentHandlers.SaveFile
+      GenerateDownloadUri: Handlers.GenerateDownloadUri
+      ChangeAdresyKsiegowosci: Handlers.ChangeAdresyKsiegowosci
+      ChangeZrodlaZywnosci: Handlers.ChangeZrodlaZywnosci
+      ChangeWarunkiPomocy: Handlers.ChangeWarunkiPomocy
       Import: CreateOrganizationCommandHandler.Import }
 
 let build (connectDb: unit -> Async<IDbConnection>, blobServiceClient: BlobServiceClient) : Dependencies =
@@ -25,8 +25,10 @@ let build (connectDb: unit -> Async<IDbConnection>, blobServiceClient: BlobServi
       ChangeDaneAdresowe = OrganizationsDao.changeDaneAdresowe connectDb
       ChangeKontakty = OrganizationsDao.changeKontakty connectDb
       ChangeBeneficjenci = OrganizationsDao.changeBeneficjenci connectDb
-      ChangeDokumenty = OrganizationsDao.changeDokumenty connectDb
-      UploadDocument = BlobStorage.upload blobServiceClient
+      SaveDocument = DocumentHandlers.saveDocumentHandler
+                        (BlobStorage.upload blobServiceClient)
+                        (OrganizationsDao.saveDocMetadata connectDb)
+      GenerateDownloadUri = BlobStorage.generateDownloadUri blobServiceClient
       ChangeAdresyKsiegowosci = OrganizationsDao.changeAdresyKsiegowosci connectDb
       ChangeZrodlaZywnosci = OrganizationsDao.changeZrodlaZywnosci connectDb
       ChangeWarunkiPomocy = OrganizationsDao.changeWarunkiPomocy connectDb

@@ -1,8 +1,8 @@
 module Tests.Setup
 
 open System
+open DotNet.Testcontainers.Builders
 open Testcontainers.PostgreSql
-open Testcontainers.Azurite
 open Xunit
 
 type Setup() =
@@ -16,17 +16,16 @@ type Setup() =
                 .WithEnvironment("POSTGRES_DB", "food_bank")
                 .WithPortBinding(5432, false)
                 .Build()
-
         let azurite =
-            AzuriteBuilder()
-                .WithReuse(true)
+              ContainerBuilder()
                 .WithImage("mcr.microsoft.com/azure-storage/azurite:latest")
                 .WithName("azurite")
                 .WithPortBinding(10000, 10000)
+                .WithReuse(true)
                 .Build()
 
-        postgres.StartAsync() |> Async.AwaitTask |> Async.RunSynchronously
         azurite.StartAsync() |> Async.AwaitTask |> Async.RunSynchronously
+        postgres.StartAsync() |> Async.AwaitTask |> Async.RunSynchronously
 
         let code = Migrations.main [||]
         code |> ignore

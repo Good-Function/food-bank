@@ -29,12 +29,21 @@ type Kontakty =
 
 [<CLIMutable>]
 type Dokumenty =
-    { Wniosek: System.DateOnly option
-      UmowaZDn: System.DateOnly option
-      UmowaRODO: System.DateOnly option
-      KartyOrganizacjiData: System.DateOnly option
-      OstatnieOdwiedzinyData: System.DateOnly option
-      DataUpowaznieniaDoOdbioru: System.DateOnly option }
+    { Wniosek: string option
+      WniosekDate: System.DateOnly option
+      DeleteWniosek: string option
+      Umowa: string option
+      UmowaDate: System.DateOnly option
+      DeleteUmowa: string option
+      RODO: string option
+      RODODate: System.DateOnly option
+      DeleteRODO: string option
+      Odwiedziny: string option
+      OdwiedzinyDate: System.DateOnly option
+      DeleteOdwiedziny: string option
+      UpowaznienieDoOdbioru: string option
+      UpowaznienieDoOdbioruDate: System.DateOnly option
+      DeleteUpowaznienieDoOdbioru: string option }
 
 [<CLIMutable>]
 type Beneficjenci =
@@ -82,8 +91,3 @@ type NewOrganization =
       Beneficjenci: Beneficjenci
       Dokumenty: Dokumenty
       WarunkiPomocy: WarunkiPomocy }
-
-type DocumentUpload = {
-    ContentStream: Stream
-    Name: string
-}

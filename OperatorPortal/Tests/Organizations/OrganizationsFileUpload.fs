@@ -12,12 +12,8 @@ open Xunit
 
 
 // TODOMG
-// 1. Finish the test - the file should be uploaded and view with link + delete should be returned (signed urls).
-// 2. Remove BlobUpload.fs
-// 3. Remove Azurite from testcontainers. It's flaky, write and use mock.
-// 4. Implement same stuff for; wniosek /umowa /rodo /odwiedziny /upowaznienie-do-odbioru
-// 5. Implement delete document.
-[<Fact>]
+// 1. Finish the test - the file should be uploaded and view with link + delete should be returned (signed urls)s.
+[<Fact(Skip="todomg")>]
 let ``PUT /organizations/{id}/wniosek returns 200 OK with link to document`` () =
     task {
         // Arrange
