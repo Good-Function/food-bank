@@ -1,12 +1,21 @@
 module Organizations.Database.OrganizationsDao
 
+open System
 open System.Data
 open Organizations.Application
+open Organizations.Application.DocumentType
 open Organizations.Application.ReadModels
+open Organizations.Database.DateOnlyCoder
 open Organizations.Domain.Organization
 open PostgresPersistence.DapperFsharp
 open Organizations.Application.Commands
+open Thoth.Json.Net
 open Web.Organizations.Database.OrganizationRow
+
+let toDb (opt: 'a option) =
+    match opt with
+    | Some x -> x
+    | None -> null
 
 let searchOrgsSql sortBy dir = $"""
 SELECT 
@@ -112,6 +121,31 @@ WHERE Teczka = @Teczka;""" {|
                              Beneficjenci = beneficjenci.Beneficjenci
                              |}
     }
+
+let saveDocMetadata (connectDB: unit -> Async<IDbConnection>) : DocumentHandlers.SaveDocMetadata =
+    fun (teczkaId, metadata) ->
+        async {
+            use! db = connectDB()
+            let jsonPropName =
+                match metadata.Type with
+                | Odwiedziny -> "Odwiedziny"
+                | Umowa -> "Umowa"
+                | RODO -> "Rodo"
+                | UpowaznienieDoOdbioru -> "UpowaznienieDoOdbioru"
+                | Wniosek -> "Wniosek"
+            do! db.Execute $"""
+UPDATE organizacje
+SET Documents = jsonb_set(
+    Documents,
+    '{{{jsonPropName}}}',
+    @Jsonb::jsonb,
+    true
+)
+WHERE Teczka = @Teczka; """ {|
+                                Teczka = teczkaId
+                                Jsonb = Encode.Auto.toString(0, {|Date= metadata.Date; FileName = metadata.FileName |}, CaseStrategy.PascalCase, Extra.empty |> (Extra.withCustom DateOnlyCodec.encode DateOnlyCodec.decode) )
+                            |}
+        }
     
 let changeDokumenty (connectDB: unit -> Async<IDbConnection>) (teczkaId: TeczkaId, dokumenty: Dokumenty) =
     async {

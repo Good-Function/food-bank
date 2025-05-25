@@ -79,6 +79,7 @@
       <Content Include="Organizations\Database\sample.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <Compile Include="Organizations\Database\DateOnlyCoder.fs" />
       <Compile Include="Organizations\Database\OrganizationRow.fs" />
       <Compile Include="Organizations\Database\OrganizationsDao.fs" />
       <Compile Include="Organizations\Templates\Formatters.fs" />

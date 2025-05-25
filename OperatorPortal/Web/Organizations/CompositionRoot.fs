@@ -12,9 +12,7 @@ type Dependencies =
       ChangeDaneAdresowe: Handlers.ChangeDaneAdresowe
       ChangeKontakty: Handlers.ChangeKontakty
       ChangeBeneficjenci: Handlers.ChangeBeneficjenci
-      ChangeDokumenty: Handlers.ChangeDokumenty
-      // UploadWniosek: Handlers.UploadWniosek
-      // DeleteDocument: Handlers.DeleteDocument
+      SaveDocument: DocumentHandlers.SaveFile
       GenerateDownloadUri: Handlers.GenerateDownloadUri
       ChangeAdresyKsiegowosci: Handlers.ChangeAdresyKsiegowosci
       ChangeZrodlaZywnosci: Handlers.ChangeZrodlaZywnosci
@@ -27,13 +25,9 @@ let build (connectDb: unit -> Async<IDbConnection>, blobServiceClient: BlobServi
       ChangeDaneAdresowe = OrganizationsDao.changeDaneAdresowe connectDb
       ChangeKontakty = OrganizationsDao.changeKontakty connectDb
       ChangeBeneficjenci = OrganizationsDao.changeBeneficjenci connectDb
-      ChangeDokumenty = OrganizationsDao.changeDokumenty connectDb
-      // UploadWniosek = DocumentHandlers.uploadWniosekHandler
-      //                      (OrganizationsDao.saveWniosekDocumentMetadata connectDb)
-      //                      (BlobStorage.upload blobServiceClient)
-      // DeleteDocument = DocumentHandlers.deleteDocumentHandler
-      //                      (OrganizationsDao.deleteDocumentMetadata connectDb)
-      //                      (BlobStorage.delete blobServiceClient)
+      SaveDocument = DocumentHandlers.saveDocumentHandler
+                        (BlobStorage.upload blobServiceClient)
+                        (OrganizationsDao.saveDocMetadata connectDb)
       GenerateDownloadUri = BlobStorage.generateDownloadUri blobServiceClient
       ChangeAdresyKsiegowosci = OrganizationsDao.changeAdresyKsiegowosci connectDb
       ChangeZrodlaZywnosci = OrganizationsDao.changeZrodlaZywnosci connectDb

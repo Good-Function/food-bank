@@ -1,20 +1,20 @@
 module Organizations.BlobStorage
 
 open System
-open System.IO
 open Azure.Storage.Sas
 open Azure.Storage.Blobs
 open Organizations.Application
 open Organizations.Application.DocumentHandlers
 
-let upload (serviceClient: BlobServiceClient) (teczkaId: Commands.TeczkaId, fileName: FileName, stream: Stream) =
-    async {
-        let containerClient = serviceClient.GetBlobContainerClient $"{teczkaId}"
-        let! _ = containerClient.CreateIfNotExistsAsync() |> Async.AwaitTask
-        let blobClient = containerClient.GetBlobClient fileName
-        let! _ = blobClient.UploadAsync(stream, true) |> Async.AwaitTask
-        return ()
-    }
+let upload (serviceClient: BlobServiceClient): UploadBlob =
+    fun (teczkaId, uploadDocument) ->
+        async {
+            let containerClient = serviceClient.GetBlobContainerClient $"{teczkaId}"
+            let! _ = containerClient.CreateIfNotExistsAsync() |> Async.AwaitTask
+            let blobClient = containerClient.GetBlobClient uploadDocument.FileName
+            let! _ = blobClient.UploadAsync(uploadDocument.ContentStream, true) |> Async.AwaitTask
+            return ()
+        }
     
 let delete (serviceClient: BlobServiceClient) (teczkaId: Commands.TeczkaId, fileName: FileName) =
     async {

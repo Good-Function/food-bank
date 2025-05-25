@@ -1,13 +1,11 @@
 module Organizations.SectionsRouter
 
-open Microsoft.AspNetCore.Http
 open Organizations.Application
 open Organizations.Application.DocumentType
 open Organizations.Templates
 open Oxpecker
 open Organizations.Application.ReadModels
 open Organizations.CompositionRoot
-open HttpContextExtensions
 
 let daneAdresowe (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
@@ -93,13 +91,7 @@ let dokumentyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : E
             return ctx.WriteHtmlView(Dokumenty.Form details.Dokumenty teczka)
         }
 
-let changeDokumenty (
-    saveWniosek: DocumentHandlers.SaveFile,
-    saveRODO: DocumentHandlers.SaveFile,
-    saveUpowaznienie: DocumentHandlers.SaveFile,
-    saveUmowa: DocumentHandlers.SaveFile,
-    saveOdwiedziny: DocumentHandlers.SaveFile
-    ) (teczka: int64) :EndpointHandler =
+let changeDokumenty (saveDocument: DocumentHandlers.SaveFile) (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
             let! cmd = ctx.BindForm<Commands.Dokumenty>()
@@ -109,35 +101,35 @@ let changeDokumenty (
             let odwiedziny = ctx.Request.Form.Files.Item $"{Odwiedziny}" |> Option.ofObj
             let upowaznienie = ctx.Request.Form.Files.Item $"{UpowaznienieDoOdbioru}" |> Option.ofObj
             
-            do! saveWniosek(teczka, {
+            do! saveDocument(teczka, {
                 Date = cmd.WniosekDate
                 Type = Wniosek
                 ContentStream = wniosek |> Option.map(_.OpenReadStream())
-                FileName = wniosek |> Option.map(_.FileName)
+                FileName = wniosek |> Option.map _.FileName |> Option.orElse cmd.Wniosek
             })
-            do! saveRODO(teczka, {
+            do! saveDocument(teczka, {
                 Date = cmd.RODODate
                 Type = RODO
                 ContentStream = rodo |> Option.map(_.OpenReadStream())
-                FileName = rodo |> Option.map(_.FileName)
+                FileName = rodo |> Option.map(_.FileName) |> Option.orElse cmd.RODO
             })
-            do! saveOdwiedziny(teczka, {
+            do! saveDocument(teczka, {
                 Date = cmd.OdwiedzinyDate
                 Type = Odwiedziny
                 ContentStream = odwiedziny |> Option.map(_.OpenReadStream())
-                FileName = odwiedziny |> Option.map(_.FileName)
+                FileName = odwiedziny |> Option.map(_.FileName) |> Option.orElse cmd.Odwiedziny
             })
-            do! saveUpowaznienie(teczka, {
-                Date = cmd.WniosekDate
+            do! saveDocument(teczka, {
+                Date = cmd.UpowaznienieDoOdbioruDate
                 Type = UpowaznienieDoOdbioru
                 ContentStream = upowaznienie |> Option.map(_.OpenReadStream())
-                FileName = upowaznienie |> Option.map(_.FileName)
+                FileName = upowaznienie |> Option.map(_.FileName) |> Option.orElse cmd.UpowaznienieDoOdbioru
             })
-            do! saveUmowa(teczka, {
+            do! saveDocument(teczka, {
                 Date = cmd.UmowaDate
                 Type = Umowa
                 ContentStream = umowa |> Option.map(_.OpenReadStream())
-                FileName = umowa |> Option.map(_.FileName)
+                FileName = umowa |> Option.map(_.FileName) |> Option.orElse cmd.Umowa
             })
             
             return ctx.WriteHtmlString "OK"
@@ -232,7 +224,7 @@ let Endpoints (dependencies: Dependencies) =
           routef "/{%d}/dane-adresowe" (changeDaneAdresowe dependencies.ChangeDaneAdresowe)
           routef "/{%d}/kontakty" (changeKontakty dependencies.ChangeKontakty)
           routef "/{%d}/beneficjenci" (changeBeneficjenci dependencies.ChangeBeneficjenci)
-          // routef "/{%d}/dokumenty" (changeDokumenty dependencies.ChangeDokumenty)
+          routef "/{%d}/dokumenty" (changeDokumenty dependencies.SaveDocument)
           routef "/{%d}/zrodla-zywnosci" (changeZrodlaZywnosci dependencies.ChangeZrodlaZywnosci)
           routef "/{%d}/adresy-ksiegowosci" (changeAdresyKsiegowosci dependencies.ChangeAdresyKsiegowosci)
           routef "/{%d}/warunki-pomocy" (changeWarunkiPomocy dependencies.ChangeWarunkiPomocy)
