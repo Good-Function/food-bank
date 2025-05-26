@@ -233,6 +233,10 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
               name: 'BlobStorageConnectionString'
               secretRef: 'blobstorageconnectionref'
             }
+            {
+              name: 'ASPNETCORE_ENVIRONMENT'
+              value: 'Production'
+            }
           ]
         }
       ]
