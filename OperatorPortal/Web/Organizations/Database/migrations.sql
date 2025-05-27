@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS  organizacje;
 CREATE TABLE IF NOT EXISTS organizacje
 (
     Teczka                              BIGINT CONSTRAINT organizacje_pk PRIMARY KEY,
