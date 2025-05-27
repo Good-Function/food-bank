@@ -78,24 +78,29 @@ main {
     position: relative;
 }
 
-thead th {
-    position: sticky;
-    top: 0;
-    z-index: 1;
+.big-table {
+    table-layout:fixed;
+    
+    thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+    
+    thead th:first-child {
+        left: 0;
+        position: sticky;
+        z-index: 2;
+    }
+    
+    tr > td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        background-color: var(--pico-background-color) !important;
+    }
 }
 
-thead th:first-child {
-    left: 0;
-    position: sticky;
-    z-index: 2;
-}
-
-tr > td:first-child {
-    position: sticky;
-    left: 0;
-    z-index: 1;
-    background-color: var(--pico-background-color) !important;
-}
 
 .htmx-indicator svg {
     height: 100%;

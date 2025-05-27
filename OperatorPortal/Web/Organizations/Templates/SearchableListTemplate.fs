@@ -53,10 +53,10 @@ let Template (filter: Filter) =
             value = filter.searchTerm,
             id = "OrganizationSearch",
             style = "transition:none;",
-            title = "Szukaj po: Teczka, Nazwa placówki",
+            title = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxGet = "/organizations/list",
             hxInclude = "[name='sort'], [name='dir']",
-            placeholder = "Szukaj po teczce, nazwie placówki...",
+            placeholder = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxTrigger = "input changed delay:300ms, keyup[key=='Enter']",
             hxTarget = "#OrganizationsPage",
             hxPushUrl = "true"
@@ -64,10 +64,10 @@ let Template (filter: Filter) =
 
         small () {
             div (style = "overflow-x: scroll; max-height: 70vh") {
-                table (class' = "striped", style = "table-layout:fixed") {
+                table (class' = "striped big-table") {
                     thead () {
                         tr () {
-                            th (style = "width: 80px;") {
+                            th (style = "width: 82px;") {
                                 "Tecz." |> createSortableBy "Teczka"
                             }
                             th (style = "width: 290px;") { "Nazwa placówki" }
