@@ -1,5 +1,6 @@
 module Organizations.Templates.ZrodlaZywnosci
 
+open Layout
 open Organizations.Application
 open Layout.Fields
 open Oxpecker.ViewEngine
@@ -17,9 +18,11 @@ let View (zrodla: ReadModels.ZrodlaZywnosci) (teczka: int64) =
     }
 
 let Form (zrodla: ReadModels.ZrodlaZywnosci) (teczka: int64) =
+    let indicator = "ZrodlaZywnosciIndicator"
     form () {
         article (class' = "focus-dim") {
-            activeEditableHeader "Źródła żywności" $"/organizations/{teczka}/zrodla-zywnosci"
+            activeEditableHeader "Źródła żywności" $"/organizations/{teczka}/zrodla-zywnosci" indicator
+            Indicators.OverlaySpinner indicator
             booleanField "Sieci" zrodla.Sieci (nameof zrodla.Sieci)
             booleanField "Bazarki" zrodla.Bazarki (nameof zrodla.Bazarki)
             booleanField "Machfit" zrodla.Machfit (nameof zrodla.Machfit)

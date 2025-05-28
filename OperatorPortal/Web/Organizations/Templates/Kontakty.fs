@@ -1,5 +1,6 @@
 module Organizations.Templates.Kontakty
 
+open Layout
 open Organizations.Application
 open Layout.Fields
 open Oxpecker.ViewEngine
@@ -21,9 +22,11 @@ let View (kontakty: ReadModels.Kontakty) (teczka: int64) =
     }
 
 let Form (kontakty: ReadModels.Kontakty) (teczka: int64) =
+    let indicator = "KontaktySpinner"
     form () {
         article (class' = "focus-dim") {
-            activeEditableHeader "Kontakty" $"/organizations/{teczka}/kontakty"
+            activeEditableHeader "Kontakty" $"/organizations/{teczka}/kontakty" indicator
+            Indicators.OverlaySpinner indicator
             editField "www / facebook" kontakty.WwwFacebook (nameof kontakty.WwwFacebook)
             editField "Telefon" kontakty.Telefon (nameof kontakty.Telefon)
             editField "Przedstawiciel" kontakty.Przedstawiciel (nameof kontakty.Przedstawiciel)

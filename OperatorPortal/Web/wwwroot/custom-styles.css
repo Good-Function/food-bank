@@ -78,6 +78,18 @@ main {
     position: relative;
 }
 
+.htmx-indicator {
+    display: none;
+}
+
+.htmx-request .htmx-indicator {
+    display: flex;
+}
+
+.htmx-request.htmx-indicator {
+    display: flex;
+}
+
 .big-table {
     table-layout:fixed;
     
@@ -100,7 +112,6 @@ main {
         background-color: var(--pico-background-color) !important;
     }
 }
-
 
 .htmx-indicator svg {
     height: 100%;
