@@ -20,7 +20,7 @@ let editableHeader (title: string) (formPath: string) =
         }
     }
 
-let activeEditableHeader (title: string) (formPath: string) =
+let activeEditableHeader (title: string) (formPath: string) (indicator: string)=
      header (class' = "action-header") {
         span () { title }
         div (class' = "action-header-actions") {
@@ -36,6 +36,7 @@ let activeEditableHeader (title: string) (formPath: string) =
                 hxPut = formPath,
                 hxEncoding = "multipart/form-data",
                 hxTarget = "closest article",
+                hxIndicator = $"#{indicator}",
                 hxSwap = "outerHTML"
             ) {
                 Icons.Ok
