@@ -1,5 +1,6 @@
 module Organizations.Templates.DaneAdresowe
 
+open Layout
 open Organizations.Application
 open Oxpecker.ViewEngine
 open Layout.Fields
@@ -16,9 +17,11 @@ let View (adresy: ReadModels.DaneAdresowe) (teczka: int64) =
     }
 
 let Form (adresy: ReadModels.DaneAdresowe) (teczka: int64) =
+    let indicator = "DaneAdresoweSpinner"
     form () {
         article (class' = "focus-dim") {
-            activeEditableHeader "Dane adresowe" $"/organizations/{teczka}/dane-adresowe"
+            activeEditableHeader "Dane adresowe" $"/organizations/{teczka}/dane-adresowe" indicator
+            Indicators.OverlaySpinner indicator
             editField "Organizacja, która podpisała umowę" adresy.NazwaOrganizacjiPodpisujacejUmowe (nameof adresy.NazwaOrganizacjiPodpisujacejUmowe)
             editField "Adres rejestrowy" adresy.AdresRejestrowy (nameof adresy.AdresRejestrowy)
             editField "Placówka do której trafia żywność" adresy.NazwaPlacowkiTrafiaZywnosc (nameof adresy.NazwaPlacowkiTrafiaZywnosc)

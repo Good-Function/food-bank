@@ -74,9 +74,11 @@ let View (documents: Document list) (teczka: int64) =
     }
 
 let Form (documents: Document list) (teczka: int64) =
+    let spinner = "DokumentySpinner"
     form () {
         article (class' = "focus-dim") {
-            activeEditableHeader "Dokumenty" $"/organizations/{teczka}/dokumenty"
+            activeEditableHeader "Dokumenty" $"/organizations/{teczka}/dokumenty" spinner
+            Indicators.OverlaySpinner "DokumentySpinner"
             table(style="table-layout:fixed;") {
                 thead() {
                     tr() {
