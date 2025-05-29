@@ -1,5 +1,6 @@
 module Organizations.SectionsRouter
 
+open System
 open Organizations.Application
 open Organizations.Application.DocumentType
 open Organizations.Templates
@@ -82,7 +83,7 @@ let dokumenty (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : Endpo
         
 let downloadFile (handle: Handlers.GenerateDownloadUri) (teczka: int64) (fileName:string): EndpointHandler =
     let uri = handle (teczka, fileName)
-    redirectTo (uri.ToString()) false
+    redirectTo uri.AbsoluteUri false
 
 let dokumentyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
