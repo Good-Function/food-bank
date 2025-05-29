@@ -13,7 +13,8 @@ type Dependencies =
       ChangeKontakty: Handlers.ChangeKontakty
       ChangeBeneficjenci: Handlers.ChangeBeneficjenci
       SaveDocument: DocumentHandlers.SaveFile
-      GenerateDownloadUri: Handlers.GenerateDownloadUri
+      DeleteDocument: DocumentHandlers.DeleteFile
+      GenerateDownloadUri: DocumentHandlers.GenerateDownloadUri
       ChangeAdresyKsiegowosci: Handlers.ChangeAdresyKsiegowosci
       ChangeZrodlaZywnosci: Handlers.ChangeZrodlaZywnosci
       ChangeWarunkiPomocy: Handlers.ChangeWarunkiPomocy
@@ -28,6 +29,7 @@ let build (connectDb: unit -> Async<IDbConnection>, blobServiceClient: BlobServi
       SaveDocument = DocumentHandlers.saveDocumentHandler
                         (BlobStorage.upload blobServiceClient)
                         (OrganizationsDao.saveDocMetadata connectDb)
+      DeleteDocument = BlobStorage.delete blobServiceClient
       GenerateDownloadUri = BlobStorage.generateDownloadUri blobServiceClient
       ChangeAdresyKsiegowosci = OrganizationsDao.changeAdresyKsiegowosci connectDb
       ChangeZrodlaZywnosci = OrganizationsDao.changeZrodlaZywnosci connectDb

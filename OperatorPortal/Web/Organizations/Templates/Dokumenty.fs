@@ -23,7 +23,7 @@ let private documentEdit (doc: Document)=
             | Some name -> 
                 div(style="display: inline-block; height: 32px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100%;") {
                     input(type' = "hidden", name = $"{doc.Type}", value = $"{name}")
-                    a(hxGet = $"/fragments/file-input-after-delete?inputName={doc.Type}",
+                    a(hxGet = $"/fragments/file-input-after-delete?inputName={doc.Type}&fileName={name}",
                       hxTarget = "closest td",
                       style="width:32px;display:inline-block;cursor:pointer;") {
                         Icons.Delete

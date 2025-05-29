@@ -1,6 +1,6 @@
 module Organizations.SectionsRouter
 
-open System
+open Microsoft.AspNetCore.Http
 open Organizations.Application
 open Organizations.Application.DocumentType
 open Organizations.Templates
@@ -81,7 +81,7 @@ let dokumenty (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : Endpo
             return ctx.WriteHtmlView(Dokumenty.View details.Dokumenty teczka)
         }
         
-let downloadFile (handle: Handlers.GenerateDownloadUri) (teczka: int64) (fileName:string): EndpointHandler =
+let downloadFile (handle: DocumentHandlers.GenerateDownloadUri) (teczka: int64) (fileName:string): EndpointHandler =
     let uri = handle (teczka, fileName)
     redirectTo uri.AbsoluteUri false
 
@@ -91,73 +91,74 @@ let dokumentyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : E
             let! details = readDetailsBy teczka
             return ctx.WriteHtmlView(Dokumenty.Form details.Dokumenty teczka)
         }
+        
+let readFileByType<'T> (ctx: HttpContext) (docType: 'T) fallbackFileName =
+    let file = ctx.Request.Form.Files.Item $"{docType}" |> Option.ofObj
+    let fileName = file |> Option.map _.FileName |> Option.orElse fallbackFileName
+    file, fileName
 
-let changeDokumenty (saveDocument: DocumentHandlers.SaveFile) (teczka: int64) :EndpointHandler =
+let changeDokumenty (saveDocument: DocumentHandlers.SaveFile)
+                    (deleteDocument: DocumentHandlers.DeleteFile)
+                    (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
             let! cmd = ctx.BindForm<Commands.Dokumenty>()
-            let wniosek = ctx.Request.Form.Files.Item $"{Wniosek}" |> Option.ofObj
-            let umowa = ctx.Request.Form.Files.Item $"{Umowa}" |> Option.ofObj
-            let rodo = ctx.Request.Form.Files.Item $"{RODO}" |> Option.ofObj
-            let odwiedziny = ctx.Request.Form.Files.Item $"{Odwiedziny}" |> Option.ofObj
-            let upowaznienie = ctx.Request.Form.Files.Item $"{UpowaznienieDoOdbioru}" |> Option.ofObj
+            let readFile = readFileByType ctx
+            let wniosek, wniosekFileName = readFile Wniosek cmd.Wniosek       
+            let umowa, umowaFileName = readFile Umowa cmd.Umowa
+            let rodo, rodoFileName = readFile RODO cmd.RODO
+            let odwiedziny, odwiedzinyFileName = readFile Odwiedziny cmd.Odwiedziny
+            let upowaznienie, upowaznienieFileName = readFile UpowaznienieDoOdbioru cmd.UpowaznienieDoOdbioru
+            
+            do!
+                [
+                     cmd.DeleteOdwiedziny
+                     cmd.DeleteUmowa
+                     cmd.DeleteWniosek
+                     cmd.DeleteUpowaznienieDoOdbioru
+                     cmd.DeleteRODO
+                ] |> List.choose id
+                  |> List.map(fun fileName -> deleteDocument(teczka, fileName))
+                  |> Async.Parallel
+                  |> Async.Ignore    
             
             do! saveDocument(teczka, {
                 Date = cmd.WniosekDate
                 Type = Wniosek
                 ContentStream = wniosek |> Option.map(_.OpenReadStream())
-                FileName = wniosek |> Option.map _.FileName |> Option.orElse cmd.Wniosek
+                FileName = wniosekFileName
             })
             do! saveDocument(teczka, {
                 Date = cmd.RODODate
                 Type = RODO
                 ContentStream = rodo |> Option.map(_.OpenReadStream())
-                FileName = rodo |> Option.map(_.FileName) |> Option.orElse cmd.RODO
+                FileName = rodoFileName
             })
             do! saveDocument(teczka, {
                 Date = cmd.OdwiedzinyDate
                 Type = Odwiedziny
                 ContentStream = odwiedziny |> Option.map(_.OpenReadStream())
-                FileName = odwiedziny |> Option.map(_.FileName) |> Option.orElse cmd.Odwiedziny
+                FileName = odwiedzinyFileName
             })
             do! saveDocument(teczka, {
                 Date = cmd.UpowaznienieDoOdbioruDate
                 Type = UpowaznienieDoOdbioru
                 ContentStream = upowaznienie |> Option.map(_.OpenReadStream())
-                FileName = upowaznienie |> Option.map(_.FileName) |> Option.orElse cmd.UpowaznienieDoOdbioru
+                FileName = upowaznienieFileName
             })
             do! saveDocument(teczka, {
                 Date = cmd.UmowaDate
                 Type = Umowa
                 ContentStream = umowa |> Option.map(_.OpenReadStream())
-                FileName = umowa |> Option.map(_.FileName) |> Option.orElse cmd.Umowa
+                FileName = umowaFileName
             })
+            
             let documents: Document list = [
-                {
-                    Date = cmd.WniosekDate
-                    FileName = wniosek |> Option.map _.FileName |> Option.orElse cmd.Wniosek
-                    Type = Wniosek
-                }
-                {
-                    Date = cmd.UmowaDate
-                    FileName = umowa |> Option.map _.FileName |> Option.orElse cmd.Umowa
-                    Type = Umowa
-                }
-                {
-                    Date = cmd.OdwiedzinyDate
-                    FileName = odwiedziny |> Option.map _.FileName |> Option.orElse cmd.Odwiedziny
-                    Type = Odwiedziny
-                }
-                {
-                    Date = cmd.RODODate
-                    FileName = rodo |> Option.map _.FileName |> Option.orElse cmd.RODO
-                    Type = RODO
-                }
-                {
-                    Date = cmd.UpowaznienieDoOdbioruDate
-                    FileName = upowaznienie |> Option.map _.FileName |> Option.orElse cmd.UpowaznienieDoOdbioru
-                    Type = UpowaznienieDoOdbioru
-                }
+                { Date = cmd.WniosekDate; FileName = wniosekFileName; Type = Wniosek }
+                { Date = cmd.UmowaDate; FileName = umowaFileName; Type = Umowa }
+                { Date = cmd.OdwiedzinyDate; FileName = odwiedzinyFileName; Type = Odwiedziny }
+                { Date = cmd.RODODate; FileName = rodoFileName; Type = RODO}
+                { Date = cmd.UpowaznienieDoOdbioruDate; FileName = upowaznienieFileName; Type = UpowaznienieDoOdbioru }
             ]
             return ctx.WriteHtmlView(Dokumenty.View documents teczka)
         }
@@ -251,7 +252,7 @@ let Endpoints (dependencies: Dependencies) =
           routef "/{%d}/dane-adresowe" (changeDaneAdresowe dependencies.ChangeDaneAdresowe)
           routef "/{%d}/kontakty" (changeKontakty dependencies.ChangeKontakty)
           routef "/{%d}/beneficjenci" (changeBeneficjenci dependencies.ChangeBeneficjenci)
-          routef "/{%d}/dokumenty" (changeDokumenty dependencies.SaveDocument)
+          routef "/{%d}/dokumenty" (changeDokumenty dependencies.SaveDocument dependencies.DeleteDocument)
           routef "/{%d}/zrodla-zywnosci" (changeZrodlaZywnosci dependencies.ChangeZrodlaZywnosci)
           routef "/{%d}/adresy-ksiegowosci" (changeAdresyKsiegowosci dependencies.ChangeAdresyKsiegowosci)
           routef "/{%d}/warunki-pomocy" (changeWarunkiPomocy dependencies.ChangeWarunkiPomocy)

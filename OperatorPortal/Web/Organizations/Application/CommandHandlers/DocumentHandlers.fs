@@ -27,6 +27,7 @@ type DeleteOdwiedzinyMetadata = Commands.TeczkaId * DocumentMetadata -> Async<un
 type DeleteFile = Commands.TeczkaId * FileName -> Async<unit>
 type UploadBlob = Commands.TeczkaId * DocumentUpload -> Async<unit>
 type SaveFile = Commands.TeczkaId * Document -> Async<unit>
+type GenerateDownloadUri = Commands.TeczkaId * string -> Uri
 
 let saveDocumentHandler (upload: UploadBlob) (saveMetadata: SaveDocMetadata) : SaveFile =
     fun (teczkaId, document) -> async {

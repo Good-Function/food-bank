@@ -12,5 +12,5 @@ let View (fileInputName: string, fileName: string) =
             class' = "in-table-file-input"
         )
 
-        input (type' = "hidden", name = $"Delete{fileInputName}", value = fileName)
+        input (type' = "hidden", name = $"Delete{fileInputName}", value = $"{fileName}")
     }

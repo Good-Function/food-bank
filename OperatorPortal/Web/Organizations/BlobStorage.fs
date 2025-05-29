@@ -16,21 +16,23 @@ let upload (serviceClient: BlobServiceClient): UploadBlob =
             return ()
         }
     
-let delete (serviceClient: BlobServiceClient) (teczkaId: Commands.TeczkaId, fileName: FileName) =
-    async {
-         let containerClient = serviceClient.GetBlobContainerClient($"{teczkaId}")
-         let! _ = containerClient.DeleteBlobIfExistsAsync(fileName) |> Async.AwaitTask
-         return ()
-    }
+let delete (serviceClient: BlobServiceClient) : DeleteFile =
+    fun (teczkaId: Commands.TeczkaId, fileName: FileName) -> 
+        async {
+             let containerClient = serviceClient.GetBlobContainerClient($"{teczkaId}")
+             let! _ = containerClient.DeleteBlobIfExistsAsync(fileName) |> Async.AwaitTask
+             return ()
+        }
     
-let generateDownloadUri (serviceClient: BlobServiceClient) (teczkaId: Commands.TeczkaId, fileName:string): Uri =
-    let containerClient = serviceClient.GetBlobContainerClient($"{teczkaId}")
-    let blobClient = containerClient.GetBlobClient(fileName)
-    let sasBuilder = BlobSasBuilder(
-        BlobContainerName = $"{teczkaId}",
-        BlobName = fileName,
-        Resource = "b",
-        ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(3.0)
-    )
-    sasBuilder.SetPermissions(BlobSasPermissions.Read)
-    blobClient.GenerateSasUri(sasBuilder)
+let generateDownloadUri (serviceClient: BlobServiceClient) : GenerateDownloadUri =
+    fun (teczkaId: Commands.TeczkaId, fileName:string) ->
+        let containerClient = serviceClient.GetBlobContainerClient($"{teczkaId}")
+        let blobClient = containerClient.GetBlobClient(fileName)
+        let sasBuilder = BlobSasBuilder(
+            BlobContainerName = $"{teczkaId}",
+            BlobName = fileName,
+            Resource = "b",
+            ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(3.0)
+        )
+        sasBuilder.SetPermissions(BlobSasPermissions.Read)
+        blobClient.GenerateSasUri(sasBuilder)
