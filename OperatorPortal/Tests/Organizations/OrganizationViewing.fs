@@ -2,7 +2,7 @@ module OrganizationViewing
 
 open System
 open System.Net
-open DocumentFormat.OpenXml.Drawing.Wordprocessing
+open Organizations.Domain.FormaPrawna
 open Organizations.Domain.Identifiers
 open Organizations.Domain.Organization
 open Tests
@@ -132,8 +132,10 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
             $"{organization.IdentyfikatorEnova}"
             organization.NIP |> Nip.unwrap
             organization.Regon |> Regon.unwrap
-            organization.KrsNr |> Krs.unwrap
-            organization.FormaPrawna
+            organization.FormaPrawna.Rejestracja |> function
+                | WRejestrzeKRS krs -> Krs.unwrap krs
+                | PozaRejestrem nr -> nr
+            organization.FormaPrawna.Nazwa
         ]
         kontakty[0..10] |> should equal [
             organization.Kontakty.WwwFacebook

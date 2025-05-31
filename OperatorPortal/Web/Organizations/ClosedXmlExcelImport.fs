@@ -5,6 +5,7 @@ open System.IO
 open ClosedXML.Excel
 open FsToolkit.ErrorHandling
 open Organizations.Application.CreateOrganizationCommandHandler
+open Organizations.Domain
 open Organizations.Domain.Identifiers
 open Organizations.Domain.Organization
 
@@ -97,12 +98,14 @@ let mapRow (row: IXLRow): Result<Organization, string list> =
     let parseColumn (col: int) (parse: string -> Result<'T, 'E>): Result<'T, string> =
         let textValue = getCellText col row
         parse textValue |> Result.mapError(fun _ -> $"""Niepoprawna wartość: "%s{textValue}" w kolumnie [%s{expectedHeaders[col-1]}].""")
-
+    let formaPrawna = (getCellText 6 row)
+    let krs = (getCellText 5 row)
     let parsedColumns = validation {
         let! teczkaId = parseColumn 1 TeczkaId.parse
         and! nip = parseColumn 3 Nip.create
         and! regon = parseColumn 4 Regon.create
-        and! krs = parseColumn 5 Krs.create
+        and! formaPrawna = FormaPrawna.FormaPrawna.tryCreate(formaPrawna, krs)
+                           |> Result.mapError(fun _ -> $"""Niepoprawna wartość: "%s{krs}" w kolumnie [{expectedHeaders[4]}].""")
         and! opp = 7 |> toBool
         and! sieci = 31 |> toBool
         and! odbiorKrotkiTermin = 32 |> toBool
@@ -122,7 +125,7 @@ let mapRow (row: IXLRow): Result<Organization, string list> =
                   teczka = teczkaId
                   nip = nip
                   regon = regon
-                  krs = krs
+                  formaPrawna = formaPrawna
                   opp = opp
                   sieci = sieci
                   bazarki = bazarki
@@ -147,8 +150,7 @@ let mapRow (row: IXLRow): Result<Organization, string list> =
             IdentyfikatorEnova = row |> getCellText 2
             NIP = columns.nip
             Regon = columns.regon
-            KrsNr = columns.krs 
-            FormaPrawna = row |> getCellText 6
+            FormaPrawna = columns.formaPrawna
             OPP = columns.opp
             DaneAdresowe = {
                 NazwaOrganizacjiPodpisujacejUmowe = row |> getCellText 8

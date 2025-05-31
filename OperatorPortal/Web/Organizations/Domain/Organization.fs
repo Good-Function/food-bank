@@ -1,6 +1,7 @@
 module Organizations.Domain.Organization
 
 open System
+open Organizations.Domain.FormaPrawna
 open Organizations.Domain.Identifiers
 
 type DaneAdresowe =
@@ -24,19 +25,16 @@ type Kontakty =
       OsobaOdbierajacaZywnosc: string
       TelefonOsobyOdbierajacej: string }
 
-type Document = {
-    Date: DateOnly option
-    FileName: string option
-}
+type Document =
+    { Date: DateOnly option
+      FileName: string option }
 
-type Documents = {
-    Wniosek: Document
-    Umowa: Document
-    Rodo: Document
-    Odwiedziny: Document
-    UpowaznienieDoOdbioru: Document
-}
-
+type Documents =
+    { Wniosek: Document
+      Umowa: Document
+      Rodo: Document
+      Odwiedziny: Document
+      UpowaznienieDoOdbioru: Document }
 
 type Beneficjenci =
     { LiczbaBeneficjentow: int
@@ -70,8 +68,7 @@ type Organization =
       IdentyfikatorEnova: string
       NIP: Nip
       Regon: Regon
-      KrsNr: Krs
-      FormaPrawna: string // fundacja, stowarzyszenie, org koscielna
+      FormaPrawna: FormaPrawna
       OPP: bool // szczegóły: Organizacja użytku publicznego
       DaneAdresowe: DaneAdresowe
       Kontakty: Kontakty

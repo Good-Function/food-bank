@@ -45,11 +45,11 @@ let ``POST /organizations/import/upload returns info with how many rows were imp
         let value = (ringNode.Attribute "data-value").Value()
         let total = (ringNode.Attribute "data-max").Value()
         let errors = doc.CssSelect "li" |> List.map(_.InnerText())
-        value |> should equal "10"
+        value |> should equal "9"
         total |> should equal "11"
         errors |> should equal [
-            """Niepoprawna wartość: "nd" w kolumnie [krs/ nr w rejestrze]."""
             """Niepoprawna data: "wysłana 26.06.2024" w kolumnie [umowa z dnia]."""
+            """Niepoprawna wartość: "nd" w kolumnie [krs/ nr w rejestrze]."""
         ]
     }
 

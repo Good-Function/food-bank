@@ -67,6 +67,7 @@
     </ItemGroup>
     <ItemGroup>
       <Compile Include="Organizations\Domain\Identifiers.fs" />
+      <Compile Include="Organizations\Domain\FormaPrawna.fs" />
       <Compile Include="Organizations\Domain\Organization.fs" />
       <Compile Include="Organizations\Application\DocumentType.fs" />
       <Compile Include="Organizations\Application\Commands.fs" />

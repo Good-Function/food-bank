@@ -4,6 +4,7 @@ open System
 open System.Text.Json
 open Organizations.Application
 open Organizations.Application.ReadModels
+open Organizations.Domain.FormaPrawna
 open Organizations.Domain.Identifiers
 open Organizations.Domain.Organization
 
@@ -64,8 +65,10 @@ type OrganizationDetailsRow = {
             IdentyfikatorEnova = org.IdentyfikatorEnova
             NIP = org.NIP |> Nip.unwrap
             Regon = org.Regon |> Regon.unwrap
-            KrsNr = org.KrsNr |> Krs.unwrap
-            FormaPrawna = org.FormaPrawna
+            KrsNr = org.FormaPrawna.Rejestracja |> function
+                | PozaRejestrem nr -> nr
+                | WRejestrzeKRS krs -> Krs.unwrap krs
+            FormaPrawna = org.FormaPrawna.Nazwa
             OPP = org.OPP
             NazwaOrganizacjiPodpisujacejUmowe = org.DaneAdresowe.NazwaOrganizacjiPodpisujacejUmowe
             AdresRejestrowy = org.DaneAdresowe.AdresRejestrowy

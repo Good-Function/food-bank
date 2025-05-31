@@ -3,6 +3,7 @@ module Tests.Arranger
 open Bogus.Extensions.Poland
 open IdGen
 open System
+open Organizations.Domain.FormaPrawna
 open Organizations.Domain.Identifiers
 open Organizations.Domain.Organization
 open FsToolkit.ErrorHandling
@@ -25,8 +26,10 @@ let AnOrganization () : Organization =
       IdentyfikatorEnova = f.Random.Replace("##########")
       NIP = f.Company.Nip() |> Nip.create |> getOrThrow
       Regon = f.Company.Regon() |> Regon.create |> getOrThrow
-      KrsNr = f.Random.Replace("##########") |> Krs.create |> getOrThrow
-      FormaPrawna = f.PickRandomParam([| "Fundacja" |])
+      FormaPrawna = {
+          Nazwa = f.PickRandomParam([| "Fundacja" |])
+          Rejestracja = WRejestrzeKRS (f.Random.Replace("##########") |> Krs.create |> getOrThrow)
+      }
       OPP = f.Random.Bool()
       DaneAdresowe =
         { NazwaOrganizacjiPodpisujacejUmowe = f.Company.CompanyName()
