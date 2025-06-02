@@ -30,6 +30,7 @@ SELECT
     dostepnosc,
     osobadokontaktu,
     telefonosobykontaktowej,
+    beneficjenci,
     liczbabeneficjentow,
     kategoria,
     jsonb_extract_path_text(documents, 'Odwiedziny', 'Date')::date AS ostatnieodwiedzinydata

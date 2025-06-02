@@ -24,6 +24,7 @@ let Template (data: OrganizationSummary list) =
                 td () { row.TelefonOsobyKontaktowej }
                 td () { row.Dostepnosc }
                 td () { row.Kategoria }
+                td () { row.Beneficjenci }
                 td () { $"%i{row.LiczbaBeneficjentow}" }
                 td () { row.OstatnieOdwiedzinyData |> toDisplay }
             }

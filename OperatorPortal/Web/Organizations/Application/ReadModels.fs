@@ -15,6 +15,7 @@ type OrganizationSummary =
       Dostepnosc: string
       OsobaDoKontaktu: string
       TelefonOsobyKontaktowej: string
+      Beneficjenci: string
       LiczbaBeneficjentow: int
       Kategoria: string
       OstatnieOdwiedzinyData: DateOnly option }

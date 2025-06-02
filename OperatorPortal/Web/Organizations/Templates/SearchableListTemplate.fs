@@ -75,15 +75,24 @@ let Template (filter: Filter) =
                             th (style = "width: 200px;") {
                                 "Gmina/Dzielnica" |> createSortableBy "GminaDzielnica"
                             }
-                            th (style = "width: 150px;") { "Forma prawna" }
+                            th (style = "width: 150px;") {
+                                "Forma prawna" |> createSortableBy "FormaPrawna"
+                            }
                             th (style = "width: 200px;") { "Telefon" }
                             th (style = "width: 200px;") { "Email" }
                             th (style = "width: 200px;") { "Kontakt" }
                             th (style = "width: 200px;") { "Osoba do kontaktu" }
                             th (style = "width: 200px;") { "Tel. osoby kontaktowej" }
                             th (style = "width: 200px;") { "Dostępność" }
-                            th (style = "width: 200px;") { "Kategoria" }
-                            th (style = "width: 165px;") { "Liczba Beneficjentów" }
+                            th (style = "width: 200px;") {
+                                "Kategoria" |> createSortableBy "Kategoria"
+                            }
+                            th (style = "width: 200px;") {
+                                "Beneficjenci" |> createSortableBy "Beneficjenci"
+                            }
+                            th (style = "width: 165px;") {
+                                "Liczba Beneficjentów" |> createSortableBy "LiczbaBeneficjentow"
+                            }
                             th (style = "width: 150px;") {
                                 "Ostatnie odwiedziny" |> createSortableBy "OstatnieOdwiedzinyData"
                             }
