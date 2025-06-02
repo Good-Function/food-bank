@@ -15,7 +15,7 @@ open Organizations.Database.OrganizationsDao
 open FSharp.Data
 
 [<Fact>]
-let ``/ogranizations/summaries?search filters out and displays organization's most important data `` () =
+let ``/ogranizations/summaries?search filters out and displays organization's most important data`` () =
     task {
         // Arrange
         let org =  Arranger.AnOrganization()
@@ -46,8 +46,9 @@ let ``/ogranizations/summaries?search filters out and displays organization's mo
             dbSummary.TelefonOsobyKontaktowej |> should equal (summary |> Seq.item 9)
             dbSummary.Dostepnosc |> should equal (summary |> Seq.item 10)
             dbSummary.Kategoria |> should equal (summary |> Seq.item 11)
-            $"%i{dbSummary.LiczbaBeneficjentow}" |> should equal (summary |> Seq.item 12)
-            dbSummary.OstatnieOdwiedzinyData |> toDisplay |> should equal (summary |> Seq.item 13)
+            dbSummary.Beneficjenci |> should equal (summary |> Seq.item 12)
+            $"%i{dbSummary.LiczbaBeneficjentow}" |> should equal (summary |> Seq.item 13)
+            dbSummary.OstatnieOdwiedzinyData |> toDisplay |> should equal (summary |> Seq.item 14)
              ) 
     }
 
