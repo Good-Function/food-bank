@@ -1,0 +1,23 @@
+package views
+
+templ Base() {
+<!DOCTYPE html>
+<html data-theme="light">
+
+<head>
+	<script src="/static/htmx.min.js" hx-preserve="true"></script>
+	<link href="/static/pico.pumpkin.min.css" rel="stylesheet" hx-preserve="true" />
+</head>
+
+<body class="container">
+	<header>
+		<div style="display: flex; align-items: center; justify-content: center;">
+			<div></div><img src="/static/bzsoslogo.png" style="width:175px;" />
+		</div>
+		<hr />
+	</header>
+	@Home()
+</body>
+
+</html>
+}

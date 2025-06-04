@@ -25,7 +25,10 @@ func NewAPI() *API {
 }
 
 func registerRoutes(mux *http.ServeMux) {
-	mux.Handle("GET /ping", handlers.NewPingHandler())
+	fs := http.FileServer(http.Dir("./web/static"))
+	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
+
+	mux.Handle("GET /{$}", handlers.NewHomeHandler())
 }
 
 func (a *API) Start() {
