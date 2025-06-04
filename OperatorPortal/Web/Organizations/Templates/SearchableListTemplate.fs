@@ -1,10 +1,12 @@
 module Organizations.SearchableListTemplate
 
+open Layout
 open Layout.Navigation
 open Microsoft.AspNetCore.WebUtilities
 open Organizations.Application.ReadModels
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
+open Web.Layout.Dropdown
 open Web.Organizations
 open PageComposer
 
@@ -40,6 +42,33 @@ let Template (filter: Filter) =
                 | _ -> ""
             }
         }
+    let createFilterableSortableBy (labelText: string) =
+        let url = $"""/organizations/list{buildQueryForSorting ("LiczbaBeneficjentow", filter)}"""
+        div (style="display:flex;justify-content:space-between;") {
+            a (
+                hxGet = url,
+                href = url,
+                hxTarget = "#OrganizationsPage",
+                hxTrigger = "click",
+                hxPushUrl = "true",
+                style = "color:unset; text-decoration: none"
+            ) {
+                span (style="text-decoration: underline") { labelText }
+                span (style = "text-decoration: none;") {
+                    match filter.sortBy with
+                    | Some(sort, dir) when sort = "LiczbaBeneficjentow" && dir = Direction.Asc -> "▲"
+                    | Some(sort, _) when sort =  "LiczbaBeneficjentow" -> "▼"
+                    | _ -> ""
+                }
+            }
+            DropDown 24 Icons.FilterEmpty (div(style="width:165px;") {
+                InProgress.Component
+                label () { "Od" }
+                input (value = "", name = "", type'="number")
+                label () { "Do" }
+                input (value = "", name = "", type'="number")
+            })
+        }
         
     div (id = "OrganizationsPage") {
         match filter.sortBy with
@@ -63,7 +92,7 @@ let Template (filter: Filter) =
         )
 
         small () {
-            div (style = "overflow-x: scroll; max-height: 70vh") {
+            div (style = "overflow-x: scroll; height: 70vh;";) {
                 table (class' = "striped big-table") {
                     thead () {
                         tr () {
@@ -75,14 +104,14 @@ let Template (filter: Filter) =
                             th (style = "width: 200px;") {
                                 "Gmina/Dzielnica" |> createSortableBy "GminaDzielnica"
                             }
-                            th (style = "width: 150px;") {
+                            th (style = "width: 175px;") {
                                 "Forma prawna" |> createSortableBy "FormaPrawna"
                             }
                             th (style = "width: 200px;") { "Telefon" }
                             th (style = "width: 200px;") { "Email" }
                             th (style = "width: 200px;") { "Kontakt" }
-                            th (style = "width: 200px;") { "Osoba do kontaktu" }
-                            th (style = "width: 200px;") { "Tel. osoby kontaktowej" }
+                            th (style = "width: 200px;") { "Osoba" }
+                            th (style = "width: 200px;") { "Tel. osoby" }
                             th (style = "width: 200px;") { "Dostępność" }
                             th (style = "width: 200px;") {
                                 "Kategoria" |> createSortableBy "Kategoria"
@@ -90,11 +119,11 @@ let Template (filter: Filter) =
                             th (style = "width: 200px;") {
                                 "Beneficjenci" |> createSortableBy "Beneficjenci"
                             }
-                            th (style = "width: 165px;") {
-                                "Liczba Beneficjentów" |> createSortableBy "LiczbaBeneficjentow"
+                            th (style = "width: 155px;") {
+                                "Liczba B." |> createFilterableSortableBy
                             }
                             th (style = "width: 150px;") {
-                                "Ostatnie odwiedziny" |> createSortableBy "OstatnieOdwiedzinyData"
+                                "Odwiedzono" |> createSortableBy "OstatnieOdwiedzinyData"
                             }
                         }
                     }

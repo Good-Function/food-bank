@@ -1,4 +1,10 @@
 @import "ring-chart.css";
+@import "dropdown.css";
+@import "data-table.css";
+
+:root {
+    --pico-line-height: 1.25 !important;
+}
 
 main {
     padding-block: 0 !important;
@@ -46,27 +52,6 @@ main {
     height: 80px;
 }
 
-#ProfilePopoverTrigger {
-    anchor-name: --ProfilePopover; /* chrome popover */
-    background: none;
-    outline: none;
-    box-shadow: none;
-    border: none;
-    padding: 0;
-}
-
-#ProfilePopover {
-    margin: 0;
-    position-anchor: --ProfilePopover; /* chrome popover */
-    position-area: block-end span-inline-end; /* chrome popover */
-    inset: unset; /* firefox popover */
-    background-color: var(--pico-code-background-color);
-    border-radius: var(--pico-border-radius);
-    border: 0;
-    padding: var(--pico-spacing);
-    text-align: left;
-}
-
 @media screen and (max-width: 770px) {
     .bzsos-logo {
         display: none;
@@ -88,29 +73,6 @@ main {
 
 .htmx-request.htmx-indicator {
     display: flex;
-}
-
-.big-table {
-    table-layout:fixed;
-    
-    thead th {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
-    
-    thead th:first-child {
-        left: 0;
-        position: sticky;
-        z-index: 2;
-    }
-    
-    tr > td:first-child {
-        position: sticky;
-        left: 0;
-        z-index: 1;
-        background-color: var(--pico-background-color) !important;
-    }
 }
 
 .htmx-indicator svg {

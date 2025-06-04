@@ -77,7 +77,7 @@ let ``/ogranizations/summaries?search=xxx&sort=OstatnieOdwiedziny&dir=asc filter
         let indexOfOstatnieOdwiedziny = headersDoc.CssSelect("th")
                                         |> List.map _.InnerText()
                                         |> List.indexed
-                                        |> List.find(fun(_, text) -> text.Contains "Ostatnie odwiedziny")
+                                        |> List.find(fun(_, text) -> text.Contains "Odwiedzono")
                                         |> fst
         let summaries =
             doc.CssSelect "tbody tr"

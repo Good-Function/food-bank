@@ -1,0 +1,29 @@
+.big-table {
+    table-layout:fixed;
+
+    thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+    
+    th input {
+        height:20px;
+        font-weight: normal;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    thead th:first-child {
+        left: 0;
+        position: sticky;
+        z-index: 2;
+    }
+
+    tr > td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        background-color: var(--pico-background-color) !important;
+    }
+}

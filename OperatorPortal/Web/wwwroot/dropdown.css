@@ -1,0 +1,44 @@
+.dropdown {
+    display: inline-block;
+    position: relative;
+    outline: none;
+}
+
+.dropbtn {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.dropdown .dropdown-content {
+    position: absolute;
+    inset: 100% -100% auto auto;
+    background-color: var(--pico-code-background-color);
+    border-radius: var(--pico-border-radius);
+    border: 0;
+    padding: var(--pico-spacing);
+    text-align: left;
+    z-index: 100000;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.dropdown:focus-within .dropdown-content {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* mask to close menu by clicking on the button */
+.dropdown .db2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+    display: none;
+}
+.dropdown:focus .db2 {
+    display: inline-block;
+}

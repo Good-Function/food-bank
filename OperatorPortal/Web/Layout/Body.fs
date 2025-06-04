@@ -3,6 +3,7 @@ module Layout.Body
 open Layout
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
+open Web.Layout.Dropdown
 
 let Template (content: HtmlElement) (currentPath: Navigation.Page option) (userName: string) =
     body (class' = "container", hxBoost = true) {
@@ -12,10 +13,7 @@ let Template (content: HtmlElement) (currentPath: Navigation.Page option) (userN
                 Navigation.Template currentPath
                 div(style="display: inline-flex; flex-direction: column; vertical-align:top; text-align:right;") {   
                     div () {
-                        button(id="ProfilePopoverTrigger").attr("popovertarget", "ProfilePopover") {
-                            Icons.Profile
-                        }
-                        ProfilePopover.Template
+                        DropDown 40 Icons.Profile ProfilePopover.Template
                         ThemeToggler.Component
                     }
                     small(style="color: var(--pico-contrast-underline)") { userName }

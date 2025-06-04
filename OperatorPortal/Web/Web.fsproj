@@ -38,6 +38,7 @@
     <ItemGroup>
         <Compile Include="Layout\Icons\Icons.fs" />
         <Compile Include="Layout\ThemeToggler.fs" />
+        <Compile Include="Layout\Dropdown.fs" />
         <Compile Include="Layout\Head.fs" />
         <Compile Include="Layout\ProfilePopover.fs" />
         <Compile Include="Layout\Navigation.fs" />
@@ -48,6 +49,7 @@
         <Compile Include="Layout\DeletedFileInput.fs" />
         <Compile Include="Layout\FragmentsRouter.fs" />
         <Compile Include="Layout\Indicators.fs" />
+        <Compile Include="Layout\InProgress.fs" />
         <Compile Include="Login\Domain.fs" />
       <Compile Include="Login\Templates\Template.fs" />
       <Compile Include="Login\Templates\ChangePasswordTemplate.fs" />
