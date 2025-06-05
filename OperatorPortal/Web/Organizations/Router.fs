@@ -51,9 +51,10 @@ let list: EndpointHandler =
 let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
     fun ctx ->
         task {
+            let username = ctx.User.FindFirstValue(ClaimTypes.Name)
             let filter = ctx |> parseFilter
             let! summaries = readSummaries filter
-            return ctx.WriteHtmlView(ListTemplate.Template summaries)
+            return ctx |> render (ListTemplate.Template summaries filter) (SearchableListTemplate.FullPage filter username)
         }
         
 let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
