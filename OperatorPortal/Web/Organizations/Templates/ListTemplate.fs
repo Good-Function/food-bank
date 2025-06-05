@@ -8,16 +8,16 @@ open Oxpecker.Htmx
 open Organizations.Application.ReadModels
 open Web.Layout.Dropdown
 
-let filterTemplate filter =
+let filterTemplate currentFilter =
     Fragment() {
         div(id = "OrganizationsFilterState", hxSwapOob = "true") {
-            createFilterStateHolder filter
+            createFilterStateHolder currentFilter
         }
         input (
             hxSwapOob = "true",
             type' = "search",
             name = "search",
-            value = filter.searchTerm,
+            value = currentFilter.searchTerm,
             id = "OrganizationSearch",
             style = "transition:none;",
             title = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
@@ -34,9 +34,13 @@ let filterTemplate filter =
         tr (id="OrganizationHeadersRow", hxSwapOob = "true") {
             for column in Columns do
                 th (style = $"width:{column.Width}px;") {
-                    filter |> createSortableBy column.Name column.Label
+                    match column.SortAndFilter with
+                    | Some { Key = key; Filter = Some filterType } ->
+                        currentFilter |> createFilterableSortableBy key column.Label filterType
+                    | Some { Key = key; Filter = None } ->
+                        currentFilter |> createSortableBy key column.Label
+                    | None -> column.Label
                 }
-            th(style = "width: 120px; text-align:center;") {"Kontakt"}
         }
     }
 
