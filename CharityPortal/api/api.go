@@ -11,8 +11,7 @@ type API struct {
 }
 
 func NewAPI() *API {
-	router := http.NewServeMux()
-	registerRoutes(router)
+	router := newRouter()
 
 	server := http.Server{
 		Addr:    ":8080",
@@ -22,6 +21,12 @@ func NewAPI() *API {
 	return &API{
 		server: &server,
 	}
+}
+
+func newRouter() *http.ServeMux {
+	mux := http.NewServeMux()
+	registerRoutes(mux)
+	return mux
 }
 
 func registerRoutes(mux *http.ServeMux) {

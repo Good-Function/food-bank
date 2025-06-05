@@ -1,0 +1,62 @@
+package components
+
+templ Login() {
+<form action="/login" method="POST" hx-target="#ErrorContainer" hx-indicator="#spinner">
+	<input autocomplete="email" aria-label="Email" placeholder="Email" name="Email" type="Email"
+		required="" /><input aria-label="Password" placeholder="Password" name="Password" type="password"
+		required="" /><input type="submit" name="Login" value="Zaloguj" />
+	<div id="ErrorContainer"></div>
+	<div id="spinner" class="htmx-indicator" style="text-align:center; height:50px;">
+		<svg style="fill: var(--pico-primary-background)" viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg">
+			<style>
+				.spinner_mHwL {
+					animation: spinner_OeFQ .75s cubic-bezier(0.56, .52, .17, .98) infinite
+				}
+
+				.spinner_ote2 {
+					animation: spinner_ZEPt .75s cubic-bezier(0.56, .52, .17, .98) infinite
+				}
+
+				@keyframes spinner_OeFQ {
+					0% {
+						cx: 4px;
+						r: 3px
+					}
+
+					50% {
+						cx: 9px;
+						r: 8px
+					}
+				}
+
+				@keyframes spinner_ZEPt {
+					0% {
+						cx: 15px;
+						r: 8px
+					}
+
+					50% {
+						cx: 20px;
+						r: 3px
+					}
+				}
+			</style>
+			<defs>
+				<filter id="spinner-gF00">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="y">
+					</feGaussianBlur>
+					<feColorMatrix in="y" mode="matrix"
+						values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 18 -7" result="z">
+					</feColorMatrix>
+					<feBlend in="SourceGraphic" in2="z"></feBlend>
+				</filter>
+			</defs>
+			<g filter="url(#spinner-gF00)">
+				<circle class="spinner_mHwL" cx="4" cy="12" r="3"></circle>
+				<circle class="spinner_ote2" cx="15" cy="12" r="8"></circle>
+			</g>
+		</svg>
+	</div>
+</form>
+}
