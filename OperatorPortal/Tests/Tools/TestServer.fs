@@ -8,5 +8,6 @@ let runTestApi () =
     (new WebApplicationFactory<Program>()).Server.CreateClient()
     
 let authenticate (client: HttpClient)=
+    client.DefaultRequestHeaders.Add("HX-Request", "true")
     client
     
