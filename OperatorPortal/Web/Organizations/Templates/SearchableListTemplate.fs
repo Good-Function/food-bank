@@ -83,7 +83,7 @@ let createFilterableSortableBy (labelText: string) filter =
                 | _ -> ""
             }
         }
-        DropDown 24 Icons.FilterEmpty (div(style="width:165px;") {
+        DropDown (24, Icons.FilterEmpty) (Placement.Bottom, div(style="width:165px;") {
             InProgress.Component
             label () { "Od" }
             input (
@@ -138,12 +138,7 @@ let Template (filter: Filter) =
                                 th (style = $"width:{column.Width}px;") {
                                     filter |> createSortableBy column.Name column.Label
                                 }
-                            // th (style = "width: 200px;") { "Telefon" }
-                            // th (style = "width: 200px;") { "Email" }
-                            // th (style = "width: 200px;") { "Kontakt" }
-                            // th (style = "width: 200px;") { "Osoba" }
-                            // th (style = "width: 200px;") { "Tel. osoby" }
-                            // th (style = "width: 200px;") { "Dostępność" }
+                            th(style = "width: 120px") {"Kontakt"}
                         }
                     }
                     Indicators.TableShimmeringRows 6 9

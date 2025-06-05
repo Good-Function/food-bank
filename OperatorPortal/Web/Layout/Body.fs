@@ -13,7 +13,7 @@ let Template (content: HtmlElement) (currentPath: Navigation.Page option) (userN
                 Navigation.Template currentPath
                 div(style="display: inline-flex; flex-direction: column; vertical-align:top; text-align:right;") {   
                     div () {
-                        DropDown 40 Icons.Profile ProfilePopover.Template
+                        DropDown (40, Icons.Profile) (Placement.Bottom, ProfilePopover.Template)
                         ThemeToggler.Component
                     }
                     small(style="color: var(--pico-contrast-underline)") { userName }

@@ -11,15 +11,25 @@
 
 .dropdown .dropdown-content {
     position: absolute;
-    inset: 100% -100% auto auto;
     background-color: var(--pico-code-background-color);
     border-radius: var(--pico-border-radius);
     border: 0;
+    box-shadow: 0 0 20px -8px var(--pico-contrast);
     padding: var(--pico-spacing);
     text-align: left;
     z-index: 100000;
     visibility: hidden;
     opacity: 0;
+}
+
+.dropdown-bottom {
+    inset: 100% -100% auto auto;
+}
+
+.dropdown-left {
+    right: 0;
+    top: 0;
+    margin-right: 100%;
 }
 
 .dropdown:focus-within .dropdown-content {

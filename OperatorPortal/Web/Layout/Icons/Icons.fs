@@ -2,6 +2,10 @@ module Layout.Icons
 
 open Oxpecker.ViewEngine
 
+let ContactPage = raw """
+<svg style="fill: var(--pico-primary-background)" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#EFEFEF"><path d="M480-40 360-160H200q-33 0-56.5-23.5T120-240v-560q0-33 23.5-56.5T200-880h560q33 0 56.5 23.5T840-800v560q0 33-23.5 56.5T760-160H600L480-40Zm0-440q58 0 99-41t41-99q0-58-41-99t-99-41q-58 0-99 41t-41 99q0 58 41 99t99 41ZM200-240h560v-46q-54-53-125.5-83.5T480-400q-83 0-154.5 30.5T200-286v46Z"/></svg>
+"""
+
 let Filter = raw """
 <svg style="fill: var(--pico-primary-background)" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#EFEFEF"><path d="M440-160q-17 0-28.5-11.5T400-200v-240L168-736q-15-20-4.5-42t36.5-22h560q26 0 36.5 22t-4.5 42L560-440v240q0 17-11.5 28.5T520-160h-80Z"/></svg>
 """
