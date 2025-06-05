@@ -1,5 +1,6 @@
 module Organizations.Router
 
+open System
 open System.Security.Claims
 open Microsoft.AspNetCore.Http
 open Organizations.Application
@@ -19,12 +20,22 @@ let parseFilter (ctx: HttpContext) : Filter =
         let! dir = ctx.TryGetQueryValue "dir"
         return sortBy, dir |> Direction.FromString
     }
-    {searchTerm = search; sortBy = sortBy}
+    let gt = ctx.TryGetQueryValue "liczba_beneficjentow_gt" 
+            |> Option.bind (fun text ->
+                let ok, value = Int32.TryParse text
+                if ok then Some value else None
+            )
+    let lt = ctx.TryGetQueryValue "liczba_beneficjentow_lt" 
+            |> Option.bind (fun text ->
+                let ok, value = Int32.TryParse text
+                if ok then Some value else None
+            )
+    { searchTerm = search; sortBy = sortBy; beneficjenci = {| gt = gt; lt = lt |} }
 
 let indexPage: EndpointHandler =
     fun ctx ->
         let username = ctx.User.FindFirstValue(ClaimTypes.Name)
-        ctx.WriteHtmlView(SearchableListTemplate.FullPage { searchTerm = ""; sortBy = None } username)
+        ctx.WriteHtmlView(SearchableListTemplate.FullPage Filter.Zero username)
 
 
 let list: EndpointHandler =

@@ -157,7 +157,14 @@ type Direction =
 
 type Filter =
     { searchTerm: string
-      sortBy: (string * Direction) option}
+      sortBy: (string * Direction) option
+      beneficjenci: {| lt: int option; gt: int option |}
+    }
+    with static member Zero=
+            { searchTerm = ""
+              sortBy = None
+              beneficjenci = {| lt = None; gt = None |}
+            }
 
 type ReadOrganizationSummaries = Filter -> Async<OrganizationSummary list>
 type ReadOrganizationDetailsBy = int64 -> Async<OrganizationDetails>

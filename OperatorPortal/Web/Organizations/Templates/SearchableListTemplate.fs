@@ -11,7 +11,7 @@ open Web.Organizations
 open PageComposer
 
 let buildQueryForSorting (column: string, filter: Filter) : string =
-    let queryParams = Map.empty |> Map.add "search" filter.searchTerm
+    let queryParams = Map.empty
 
     let queryParams =
         match filter.sortBy with
@@ -31,6 +31,7 @@ let Template (filter: Filter) =
                 hxTarget = "#OrganizationsPage",
                 hxTrigger = "click",
                 hxPushUrl = "true",
+                hxInclude = """[name='liczba_beneficjentow_gt'], [name='liczba_beneficjentow_lt'], [name='search']""",
                 style = "color:unset;"
             ) {
                 div () { label }
@@ -51,6 +52,7 @@ let Template (filter: Filter) =
                 hxTarget = "#OrganizationsPage",
                 hxTrigger = "click",
                 hxPushUrl = "true",
+                hxInclude = """[name='liczba_beneficjentow_gt'], [name='liczba_beneficjentow_lt'], [name='search']""",
                 style = "color:unset; text-decoration: none"
             ) {
                 span (style="text-decoration: underline") { labelText }
@@ -64,9 +66,15 @@ let Template (filter: Filter) =
             DropDown 24 Icons.FilterEmpty (div(style="width:165px;") {
                 InProgress.Component
                 label () { "Od" }
-                input (value = "", name = "", type'="number")
+                input (
+                    value = (filter.beneficjenci.gt |> Option.map _.ToString() |> Option.defaultValue("")),
+                    name = "liczba_beneficjentow_gt",
+                    type'="number")
                 label () { "Do" }
-                input (value = "", name = "", type'="number")
+                input (
+                    value = (filter.beneficjenci.lt |> Option.map _.ToString() |> Option.defaultValue("")),
+                    name = "liczba_beneficjentow_lt",
+                    type'="number")
             })
         }
         
