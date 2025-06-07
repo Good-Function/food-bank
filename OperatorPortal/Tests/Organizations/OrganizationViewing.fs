@@ -21,9 +21,9 @@ let ``/ogranizations/summaries?search filters out and displays organization's mo
         let org =  Arranger.AnOrganization()
         do! org |> (save Tools.DbConnection.connectDb)
         let! dbSummaries = readSummaries Tools.DbConnection.connectDb {
-            searchTerm = org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc
-            sortBy = None
-            beneficjenci = {| gt = None; lt = None |}
+            SearchTerm = org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc
+            SortBy = None
+            Filters = []
         }
         let dbSummaryTeczkaIds = dbSummaries |> List.map(fun summary -> $"%i{summary.Teczka}")
         let api = runTestApi() |> authenticate

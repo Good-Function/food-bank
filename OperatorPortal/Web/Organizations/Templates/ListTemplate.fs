@@ -17,12 +17,12 @@ let filterTemplate currentFilter =
             hxSwapOob = "true",
             type' = "search",
             name = "search",
-            value = currentFilter.searchTerm,
+            value = currentFilter.SearchTerm,
             id = "OrganizationSearch",
             style = "transition:none;",
             title = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxGet = "/organizations/summaries",
-            hxInclude = "[name='sort'], [name='dir'], [name='liczba_beneficjentow_gt'], [name='liczba_beneficjentow_lt']",
+            hxInclude = "[name='sort'], [name='dir'], [name='liczba_beneficjentow']",
             placeholder = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxTrigger = "input changed delay:500ms, keyup[key=='Enter']",
             hxSync = "this:replace",
@@ -35,8 +35,8 @@ let filterTemplate currentFilter =
             for column in Columns do
                 th (style = $"width:{column.Width}px;") {
                     match column.SortAndFilter with
-                    | Some { Key = key; Filter = Some filterType } ->
-                        currentFilter |> createFilterableSortableBy key column.Label filterType
+                    | Some { Key = key; Filter = Some _ } ->
+                        currentFilter |> createFilterableSortableBy key column.Label
                     | Some { Key = key; Filter = None } ->
                         currentFilter |> createSortableBy key column.Label
                     | None -> column.Label
@@ -45,7 +45,7 @@ let filterTemplate currentFilter =
     }
 
 
-let Template (data: OrganizationSummary list) (filter: Filter) =
+let Template (data: OrganizationSummary list) (filter: Query) =
     Fragment() {
         tbody (id = "OrganizationsList", class'="hide-on-request") {
             for row in data do

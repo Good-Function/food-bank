@@ -13,29 +13,29 @@ open Organizations.CompositionRoot
 open HttpContextExtensions
 open type Microsoft.AspNetCore.Http.TypedResults
 
-let parseFilter (ctx: HttpContext) : Filter =
+let parseFilter (ctx: HttpContext) : Query =
     let search = ctx.TryGetQueryValue "search" |> Option.defaultValue ""
     let sortBy = option {
         let! sortBy = ctx.TryGetQueryValue "sort"
         let! dir = ctx.TryGetQueryValue "dir"
         return sortBy, dir |> Direction.FromString
     }
-    let gt = ctx.TryGetQueryValue "liczba_beneficjentow_gt" 
-            |> Option.bind (fun text ->
-                let ok, value = Int32.TryParse text
-                if ok then Some value else None
-            )
-    let lt = ctx.TryGetQueryValue "liczba_beneficjentow_lt" 
-            |> Option.bind (fun text ->
-                let ok, value = Int32.TryParse text
-                if ok then Some value else None
-            )
-    { searchTerm = search; sortBy = sortBy; beneficjenci = {| gt = gt; lt = lt |} }
+    let liczba_beneficjentow_op = ctx.TryGetQueryValue "liczba_beneficjentow_op" 
+    let liczba_beneficjentow = ctx.TryGetQueryValue "liczba_beneficjentow" 
+                                    |> Option.bind (fun text ->
+                                        let ok, value = Int32.TryParse text
+                                        if ok then Some value else None
+                                    )
+    //todo todomg: Keys should be constant list to avoid SQL injection.
+    let filters = match (liczba_beneficjentow, liczba_beneficjentow_op) with
+                  | Some value, Some operator -> [{ Key = "LiczbaBeneficjentow"; Value = value; Operator = operator }]
+                  | _ -> []
+    { SearchTerm = search; SortBy = sortBy; Filters = filters}
 
 let indexPage: EndpointHandler =
     fun ctx ->
         let username = ctx.User.FindFirstValue(ClaimTypes.Name)
-        ctx.WriteHtmlView(SearchableListTemplate.FullPage Filter.Zero username)
+        ctx.WriteHtmlView(SearchableListTemplate.FullPage Query.Zero username)
 
 
 let list: EndpointHandler =

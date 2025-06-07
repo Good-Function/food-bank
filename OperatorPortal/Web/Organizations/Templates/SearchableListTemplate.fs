@@ -10,34 +10,9 @@ open Web.Layout.Dropdown
 open Web.Organizations
 open PageComposer
 
-type StringOperator =
-    | Equals
-    | Contains
-
-type NumberOperator =
-    | Equals
-    | GreaterThan
-    | LessThan
-    | GreaterThanOrEqual
-    | LessThanOrEqual
-    with override this.ToString() =
-            match this with
-            | Equals -> "="
-            | GreaterThan -> ">"
-            | LessThan -> failwith "<"
-            | GreaterThanOrEqual -> failwith ">="
-            | LessThanOrEqual -> failwith "<="
-         static member Parse operator =
-             match operator with
-             | ">"  -> GreaterThan
-             | "<"  -> LessThan
-             | ">=" -> GreaterThanOrEqual
-             | "<=" -> LessThanOrEqual
-             | _ -> Equals
-
 type FilterType =
-    | StringFilter // of StringOperator * string
-    | NumberFilter // of NumberOperator * int
+    | StringFilter
+    | NumberFilter
 
 type SortAndFilter = {
     Key: string
@@ -63,17 +38,17 @@ let Columns: Column list = [
     { Label = "Kontakt"; Width = 110; SortAndFilter = None }
 ]
 
-let buildQueryForSorting (column: string, filter: Filter) : string =
+let buildQueryForSorting (column: string, filter: Query) : string =
     let queryParams = Map.empty
 
     let queryParams =
-        match filter.sortBy with
+        match filter.SortBy with
         | Some(sort, dir) when sort = column ->
             queryParams |> Map.add "sort" sort |> Map.add "dir" (dir.Reverse().ToString())
         | _ -> queryParams |> Map.add "sort" column |> Map.add "dir" (Direction.Asc.ToString())
     QueryHelpers.AddQueryString("", queryParams)
 
-let createSortableBy (columnName: string) (label: string) (filter: Filter)=
+let createSortableBy (columnName: string) (label: string) (filter: Query)=
     let url = $"""/organizations/summaries{buildQueryForSorting (columnName, filter)}"""
     div (style="display:flex;") {
         a (
@@ -83,22 +58,23 @@ let createSortableBy (columnName: string) (label: string) (filter: Filter)=
             hxTrigger = "click",
             hxPushUrl = "true",
             hxSwap = "outerHTML",
-            hxInclude = """[name='liczba_beneficjentow_gt'], [name='liczba_beneficjentow_lt'], [name='search']""",
+            hxInclude = """[name='liczba_beneficjentow'], [name='liczba_beneficjentow_op'], [name='search']""",
             hxIndicator = ".big-table",
             style = "color:unset;"
         ) {
             div () { label }
         }
         div (style = "text-decoration: none;") {
-            match filter.sortBy with
+            match filter.SortBy with
             | Some(sort, dir) when sort = columnName && dir = Direction.Asc -> "▲"
             | Some(sort, _) when sort = columnName -> "▼"
             | _ -> ""
         }
     }
     
-let createFilterableSortableBy (columnName: string) (labelText: string) (filterType: FilterType) filter =
-    let url = $"""/organizations/summaries{buildQueryForSorting (columnName, filter)}"""
+let createFilterableSortableBy (columnName: string) (labelText: string) query =
+    let url = $"""/organizations/summaries{buildQueryForSorting (columnName, query)}"""
+    let columnFilter = query.Filters |> List.tryFind(fun filter -> filter.Key = columnName)
     div (style="display:flex;justify-content:space-between;") {
         a (
             hxGet = url,
@@ -107,40 +83,47 @@ let createFilterableSortableBy (columnName: string) (labelText: string) (filterT
             hxTrigger = "click",
             hxPushUrl = "true",
             hxSwap = "outerHTML",
-            hxInclude = """[name='liczba_beneficjentow_gt'], [name='liczba_beneficjentow_lt'], [name='search']""",
+            hxInclude = """[name='liczba_beneficjentow'], [name='liczba_beneficjentow_op'], [name='search']""",
             hxIndicator = ".big-table",
             style = "color:unset;"
         ) {
             span (style="text-decoration: underline") { labelText }
             span (style = "text-decoration: none;") {
-                match filter.sortBy with
+                match query.SortBy with
                 | Some(sort, dir) when sort = columnName && dir = Direction.Asc -> "▲"
                 | Some(sort, _) when sort =  columnName -> "▼"
                 | _ -> ""
             }
         }
+        let hasOp op = Option.exists (fun cf -> cf.Operator = op)  
         DropDown (24, Icons.FilterEmpty) (Placement.Bottom, div(style="width:300px;") {
             InProgress.Component
+            // todo trigger on div on blur (one may change the operator) 
             div(style="display:flex; align-items: baseline; justify-content: space-between") {
                 span (style="white-space:no-break") { labelText }
-                select (style="height: 34.5px; margin: 0; padding-right: 5px; padding-top: 0; padding-bottom: 0; width: 100px;") {
-                    option() { "=" }
-                    option() { ">" }
-                    option() { "<" }
-                    option() { ">=" }
-                    option() { "<=" }
+                select (name="liczba_beneficjentow_op", style = "height: 34.5px; margin: 0; padding-right: 5px; padding-top: 0; padding-bottom: 0; width: 100px;") {
+                    option(selected = (columnFilter |> hasOp "=")) { "=" }
+                    option(selected = (columnFilter |> hasOp ">")) { ">" }
+                    option(selected = (columnFilter |> hasOp "<")) { "<" }
+                    option(selected = (columnFilter |> hasOp ">=")) { ">=" }
+                    option(selected = (columnFilter |> hasOp "<=")) { "<=" }
                 } 
                 input (
+                    hxTarget = "#OrganizationsList",
+                    hxTrigger = "keyup[key=='Enter'], blur",
+                    hxSwap = "outerHTML",
+                    hxGet = "/organizations/summaries",
+                    hxInclude = "[name='sort'], [name='dir'], [name='liczba_beneficjentow'], [name='liczba_beneficjentow_op']",
                     style="width: 100px; margin-bottom:0;",
-                    value = (filter.beneficjenci.lt |> Option.map _.ToString() |> Option.defaultValue("")),
-                    name = "liczba_beneficjentow_lt",
+                    value = (columnFilter |> Option.map _.Value.ToString() |> Option.defaultValue ""),
+                    name = "liczba_beneficjentow",
                     type'="number")
             }
         })
     }
     
 let createFilterStateHolder filter =
-            match filter.sortBy with
+            match filter.SortBy with
             | None -> Fragment() {}
             | Some(sort, dir) ->
                 Fragment() {
@@ -148,7 +131,7 @@ let createFilterStateHolder filter =
                     input (type' = "hidden", name = "dir", value = dir.ToString())
                 }
 
-let Template (currentFilter: Filter) =
+let Template (currentFilter: Query) =
     div (id = "OrganizationsPage") {
         div(id = "OrganizationsFilterState") {
             createFilterStateHolder currentFilter
@@ -156,12 +139,12 @@ let Template (currentFilter: Filter) =
         input (
             type' = "search",
             name = "search",
-            value = currentFilter.searchTerm,
+            value = currentFilter.SearchTerm,
             id = "OrganizationSearch",
             style = "transition:none;",
             title = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxGet = "/organizations/summaries",
-            hxInclude = "[name='sort'], [name='dir'], [name='liczba_beneficjentow_gt'], [name='liczba_beneficjentow_lt']",
+            hxInclude = "[name='sort'], [name='dir'], [name='liczba_beneficjentow'], [name='liczba_beneficjentow_op']",
             placeholder = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxTrigger = "load, input changed delay:500ms, keyup[key=='Enter']",
             hxSync = "this:replace",
@@ -188,7 +171,7 @@ let Template (currentFilter: Filter) =
         }
     }
 
-let FullPage (filter: Filter) =
+let FullPage (filter: Query) =
     composeFullPage
         { Content = Template filter
           CurrentPage = Page.Organizations }

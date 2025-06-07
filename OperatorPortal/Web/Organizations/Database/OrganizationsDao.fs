@@ -17,7 +17,7 @@ let toDb (opt: 'a option) =
     | Some x -> x
     | None -> null
 
-let searchOrgsSql sortBy dir = $"""
+let searchOrgsSql sortBy dir filterClause = $"""
 SELECT 
     teczka,
     formaprawna,
@@ -36,20 +36,24 @@ SELECT
     jsonb_extract_path_text(documents, 'Odwiedziny', 'Date')::date AS ostatnieodwiedzinydata
 FROM organizacje
 WHERE
-   @searchTerm = '' 
+   (@searchTerm = '' 
    OR teczka = CASE WHEN @searchTerm ~ '^\d+$' THEN @searchTerm::bigint  END
-   OR (similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.2 OR similarity(gminadzielnica, @searchTerm) > 0.2)
+   OR (similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.2 OR similarity(gminadzielnica, @searchTerm) > 0.2))
+   {filterClause}
 ORDER BY %s{sortBy} %s{dir};
 """
 
-let readSummaries (connectDB: unit -> Async<IDbConnection>) (filter: Filter) =
+let readSummaries (connectDB: unit -> Async<IDbConnection>) (query: Query) =
     async {
         use! db = connectDB()
-        let sortBy, dir = match filter.sortBy with
+        let sortBy, dir = match query.SortBy with
                             | Some (sortBy, dir) -> (sortBy, dir.ToString())
                             | None -> ("teczka", "desc")
-        let query = (searchOrgsSql sortBy dir)
-        return! db.QueryBy<OrganizationSummary> query {| searchTerm = filter.searchTerm |}
+        let filterClause = query.Filters
+                           |> List.map(fun f -> $"AND {f.Key} {f.Operator} {f.Value} ")
+                           |> String.concat ""
+        let sql = (searchOrgsSql sortBy dir filterClause)
+        return! db.QueryBy<OrganizationSummary> sql {| searchTerm = query.SearchTerm |}
     }
     
 let changeDaneAdresowe (connectDB: unit -> Async<IDbConnection>) (teczkaId: TeczkaId, daneAdresowe: DaneAdresowe) =

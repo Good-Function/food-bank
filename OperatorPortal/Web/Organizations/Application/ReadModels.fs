@@ -155,16 +155,18 @@ type Direction =
 
     static member FromString(str: string) = if str = "desc" then Desc else Asc
 
-type Filter =
-    { searchTerm: string
-      sortBy: (string * Direction) option
-      beneficjenci: {| lt: int option; gt: int option |}
+
+type Filter = { Key: string; Value: obj; Operator: string }
+type Query =
+    { SearchTerm: string
+      SortBy: (string * Direction) option
+      Filters: Filter list
     }
     with static member Zero=
-            { searchTerm = ""
-              sortBy = None
-              beneficjenci = {| lt = None; gt = None |}
+            { SearchTerm = ""
+              SortBy = None
+              Filters = []
             }
 
-type ReadOrganizationSummaries = Filter -> Async<OrganizationSummary list>
+type ReadOrganizationSummaries = Query -> Async<OrganizationSummary list>
 type ReadOrganizationDetailsBy = int64 -> Async<OrganizationDetails>
