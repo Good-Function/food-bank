@@ -9,7 +9,7 @@ import (
 )
 
 func TestRegisteredRoutes(t *testing.T) {
-	router := newRouter()
+	router := newRouter(nil) // Pass nil for authProvider since we are not testing auth here
 	if router == nil {
 		assert.Fail(t, "Router should not be nil")
 	}

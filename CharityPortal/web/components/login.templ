@@ -3,9 +3,7 @@ package components
 templ Login() {
 <div style="width: 50%;">
 	<form action="/login" method="POST" hx-target="#ErrorContainer" hx-indicator="#spinner">
-		<input autocomplete="email" aria-label="Email" placeholder="Email" name="Email" type="Email"
-			required="" /><input aria-label="Password" placeholder="Password" name="Password"
-			type="password" required="" /><input type="submit" name="Login" value="Zaloguj" />
+		<input type="submit" name="Login" value="Zaloguj" />
 		<div id="ErrorContainer"></div>
 		<div id="spinner" class="htmx-indicator" style="text-align:center; height:50px;">
 			<svg style="fill: var(--pico-primary-background)" viewBox="0 0 24 24"

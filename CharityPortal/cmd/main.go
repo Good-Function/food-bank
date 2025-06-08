@@ -2,9 +2,11 @@ package main
 
 import (
 	"charity_portal/api"
+	"charity_portal/config"
 )
 
 func main() {
-	apiServer := api.NewAPI()
+	cfg := config.LoadConfig()
+	apiServer := api.NewAPI(cfg)
 	apiServer.Start()
 }
