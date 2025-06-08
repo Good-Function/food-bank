@@ -22,7 +22,7 @@ let filterTemplate currentFilter =
             style = "transition:none;",
             title = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxGet = "/organizations/summaries",
-            hxInclude = "[name='sort'], [name='dir'], [name='liczba_beneficjentow']",
+            hxInclude = "[name='sort'], [name='dir'], [name='liczba_beneficjentow'], [name='liczba_beneficjentow_op']",
             placeholder = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxTrigger = "input changed delay:500ms, keyup[key=='Enter']",
             hxSync = "this:replace",

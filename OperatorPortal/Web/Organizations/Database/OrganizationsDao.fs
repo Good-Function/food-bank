@@ -53,7 +53,8 @@ let readSummaries (connectDB: unit -> Async<IDbConnection>) (query: Query) =
                            |> List.map(fun f -> $"AND {f.Key} {f.Operator} {f.Value} ")
                            |> String.concat ""
         let sql = (searchOrgsSql sortBy dir filterClause)
-        return! db.QueryBy<OrganizationSummary> sql {| searchTerm = query.SearchTerm |}
+        let! rows = db.QueryBy<OrganizationSummary> sql {| searchTerm = query.SearchTerm |}
+        return rows
     }
     
 let changeDaneAdresowe (connectDB: unit -> Async<IDbConnection>) (teczkaId: TeczkaId, daneAdresowe: DaneAdresowe) =

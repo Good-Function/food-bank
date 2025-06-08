@@ -97,27 +97,58 @@ let createFilterableSortableBy (columnName: string) (labelText: string) query =
         }
         let hasOp op = Option.exists (fun cf -> cf.Operator = op)  
         DropDown (24, Icons.FilterEmpty) (Placement.Bottom, div(style="width:300px;") {
-            InProgress.Component
-            // todo trigger on div on blur (one may change the operator) 
-            div(style="display:flex; align-items: baseline; justify-content: space-between") {
+            div(
+                style="display:flex; align-items: baseline; justify-content: space-between"
+                ) {
                 span (style="white-space:no-break") { labelText }
-                select (name="liczba_beneficjentow_op", style = "height: 34.5px; margin: 0; padding-right: 5px; padding-top: 0; padding-bottom: 0; width: 100px;") {
+                select (
+                        name="liczba_beneficjentow_op",
+                        style = "height: 34.5px; margin: 0; padding-right: 5px; padding-top: 0; padding-bottom: 0; width: 100px;"
+                    ) {
                     option(selected = (columnFilter |> hasOp "=")) { "=" }
                     option(selected = (columnFilter |> hasOp ">")) { ">" }
                     option(selected = (columnFilter |> hasOp "<")) { "<" }
                     option(selected = (columnFilter |> hasOp ">=")) { ">=" }
                     option(selected = (columnFilter |> hasOp "<=")) { "<=" }
-                } 
+                }
                 input (
+                    hxTrigger = "keyup[key=='Enter']",
                     hxTarget = "#OrganizationsList",
-                    hxTrigger = "keyup[key=='Enter'], blur",
                     hxSwap = "outerHTML",
                     hxGet = "/organizations/summaries",
-                    hxInclude = "[name='sort'], [name='dir'], [name='liczba_beneficjentow'], [name='liczba_beneficjentow_op']",
+                    hxPushUrl ="true",
+                    hxIndicator = ".big-table",
+                    hxInclude = "[name='sort'], [name='dir'], [name='liczba_beneficjentow_op'], [name='search']",
                     style="width: 100px; margin-bottom:0;",
                     value = (columnFilter |> Option.map _.Value.ToString() |> Option.defaultValue ""),
                     name = "liczba_beneficjentow",
                     type'="number")
+            }
+            div(style="display: flex; justify-content:space-between; gap:var(--pico-spacing); margin-top:var(--pico-spacing); font-weight:normal"){
+                div(
+                    style="cursor:pointer",
+                    hxTarget = "#OrganizationsList",
+                    hxSwap = "outerHTML",
+                    hxGet = "/organizations/summaries",
+                    hxPushUrl ="true",
+                    hxIndicator = ".big-table",
+                    hxInclude = "[name='sort'], [name='dir'], [name='search']"
+                    ){
+                    Icons.Cancel
+                    "usuń"
+                }
+                div(
+                    style="cursor:pointer",
+                    hxTarget = "#OrganizationsList",
+                    hxSwap = "outerHTML",
+                    hxGet = "/organizations/summaries",
+                    hxPushUrl ="true",
+                    hxIndicator = ".big-table",
+                    hxInclude = "[name='sort'], [name='dir'], [name='liczba_beneficjentow'], [name='liczba_beneficjentow_op'], [name='search']"
+                    ){
+                    "zastosuj"
+                    Icons.Ok
+                }
             }
         })
     }
