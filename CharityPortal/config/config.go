@@ -18,6 +18,7 @@ type Auth struct {
 	RedirectURL  string
 	TenantName   string
 	TenantID     string
+	State        string
 }
 
 func buildAuthConfig() *Auth {
@@ -27,5 +28,6 @@ func buildAuthConfig() *Auth {
 		RedirectURL:  os.Getenv("AUTH_REDIRECT_URL"),
 		TenantName:   os.Getenv("AUTH_TENANT_NAME"),
 		TenantID:     os.Getenv("AUTH_TENANT_ID"),
+		State:        os.Getenv("AUTH_STATE"),
 	}
 }

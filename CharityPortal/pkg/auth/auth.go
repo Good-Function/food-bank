@@ -20,6 +20,7 @@ type Auth struct {
 	oidcConfig   *oidc.Config
 	oauth2Config *oauth2.Config
 	verifier     *oidc.IDTokenVerifier
+	state        string
 }
 
 type UserClaims struct {
@@ -52,14 +53,18 @@ func NewAuth(cfg *config.Auth) (*Auth, error) {
 		oidcConfig:   oidcConfig,
 		oauth2Config: oauth2Config,
 		verifier:     verifier,
+		state:        cfg.State,
 	}, nil
 }
 
 func (a *Auth) GetLoginURL() string {
-	return a.oauth2Config.AuthCodeURL("dupa", oauth2.SetAuthURLParam("p", "user_signup"))
+	return a.oauth2Config.AuthCodeURL(a.state, oauth2.SetAuthURLParam("p", "user_signup"))
 }
 
 func (a *Auth) ExchangeToken(ctx context.Context, url url.Values) (*UserClaims, error) {
+	if url.Get("state") != a.state {
+		return nil, fmt.Errorf("state mismatch")
+	}
 	code := url.Get("code")
 	token, err := a.oauth2Config.Exchange(ctx, code)
 	if err != nil {
