@@ -95,8 +95,11 @@ let createFilterableSortableBy (columnName: string) (labelText: string) query =
                 | _ -> ""
             }
         }
+        let icon = match columnFilter with
+                   | Some _ -> Icons.Filter
+                   | None -> Icons.FilterEmpty
         let hasOp op = Option.exists (fun cf -> cf.Operator = op)  
-        DropDown (24, Icons.FilterEmpty) (Placement.Bottom, div(style="width:300px;") {
+        DropDown (24, icon) (Placement.Bottom, div(style="width:300px;") {
             div(
                 style="display:flex; align-items: baseline; justify-content: space-between"
                 ) {
