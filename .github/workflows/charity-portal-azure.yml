@@ -7,7 +7,6 @@ on:
       - .github/workflows/charity-portal-azure.yml
     branches:
       - main
-  workflow_dispatch:
 
 defaults:
   run:
