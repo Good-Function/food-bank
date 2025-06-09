@@ -1,3 +1,6 @@
+@description('Name of the Charity Portal container app')
+param name string = 'charityportal'
+
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
@@ -78,7 +81,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
 }
 
 resource law 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
-  name: 'charity-logs'
+  name: '${name}-logs'
   location: location
   properties: any({
     retentionInDays: 30
@@ -92,7 +95,7 @@ resource law 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
 }
 
 resource charityEnv 'Microsoft.App/managedEnvironments@2022-03-01' = {
-  name: 'charity-portal-env'
+  name: '${name}-env'
   location: location
   properties: {
     vnetConfiguration: {
@@ -109,7 +112,7 @@ resource charityEnv 'Microsoft.App/managedEnvironments@2022-03-01' = {
 }
 
 resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
-  name: 'charityportal'
+  name: name
   location: location
   properties: {
     managedEnvironmentId: charityEnv.id
@@ -144,7 +147,7 @@ resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
       containers: [
         {
           image: image
-          name: 'charityportal'
+          name: name
           resources: {
             cpu: json('0.75')
             memory: '1.5Gi'
