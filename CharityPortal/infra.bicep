@@ -1,13 +1,10 @@
-@description('Name for the container group')
-param name string = 'foodbank'
-
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
 @description('ACR Login')
 param acrlogin string
 
-@description('ACR Login')
+@description('ACR Endpoint')
 param acrendpoint string
 
 @description('Container image to deploy.')
@@ -19,12 +16,6 @@ param acrpassword string
 
 @description('VNET Name')
 param vnetName string = 'foodbank-vnet'
-
-@description('Subnet Name for PostgreSQL')
-param subnetDbName string = 'postgres-subnet'
-
-@description('Subnet Name for Container Apps')
-param subnetAppName string = 'containerapp-subnet'
 
 @description('Subnet Name for Charity Portal App')
 param charitySubnetName string = 'charityportal-subnet'
@@ -77,26 +68,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
     }
     subnets: [
       {
-        name: subnetDbName
-        properties: {
-          addressPrefix: '10.0.0.0/23'
-          delegations: [
-            {
-              name: 'Microsoft.DBforPostgreSQL'
-              properties: {
-                serviceName: 'Microsoft.DBforPostgreSQL/flexibleServers'
-              }
-            }
-          ]
-        }
-      }
-      {
-        name: subnetAppName
-        properties: {
-          addressPrefix: '10.0.2.0/23'
-        }
-      }
-      {
         name: charitySubnetName
         properties: {
           addressPrefix: '10.0.4.0/23'
@@ -106,62 +77,8 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
   }
 }
 
-resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-  name: 'privatelink.postgres.database.azure.com'
-  location: 'global'
-  resource vNetLink 'virtualNetworkLinks' = {
-    name: 'privatelink.postgres.database.azure.com'
-    location: 'global'
-    properties: {
-      registrationEnabled: false
-      virtualNetwork: { id: vnet.id }
-    }
-  }
-}
-
-resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2024-11-01-preview' = {
-  name: dbServerName
-  location: location
-  sku: {
-    name: 'Standard_B1ms'
-    tier: 'Burstable'
-  }
-  properties: {
-    administratorLogin: 'pgadmin'
-    administratorLoginPassword: dbAdminPassword
-    version: '16'
-    network: {
-      delegatedSubnetResourceId: vnet.properties.subnets[0].id
-      privateDnsZoneArmResourceId: privateDnsZone.id
-    }
-    storage: {
-      storageSizeGB: 32
-    }
-    authConfig: {
-      activeDirectoryAuth: 'Disabled'
-      passwordAuth: 'Enabled'
-    }
-  }
-  resource postgresConfig 'configurations' = {
-    name: 'azure.extensions'
-    properties: {
-      value: 'pg_trgm'
-      source: 'user-override'
-    }
-  }
-}
-
-resource database 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2024-11-01-preview' = {
-  parent: postgres
-  name: dbName
-  properties: {
-    charset: 'UTF8'
-    collation: 'en_US.utf8'
-  }
-}
-
 resource law 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
-  name: name
+  name: 'charity-logs'
   location: location
   properties: any({
     retentionInDays: 30
@@ -172,88 +89,6 @@ resource law 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
       name: 'PerGB2018'
     }
   })
-}
-
-resource environment 'Microsoft.App/managedEnvironments@2022-03-01' = {
-  name: name
-  location: location
-  properties: {
-    vnetConfiguration: {
-      infrastructureSubnetId: vnet.properties.subnets[1].id
-    }
-    appLogsConfiguration: {
-      destination: 'log-analytics'
-      logAnalyticsConfiguration: {
-        customerId: law.properties.customerId
-        sharedKey: law.listKeys().primarySharedKey
-      }
-    }
-  }
-}
-
-resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
-  name: name
-  location: location
-  properties: {
-    managedEnvironmentId: environment.id
-    configuration: {
-      secrets: [
-        {
-          name: 'containerregistrypasswordref'
-          value: acrpassword
-        }
-        {
-          name: 'dbconnectionstringref'
-          value: 'Host=${dbServerName}.postgres.database.azure.com;Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
-        }
-        {
-          name: 'blobstorageconnectionref'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${storageAccount.listKeys().keys[0].value};EndpointSuffix=core.windows.net'
-        }
-      ]
-      ingress: {
-        external: true
-        targetPort: 8080
-      }
-      registries: [
-        {
-          server: acrendpoint
-          username: acrlogin
-          passwordSecretRef: 'containerregistrypasswordref'
-        }
-      ]
-    }
-    template: {
-      containers: [
-        {
-          image: image
-          name: name
-          resources: {
-            cpu: json('0.75')
-            memory: '1.5Gi'
-          }
-          env: [
-            {
-              name: 'DbConnectionString'
-              secretRef: 'dbconnectionstringref'
-            }
-            {
-              name: 'BlobStorageConnectionString'
-              secretRef: 'blobstorageconnectionref'
-            }
-            {
-              name: 'ASPNETCORE_ENVIRONMENT'
-              value: 'Production'
-            }
-          ]
-        }
-      ]
-      scale: {
-        minReplicas: 1
-        maxReplicas: 1
-      }
-    }
-  }
 }
 
 resource charityEnv 'Microsoft.App/managedEnvironments@2022-03-01' = {
@@ -338,4 +173,4 @@ resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
   }
 }
 
-output fqdn string = foodbankapp.properties.configuration.ingress.fqdn
+output fqdn string = charityPortalApp.properties.configuration.ingress.fqdn
