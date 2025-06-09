@@ -16,3 +16,7 @@ TestContainers manages local dependencies. It may be useful to install https://a
 Can be found here: 
 https://github.com/orgs/Good-Function/projects/2/views/1
 On the top you can find most important tasks.
+
+## CharityPortal
+1. Create & fill .env file based on .env.example
+2. Execute `execute source .env && air` 
