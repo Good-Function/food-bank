@@ -96,8 +96,10 @@
       <Compile Include="Organizations\Templates\ZrodlaZywnosci.fs" />
       <Compile Include="Organizations\Templates\WarunkiPomocy.fs" />
       <Compile Include="Organizations\Templates\DetailsTemplate.fs" />
-      <Compile Include="Organizations\Templates\SearchableListTemplate.fs" />
-      <Compile Include="Organizations\Templates\ListTemplate.fs" />
+      <Compile Include="Organizations\Templates\List\Columns.fs" />
+      <Compile Include="Organizations\Templates\List\ColumnsOperations.fs" />
+      <Compile Include="Organizations\Templates\List\SearchableListTemplate.fs" />
+      <Compile Include="Organizations\Templates\List\ListTemplate.fs" />
       <Compile Include="Organizations\Templates\ImportExcelTemplate.fs" />
       <Compile Include="Organizations\Templates\ImportExcelResult.fs" />
       <Compile Include="Organizations\ClosedXmlExcelImport.fs" />

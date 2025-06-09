@@ -1,12 +1,14 @@
-module Organizations.ListTemplate
+module Organizations.List.ListTemplate
 
 open Layout
-open Organizations.SearchableListTemplate
+open Organizations.List.SearchableListTemplate
 open Organizations.Templates.Formatters
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 open Organizations.Application.ReadModels
 open Web.Layout.Dropdown
+open Web.Organizations.Templates.List.Columns
+open Web.Organizations.Templates.List.ColumnsOperations
 
 let filterTemplate currentFilter =
     Fragment() {

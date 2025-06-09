@@ -5,6 +5,7 @@ open System.Security.Claims
 open Microsoft.AspNetCore.Http
 open Organizations.Application
 open Organizations.Application.ReadModels
+open Organizations.List
 open Organizations.Templates
 open FsToolkit.ErrorHandling
 open Oxpecker
