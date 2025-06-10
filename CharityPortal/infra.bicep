@@ -23,11 +23,8 @@ param vnetName string = 'foodbank-vnet'
 @description('Subnet Name for PostgreSQL')
 param subnetDbName string = 'postgres-subnet'
 
-@description('Subnet Name for Operator Portal')
+@description('Subnet Name for Operator and Charity Apps')
 param subnetAppName string = 'containerapp-subnet'
-
-@description('Subnet Name for Charity Portal')
-param charitySubnetName string = 'charityportal-subnet'
 
 @secure()
 @description('PostgreSQL Admin Password')
@@ -94,12 +91,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
         name: subnetAppName
         properties: {
           addressPrefix: '10.0.2.0/23'
-        }
-      }
-      {
-        name: charitySubnetName
-        properties: {
-          addressPrefix: '10.0.4.0/23'
         }
       }
     ]
@@ -256,28 +247,11 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
   }
 }
 
-resource charityEnv 'Microsoft.App/managedEnvironments@2022-03-01' = {
-  name: 'charityportal-env'
-  location: location
-  properties: {
-    vnetConfiguration: {
-      infrastructureSubnetId: resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, charitySubnetName)
-    }
-    appLogsConfiguration: {
-      destination: 'log-analytics'
-      logAnalyticsConfiguration: {
-        customerId: law.properties.customerId
-        sharedKey: law.listKeys().primarySharedKey
-      }
-    }
-  }
-}
-
 resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: 'charityportal'
   location: location
   properties: {
-    managedEnvironmentId: charityEnv.id
+    managedEnvironmentId: environment.id
     configuration: {
       secrets: [
         {
