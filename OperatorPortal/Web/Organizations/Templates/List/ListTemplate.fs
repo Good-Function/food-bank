@@ -7,19 +7,19 @@ open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 open Organizations.Application.ReadModels
 open Web.Layout.Dropdown
-open Web.Organizations.Templates.List.Columns
-open Web.Organizations.Templates.List.ColumnsOperations
+open Web.Organizations.Templates.List.Filterable
+open Web.Organizations.Templates.List.Sortable
 
-let filterTemplate currentFilter =
+let filterTemplate query =
     Fragment() {
         div(id = "OrganizationsFilterState", hxSwapOob = "true") {
-            createFilterStateHolder currentFilter
+            createFilterStateHolder query
         }
         input (
             hxSwapOob = "true",
             type' = "search",
             name = "search",
-            value = currentFilter.SearchTerm,
+            value = query.SearchTerm,
             id = "OrganizationSearch",
             style = "transition:none;",
             title = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
@@ -33,16 +33,84 @@ let filterTemplate currentFilter =
             hxTarget = "#OrganizationsList",
             hxPushUrl = "true"
         )
+
         tr (id="OrganizationHeadersRow", hxSwapOob = "true") {
-            for column in Columns do
-                th (style = $"width:{column.Width}px;") {
-                    match column.SortAndFilter with
-                    | Some { Key = key; Filter = Some _ } ->
-                        currentFilter |> createFilterableSortableBy key column.Label
-                    | Some { Key = key; Filter = None } ->
-                        currentFilter |> createSortableBy key column.Label
-                    | None -> column.Label
+            th (style = "width:82px;") {
+                sortable {
+                    ColumnKey = "Teczka"
+                    ColumnLabel = "Teczk."
+                    CurrentSortBy = query.SortBy
                 }
+            }
+            th (style = "width:290px;") {
+                sortable {
+                    ColumnKey = "NazwaPlacowkiTrafiaZywnosc"
+                    ColumnLabel = "Nazwa placówki"
+                    CurrentSortBy = query.SortBy
+                }
+            }
+            th (style = "width:300px;") {
+                sortable {
+                    ColumnKey = "AdresPlacowkiTrafiaZywnosc"
+                    ColumnLabel = "Adres placówki"
+                    CurrentSortBy = query.SortBy
+                }
+            }
+            th (style = "width:200px;") {
+                sortable {
+                    ColumnKey = "GminaDzielnica"
+                    ColumnLabel = "Gmina/Dzielnica"
+                    CurrentSortBy = query.SortBy
+                }
+            }
+            th (style = "width:175px;") {
+                sortable {
+                    ColumnKey = "FormaPrawna"
+                    ColumnLabel = "Forma prawna"
+                    CurrentSortBy = query.SortBy
+                }
+            }
+            th (style = "width:200px;") {
+                sortable {
+                    ColumnKey = "Kategoria"
+                    ColumnLabel = "Forma prawna"
+                    CurrentSortBy = query.SortBy
+                }
+            }
+            th (style = "width:200px;") {
+                sortable {
+                    ColumnKey = "Beneficjenci"
+                    ColumnLabel = "Beneficjenci"
+                    CurrentSortBy = query.SortBy
+                }
+                filterable {
+                    Type = FilterType.StringFilter
+                    ColumnKey = "Beneficjenci"
+                    FilterLabel = "Beneficjenci"
+                    CurrentFilters = query.Filters
+                }
+            }
+            th (style = "width:155px;") {
+                sortable {
+                    ColumnKey = "LiczbaBeneficjentow"
+                    ColumnLabel = "Liczba B."
+                    CurrentSortBy = query.SortBy
+                }
+                filterable {
+                    Type = FilterType.NumberFilter
+                    ColumnKey = "LiczbaBeneficjentow"
+                    FilterLabel = "Liczba B."
+                    CurrentFilters = query.Filters
+                }
+            }
+            th (style = "width:150px;") {
+                sortable {
+                    ColumnKey = "OstatnieOdwiedzinyData"
+                    ColumnLabel = "Odwiedzono"
+                    CurrentSortBy = query.SortBy
+                }
+            }
+            th (style = "width:110px;") { "Kontakt" }
         }
     }
 

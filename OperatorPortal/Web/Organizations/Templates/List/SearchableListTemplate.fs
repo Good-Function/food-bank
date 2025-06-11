@@ -7,8 +7,7 @@ open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 open Web.Organizations
 open PageComposer
-open Web.Organizations.Templates.List.Columns
-    
+
 let createFilterStateHolder filter =
             match filter.SortBy with
             | None -> Fragment() {}
@@ -45,10 +44,16 @@ let Template (currentFilter: Query) =
                 table (class' = "striped big-table") {
                     thead () {
                         tr (id="OrganizationHeadersRow") {
-                            for column in Columns do
-                                th (style = $"width:{column.Width}px;") {
-                                    column.Label
-                                }
+                            th (style = "width:82px;") { "Teczk." }
+                            th (style = "width:290px;") { "Nazwa placówki" }
+                            th (style = "width:300px;") { "Adres placówki" }
+                            th (style = "width:200px;") { "Gmina/Dzielnica" }
+                            th (style = "width:175px;") { "Forma prawna" }
+                            th (style = "width:200px;") { "Kategoria" }
+                            th (style = "width:200px;") { "Beneficjenci" }
+                            th (style = "width:155px;") { "Liczba B." }
+                            th (style = "width:150px;") { "Odwiedzono" }
+                            th (style = "width:110px;") { "Kontakt" }
                         }
                     }
                     Indicators.TableShimmeringRows 6 9
