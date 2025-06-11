@@ -42,6 +42,17 @@ WHERE
    {filterClause}
 ORDER BY %s{sortBy} %s{dir};
 """
+let replaceTextFilterOperator (operator: string) =
+    match operator with
+    | "zawiera" -> "ILIKE"
+    | "nie zawiera" -> "NOT ILIKE"
+    | _ -> failwith "Invalid operator"
+    
+let prepareFilter (operator: string, value: obj) =
+    match value with
+    | :? int -> $"{operator} {value}"
+    | :? string -> $"{operator |> replaceTextFilterOperator} '%%{value}%%'"
+    | _ -> failwith  "Unknown type"
 
 let readSummaries (connectDB: unit -> Async<IDbConnection>) (query: Query) =
     async {
@@ -50,7 +61,7 @@ let readSummaries (connectDB: unit -> Async<IDbConnection>) (query: Query) =
                             | Some (sortBy, dir) -> (sortBy, dir.ToString())
                             | None -> ("teczka", "desc")
         let filterClause = query.Filters
-                           |> List.map(fun f -> $"AND {f.Key} {f.Operator} {f.Value} ")
+                           |> List.map(fun f -> $"AND {f.Key} {(prepareFilter(f.Operator, f.Value))} ")
                            |> String.concat ""
         let sql = (searchOrgsSql sortBy dir filterClause)
         let! rows = db.QueryBy<OrganizationSummary> sql {| searchTerm = query.SearchTerm |}

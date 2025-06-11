@@ -14,12 +14,6 @@ open Organizations.CompositionRoot
 open HttpContextExtensions
 open type Microsoft.AspNetCore.Http.TypedResults
 
-let replaceTextFilterOperator (operator: string option) =
-    match operator with
-    | Some "zawiera" -> Some "ILIKE"
-    | Some "nie zawiera" -> Some "NOT ILIKE"
-    | _ -> None
-
 let parseFilter (ctx: HttpContext) : Query =
     let search = ctx.TryGetQueryValue "search" |> Option.defaultValue ""
     let sortBy = option {
@@ -27,7 +21,7 @@ let parseFilter (ctx: HttpContext) : Query =
         let! dir = ctx.TryGetQueryValue "dir"
         return sortBy, dir |> Direction.FromString
     }
-    let benficjenci_op = ctx.TryGetQueryValue "Beneficjenci_op" |> replaceTextFilterOperator
+    let benficjenci_op = ctx.TryGetQueryValue "Beneficjenci_op"
     let benficjenci = ctx.TryGetQueryValue "Beneficjenci" 
     let liczba_beneficjentow_op = ctx.TryGetQueryValue "LiczbaBeneficjentow_op" 
     let liczba_beneficjentow = ctx.TryGetQueryValue "LiczbaBeneficjentow" 
