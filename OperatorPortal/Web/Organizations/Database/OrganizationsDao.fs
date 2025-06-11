@@ -4,7 +4,7 @@ open System
 open System.Data
 open Organizations.Application
 open Organizations.Application.DocumentType
-open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Database.DateOnlyCoder
 open Organizations.Domain.Organization
 open PostgresPersistence.DapperFsharp

@@ -3,7 +3,8 @@ module Organizations.CompositionRoot
 open System.Data
 open Azure.Storage.Blobs
 open Organizations.Application
-open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.OrganizationDetails
+open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Database
 
 type Dependencies =

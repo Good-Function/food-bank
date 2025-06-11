@@ -1,11 +1,11 @@
 module Organizations.Templates.Kontakty
 
 open Layout
-open Organizations.Application
+open Organizations.Application.ReadModels
 open Layout.Fields
 open Oxpecker.ViewEngine
 
-let View (kontakty: ReadModels.Kontakty) (teczka: int64) =
+let View (kontakty: OrganizationDetails.Kontakty) (teczka: int64) =
     article () {
         editableHeader "Kontakty" $"/organizations/{teczka}/kontakty/edit"
         readonlyField "www / facebook" kontakty.WwwFacebook
@@ -21,7 +21,7 @@ let View (kontakty: ReadModels.Kontakty) (teczka: int64) =
         readonlyField "Telefon do os. odbierającej" kontakty.TelefonOsobyOdbierajacej
     }
 
-let Form (kontakty: ReadModels.Kontakty) (teczka: int64) =
+let Form (kontakty: OrganizationDetails.Kontakty) (teczka: int64) =
     let indicator = "KontaktySpinner"
     form () {
         article (class' = "focus-dim") {

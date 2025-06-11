@@ -5,7 +5,7 @@ open Organizations.Application
 open Organizations.Application.DocumentType
 open Organizations.Templates
 open Oxpecker
-open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.OrganizationDetails
 open Organizations.CompositionRoot
 
 let daneAdresowe (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
@@ -27,7 +27,7 @@ let changeDaneAdresowe (handle: Handlers.ChangeDaneAdresowe) (teczka: int64) :En
         task {
             let! cmd = ctx.BindForm<Commands.DaneAdresowe>()
             do! handle(teczka, cmd)
-            return ctx.WriteHtmlView(DaneAdresowe.View (cmd |> ReadModels.DaneAdresowe.FromCommand) teczka)
+            return ctx.WriteHtmlView(DaneAdresowe.View (cmd |> DaneAdresowe.FromCommand) teczka)
         }
 
 let kontakty (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
@@ -49,7 +49,7 @@ let changeKontakty (handle: Handlers.ChangeKontakty) (teczka: int64) :EndpointHa
         task {
             let! cmd = ctx.BindForm<Commands.Kontakty>()
             do! handle(teczka, cmd)
-            return ctx.WriteHtmlView(Kontakty.View (cmd |> ReadModels.Kontakty.FromCommand) teczka)
+            return ctx.WriteHtmlView(Kontakty.View (cmd |> Kontakty.FromCommand) teczka)
         }
         
 let beneficjenci (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
@@ -71,7 +71,7 @@ let changeBeneficjenci (handle: Handlers.ChangeBeneficjenci) (teczka: int64) :En
         task {
             let! cmd = ctx.BindForm<Commands.Beneficjenci>()
             do! handle(teczka, cmd)
-            return ctx.WriteHtmlView(Beneficjenci.View (cmd |> ReadModels.Beneficjenci.FromCommand) teczka)
+            return ctx.WriteHtmlView(Beneficjenci.View (cmd |> Beneficjenci.FromCommand) teczka)
         }
         
 let dokumenty (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
@@ -182,7 +182,7 @@ let changeZrodlaZywnosci (handle: Handlers.ChangeZrodlaZywnosci) (teczka: int64)
         task {
             let! cmd = ctx.BindForm<Commands.ZrodlaZywnosci>()
             do! handle(teczka, cmd)
-            return ctx.WriteHtmlView(ZrodlaZywnosci.View (cmd |> ReadModels.ZrodlaZywnosci.FromCommand) teczka)
+            return ctx.WriteHtmlView(ZrodlaZywnosci.View (cmd |> ZrodlaZywnosci.FromCommand) teczka)
         }
         
 let adresyKsiegowosci (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64): EndpointHandler =
@@ -204,7 +204,7 @@ let changeAdresyKsiegowosci (handle: Handlers.ChangeAdresyKsiegowosci) (teczka: 
         task {
             let! cmd = ctx.BindForm<Commands.AdresyKsiegowosci>()
             do! handle(teczka, cmd)
-            return ctx.WriteHtmlView(AdresyKsiegowosci.View (cmd |> ReadModels.AdresyKsiegowosci.FromCommand) teczka)
+            return ctx.WriteHtmlView(AdresyKsiegowosci.View (cmd |> AdresyKsiegowosci.FromCommand) teczka)
         }
      
 let warunkiPomocy (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64): EndpointHandler =
@@ -226,7 +226,7 @@ let changeWarunkiPomocy (handle: Handlers.ChangeWarunkiPomocy) (teczka: int64): 
         task {
             let! cmd = ctx.BindForm<Commands.WarunkiPomocy>()
             do! handle(teczka, cmd)
-            return ctx.WriteHtmlView(WarunkiPomocy.View (cmd |> ReadModels.WarunkiPomocy.FromCommand) teczka)
+            return ctx.WriteHtmlView(WarunkiPomocy.View (cmd |> WarunkiPomocy.FromCommand) teczka)
         }
 
 let Endpoints (dependencies: Dependencies) =

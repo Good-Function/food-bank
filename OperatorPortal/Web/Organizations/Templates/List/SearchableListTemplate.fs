@@ -2,7 +2,7 @@ module Organizations.List.SearchableListTemplate
 
 open Layout
 open Layout.Navigation
-open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.OrganizationSummary
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 open Web.Organizations

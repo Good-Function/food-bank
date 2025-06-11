@@ -4,7 +4,8 @@ open System
 open System.Security.Claims
 open Microsoft.AspNetCore.Http
 open Organizations.Application
-open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.OrganizationSummary
+open Organizations.Application.ReadModels.OrganizationDetails
 open Organizations.List
 open Organizations.Templates
 open FsToolkit.ErrorHandling

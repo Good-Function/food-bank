@@ -1,11 +1,11 @@
 module Organizations.Templates.DaneAdresowe
 
 open Layout
-open Organizations.Application
+open Organizations.Application.ReadModels
 open Oxpecker.ViewEngine
 open Layout.Fields
 
-let View (adresy: ReadModels.DaneAdresowe) (teczka: int64) =
+let View (adresy: OrganizationDetails.DaneAdresowe) (teczka: int64) =
     article () {
         editableHeader "Dane adresowe" $"/organizations/{teczka}/dane-adresowe/edit"
         readonlyField "Organizacja, która podpisała umowę" adresy.NazwaOrganizacjiPodpisujacejUmowe
@@ -16,7 +16,7 @@ let View (adresy: ReadModels.DaneAdresowe) (teczka: int64) =
         readonlyField "Powiat" adresy.Powiat
     }
 
-let Form (adresy: ReadModels.DaneAdresowe) (teczka: int64) =
+let Form (adresy: OrganizationDetails.DaneAdresowe) (teczka: int64) =
     let indicator = "DaneAdresoweSpinner"
     form () {
         article (class' = "focus-dim") {

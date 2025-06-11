@@ -2,7 +2,7 @@ module Organizations.Templates.Dokumenty
 
 open Layout
 open Layout.Fields
-open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.OrganizationDetails
 open Oxpecker.ViewEngine
 open Organizations.Templates.Formatters
 open Oxpecker.Htmx

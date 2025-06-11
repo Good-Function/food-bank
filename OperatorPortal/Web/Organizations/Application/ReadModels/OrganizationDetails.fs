@@ -1,24 +1,8 @@
-module Organizations.Application.ReadModels
+module Organizations.Application.ReadModels.OrganizationDetails
 
 open System
+open Organizations.Application
 open Organizations.Application.DocumentType
-
-type OrganizationSummary =
-    { Teczka: int64
-      FormaPrawna: string
-      NazwaPlacowkiTrafiaZywnosc: string
-      AdresPlacowkiTrafiaZywnosc: string
-      GminaDzielnica: string
-      Telefon: string
-      Kontakt: string
-      Email: string
-      Dostepnosc: string
-      OsobaDoKontaktu: string
-      TelefonOsobyKontaktowej: string
-      Beneficjenci: string
-      LiczbaBeneficjentow: int
-      Kategoria: string
-      OstatnieOdwiedzinyData: DateOnly option }
 
 type DaneAdresowe =
     { NazwaOrganizacjiPodpisujacejUmowe: string
@@ -138,35 +122,5 @@ type OrganizationDetails =
       Beneficjenci: Beneficjenci
       Dokumenty: Document list
       WarunkiPomocy: WarunkiPomocy }
-
-type Direction =
-    | Asc
-    | Desc
-
-    override this.ToString() =
-        this
-        |> function
-            | Asc -> "asc"
-            | Desc -> "desc"
-    member this.Reverse() =
-        if this = Asc then
-            Desc
-        else Asc
-
-    static member FromString(str: string) = if str = "desc" then Desc else Asc
-
-
-type Filter = { Key: string; Value: obj; Operator: string }
-type Query =
-    { SearchTerm: string
-      SortBy: (string * Direction) option
-      Filters: Filter list
-    }
-    with static member Zero=
-            { SearchTerm = ""
-              SortBy = None
-              Filters = []
-            }
-
-type ReadOrganizationSummaries = Query -> Async<OrganizationSummary list>
+    
 type ReadOrganizationDetailsBy = int64 -> Async<OrganizationDetails>

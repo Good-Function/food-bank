@@ -1,12 +1,12 @@
 module Organizations.Templates.ZrodlaZywnosci
 
 open Layout
-open Organizations.Application
+open Organizations.Application.ReadModels
 open Layout.Fields
 open Oxpecker.ViewEngine
 open Organizations.Templates.Formatters
 
-let View (zrodla: ReadModels.ZrodlaZywnosci) (teczka: int64) =
+let View (zrodla: OrganizationDetails.ZrodlaZywnosci) (teczka: int64) =
     article () {
         editableHeader "Źródła żywności"  $"/organizations/{teczka}/zrodla-zywnosci/edit"
         readonlyField "Sieci" (zrodla.Sieci |> toTakNie)
@@ -17,7 +17,7 @@ let View (zrodla: ReadModels.ZrodlaZywnosci) (teczka: int64) =
         readonlyField "Tylko nasz magazyn" (zrodla.TylkoNaszMagazyn |> toTakNie)
     }
 
-let Form (zrodla: ReadModels.ZrodlaZywnosci) (teczka: int64) =
+let Form (zrodla: OrganizationDetails.ZrodlaZywnosci) (teczka: int64) =
     let indicator = "ZrodlaZywnosciIndicator"
     form () {
         article (class' = "focus-dim") {

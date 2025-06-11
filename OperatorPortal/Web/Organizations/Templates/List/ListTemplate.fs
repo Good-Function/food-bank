@@ -5,7 +5,7 @@ open Organizations.List.SearchableListTemplate
 open Organizations.Templates.Formatters
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
-open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.OrganizationSummary
 open Web.Layout.Dropdown
 open Web.Organizations.Templates.List.Filterable
 open Web.Organizations.Templates.List.Sortable

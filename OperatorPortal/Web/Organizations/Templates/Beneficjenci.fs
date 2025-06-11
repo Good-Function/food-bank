@@ -1,18 +1,18 @@
 module Organizations.Templates.Beneficjenci
 
 open Layout
-open Organizations.Application
+open Organizations.Application.ReadModels
 open Layout.Fields
 open Oxpecker.ViewEngine
 
-let View (beneficjenci: ReadModels.Beneficjenci) (teczka: int64) =
+let View (beneficjenci: OrganizationDetails.Beneficjenci) (teczka: int64) =
     article () {
         editableHeader "Beneficjenci" $"/organizations/{teczka}/beneficjenci/edit"
         readonlyField "Liczba Beneficjentów" $"{beneficjenci.LiczbaBeneficjentow}"
         readonlyField "Beneficjenci" beneficjenci.Beneficjenci
     }
 
-let Form (beneficjenci: ReadModels.Beneficjenci) (teczka: int64) =
+let Form (beneficjenci: OrganizationDetails.Beneficjenci) (teczka: int64) =
     let indicator = "BeneficjenciSpinner"
     form () {
         article (class' = "focus-dim") {

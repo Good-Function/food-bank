@@ -2,7 +2,7 @@ module Organizations.Templates.DetailsTemplate
 
 open System
 open Layout.Navigation
-open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.OrganizationDetails
 open Layout.Fields
 open Oxpecker.ViewEngine
 open Web.Organizations

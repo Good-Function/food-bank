@@ -1,12 +1,12 @@
 module Organizations.Templates.WarunkiPomocy
 
 open Layout
-open Organizations.Application
+open Organizations.Application.ReadModels
 open Layout.Fields
 open Oxpecker.ViewEngine
 open Organizations.Templates.Formatters
 
-let View (warunki: ReadModels.WarunkiPomocy) (teczka: int64) =
+let View (warunki: OrganizationDetails.WarunkiPomocy) (teczka: int64) =
     article () {
         editableHeader "Warunki udzielania pomocy żywnościowej"  $"/organizations/{teczka}/warunki-pomocy/edit"
         readonlyField "Kategoria" warunki.Kategoria
@@ -19,7 +19,7 @@ let View (warunki: ReadModels.WarunkiPomocy) (teczka: int64) =
         readonlyField "Transport - kategoria" warunki.TransportKategoria
     }
 
-let Form (warunki: ReadModels.WarunkiPomocy) (teczka: int64) =
+let Form (warunki: OrganizationDetails.WarunkiPomocy) (teczka: int64) =
     let indicator = "WarunkiPomocySpinner"
     form () {
         article (class' = "focus-dim") {

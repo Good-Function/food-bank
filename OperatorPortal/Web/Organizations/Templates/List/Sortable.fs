@@ -1,7 +1,7 @@
 module Web.Organizations.Templates.List.Sortable
 
 open Microsoft.AspNetCore.WebUtilities
-open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.OrganizationSummary
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 

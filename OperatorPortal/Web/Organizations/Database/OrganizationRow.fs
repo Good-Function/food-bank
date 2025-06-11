@@ -3,7 +3,7 @@ module Web.Organizations.Database.OrganizationRow
 open System
 open System.Text.Json
 open Organizations.Application
-open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.OrganizationDetails
 open Organizations.Domain.FormaPrawna
 open Organizations.Domain.Identifiers
 open Organizations.Domain.Organization
