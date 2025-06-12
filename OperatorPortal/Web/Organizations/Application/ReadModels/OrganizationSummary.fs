@@ -1,6 +1,40 @@
 module Organizations.Application.ReadModels.OrganizationSummary
 
 open System
+open Microsoft.FSharp.Reflection
+
+type QueriedColumns = 
+  | Teczka
+  | FormaPrawna
+  | NazwaPlacowkiTrafiaZywnosc
+  | AdresPlacowkiTrafiaZywnosc
+  | GminaDzielnica
+  | Telefon
+  | Kontakt
+  | Email
+  | Dostepnosc
+  | OsobaDoKontaktu
+  | TelefonOsobyKontaktowej
+  | Beneficjenci
+  | LiczbaBeneficjentow
+  | Kategoria
+  | OstatnieOdwiedzinyData
+  member this.Label =
+      match this with
+      | Teczka -> failwith "Teczk."
+      | NazwaPlacowkiTrafiaZywnosc -> "Nazwa placówki"
+      | AdresPlacowkiTrafiaZywnosc -> "Adres placówki"
+      | GminaDzielnica -> "Gmina/Dzielnica"
+      | FormaPrawna -> "Forma prawna"
+      | Kategoria -> "Kategoria"
+      | Beneficjenci -> "Beneficjenci"
+      | LiczbaBeneficjentow -> "Liczba B."
+      | OstatnieOdwiedzinyData -> "Odwiedzono"
+      
+let QueriedColumnsList =
+    FSharpType.GetUnionCases(typeof<QueriedColumns>)
+    |> Array.map(fun case -> FSharpValue.MakeUnion(case, [||]) :?> QueriedColumns)
+    |> Array.toList
 
 type OrganizationSummary =
     { Teczka: int64
