@@ -93,9 +93,6 @@ jobs:
             dbAdminPassword=${{ secrets.DB_ADMIN_PASSWORD }}
             dbServerName=foodbank-postgres
             dbName=foodbankdb
-            vnetName=foodbank-vnet
-            subnetDbName=postgres-subnet
-            subnetAppName=containerapp-subnet
           failOnStdErr: false
       - name: Show FQDN
         run: | 
