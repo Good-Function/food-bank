@@ -7,6 +7,8 @@ open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 open Web.Organizations
 open PageComposer
+open Web.Organizations.Templates.List.Filterable
+open Web.Organizations.Templates.List.Sortable
 
 let createFilterStateHolder filter =
             match filter.SortBy with
@@ -17,20 +19,20 @@ let createFilterStateHolder filter =
                     input (type' = "hidden", name = "dir", value = dir.ToString())
                 }
 
-let Template (currentFilter: Query) =
+let Template (query: Query) =
     div (id = "OrganizationsPage") {
         div(id = "OrganizationsFilterState") {
-            createFilterStateHolder currentFilter
+            createFilterStateHolder query
         }
         input (
             type' = "search",
             name = "search",
-            value = currentFilter.SearchTerm,
+            value = query.SearchTerm,
             id = "OrganizationSearch",
             style = "transition:none;",
             title = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxGet = "/organizations/summaries",
-            hxInclude = "[name='sort'], [name='dir'], [name='liczba_beneficjentow'], [name='liczba_beneficjentow_op']",
+            hxInclude = "[name='sort'], [name='dir'], [name='LiczbaBeneficjentow'], [name='LiczbaBeneficjentow_op']",
             placeholder = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxTrigger = "load, input changed delay:500ms, keyup[key=='Enter']",
             hxSync = "this:replace",
@@ -44,15 +46,81 @@ let Template (currentFilter: Query) =
                 table (class' = "striped big-table") {
                     thead () {
                         tr (id="OrganizationHeadersRow") {
-                            th (style = "width:82px;") { "Teczk." }
-                            th (style = "width:290px;") { "Nazwa placówki" }
-                            th (style = "width:300px;") { "Adres placówki" }
-                            th (style = "width:200px;") { "Gmina/Dzielnica" }
-                            th (style = "width:175px;") { "Forma prawna" }
-                            th (style = "width:200px;") { "Kategoria" }
-                            th (style = "width:200px;") { "Beneficjenci" }
-                            th (style = "width:155px;") { "Liczba B." }
-                            th (style = "width:150px;") { "Odwiedzono" }
+                            th (style = "width:82px;") {
+                                sortable {
+                                    ColumnKey = "Teczka"
+                                    ColumnLabel = "Teczk."
+                                    CurrentSortBy = query.SortBy
+                                }
+                            }
+                            th (style = "width:290px;") {
+                                sortable {
+                                    ColumnKey = "NazwaPlacowkiTrafiaZywnosc"
+                                    ColumnLabel = "Nazwa placówki"
+                                    CurrentSortBy = query.SortBy
+                                }
+                            }
+                            th (style = "width:300px;") {
+                                sortable {
+                                    ColumnKey = "AdresPlacowkiTrafiaZywnosc"
+                                    ColumnLabel = "Adres placówki"
+                                    CurrentSortBy = query.SortBy
+                                }
+                            }
+                            th (style = "width:200px;") {
+                                sortable {
+                                    ColumnKey = "GminaDzielnica"
+                                    ColumnLabel = "Gmina/Dzielnica"
+                                    CurrentSortBy = query.SortBy
+                                }
+                            }
+                            th (style = "width:175px;") {
+                                sortable {
+                                    ColumnKey = "FormaPrawna"
+                                    ColumnLabel = "Forma prawna"
+                                    CurrentSortBy = query.SortBy
+                                }
+                            }
+                            th (style = "width:200px;") {
+                                sortable {
+                                    ColumnKey = "Kategoria"
+                                    ColumnLabel = "Forma prawna"
+                                    CurrentSortBy = query.SortBy
+                                }
+                            }
+                            th (style = "width:200px;") {
+                                sortable {
+                                    ColumnKey = "Beneficjenci"
+                                    ColumnLabel = "Beneficjenci"
+                                    CurrentSortBy = query.SortBy
+                                }
+                                filterable {
+                                    Type = FilterType.StringFilter
+                                    ColumnKey = "Beneficjenci"
+                                    FilterLabel = "Beneficjenci"
+                                    CurrentFilters = query.Filters
+                                }
+                            }
+                            th (style = "width:155px;") {
+                                sortable {
+                                    ColumnKey = "LiczbaBeneficjentow"
+                                    ColumnLabel = "Liczba B."
+                                    CurrentSortBy = query.SortBy
+                                }
+                                filterable {
+                                    Type = FilterType.NumberFilter
+                                    ColumnKey = "LiczbaBeneficjentow"
+                                    FilterLabel = "Liczba B."
+                                    CurrentFilters = query.Filters
+                                }
+                            }
+                            th (style = "width:150px;") {
+                                sortable {
+                                    ColumnKey = "OstatnieOdwiedzinyData"
+                                    ColumnLabel = "Odwiedzono"
+                                    CurrentSortBy = query.SortBy
+                                }
+                            }
                             th (style = "width:110px;") { "Kontakt" }
                         }
                     }
