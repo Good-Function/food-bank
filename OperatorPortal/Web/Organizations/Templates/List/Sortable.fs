@@ -31,7 +31,7 @@ let sortable (sortBy: SortBy) =
                 hxTrigger = "click",
                 hxPushUrl = "true",
                 hxSwap = "outerHTML",
-                hxInclude = """[name='liczba_beneficjentow'], [name='liczba_beneficjentow_op'], [name='search']""",
+                hxInclude = """[name='LiczbaBeneficjentow'], [name='LiczbaBeneficjentow_op'], [name='search']""",
                 hxIndicator = ".big-table",
                 style = "color:unset;"
             ) {
