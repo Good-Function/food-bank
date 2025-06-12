@@ -30,6 +30,7 @@ param dbName string = 'foodbankdb'
 
 resource managedEnv 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
   name: 'operator-portal' // TODO fix later
+  scope: resourceGroup(environmentResourceGroup)
 }
 
 
