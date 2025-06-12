@@ -28,17 +28,16 @@ param dbServerName string = 'foodbank-postgres'
 @description('PostgreSQL Database Name')
 param dbName string = 'foodbankdb'
 
-resource managedEnv 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
-  name: 'operator-portal' // TODO fix later
-  scope: resourceGroup(environmentResourceGroup)
-}
-
+// resource managedEnv 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
+//   name: 'operator-portal' // TODO fix later
+//   scope: resourceGroup()
+// }
 
 resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: name
   location: location
   properties: {
-    managedEnvironmentId: managedEnv.id
+    managedEnvironmentId: '/subscriptions/1d7d3d46-9d6b-405b-b676-bda39c17c5b5/resourceGroups/bzsoswaw/providers/Microsoft.App/managedEnvironments/operator-portal'
     configuration: {
       secrets: [
         {
