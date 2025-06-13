@@ -7,6 +7,10 @@ on:
       - .github/workflows/operator-portal.yml
     branches:
       - main
+  pull_request:
+    paths:
+      - "OperatorPortal/**"
+      - .github/workflows/operator-portal.yml
 
 defaults:
   run:

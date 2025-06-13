@@ -7,6 +7,10 @@ on:
       - .github/workflows/charity-portal.yml
     branches:
       - main
+  pull_request:
+    paths:
+      - "CharityPortal/**"
+      - .github/workflows/charity-portal.yml
 
 defaults:
   run:
