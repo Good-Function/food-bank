@@ -1,4 +1,4 @@
-@description('Name for the container group')
+@description('Name for the app')
 param name string 
 
 @description('Location for all resources.')
@@ -7,7 +7,7 @@ param location string = resourceGroup().location
 @description('ACR Login')
 param acrlogin string
 
-@description('ACR Login')
+@description('ACR endpoint')
 param acrendpoint string
 
 @description('Container image to deploy.')
