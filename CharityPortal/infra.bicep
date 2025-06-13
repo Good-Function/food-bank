@@ -1,6 +1,5 @@
 @description('Name for the container group')
-// TODO: Fix - this is correct, but it is called form GH actions with operator-portal. Rename it to appName, this could be used for bot image name and az container app name.
-param name string = 'foodbank'
+param name string 
 
 @description('Location for all resources.')
 param location string = resourceGroup().location
@@ -49,16 +48,15 @@ param authTenantId string
 @description('OAuth state value')
 param authState string
 
-// resource managedEnv 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
-//   name: 'operator-portal' // TODO fix later
-//   scope: resourceGroup()
-// }
+resource managedEnv 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
+  name: 'operator-portal'
+}
 
 resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: name
   location: location
   properties: {
-    managedEnvironmentId: '/subscriptions/1d7d3d46-9d6b-405b-b676-bda39c17c5b5/resourceGroups/bzsoswaw/providers/Microsoft.App/managedEnvironments/operator-portal'
+    managedEnvironmentId: managedEnv.id
     configuration: {
       secrets: [
         {
