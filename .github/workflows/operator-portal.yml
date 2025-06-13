@@ -2,15 +2,13 @@ name: Operator Portal CI/CD
 
 on:
   push:
-    paths:
-      - "OperatorPortal/**"
-      - .github/workflows/operator-portal.yml
     branches:
       - main
-  pull_request:
-    paths:
+    paths: &watched_paths
       - "OperatorPortal/**"
       - .github/workflows/operator-portal.yml
+  pull_request:
+    paths: *watched_paths
 
 defaults:
   run:
