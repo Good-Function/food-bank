@@ -1,16 +1,12 @@
-name: Food Bank CI/CD
+name: Operator Portal CI/CD
 
 on:
   push:
     paths:
       - "OperatorPortal/**"
-      - .github/workflows/deploy-to-azure.yml
+      - .github/workflows/operator-portal.yml
     branches:
       - main
-  pull_request:
-    paths:
-      - "OperatorPortal/**"
-      - .github/workflows/deploy-to-azure.yml
 
 defaults:
   run:

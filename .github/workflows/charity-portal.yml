@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "CharityPortal/**"
-      - .github/workflows/charity-portal-azure.yml
+      - .github/workflows/charity-portal.yml
     branches:
       - main
 
