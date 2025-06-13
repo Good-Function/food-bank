@@ -2,13 +2,15 @@ name: Charity Portal CI/CD
 
 on:
   push:
-    branches:
-      - main
-    paths: &watched_paths
+    paths:
       - "CharityPortal/**"
       - .github/workflows/charity-portal.yml
+    branches:
+      - main
   pull_request:
-    paths: *watched_paths
+    paths:
+      - "CharityPortal/**"
+      - .github/workflows/charity-portal.yml
 
 defaults:
   run:
