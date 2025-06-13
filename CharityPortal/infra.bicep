@@ -70,15 +70,15 @@ resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
           value: 'Host=${dbServerName}.postgres.database.azure.com;Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
         }
         {
-          name: 'authClientId'
+          name: 'authClientIdRef'
           value: authClientId
         }
         {
-          name: 'authClientSecret'
+          name: 'authClientSecretRef'
           value: authClientSecret
         }
         {
-          name: 'authTenantId'
+          name: 'authTenantIdRef'
           value: authTenantId
         }
       ]
@@ -114,15 +114,15 @@ resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
             }
             {
               name: 'AUTH_CLIENT_ID'
-              secretRef: 'authClientId'
+              secretRef: 'authClientIdRef'
             }
             {
               name: 'AUTH_CLIENT_SECRET'
-              secretRef: 'authClientSecret'
+              secretRef: 'authClientSecretRef'
             }
             {
               name: 'AUTH_TENANT_ID'
-              secretRef: 'authTenantId'
+              secretRef: 'authTenantIdRef'
             }
             {
               name: 'AUTH_REDIRECT_URL'
