@@ -3,7 +3,7 @@ module Organizations.Application.ReadModels.OrganizationSummary
 open System
 open Microsoft.FSharp.Reflection
 
-type QueriedColumns = 
+type QueriedColumn = 
   | Teczka
   | FormaPrawna
   | NazwaPlacowkiTrafiaZywnosc
@@ -31,10 +31,18 @@ type QueriedColumns =
       | LiczbaBeneficjentow -> "Liczba B."
       | OstatnieOdwiedzinyData -> "Odwiedzono"
       
-let QueriedColumnsList =
-    FSharpType.GetUnionCases(typeof<QueriedColumns>)
-    |> Array.map(fun case -> FSharpValue.MakeUnion(case, [||]) :?> QueriedColumns)
+let QueriedColumns =
+    FSharpType.GetUnionCases(typeof<QueriedColumn>)
+    |> Array.map(fun case -> FSharpValue.MakeUnion(case, [||]) :?> QueriedColumn)
     |> Array.toList
+    
+let QueriedColumnsWithOperators =
+    QueriedColumns |> List.collect (fun col -> 
+        [string col; string col + "_op"]
+    )
+    
+let QueriedColumnsWithOperatorsExcept (col: QueriedColumn) =
+    QueriedColumnsWithOperators |> List.filter(not << _.StartsWith(string col))
 
 type OrganizationSummary =
     { Teczka: int64

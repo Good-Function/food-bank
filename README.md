@@ -20,3 +20,10 @@ On the top you can find most important tasks.
 ## CharityPortal
 1. Create & fill .env file based on .env.example
 2. Execute `execute source .env && air` 
+
+
+## Useful stuff
+1. Lint bicep: 
+`az bicep lint --file ./infra.bicep`
+2. Validate bicep (requires login):
+`az deployment group validate --resource-group bzsoswaw --template-file ./infra.bicep`
