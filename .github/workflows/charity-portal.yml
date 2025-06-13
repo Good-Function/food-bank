@@ -93,6 +93,12 @@ jobs:
             dbAdminPassword=${{ secrets.DB_ADMIN_PASSWORD }}
             dbServerName=foodbank-postgres
             dbName=foodbankdb
+            authClientId=${{ secrets.AUTH_CLIENT_ID }}
+            authClientSecret=${{ secrets.AUTH_CLIENT_SECRET }}
+            authRedirectUrl=${{ secrets.AUTH_REDIRECT_URL }}
+            authTenantName=${{ secrets.AUTH_TENANT_NAME }}
+            authTenantId=${{ secrets.AUTH_TENANT_ID }}
+            authState=${{ secrets.AUTH_STATE }}
           failOnStdErr: false
       - name: Show FQDN
         run: | 
