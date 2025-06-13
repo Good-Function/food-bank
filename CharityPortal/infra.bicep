@@ -28,6 +28,27 @@ param dbServerName string = 'foodbank-postgres'
 @description('PostgreSQL Database Name')
 param dbName string = 'foodbankdb'
 
+@secure()
+@description('Client ID for authentication')
+param authClientId string
+
+@secure()
+@description('Client secret for authentication')
+param authClientSecret string
+
+@description('Redirect URL for authentication')
+param authRedirectUrl string
+
+@description('Tenant name for authentication')
+param authTenantName string
+
+@secure()
+@description('Tenant ID for authentication')
+param authTenantId string
+
+@description('OAuth state value')
+param authState string
+
 // resource managedEnv 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
 //   name: 'operator-portal' // TODO fix later
 //   scope: resourceGroup()
@@ -78,6 +99,30 @@ resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
             {
               name: 'ASPNETCORE_ENVIRONMENT'
               value: 'Production'
+            }
+            {
+              name: 'AUTH_CLIENT_ID'
+              secretRef: 'authClientId'
+            }
+            {
+              name: 'AUTH_CLIENT_SECRET'
+              secretRef: 'authClientSecret'
+            }
+            {
+              name: 'AUTH_TENANT_ID'
+              secretRef: 'authTenantId'
+            }
+            {
+              name: 'AUTH_REDIRECT_URL'
+              value: authRedirectUrl
+            }
+            {
+              name: 'AUTH_TENANT_NAME'
+              value: authTenantName
+            }
+            {
+              name: 'AUTH_STATE'
+              value: authState
             }
           ]
         }
