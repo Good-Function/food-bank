@@ -76,10 +76,6 @@ resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
               secretRef: 'dbconnectionstringref'
             }
             {
-              name: 'BlobStorageConnectionString'
-              secretRef: 'blobstorageconnectionref'
-            }
-            {
               name: 'ASPNETCORE_ENVIRONMENT'
               value: 'Production'
             }
