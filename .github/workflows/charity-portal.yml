@@ -1,75 +1,93 @@
-name: Food Bank CI/CD
+name: Charity Portal CI/CD
 
 on:
   push:
     paths:
-      - "OperatorPortal/**"
-      - .github/workflows/deploy-to-azure.yml
+      - "CharityPortal/**"
+      - .github/workflows/charity-portal.yml
     branches:
       - main
   pull_request:
     paths:
-      - "OperatorPortal/**"
-      - .github/workflows/deploy-to-azure.yml
+      - "CharityPortal/**"
+      - .github/workflows/charity-portal.yml
 
 defaults:
   run:
-    working-directory: OperatorPortal 
+    working-directory: CharityPortal
 env:
-  IMAGE_NAME: operator-portal
+  IMAGE_NAME: charity-portal
   RESOURCE_GROUP: bzsoswaw
   ASPNETCORE_ENVIRONMENT: Development
 
 jobs:
-  test:
-    name: Build & Test (all branches and PRs)
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
         with:
-          dotnet-version: '9.0.x'
+          go-version: '1.24'
+
+      - name: Cache Go build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
       - name: Build
-        run: dotnet build
-      - name: Playwright
-        run: pwsh Tests/bin/Debug/net9.0/playwright.ps1 install chromium --with-deps
+        run: go build -v ./...
+        working-directory: ./CharityPortal
+
       - name: Test
-        run: dotnet test --logger html
+        run: go test -v ./...
+        working-directory: ./CharityPortal
 
   deploy:
     name: Push to ACR & Deploy (main branch only)
-    needs: test
+    needs: build
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/checkout@v4
+  
+      - name: Set up Go
+        uses: actions/setup-go@v4
         with:
-          dotnet-version: '9.0.x'
+          go-version: '1.24'
+  
       - name: Log in to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+  
       - name: Log into ACR
         uses: docker/login-action@v1
         with:
           registry: ${{ secrets.ACR_ENDPOINT }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
+  
       - name: Build Docker image
         run: docker build . -t ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+  
       - name: Push Docker image
         run: docker push ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+  
       - name: Deploy Bicep
         id: deploy
         uses: azure/arm-deploy@v1
         with:
           resourceGroupName: ${{ env.RESOURCE_GROUP }}
-          template: ./OperatorPortal/infra.bicep
+          template: ./CharityPortal/infra.bicep
           parameters: >
             image=${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
             name=${{ env.IMAGE_NAME }}
@@ -79,9 +97,12 @@ jobs:
             dbAdminPassword=${{ secrets.DB_ADMIN_PASSWORD }}
             dbServerName=foodbank-postgres
             dbName=foodbankdb
-            vnetName=foodbank-vnet
-            subnetDbName=postgres-subnet
-            subnetAppName=containerapp-subnet
+            authClientId=${{ secrets.AUTH_CLIENT_ID }}
+            authClientSecret=${{ secrets.AUTH_CLIENT_SECRET }}
+            authRedirectUrl=${{ secrets.AUTH_REDIRECT_URL }}
+            authTenantName=${{ secrets.AUTH_TENANT_NAME }}
+            authTenantId=${{ secrets.AUTH_TENANT_ID }}
+            authState=${{ secrets.AUTH_STATE }}
           failOnStdErr: false
       - name: Show FQDN
         run: | 
