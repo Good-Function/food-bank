@@ -32,10 +32,12 @@ let ``/ogranizations/summaries?search filters out and displays organization's mo
         // Assert
         let! doc = response.HtmlContent()
         let summaries =
-            doc.CssSelect "tbody tr"
+            doc.CssSelect "tr"
             |> Seq.map(fun row -> row.Descendants "td" |> Seq.map(_.InnerText()))
+            |> Seq.filter(fun row -> row |> Seq.length > 0)
             |> Seq.filter(fun row -> dbSummaryTeczkaIds |> List.contains (row |> Seq.head))
             |> Seq.toList
+        printfn "%A" summaries
         response.StatusCode |> should equal HttpStatusCode.OK
         (dbSummaries, summaries) ||> List.iter2(fun dbSummary summary ->
             $"{dbSummary.Teczka}" |> should equal (summary |> Seq.item 0)
@@ -84,8 +86,9 @@ let ``/ogranizations/summaries?search=xxx&sort=OstatnieOdwiedziny&dir=asc filter
                                         |> List.find(fun(_, text) -> text.Contains "Odwiedzono")
                                         |> fst
         let summaries =
-            doc.CssSelect "tbody tr"
-            |> List.map(fun tr -> tr.Descendants "td" |> Seq.map(_.InnerText()) |> Seq.toList)  
+            doc.CssSelect "tr"
+            |> List.map(fun tr -> tr.Descendants "td" |> Seq.map(_.InnerText()) |> Seq.toList)
+            |> Seq.filter(fun tr -> tr.Length > 0)
             |> Seq.toList
         response.StatusCode |> should equal HttpStatusCode.OK
         summaries.Length |> should equal 2
