@@ -1,4 +1,3 @@
-
 package handlers
 
 import (
@@ -8,8 +7,8 @@ import (
 
 type DashboardHandler struct{}
 
-func NewDashboardHandler() *HomeHandler {
-	return &HomeHandler{}
+func NewDashboardHandler() *DashboardHandler {
+	return &DashboardHandler{}
 }
 
 func (ph *DashboardHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

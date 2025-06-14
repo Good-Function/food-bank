@@ -15,6 +15,7 @@ type AuthProvider interface {
 	GetLoginURL() string
 	ExchangeToken(ctx context.Context, url url.Values) (*UserClaims, error)
 	Encode(name string, value interface{}) (string, error)
+	Decode(name, value string) (*UserClaims, error)
 }
 
 type Auth struct {
@@ -100,4 +101,25 @@ func (a *Auth) Encode(name string, value interface{}) (string, error) {
 		return "", err
 	}
 	return encoded, nil
+}
+
+func (a *Auth) Decode(name, value string) (*UserClaims, error) {
+	var decoded map[string]string
+	if err := a.securecookie.Decode(name, value, &decoded); err != nil {
+		return nil, fmt.Errorf("error decoding cookie: %w", err)
+	}
+	if decoded == nil {
+		return nil, fmt.Errorf("decoded value is nil")
+	}
+
+	user := &UserClaims{
+		Name:  decoded["name"],
+		Email: decoded["email"],
+		Sub:   decoded["sub"],
+	}
+	return user, nil
+}
+
+func SetUserContext(ctx context.Context, user *UserClaims) context.Context {
+	return context.WithValue(ctx, "user", user)
 }
