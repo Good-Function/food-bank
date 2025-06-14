@@ -2,10 +2,13 @@ package api
 
 import (
 	"charity_portal/api/handlers"
+	middleware "charity_portal/api/middlewares"
 	"charity_portal/config"
 	"charity_portal/pkg/auth"
 	"log"
 	"net/http"
+
+	"github.com/justinas/alice"
 )
 
 type API struct {
@@ -33,13 +36,15 @@ func NewAPI(cfg *config.Config) *API {
 func newRouter(authProvider auth.AuthProvider) *http.ServeMux {
 	mux := http.NewServeMux()
 
+	middlewaresChain := alice.New(middleware.Log)
+
 	fs := http.FileServer(http.Dir("./web/static"))
-	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
+	mux.Handle("GET /static/", middlewaresChain.Then(http.StripPrefix("/static/", fs)))
 
-	mux.Handle("POST /login", handlers.NewLoginHandler(authProvider))
-	mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(authProvider))
+	mux.Handle("POST /login", middlewaresChain.Then(handlers.NewLoginHandler(authProvider)))
+	mux.Handle("GET /login/callback", middlewaresChain.Then(handlers.NewLoginCallbackHandler(authProvider)))
 
-	mux.Handle("GET /{$}", handlers.NewHomeHandler())
+	mux.Handle("GET /{$}", middlewaresChain.Then(handlers.NewHomeHandler()))
 	return mux
 }
 
