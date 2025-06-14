@@ -19,6 +19,8 @@ type Auth struct {
 	TenantName   string
 	TenantID     string
 	State        string
+	HashKey      string
+	BlockKey     string
 }
 
 func buildAuthConfig() *Auth {
@@ -29,5 +31,7 @@ func buildAuthConfig() *Auth {
 		TenantName:   os.Getenv("AUTH_TENANT_NAME"),
 		TenantID:     os.Getenv("AUTH_TENANT_ID"),
 		State:        os.Getenv("AUTH_STATE"),
+		HashKey:      os.Getenv("AUTH_HASH_KEY"),
+		BlockKey:     os.Getenv("AUTH_BLOCK_KEY"),
 	}
 }

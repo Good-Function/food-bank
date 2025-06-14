@@ -21,6 +21,7 @@ func NewAPI(cfg *config.Config) *API {
 	if err != nil {
 		log.Fatalf("Failed to create auth provider: %v", err)
 	}
+
 	router := newRouter(authProvider)
 
 	server := http.Server{
@@ -44,6 +45,7 @@ func newRouter(authProvider auth.AuthProvider) *http.ServeMux {
 	mux.Handle("POST /login", middlewaresChain.Then(handlers.NewLoginHandler(authProvider)))
 	mux.Handle("GET /login/callback", middlewaresChain.Then(handlers.NewLoginCallbackHandler(authProvider)))
 
+	mux.Handle("GET /dashboard", middlewaresChain.Then(handlers.NewDashboardHandler()))
 	mux.Handle("GET /{$}", middlewaresChain.Then(handlers.NewHomeHandler()))
 	return mux
 }

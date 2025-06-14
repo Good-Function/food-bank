@@ -1,6 +1,6 @@
 package views
 
-templ Base() {
+templ Base(body templ.Component) {
 <!DOCTYPE html>
 <html data-theme="light">
 
@@ -17,7 +17,7 @@ templ Base() {
 		<hr />
 	</header>
 	<div style="display: flex; align-items: center; justify-content: center;">
-		@Home()
+		@body
 	</div>
 </body>
 

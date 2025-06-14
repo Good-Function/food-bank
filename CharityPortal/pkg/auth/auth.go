@@ -7,12 +7,14 @@ import (
 	"net/url"
 
 	"github.com/coreos/go-oidc/v3/oidc"
+	"github.com/gorilla/securecookie"
 	"golang.org/x/oauth2"
 )
 
 type AuthProvider interface {
 	GetLoginURL() string
 	ExchangeToken(ctx context.Context, url url.Values) (*UserClaims, error)
+	Encode(name string, value interface{}) (string, error)
 }
 
 type Auth struct {
@@ -21,6 +23,7 @@ type Auth struct {
 	oauth2Config *oauth2.Config
 	verifier     *oidc.IDTokenVerifier
 	state        string
+	securecookie *securecookie.SecureCookie
 }
 
 type UserClaims struct {
@@ -48,12 +51,15 @@ func NewAuth(cfg *config.Auth) (*Auth, error) {
 		Scopes:       []string{oidc.ScopeOpenID, "profile", "email"},
 	}
 
+	securecookie := securecookie.New([]byte(cfg.HashKey), []byte(cfg.BlockKey))
+
 	return &Auth{
 		provider:     provider,
 		oidcConfig:   oidcConfig,
 		oauth2Config: oauth2Config,
 		verifier:     verifier,
 		state:        cfg.State,
+		securecookie: securecookie,
 	}, nil
 }
 
@@ -86,4 +92,12 @@ func (a *Auth) ExchangeToken(ctx context.Context, url url.Values) (*UserClaims, 
 		return nil, fmt.Errorf("error parsing id_token claims: %w", err)
 	}
 	return &user, nil
+}
+
+func (a *Auth) Encode(name string, value interface{}) (string, error) {
+	encoded, err := a.securecookie.Encode(name, value)
+	if err != nil {
+		return "", err
+	}
+	return encoded, nil
 }
