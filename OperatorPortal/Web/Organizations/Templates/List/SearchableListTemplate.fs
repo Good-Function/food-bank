@@ -36,7 +36,6 @@ let Template (query: Query) =
             placeholder = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxTrigger = "load, input changed delay:500ms, keyup[key=='Enter']",
             hxSync = "this:replace",
-            hxSwap = "outerHTML",
             hxTarget = "#OrganizationsList",
             hxIndicator = ".big-table",
             hxPushUrl = "true"

@@ -35,7 +35,6 @@ let textFilterPopover (filterBy: FilterBy) =
                 input (
                     hxTrigger = "keyup[key=='Enter']",
                     hxTarget = "#OrganizationsList",
-                    hxSwap = "outerHTML",
                     hxGet = "/organizations/summaries",
                     hxPushUrl ="true",
                     hxIndicator = ".big-table",
@@ -49,7 +48,6 @@ let textFilterPopover (filterBy: FilterBy) =
                 div(
                     style="cursor:pointer",
                     hxTarget = "#OrganizationsList",
-                    hxSwap = "outerHTML",
                     hxGet = "/organizations/summaries",
                     hxPushUrl ="true",
                     hxIndicator = ".big-table",
@@ -61,7 +59,6 @@ let textFilterPopover (filterBy: FilterBy) =
                 div(
                     style="cursor:pointer",
                     hxTarget = "#OrganizationsList",
-                    hxSwap = "outerHTML",
                     hxGet = "/organizations/summaries",
                     hxPushUrl ="true",
                     hxIndicator = ".big-table",
@@ -93,7 +90,6 @@ let numberFilterPopover (filterBy: FilterBy) =
                 input (
                     hxTrigger = "keyup[key=='Enter']",
                     hxTarget = "#OrganizationsList",
-                    hxSwap = "outerHTML",
                     hxGet = "/organizations/summaries",
                     hxPushUrl ="true",
                     hxIndicator = ".big-table",
@@ -107,7 +103,6 @@ let numberFilterPopover (filterBy: FilterBy) =
                 div(
                     style="cursor:pointer",
                     hxTarget = "#OrganizationsList",
-                    hxSwap = "outerHTML",
                     hxGet = "/organizations/summaries",
                     hxPushUrl ="true",
                     hxIndicator = ".big-table",
@@ -119,7 +114,6 @@ let numberFilterPopover (filterBy: FilterBy) =
                 div(
                     style="cursor:pointer",
                     hxTarget = "#OrganizationsList",
-                    hxSwap = "outerHTML",
                     hxGet = "/organizations/summaries",
                     hxPushUrl ="true",
                     hxIndicator = ".big-table",

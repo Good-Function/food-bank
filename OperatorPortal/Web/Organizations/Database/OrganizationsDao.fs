@@ -40,7 +40,8 @@ WHERE
    OR teczka = CASE WHEN @searchTerm ~ '^\d+$' THEN @searchTerm::bigint  END
    OR (similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.2 OR similarity(gminadzielnica, @searchTerm) > 0.2))
    {filterClause}
-ORDER BY %s{sortBy} %s{dir};
+ORDER BY %s{sortBy} %s{dir}
+LIMIT 50;
 """
 let replaceTextFilterOperator (operator: string) =
     match operator with
