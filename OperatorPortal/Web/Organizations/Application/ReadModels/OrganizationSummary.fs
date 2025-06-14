@@ -9,12 +9,6 @@ type QueriedColumn =
   | NazwaPlacowkiTrafiaZywnosc
   | AdresPlacowkiTrafiaZywnosc
   | GminaDzielnica
-  | Telefon
-  | Kontakt
-  | Email
-  | Dostepnosc
-  | OsobaDoKontaktu
-  | TelefonOsobyKontaktowej
   | Beneficjenci
   | LiczbaBeneficjentow
   | Kategoria

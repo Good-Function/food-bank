@@ -11,7 +11,7 @@ type Placement =
         | Bottom -> "dropdown-bottom"
         | Left -> "dropdown-left"
 
-let DropDown (width: int, icon: RawTextNode) (placement: Placement, content: HtmlElement)=
+let DropDown (width: int, icon: HtmlElement) (placement: Placement, content: HtmlElement)=
     let placementClass = placement.ToString()
     div(class'="dropdown", tabindex= -1) {
         i(class'="db2", tabindex= -1)
