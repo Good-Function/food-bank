@@ -3,9 +3,13 @@ module Organizations.Router
 open System
 open System.Security.Claims
 open Microsoft.AspNetCore.Http
+open Microsoft.FSharp.Reflection
 open Organizations.Application
+open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.FilterOperators
 open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Application.ReadModels.OrganizationDetails
+open Organizations.Application.ReadModels.QueriedColumn
 open Organizations.List
 open Organizations.Templates
 open FsToolkit.ErrorHandling
@@ -15,27 +19,35 @@ open Organizations.CompositionRoot
 open HttpContextExtensions
 open type Microsoft.AspNetCore.Http.TypedResults
 
+let tryParseInt (text: string) =
+    match Int32.TryParse text with
+    | true, value -> Some value
+    | false, _ -> None
+
+let tryParseDU<'T> (input: string) : 'T option =
+    if FSharpType.IsUnion typeof<'T> then
+        FSharpType.GetUnionCases typeof<'T>
+        |> Array.tryFind _.Name.Equals(input, StringComparison.OrdinalIgnoreCase)
+        |> Option.map (fun case -> FSharpValue.MakeUnion(case, [||]) :?> 'T)
+    else None
+
 let parseFilter (ctx: HttpContext) : Query =
     let search = ctx.TryGetQueryValue "search" |> Option.defaultValue ""
     let sortBy = option {
-        let! sortBy = ctx.TryGetQueryValue "sort"
+        let! sortBy = ctx.TryGetQueryValue "sort" |> Option.bind tryParseDU<QueriedColumn>
         let! dir = ctx.TryGetQueryValue "dir"
         return sortBy, dir |> Direction.FromString
     }
-    let benficjenci_op = ctx.TryGetQueryValue "Beneficjenci_op"
-    let benficjenci = ctx.TryGetQueryValue "Beneficjenci" 
-    let liczba_beneficjentow_op = ctx.TryGetQueryValue "LiczbaBeneficjentow_op" 
-    let liczba_beneficjentow = ctx.TryGetQueryValue "LiczbaBeneficjentow" 
-                                    |> Option.bind (fun text ->
-                                        let ok, value = Int32.TryParse text
-                                        if ok then Some value else None
-                                    )
-    //todo todomg: Keys should be constant list to avoid SQL injection.
     let filters =
-        [
-            Option.map2 (fun value operator -> { Key = "LiczbaBeneficjentow"; Value = value; Operator = operator }) liczba_beneficjentow liczba_beneficjentow_op
-            Option.map2 (fun value operator -> { Key = "Beneficjenci"; Value = value; Operator = operator }) benficjenci benficjenci_op
-        ] |> List.choose id
+        QueriedColumn.All |> List.map(fun column ->
+            let operator = ctx.TryGetQueryValue $"{column}_op" |> Option.bind(FilterOperator.TryParse)
+            let value: obj option =
+                match operator with
+                | Some (TextOperator _) -> ctx.TryGetQueryValue $"{column}" |> Option.map box
+                | Some (NumberOperator _) -> ctx.TryGetQueryValue $"{column}" |> Option.bind tryParseInt |> Option.map box
+                | None -> None
+            (value, operator) ||> Option.map2(fun value operator -> {Key = column; Value = value; Operator = operator})
+        ) |> List.choose id
     
     { SearchTerm = search; SortBy = sortBy; Filters = filters}
 

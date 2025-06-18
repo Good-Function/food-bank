@@ -1,42 +1,8 @@
 module Organizations.Application.ReadModels.OrganizationSummary
 
 open System
-open Microsoft.FSharp.Reflection
-
-type QueriedColumn = 
-  | Teczka
-  | FormaPrawna
-  | NazwaPlacowkiTrafiaZywnosc
-  | AdresPlacowkiTrafiaZywnosc
-  | GminaDzielnica
-  | Beneficjenci
-  | LiczbaBeneficjentow
-  | Kategoria
-  | OstatnieOdwiedzinyData
-  member this.Label =
-      match this with
-      | Teczka -> failwith "Teczk."
-      | NazwaPlacowkiTrafiaZywnosc -> "Nazwa placówki"
-      | AdresPlacowkiTrafiaZywnosc -> "Adres placówki"
-      | GminaDzielnica -> "Gmina/Dzielnica"
-      | FormaPrawna -> "Forma prawna"
-      | Kategoria -> "Kategoria"
-      | Beneficjenci -> "Beneficjenci"
-      | LiczbaBeneficjentow -> "Liczba B."
-      | OstatnieOdwiedzinyData -> "Odwiedzono"
-      
-let QueriedColumns =
-    FSharpType.GetUnionCases(typeof<QueriedColumn>)
-    |> Array.map(fun case -> FSharpValue.MakeUnion(case, [||]) :?> QueriedColumn)
-    |> Array.toList
-    
-let QueriedColumnsWithOperators =
-    QueriedColumns |> List.collect (fun col -> 
-        [string col; string col + "_op"]
-    )
-    
-let QueriedColumnsWithOperatorsExcept (col: QueriedColumn) =
-    QueriedColumnsWithOperators |> List.filter(not << _.StartsWith(string col))
+open Organizations.Application.ReadModels.FilterOperators
+open Organizations.Application.ReadModels.QueriedColumn
 
 type OrganizationSummary =
     { Teczka: int64
@@ -72,10 +38,10 @@ type Direction =
     static member FromString(str: string) = if str = "desc" then Desc else Asc
 
 
-type Filter = { Key: string; Value: obj; Operator: string }
+type Filter = { Key: QueriedColumn; Value: obj; Operator: FilterOperator }
 type Query =
     { SearchTerm: string
-      SortBy: (string * Direction) option
+      SortBy: (QueriedColumn * Direction) option
       Filters: Filter list
     }
     with static member Zero=
