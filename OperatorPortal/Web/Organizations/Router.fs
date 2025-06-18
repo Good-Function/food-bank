@@ -5,7 +5,6 @@ open System.Security.Claims
 open Microsoft.AspNetCore.Http
 open Microsoft.FSharp.Reflection
 open Organizations.Application
-open Organizations.Application.ReadModels
 open Organizations.Application.ReadModels.FilterOperators
 open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Application.ReadModels.OrganizationDetails
@@ -23,6 +22,10 @@ let tryParseInt (text: string) =
     match Int32.TryParse text with
     | true, value -> Some value
     | false, _ -> None
+    
+let emptyToNone (text: string) =
+    if text = "" then None else Some text
+    
 
 let tryParseDU<'T> (input: string) : 'T option =
     if FSharpType.IsUnion typeof<'T> then
@@ -43,12 +46,15 @@ let parseFilter (ctx: HttpContext) : Query =
             let operator = ctx.TryGetQueryValue $"{column}_op" |> Option.bind(FilterOperator.TryParse)
             let value: obj option =
                 match operator with
-                | Some (TextOperator _) -> ctx.TryGetQueryValue $"{column}" |> Option.map box
-                | Some (NumberOperator _) -> ctx.TryGetQueryValue $"{column}" |> Option.bind tryParseInt |> Option.map box
+                | Some (TextOperator _) -> ctx.TryGetQueryValue $"{column}"
+                                           |> Option.bind emptyToNone
+                                           |> Option.map box
+                | Some (NumberOperator _) -> ctx.TryGetQueryValue $"{column}"
+                                             |> Option.bind tryParseInt
+                                             |> Option.map box
                 | None -> None
             (value, operator) ||> Option.map2(fun value operator -> {Key = column; Value = value; Operator = operator})
         ) |> List.choose id
-    
     { SearchTerm = search; SortBy = sortBy; Filters = filters}
 
 let indexPage: EndpointHandler =

@@ -1,6 +1,7 @@
 module Organizations.Templates.List.Sortable
 
 open Microsoft.AspNetCore.WebUtilities
+open Organizations.Application.ReadModels
 open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Application.ReadModels.QueriedColumn
 open Oxpecker.ViewEngine
@@ -30,7 +31,7 @@ let sortable (sortBy: SortBy) =
                 hxTarget = "#OrganizationsList",
                 hxTrigger = "click",
                 hxPushUrl = "true",
-                hxInclude = """[name='LiczbaBeneficjentow'], [name='LiczbaBeneficjentow_op'], [name='search']""",
+                hxInclude = $"""[name='search'], {HxIncludes.all}""",
                 hxIndicator = ".big-table",
                 style = "color:unset;"
             ) {
