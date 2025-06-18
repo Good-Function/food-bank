@@ -137,4 +137,4 @@ let filterable (filterBy: FilterBy) =
         match filterBy.Type with
         | NumberFilter -> numberFilterPopover filterBy
         | StringFilter -> textFilterPopover filterBy
-    DropDown (24, icon) (Placement.Bottom, filter)
+    DropDown (24, icon) (Placement.Custom "right:0; top:40px; margin-right:-100px", filter)

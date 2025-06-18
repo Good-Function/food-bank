@@ -36,7 +36,7 @@ let filterTemplate query =
         )
 
         tr (id="OrganizationHeadersRow", hxSwapOob = "true") {
-            th (style = "width:82px;") {
+            th (style = "width:85px;") {
                 sortable {
                     Column = Teczka
                     CurrentSortBy = query.SortBy
@@ -47,29 +47,54 @@ let filterTemplate query =
                     Column = NazwaPlacowkiTrafiaZywnosc
                     CurrentSortBy = query.SortBy
                 }
+                filterable {
+                    Type = FilterType.StringFilter
+                    Column = NazwaPlacowkiTrafiaZywnosc
+                    CurrentFilters = query.Filters
+                }
             }
             th (style = "width:300px;") {
                 sortable {
                     Column = AdresPlacowkiTrafiaZywnosc
                     CurrentSortBy = query.SortBy
                 }
+                filterable {
+                    Type = FilterType.StringFilter
+                    Column = AdresPlacowkiTrafiaZywnosc
+                    CurrentFilters = query.Filters
+                }
             }
-            th (style = "width:200px;") {
+            th (style = "width:220px;") {
                 sortable {
                     Column = GminaDzielnica
                     CurrentSortBy = query.SortBy
                 }
+                filterable {
+                    Type = FilterType.StringFilter
+                    Column = GminaDzielnica
+                    CurrentFilters = query.Filters
+                }
             }
-            th (style = "width:175px;") {
+            th (style = "width:200px;") {
                 sortable {
                     Column = FormaPrawna
                     CurrentSortBy = query.SortBy
+                }
+                filterable {
+                    Type = FilterType.StringFilter
+                    Column = FormaPrawna
+                    CurrentFilters = query.Filters
                 }
             }
             th (style = "width:200px;") {
                 sortable {
                     Column = Kategoria
                     CurrentSortBy = query.SortBy
+                }
+                filterable {
+                    Type = FilterType.StringFilter
+                    Column = Kategoria
+                    CurrentFilters = query.Filters
                 }
             }
             th (style = "width:200px;") {
