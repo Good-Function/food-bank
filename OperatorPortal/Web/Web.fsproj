@@ -102,6 +102,7 @@
       <Compile Include="Organizations\Templates\List\HxIncludes.fs" />
       <Compile Include="Organizations\Templates\List\Sortable.fs" />
       <Compile Include="Organizations\Templates\List\Filterable.fs" />
+      <Compile Include="Organizations\Templates\List\TableHeaderBuilder.fs" />
       <Compile Include="Organizations\Templates\List\SearchableListTemplate.fs" />
       <Compile Include="Organizations\Templates\List\ListTemplate.fs" />
       <Compile Include="Organizations\Templates\ImportExcelTemplate.fs" />
