@@ -73,6 +73,9 @@ let Template (data: OrganizationSummary list) (filter: Query) =
                     }  
                 }) } 
             }
-        tr(){}
+        tr(){ }
+        if data.Length = 0
+            then span(hxSwapOob="true", id="OrganizationsEmptyTableMessage") { "Nie znaleziono danych." }
+            else span(hxSwapOob="true", id="OrganizationsEmptyTableMessage") {}
         filterTemplate filter
     }

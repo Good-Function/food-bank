@@ -39,8 +39,8 @@ let Template (query: Query) =
             hxIndicator = ".big-table",
             hxPushUrl = "true"
         )
-        small () {
-            div (style = "overflow-x: scroll; height: 70vh;";) {
+        small (style="position:relative;") {
+            div (style = "overflow-x: scroll; height: 70vh";) {
                 table (class' = "striped big-table") {
                     thead () {
                         TableHeaderBuilder.build query
@@ -48,6 +48,9 @@ let Template (query: Query) =
                     Indicators.TableShimmeringRows 6 9
                     tbody (id = "OrganizationsList") { }
                 }
+            }
+            div(class'="empty-table-message") {
+                span(id="OrganizationsEmptyTableMessage"){}
             }
         }
     }
