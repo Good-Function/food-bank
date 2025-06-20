@@ -32,8 +32,9 @@ let filterTemplate query =
             hxTarget = "#OrganizationsList",
             hxPushUrl = "true"
         )
-
-        TableHeaderBuilder.build query
+        tr (id="OrganizationHeadersRow", hxSwapOob = "true") {
+            TableHeaderBuilder.build query
+        }
     }
 
 

@@ -43,7 +43,9 @@ let Template (query: Query) =
             div (style = "overflow-x: scroll; height: 70vh";) {
                 table (class' = "striped big-table") {
                     thead () {
-                        TableHeaderBuilder.build query
+                        tr (id="OrganizationHeadersRow") {
+                            TableHeaderBuilder.build query
+                        }
                     }
                     Indicators.TableShimmeringRows 6 9
                     tbody (id = "OrganizationsList") { }
