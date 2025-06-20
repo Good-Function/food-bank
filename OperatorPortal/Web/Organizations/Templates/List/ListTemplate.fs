@@ -47,7 +47,11 @@ let Template (data: OrganizationSummary list) (filter: Query) =
                         $"%i{row.Teczka}"
                     }
                 }
-                td () { row.NazwaPlacowkiTrafiaZywnosc }
+                td () {
+                    div (class'="max-two-lines", title=row.NazwaPlacowkiTrafiaZywnosc) {
+                        row.NazwaPlacowkiTrafiaZywnosc
+                    }
+                }
                 td () { row.AdresPlacowkiTrafiaZywnosc }
                 td () { row.GminaDzielnica }
                 td () { row.FormaPrawna }
