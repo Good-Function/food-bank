@@ -36,8 +36,7 @@ let Template (query: Query) =
             hxTrigger = "load, input changed delay:500ms, keyup[key=='Enter']",
             hxSync = "this:replace",
             hxTarget = "#OrganizationsList",
-            hxIndicator = ".big-table",
-            hxPushUrl = "true"
+            hxIndicator = ".big-table"
         )
         small (style="position:relative;") {
             div (style = "overflow-x: scroll; height: 70vh";) {
