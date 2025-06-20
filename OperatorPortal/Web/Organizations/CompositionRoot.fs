@@ -9,6 +9,7 @@ open Organizations.Database
 
 type Dependencies =
     { ReadOrganizationSummaries: ReadOrganizationSummaries
+      ReadOrganizationSummariesCount: ReadOrganizationSummariesCount
       ReadOrganizationDetailsBy: ReadOrganizationDetailsBy
       ChangeDaneAdresowe: Handlers.ChangeDaneAdresowe
       ChangeKontakty: Handlers.ChangeKontakty
@@ -23,6 +24,7 @@ type Dependencies =
 
 let build (connectDb: unit -> Async<IDbConnection>, blobServiceClient: BlobServiceClient) : Dependencies =
     { ReadOrganizationSummaries = OrganizationsDao.readSummaries connectDb
+      ReadOrganizationSummariesCount = OrganizationsDao.readSummariesCount connectDb
       ReadOrganizationDetailsBy = OrganizationsDao.readBy connectDb
       ChangeDaneAdresowe = OrganizationsDao.changeDaneAdresowe connectDb
       ChangeKontakty = OrganizationsDao.changeKontakty connectDb

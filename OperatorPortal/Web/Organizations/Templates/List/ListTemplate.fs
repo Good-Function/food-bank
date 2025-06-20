@@ -33,7 +33,7 @@ let filterTemplate query =
             hxPushUrl = "true"
         )
         tr (id="OrganizationHeadersRow", hxSwapOob = "true") {
-            TableHeaderBuilder.build query
+            TableHeader.build query
         }
     }
 
@@ -79,4 +79,7 @@ let Template (data: OrganizationSummary list) (filter: Query) =
             then span(hxSwapOob="true", id="OrganizationsEmptyTableMessage") { "Nie znaleziono danych." }
             else span(hxSwapOob="true", id="OrganizationsEmptyTableMessage") {}
         filterTemplate filter
+        div (id="OrganizationsTablePagination", hxSwapOob="true") {
+            Pagination.build filter.Pagination (Some data.Length)
+        }
     }

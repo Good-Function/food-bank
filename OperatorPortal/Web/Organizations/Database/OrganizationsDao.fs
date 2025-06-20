@@ -43,6 +43,16 @@ WHERE
 ORDER BY %s{sortBy} %s{dir}
 LIMIT 50;
 """
+
+let searchOrgsCountSql filterClause = $"""
+SELECT COUNT(*)
+FROM organizacje
+WHERE
+   (@searchTerm = '' 
+   OR teczka = CASE WHEN @searchTerm ~ '^\d+$' THEN @searchTerm::bigint  END
+   OR (similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.2 OR similarity(gminadzielnica, @searchTerm) > 0.2))
+   {filterClause}
+"""
     
 let prepareFilter (operator: string, value: obj) =
     match value with
@@ -61,6 +71,17 @@ let readSummaries (connectDB: unit -> Async<IDbConnection>) (query: Query) =
                            |> String.concat ""
         let sql = (searchOrgsSql sortBy dir filterClause)
         let! rows = db.QueryBy<OrganizationSummary> sql {| searchTerm = query.SearchTerm |}
+        return rows
+    }
+    
+let readSummariesCount (connectDB: unit -> Async<IDbConnection>) : ReadOrganizationSummariesCount = fun query ->
+    async {
+        use! db = connectDB()
+        let filterClause = query.Filters
+                           |> List.map(fun f -> $"AND {f.Key} {(prepareFilter(f.Operator.Symbol, f.Value))} ")
+                           |> String.concat ""
+        let sql = (searchOrgsCountSql filterClause)
+        let! rows = db.Single<int> sql {| searchTerm = query.SearchTerm |}
         return rows
     }
     

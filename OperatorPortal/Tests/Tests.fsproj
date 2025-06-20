@@ -41,6 +41,7 @@
     </ItemGroup>
     <ItemGroup>
       <Compile Include="Organizations\Arranger.fs" />
+      <Compile Include="Organizations\GenerateOrgs.fs" />
       <Compile Include="Organizations\OrganizationViewing.fs" />
       <Compile Include="Organizations\OrganizationsEditing.fs" />
       <Compile Include="Organizations\OrganizationsFileUpload.fs" />

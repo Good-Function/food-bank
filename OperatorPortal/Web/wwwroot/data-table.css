@@ -37,6 +37,52 @@
     text-align:center;
 }
 
+/*footer*/
+
+.big-table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.big-table-footer button {
+    border:0;
+    padding:.25rem;
+}
+
+.big-table-footer button div {
+    width: 24px;
+    display: inline-block;
+}
+
+.mailing-button {
+    border: 0;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    width: 24px;
+    display: inline-block;
+}
+
+.pagination-info {
+    margin-right: 0.5rem;
+}
+
+.pagination-button {
+    border: 0;
+    padding: 0.25rem;
+}
+
+.pagination-icon {
+    width: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /*Indicator styling to hide old content and display shimmers*/
 
 .table-indicator {

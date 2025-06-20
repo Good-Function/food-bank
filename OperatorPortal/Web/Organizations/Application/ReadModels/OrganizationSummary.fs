@@ -39,15 +39,19 @@ type Direction =
 
 
 type Filter = { Key: QueriedColumn; Value: obj; Operator: FilterOperator }
+type Pagination = { Size: int; Page: int; }
 type Query =
     { SearchTerm: string
       SortBy: (QueriedColumn * Direction) option
+      Pagination: Pagination
       Filters: Filter list
     }
     with static member Zero=
             { SearchTerm = ""
               SortBy = None
               Filters = []
+              Pagination = { Size = 50; Page = 1; }
             }
 
 type ReadOrganizationSummaries = Query -> Async<OrganizationSummary list>
+type ReadOrganizationSummariesCount = Query -> Async<int>

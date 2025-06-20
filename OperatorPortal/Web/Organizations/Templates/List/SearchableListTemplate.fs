@@ -39,15 +39,26 @@ let Template (query: Query) =
             hxIndicator = ".big-table"
         )
         small (style="position:relative;") {
-            div (style = "overflow-x: scroll; height: 70vh";) {
+            div (style = "overflow-x: scroll; height: 66vh";) {
                 table (class' = "striped big-table") {
                     thead () {
                         tr (id="OrganizationHeadersRow") {
-                            TableHeaderBuilder.build query
+                            TableHeader.build query
                         }
                     }
                     Indicators.TableShimmeringRows 6 9
                     tbody (id = "OrganizationsList") { }
+                }
+            }
+            div (class' = "big-table-footer") {
+                button (class' = "outline secondary", title = "Pobierz listę mailingową. (prace trwają).") {
+                    small () {
+                        div () { Icons.Mail }
+                        "Lista mailingowa"
+                    }
+                }
+                div(id="OrganizationsTablePagination") {
+                    Pagination.build query.Pagination None
                 }
             }
             div(class'="empty-table-message") {

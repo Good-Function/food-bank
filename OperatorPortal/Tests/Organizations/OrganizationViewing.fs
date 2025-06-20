@@ -24,6 +24,7 @@ let ``/ogranizations/summaries?search filters out and displays organization's mo
             SearchTerm = org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc
             SortBy = None
             Filters = []
+            Pagination = { Page = 1; Size = 50; }
         }
         let dbSummaryTeczkaIds = dbSummaries |> List.map(fun summary -> $"%i{summary.Teczka}")
         let api = runTestApi() |> authenticate

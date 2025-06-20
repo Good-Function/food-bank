@@ -41,6 +41,7 @@ let parseFilter (ctx: HttpContext) : Query =
         let! dir = ctx.TryGetQueryValue "dir"
         return sortBy, dir |> Direction.FromString
     }
+    
     let filters =
         QueriedColumn.All |> List.map(fun column ->
             let operator = ctx.TryGetQueryValue $"{column}_op" |> Option.bind(FilterOperator.TryParse)
@@ -55,12 +56,19 @@ let parseFilter (ctx: HttpContext) : Query =
                 | None -> None
             (value, operator) ||> Option.map2(fun value operator -> {Key = column; Value = value; Operator = operator})
         ) |> List.choose id
-    { SearchTerm = search; SortBy = sortBy; Filters = filters}
+    { SearchTerm = search; SortBy = sortBy; Filters = filters; Pagination = {Size = 50; Page = 1;}}
 
 let indexPage: EndpointHandler =
     fun ctx ->
         let username = ctx.User.FindFirstValue(ClaimTypes.Name)
         ctx.WriteHtmlView(SearchableListTemplate.FullPage Query.Zero username)
+        
+let summariesCount (readSummaries: ReadOrganizationSummariesCount) : EndpointHandler =
+    fun ctx ->
+        task {
+            let! total = readSummaries (parseFilter ctx)
+            return ctx.WriteText $"{total}"
+        }
 
 let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
     fun ctx ->
@@ -105,6 +113,7 @@ let Endpoints (dependencies: Dependencies) =
     [ GET
           [ route "/" indexPage
             route "/summaries" (summaries dependencies.ReadOrganizationSummaries)
+            route "/summaries/count" (summariesCount dependencies.ReadOrganizationSummariesCount)
             routef "/{%d}" (details dependencies.ReadOrganizationDetailsBy)
             route "/import" import
           ]

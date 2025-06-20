@@ -1,4 +1,4 @@
-module Organizations.Templates.List.TableHeaderBuilder
+module Organizations.Templates.List.TableHeader
 
 open Organizations.Application.ReadModels.QueriedColumn
 open Organizations.Application.ReadModels.OrganizationSummary

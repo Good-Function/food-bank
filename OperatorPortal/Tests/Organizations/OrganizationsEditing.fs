@@ -324,16 +324,6 @@ let ``PUT /ogranizations/{id}/zrodla-zywnosci modifies and returns updated data`
     }
     
 [<Fact>]
-let generate() =
-        task {
-            for i in 1..200 do        
-                let organization = Arranger.AnOrganization()
-                do! organization |> (save Tools.DbConnection.connectDb)
-                return ()
-        } |> Async.AwaitTask |> Async.RunSynchronously
-
-    
-[<Fact>]
 let ``GET /ogranizations/{id}/adresy-ksiegowosci/edit returns prefilled inputs to edit the data`` () =
     task {
         // Arrange
