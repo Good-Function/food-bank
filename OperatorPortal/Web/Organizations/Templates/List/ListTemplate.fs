@@ -1,7 +1,7 @@
 module Organizations.List.ListTemplate
 
+open System
 open Layout
-open Organizations.Application.ReadModels.QueriedColumn
 open Organizations.List.SearchableListTemplate
 open Organizations.Templates.Formatters
 open Organizations.Templates.List
@@ -9,8 +9,6 @@ open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 open Organizations.Application.ReadModels.OrganizationSummary
 open Web.Layout.Dropdown
-open Organizations.Templates.List.Filterable
-open Organizations.Templates.List.Sortable
 
 let filterTemplate query =
     Fragment() {
@@ -66,15 +64,15 @@ let Template (data: OrganizationSummary list) (filter: Query) =
                         b () { "Dostępność" }            
                     }
                     div(style="display:flex; flex-direction: column; white-space:nowrap; overflow:auto;") {
-                        span() { row.Telefon }
-                        span() { row.Email }   
-                        span() { row.Kontakt }   
-                        span() { row.OsobaDoKontaktu }   
-                        span() { row.TelefonOsobyKontaktowej }   
-                        span() { row.Dostepnosc }   
+                        div() { if String.IsNullOrWhiteSpace row.Telefon then "-" else row.Telefon}
+                        div() { if String.IsNullOrWhiteSpace row.Email then "-" else row.Email}
+                        div() { if String.IsNullOrWhiteSpace row.Kontakt then "-" else row.Kontakt}
+                        div() { if String.IsNullOrWhiteSpace row.OsobaDoKontaktu then "-" else row.OsobaDoKontaktu}
+                        div() { if String.IsNullOrWhiteSpace row.TelefonOsobyKontaktowej then "-" else row.TelefonOsobyKontaktowej}
+                        div() { if String.IsNullOrWhiteSpace row.Dostepnosc then "-" else row.Dostepnosc}
                     }  
                 }) } 
             }
-
+        tr(){}
         filterTemplate filter
     }
