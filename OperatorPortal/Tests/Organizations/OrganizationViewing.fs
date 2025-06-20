@@ -76,7 +76,7 @@ let ``/ogranizations/summaries?search=xxx&sort=OstatnieOdwiedziny&dir=asc filter
         let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/summaries?search={id}&sort=OstatnieOdwiedzinyData&dir={dir}"
-        let! headersResponse = api.GetAsync "/organizations/list"
+        let! headersResponse = api.GetAsync "/organizations"
         // Assert
         let! doc = response.HtmlContent()
         let! headersDoc = headersResponse.HtmlContent()

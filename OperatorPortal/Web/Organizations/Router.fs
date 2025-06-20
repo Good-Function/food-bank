@@ -62,17 +62,6 @@ let indexPage: EndpointHandler =
         let username = ctx.User.FindFirstValue(ClaimTypes.Name)
         ctx.WriteHtmlView(SearchableListTemplate.FullPage Query.Zero username)
 
-
-let list: EndpointHandler =
-    fun ctx ->
-        task {
-            let username = ctx.User.FindFirstValue(ClaimTypes.Name)
-            let filter = ctx |> parseFilter
-            return
-                ctx
-                |> render (SearchableListTemplate.Template filter) (SearchableListTemplate.FullPage filter username)
-        }
-
 let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
     fun ctx ->
         task {
@@ -115,7 +104,6 @@ let upload (import: CreateOrganizationCommandHandler.Import): EndpointHandler =
 let Endpoints (dependencies: Dependencies) =
     [ GET
           [ route "/" indexPage
-            route "/list" list
             route "/summaries" (summaries dependencies.ReadOrganizationSummaries)
             routef "/{%d}" (details dependencies.ReadOrganizationDetailsBy)
             route "/import" import
