@@ -41,7 +41,9 @@ let parseFilter (ctx: HttpContext) : Query =
         let! dir = ctx.TryGetQueryValue "dir"
         return sortBy, dir |> Direction.FromString
     }
-    
+    let page = ctx.TryGetQueryValue "page"
+               |> Option.bind tryParseInt
+               |> Option.defaultValue 1
     let filters =
         QueriedColumn.All |> List.map(fun column ->
             let operator = ctx.TryGetQueryValue $"{column}_op" |> Option.bind(FilterOperator.TryParse)
@@ -56,7 +58,7 @@ let parseFilter (ctx: HttpContext) : Query =
                 | None -> None
             (value, operator) ||> Option.map2(fun value operator -> {Key = column; Value = value; Operator = operator})
         ) |> List.choose id
-    { SearchTerm = search; SortBy = sortBy; Filters = filters; Pagination = {Size = 50; Page = 1;}}
+    { SearchTerm = search; SortBy = sortBy; Filters = filters; Pagination = {Size = 50; Page = page;}}
 
 let indexPage: EndpointHandler =
     fun ctx ->

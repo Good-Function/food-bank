@@ -84,6 +84,7 @@ let Template (data: OrganizationSummary list) (filter: Query) =
             else span(hxSwapOob="true", id="OrganizationsEmptyTableMessage") {}
         filterTemplate filter
         div (id="OrganizationsTablePagination", hxSwapOob="true") {
+            // todo: Probably paging should be separated from total (flickering)
             Pagination.build filter.Pagination (Some data.Length)
         }
     }
