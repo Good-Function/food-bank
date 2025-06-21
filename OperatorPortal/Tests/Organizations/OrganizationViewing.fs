@@ -26,7 +26,7 @@ let ``/ogranizations/summaries?search filters out and displays organization's mo
             Filters = []
             Pagination = { Page = 1; Size = 50; }
         }
-        let dbSummaryTeczkaIds = dbSummaries |> List.map(fun summary -> $"%i{summary.Teczka}")
+        let dbSummaryTeczkaIds = dbSummaries |> fst |> List.map(fun summary -> $"%i{summary.Teczka}")
         let api = runTestApi() |> authenticate
         // Act
         let! response = api.GetAsync $"/organizations/summaries?search={org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc}"
@@ -40,7 +40,7 @@ let ``/ogranizations/summaries?search filters out and displays organization's mo
             |> Seq.toList
         printfn "%A" summaries
         response.StatusCode |> should equal HttpStatusCode.OK
-        (dbSummaries, summaries) ||> List.iter2(fun dbSummary summary ->
+        (dbSummaries |> fst, summaries) ||> List.iter2(fun dbSummary summary ->
             $"{dbSummary.Teczka}" |> should equal (summary |> Seq.item 0)
             dbSummary.NazwaPlacowkiTrafiaZywnosc |> should equal (summary |> Seq.item 1)
             dbSummary.AdresPlacowkiTrafiaZywnosc |> should equal (summary |> Seq.item 2)

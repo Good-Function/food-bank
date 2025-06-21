@@ -53,5 +53,4 @@ type Query =
               Pagination = { Size = 50; Page = 1; }
             }
 
-type ReadOrganizationSummaries = Query -> Async<OrganizationSummary list>
-type ReadOrganizationSummariesCount = Query -> Async<int>
+type ReadOrganizationSummaries = Query -> Async<OrganizationSummary list * int>

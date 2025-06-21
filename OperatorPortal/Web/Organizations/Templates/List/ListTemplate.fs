@@ -38,7 +38,7 @@ let filterTemplate query =
     }
 
 
-let Template (data: OrganizationSummary list) (filter: Query) =
+let Template (data: OrganizationSummary list) (filter: Query) (total: int) =
     Fragment() {
         for row in data do
             tr (style = "position: relative") {
@@ -84,7 +84,6 @@ let Template (data: OrganizationSummary list) (filter: Query) =
             else span(hxSwapOob="true", id="OrganizationsEmptyTableMessage") {}
         filterTemplate filter
         div (id="OrganizationsTablePagination", hxSwapOob="true") {
-            // todo: Probably paging should be separated from total (flickering)
-            Pagination.build filter.Pagination (Some data.Length)
+            Pagination.build filter.Pagination data.Length total
         }
     }

@@ -152,7 +152,6 @@ let ``PUT /ogranizations/{id}/kontakty modifies and returns updated data`` () =
         ]
     }
     
-// todomg
 [<Fact>]
 let ``GET /ogranizations/{id}/beneficjenci/edit returns prefilled inputs to edit the data`` () =
     task {

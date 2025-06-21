@@ -18,7 +18,7 @@ let createFilterStateHolder filter =
                     input (type' = "hidden", name = "dir", value = dir.ToString())
                 }
 
-let Template (query: Query) =
+let Template (query: Query)=
     div (id = "OrganizationsPage") {
         div(id = "OrganizationsFilterState") {
             createFilterStateHolder query
@@ -58,7 +58,7 @@ let Template (query: Query) =
                     }
                 }
                 div(id="OrganizationsTablePagination") {
-                    Pagination.build query.Pagination None
+                    Pagination.build query.Pagination 0 0
                 }
             }
             div(class'="empty-table-message") {

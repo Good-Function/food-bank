@@ -71,26 +71,16 @@ let readSummaries (connectDB: unit -> Async<IDbConnection>): ReadOrganizationSum
             let filterClause = query.Filters
                                |> List.map(fun f -> $"AND {f.Key} {(prepareFilter(f.Operator.Symbol, f.Value))} ")
                                |> String.concat ""
-            let sql = (searchOrgsSql sortBy dir filterClause)
-            let! rows = db.QueryBy<OrganizationSummary> sql
-                            {|
-                               searchTerm = query.SearchTerm
-                               size = query.Pagination.Size
-                               offset = query.Pagination.Size * (query.Pagination.Page - 1)
-                            |}
-            return rows
-        }
-    
-let readSummariesCount (connectDB: unit -> Async<IDbConnection>) : ReadOrganizationSummariesCount =
-    fun query ->
-        async {
-            use! db = connectDB()
-            let filterClause = query.Filters
-                               |> List.map(fun f -> $"AND {f.Key} {(prepareFilter(f.Operator.Symbol, f.Value))} ")
-                               |> String.concat ""
-            let sql = (searchOrgsCountSql filterClause)
-            let! rows = db.Single<int> sql {| searchTerm = query.SearchTerm |}
-            return rows
+            let summariesSql = (searchOrgsSql sortBy dir filterClause)
+            let totalSql = (searchOrgsCountSql filterClause)
+            let! total = db.Single<int> totalSql {| searchTerm = query.SearchTerm |}
+            let! summaries = db.QueryBy<OrganizationSummary> summariesSql
+                                {|
+                                   searchTerm = query.SearchTerm
+                                   size = query.Pagination.Size
+                                   offset = query.Pagination.Size * (query.Pagination.Page - 1)
+                                |}
+            return summaries, total
         }
     
 let changeDaneAdresowe (connectDB: unit -> Async<IDbConnection>) (teczkaId: TeczkaId, daneAdresowe: DaneAdresowe) =

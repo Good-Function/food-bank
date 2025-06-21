@@ -12,6 +12,7 @@ open Organizations.Application.ReadModels.QueriedColumn
 open Organizations.List
 open Organizations.Templates
 open FsToolkit.ErrorHandling
+open Organizations.Templates.List
 open Oxpecker
 open RenderBasedOnHtmx
 open Organizations.CompositionRoot
@@ -25,7 +26,6 @@ let tryParseInt (text: string) =
     
 let emptyToNone (text: string) =
     if text = "" then None else Some text
-    
 
 let tryParseDU<'T> (input: string) : 'T option =
     if FSharpType.IsUnion typeof<'T> then
@@ -58,27 +58,25 @@ let parseFilter (ctx: HttpContext) : Query =
                 | None -> None
             (value, operator) ||> Option.map2(fun value operator -> {Key = column; Value = value; Operator = operator})
         ) |> List.choose id
-    { SearchTerm = search; SortBy = sortBy; Filters = filters; Pagination = {Size = 50; Page = page;}}
+    {
+        SearchTerm = search
+        SortBy = sortBy
+        Filters = filters
+        Pagination = { Size = 50; Page = page; }
+    }
 
 let indexPage: EndpointHandler =
     fun ctx ->
         let username = ctx.User.FindFirstValue(ClaimTypes.Name)
         ctx.WriteHtmlView(SearchableListTemplate.FullPage Query.Zero username)
         
-let summariesCount (readSummaries: ReadOrganizationSummariesCount) : EndpointHandler =
-    fun ctx ->
-        task {
-            let! total = readSummaries (parseFilter ctx)
-            return ctx.WriteText $"{total}"
-        }
-
 let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
     fun ctx ->
         task {
             let username = ctx.User.FindFirstValue(ClaimTypes.Name)
             let filter = ctx |> parseFilter
-            let! summaries = readSummaries filter
-            return ctx |> render (ListTemplate.Template summaries filter) (SearchableListTemplate.FullPage filter username)
+            let! summaries, total = readSummaries filter
+            return ctx |> render (ListTemplate.Template summaries filter total) (SearchableListTemplate.FullPage filter username)
         }
         
 let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
@@ -115,7 +113,6 @@ let Endpoints (dependencies: Dependencies) =
     [ GET
           [ route "/" indexPage
             route "/summaries" (summaries dependencies.ReadOrganizationSummaries)
-            route "/summaries/count" (summariesCount dependencies.ReadOrganizationSummariesCount)
             routef "/{%d}" (details dependencies.ReadOrganizationDetailsBy)
             route "/import" import
           ]
