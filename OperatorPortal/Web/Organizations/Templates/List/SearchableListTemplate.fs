@@ -23,6 +23,7 @@ let Template (query: Query)=
         div(id = "OrganizationsFilterState") {
             createFilterStateHolder query
         }
+        input(type'="hidden", name = "page", value = $"{query.Pagination.Page}")
         input (
             type' = "search",
             name = "search",
@@ -31,7 +32,7 @@ let Template (query: Query)=
             style = "transition:none;",
             title = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxGet = "/organizations/summaries",
-            hxInclude = $"[name='sort'], [name='dir'], {HxIncludes.all}",
+            hxInclude = $"[name='sort'], [name='dir'], [name='page'], {HxIncludes.all}",
             placeholder = "Szukaj po teczce, nazwie placówki, gminie/dzielnicy.",
             hxTrigger = "load, input changed delay:500ms, keyup[key=='Enter']",
             hxSync = "this:replace",
