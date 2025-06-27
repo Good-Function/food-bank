@@ -45,6 +45,7 @@
       <Compile Include="Organizations\OrganizationViewing.fs" />
       <Compile Include="Organizations\OrganizationsEditing.fs" />
       <Compile Include="Organizations\OrganizationsFileUpload.fs" />
+      <Compile Include="Organizations\MailingList.fs" />
       <Compile Include="Organizations\ImportFromExcel.fs" />
       <Content Include="Organizations\bank.xlsx" />
       <Content Include="Organizations\notExcel.txt" />

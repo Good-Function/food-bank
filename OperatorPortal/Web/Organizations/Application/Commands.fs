@@ -1,7 +1,5 @@
 module Organizations.Application.Commands
 
-open System.IO
-
 type TeczkaId = int64
 
 [<CLIMutable>]

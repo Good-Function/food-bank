@@ -4,6 +4,7 @@ open System
 open System.Data
 open Organizations.Application
 open Organizations.Application.DocumentType
+open Organizations.Application.ReadModels
 open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Database.DateOnlyCoder
 open Organizations.Domain.Organization
@@ -43,6 +44,16 @@ WHERE
 ORDER BY %s{sortBy} %s{dir}
 OFFSET @offset
 LIMIT @size;
+"""
+
+let searchMailsSql filterClause = $"""
+SELECT email
+FROM organizacje
+WHERE
+   (@searchTerm = '' 
+   OR teczka = CASE WHEN @searchTerm ~ '^\d+$' THEN @searchTerm::bigint  END
+   OR (similarity(nazwaplacowkitrafiazywnosc, @searchTerm) > 0.2 OR similarity(gminadzielnica, @searchTerm) > 0.2))
+   {filterClause}
 """
 
 let searchOrgsCountSql filterClause = $"""
@@ -266,6 +277,19 @@ WHERE Teczka = @Teczka;""" {|
                 TelOrganProwadzacegoKsiegowosc = adresy.TelOrganProwadzacegoKsiegowosc
             |}
     }
+    
+let readMailingListBy (connectDB: unit-> Async<IDbConnection>): Queries.ReadMailingList =
+    fun (searchTerm, filters) ->
+        async {
+            let! db = connectDB()
+            let filterClause = filters
+                               |> List.map(fun f -> $"AND {f.Key} {(prepareFilter(f.Operator.Symbol, f.Value))} ")
+                               |> String.concat ""
+            let querySql = searchMailsSql filterClause
+            let! mails = db.QueryBy<string> querySql
+                                {| searchTerm = searchTerm |}
+            return mails
+        }
         
 let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: int64) =
     async {

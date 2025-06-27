@@ -78,8 +78,10 @@
       <Compile Include="Organizations\Application\CommandHandlers\DocumentHandlers.fs" />
       <Compile Include="Organizations\Application\ReadModels\QueriedColumn.fs" />
       <Compile Include="Organizations\Application\ReadModels\FilterOperators.fs" />
+      <Compile Include="Organizations\Application\ReadModels\Filter.fs" />
       <Compile Include="Organizations\Application\ReadModels\OrganizationSummary.fs" />
       <Compile Include="Organizations\Application\ReadModels\OrganizationDetails.fs" />
+      <Compile Include="Organizations\Application\ReadModels\Queries.fs" />
       <Content Include="Organizations\Database\migrations.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
@@ -99,6 +101,7 @@
       <Compile Include="Organizations\Templates\ZrodlaZywnosci.fs" />
       <Compile Include="Organizations\Templates\WarunkiPomocy.fs" />
       <Compile Include="Organizations\Templates\DetailsTemplate.fs" />
+      <Compile Include="Organizations\Templates\MailingList.fs" />
       <Compile Include="Organizations\Templates\List\HxIncludes.fs" />
       <Compile Include="Organizations\Templates\List\Sortable.fs" />
       <Compile Include="Organizations\Templates\List\Filterable.fs" />

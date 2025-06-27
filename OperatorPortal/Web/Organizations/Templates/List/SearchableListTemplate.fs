@@ -52,7 +52,12 @@ let Template (query: Query)=
                 }
             }
             div (class' = "big-table-footer") {
-                button (class' = "outline secondary", title = "Pobierz listę mailingową. (prace trwają).") {
+                button (
+                    class' = "outline secondary",
+                    hxGet = "/organizations/summaries/mailing-list",
+                    hxInclude = $"[name='search'], {HxIncludes.all}",
+                    hxSwap = "afterbegin"
+                    ) {
                     small () {
                         div () { Icons.Mail }
                         "Lista mailingowa"

@@ -5,14 +5,15 @@ open System.Security.Claims
 open Microsoft.AspNetCore.Http
 open Microsoft.FSharp.Reflection
 open Organizations.Application
+open Organizations.Application.ReadModels.Filter
 open Organizations.Application.ReadModels.FilterOperators
 open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Application.ReadModels.OrganizationDetails
 open Organizations.Application.ReadModels.QueriedColumn
+open Organizations.Application.ReadModels.Queries
 open Organizations.List
 open Organizations.Templates
 open FsToolkit.ErrorHandling
-open Organizations.Templates.List
 open Oxpecker
 open RenderBasedOnHtmx
 open Organizations.CompositionRoot
@@ -34,7 +35,22 @@ let tryParseDU<'T> (input: string) : 'T option =
         |> Option.map (fun case -> FSharpValue.MakeUnion(case, [||]) :?> 'T)
     else None
 
-let parseFilter (ctx: HttpContext) : Query =
+let parseFilters (ctx: HttpContext): Filter list =
+    QueriedColumn.All |> List.map(fun column ->
+        let operator = ctx.TryGetQueryValue $"{column}_op" |> Option.bind(FilterOperator.TryParse)
+        let value: obj option =
+            match operator with
+            | Some (TextOperator _) -> ctx.TryGetQueryValue $"{column}"
+                                       |> Option.bind emptyToNone
+                                       |> Option.map box
+            | Some (NumberOperator _) -> ctx.TryGetQueryValue $"{column}"
+                                         |> Option.bind tryParseInt
+                                         |> Option.map box
+            | None -> None
+        (value, operator) ||> Option.map2(fun value operator -> {Key = column; Value = value; Operator = operator})
+    ) |> List.choose id
+
+let parseQueryParams (ctx: HttpContext) : Query =
     let search = ctx.TryGetQueryValue "search" |> Option.defaultValue ""
     let sortBy = option {
         let! sortBy = ctx.TryGetQueryValue "sort" |> Option.bind tryParseDU<QueriedColumn>
@@ -44,20 +60,7 @@ let parseFilter (ctx: HttpContext) : Query =
     let page = ctx.TryGetQueryValue "page"
                |> Option.bind tryParseInt
                |> Option.defaultValue 1
-    let filters =
-        QueriedColumn.All |> List.map(fun column ->
-            let operator = ctx.TryGetQueryValue $"{column}_op" |> Option.bind(FilterOperator.TryParse)
-            let value: obj option =
-                match operator with
-                | Some (TextOperator _) -> ctx.TryGetQueryValue $"{column}"
-                                           |> Option.bind emptyToNone
-                                           |> Option.map box
-                | Some (NumberOperator _) -> ctx.TryGetQueryValue $"{column}"
-                                             |> Option.bind tryParseInt
-                                             |> Option.map box
-                | None -> None
-            (value, operator) ||> Option.map2(fun value operator -> {Key = column; Value = value; Operator = operator})
-        ) |> List.choose id
+    let filters = parseFilters ctx
     {
         SearchTerm = search
         SortBy = sortBy
@@ -74,9 +77,18 @@ let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
     fun ctx ->
         task {
             let username = ctx.User.FindFirstValue(ClaimTypes.Name)
-            let filter = ctx |> parseFilter
+            let filter = ctx |> parseQueryParams
             let! summaries, total = readSummaries filter
             return ctx |> render (ListTemplate.Template summaries filter total) (SearchableListTemplate.FullPage filter username)
+        }
+        
+let mailingList (readMailingList: ReadMailingList): EndpointHandler =
+    fun ctx ->
+        task {
+            let filters = ctx |> parseFilters
+            let search = ctx.TryGetQueryValue "search" |> Option.defaultValue ""
+            let! mailingList = readMailingList(search, filters)
+            return ctx.WriteHtmlView (MailingList.View (mailingList |> String.concat(";")))
         }
         
 let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
@@ -113,6 +125,7 @@ let Endpoints (dependencies: Dependencies) =
     [ GET
           [ route "/" indexPage
             route "/summaries" (summaries dependencies.ReadOrganizationSummaries)
+            route "/summaries/mailing-list" (mailingList dependencies.ReadMailingList)
             routef "/{%d}" (details dependencies.ReadOrganizationDetailsBy)
             route "/import" import
           ]

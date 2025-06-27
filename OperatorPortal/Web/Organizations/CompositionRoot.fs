@@ -3,6 +3,7 @@ module Organizations.CompositionRoot
 open System.Data
 open Azure.Storage.Blobs
 open Organizations.Application
+open Organizations.Application.ReadModels
 open Organizations.Application.ReadModels.OrganizationDetails
 open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Database
@@ -10,6 +11,7 @@ open Organizations.Database
 type Dependencies =
     { ReadOrganizationSummaries: ReadOrganizationSummaries
       ReadOrganizationDetailsBy: ReadOrganizationDetailsBy
+      ReadMailingList: Queries.ReadMailingList
       ChangeDaneAdresowe: Handlers.ChangeDaneAdresowe
       ChangeKontakty: Handlers.ChangeKontakty
       ChangeBeneficjenci: Handlers.ChangeBeneficjenci
@@ -23,6 +25,7 @@ type Dependencies =
 
 let build (connectDb: unit -> Async<IDbConnection>, blobServiceClient: BlobServiceClient) : Dependencies =
     { ReadOrganizationSummaries = OrganizationsDao.readSummaries connectDb
+      ReadMailingList = OrganizationsDao.readMailingListBy connectDb
       ReadOrganizationDetailsBy = OrganizationsDao.readBy connectDb
       ChangeDaneAdresowe = OrganizationsDao.changeDaneAdresowe connectDb
       ChangeKontakty = OrganizationsDao.changeKontakty connectDb

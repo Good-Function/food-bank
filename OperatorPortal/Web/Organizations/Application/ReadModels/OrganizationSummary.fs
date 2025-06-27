@@ -1,7 +1,7 @@
 module Organizations.Application.ReadModels.OrganizationSummary
 
 open System
-open Organizations.Application.ReadModels.FilterOperators
+open Organizations.Application.ReadModels.Filter
 open Organizations.Application.ReadModels.QueriedColumn
 
 type OrganizationSummary =
@@ -37,8 +37,6 @@ type Direction =
 
     static member FromString(str: string) = if str = "desc" then Desc else Asc
 
-
-type Filter = { Key: QueriedColumn; Value: obj; Operator: FilterOperator }
 type Pagination = { Size: int; Page: int; }
 type Query =
     { SearchTerm: string

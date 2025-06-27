@@ -1,9 +1,9 @@
 module Organizations.Templates.List.Filterable
 
 open Layout
+open Organizations.Application.ReadModels.Filter
 open Organizations.Application.ReadModels.FilterOperators
 open Organizations.Application.ReadModels.QueriedColumn
-open Organizations.Application.ReadModels.OrganizationSummary
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 open Web.Layout.Dropdown
