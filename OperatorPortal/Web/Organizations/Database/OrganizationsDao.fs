@@ -5,6 +5,7 @@ open System.Data
 open Organizations.Application
 open Organizations.Application.DocumentType
 open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.MailingList
 open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Database.DateOnlyCoder
 open Organizations.Domain.Organization
@@ -47,7 +48,7 @@ LIMIT @size;
 """
 
 let searchMailsSql filterClause = $"""
-SELECT email
+SELECT teczka, email
 FROM organizacje
 WHERE
    (@searchTerm = '' 
@@ -278,7 +279,7 @@ WHERE Teczka = @Teczka;""" {|
             |}
     }
     
-let readMailingListBy (connectDB: unit-> Async<IDbConnection>): Queries.ReadMailingList =
+let readMailingListBy (connectDB: unit-> Async<IDbConnection>): MailingList.ReadMailingList =
     fun (searchTerm, filters) ->
         async {
             let! db = connectDB()
@@ -286,7 +287,7 @@ let readMailingListBy (connectDB: unit-> Async<IDbConnection>): Queries.ReadMail
                                |> List.map(fun f -> $"AND {f.Key} {(prepareFilter(f.Operator.Symbol, f.Value))} ")
                                |> String.concat ""
             let querySql = searchMailsSql filterClause
-            let! mails = db.QueryBy<string> querySql
+            let! mails = db.QueryBy<Contact> querySql
                                 {| searchTerm = searchTerm |}
             return mails
         }

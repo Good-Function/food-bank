@@ -56,12 +56,14 @@ let Template (query: Query)=
                     class' = "outline secondary",
                     hxGet = "/organizations/summaries/mailing-list",
                     hxInclude = $"[name='search'], {HxIncludes.all}",
-                    hxSwap = "afterbegin"
+                    hxSwap = "outerHtml",
+                    hxTarget = "#EmailCopyHolder"
                     ) {
                     small () {
                         div () { Icons.Mail }
                         "Lista mailingowa"
                     }
+                    div(style="display:none", id="EmailCopyHolder"){}
                 }
                 div(id="OrganizationsTablePagination") {
                     Pagination.build query.Pagination 0 0

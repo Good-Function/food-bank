@@ -10,7 +10,7 @@ open Organizations.Application.ReadModels.FilterOperators
 open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Application.ReadModels.OrganizationDetails
 open Organizations.Application.ReadModels.QueriedColumn
-open Organizations.Application.ReadModels.Queries
+open Organizations.Application.ReadModels.MailingList
 open Organizations.List
 open Organizations.Templates
 open FsToolkit.ErrorHandling
@@ -88,7 +88,14 @@ let mailingList (readMailingList: ReadMailingList): EndpointHandler =
             let filters = ctx |> parseFilters
             let search = ctx.TryGetQueryValue "search" |> Option.defaultValue ""
             let! mailingList = readMailingList(search, filters)
-            return ctx.WriteHtmlView (MailingList.View (mailingList |> String.concat(";")))
+            let validMails, invalidMails = mailingList |> List.partition (fun mail -> mail.Email.Length > 3)
+            let total = List.length mailingList
+            let emailsCount = List.length validMails
+            ctx.SetHttpHeader("HX-Trigger-After-Swap", $"""{{ "emailCopyDone": {{ "total": {total}, "count": {emailsCount} }} }}""" )
+            return ctx.WriteHtmlView (MailingList.View {
+                                                            Mails = validMails |> List.map _.Email |> String.concat ";"
+                                                            MissingTeczka = invalidMails |> List.map _.Teczka.ToString() |> String.concat ", "
+                                                        })
         }
         
 let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =

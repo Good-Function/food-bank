@@ -22,4 +22,5 @@ let Template (content: HtmlElement) (currentPath: Navigation.Page option) (userN
             hr ()
         }
         main () { content }
+        script (src = "/copyEmails.js")
     }

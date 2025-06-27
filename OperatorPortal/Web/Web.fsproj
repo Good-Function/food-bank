@@ -81,7 +81,7 @@
       <Compile Include="Organizations\Application\ReadModels\Filter.fs" />
       <Compile Include="Organizations\Application\ReadModels\OrganizationSummary.fs" />
       <Compile Include="Organizations\Application\ReadModels\OrganizationDetails.fs" />
-      <Compile Include="Organizations\Application\ReadModels\Queries.fs" />
+      <Compile Include="Organizations\Application\ReadModels\MailingList.fs" />
       <Content Include="Organizations\Database\migrations.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>

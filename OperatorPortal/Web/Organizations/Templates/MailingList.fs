@@ -2,17 +2,13 @@ module Organizations.Templates.MailingList
 
 open Oxpecker.ViewEngine
 
-let View (mails:string) =
+type Params = {
+    Mails: string
+    MissingTeczka: string
+}
+
+let View (param: Params) =
     Fragment() {
-        input(type'="text", value=mails, id="email-buffer", hidden="true")
-        raw """
-<script>
-  (function() {
-    var el = document.getElementById('email-buffer');
-    navigator.clipboard.writeText(el.value)
-      .then(() => alert('Skopiowano do schowka.'))
-      .catch(() => alert('Kopiowanie nie udane. Spróbuj ponownie.'));
-  })();
-</script>
-"""
+        input(type'="text", value=param.Mails, id="email-buffer", hidden="true")
+        input(type'="text", value=param.MissingTeczka, id="email-missing-teczka", hidden="true")
     }

@@ -11,7 +11,7 @@ open Organizations.Database
 type Dependencies =
     { ReadOrganizationSummaries: ReadOrganizationSummaries
       ReadOrganizationDetailsBy: ReadOrganizationDetailsBy
-      ReadMailingList: Queries.ReadMailingList
+      ReadMailingList: MailingList.ReadMailingList
       ChangeDaneAdresowe: Handlers.ChangeDaneAdresowe
       ChangeKontakty: Handlers.ChangeKontakty
       ChangeBeneficjenci: Handlers.ChangeBeneficjenci
