@@ -6,7 +6,10 @@ open Microsoft.AspNetCore.Http
 
 type HttpContext with
     member this.UserName =
-        this.User.FindFirstValue(ClaimTypes.Name)
+        this.User.FindFirstValue("preferred_username")
+        
+    member this.UserRole =
+        this.User.FindFirstValue(ClaimTypes.Role)
         
 type HttpContext with
     member this.UserId =

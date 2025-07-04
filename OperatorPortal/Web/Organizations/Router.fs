@@ -1,7 +1,6 @@
 module Organizations.Router
 
 open System
-open System.Security.Claims
 open Microsoft.AspNetCore.Http
 open Microsoft.FSharp.Reflection
 open Organizations.Application
@@ -70,13 +69,13 @@ let parseQueryParams (ctx: HttpContext) : Query =
 
 let indexPage: EndpointHandler =
     fun ctx ->
-        let username = ctx.User.FindFirstValue(ClaimTypes.Name)
+        let username = ctx.UserName
         ctx.WriteHtmlView(SearchableListTemplate.FullPage Query.Zero username)
         
 let summaries (readSummaries: ReadOrganizationSummaries) : EndpointHandler =
     fun ctx ->
         task {
-            let username = ctx.User.FindFirstValue(ClaimTypes.Name)
+            let username = ctx.UserName
             let filter = ctx |> parseQueryParams
             let! summaries, total = readSummaries filter
             return ctx |> render (ListTemplate.Template summaries filter total) (SearchableListTemplate.FullPage filter username)
@@ -101,7 +100,7 @@ let mailingList (readMailingList: ReadMailingList): EndpointHandler =
 let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
     fun ctx ->
         task {
-            let username = ctx.User.FindFirstValue(ClaimTypes.Name)
+            let username = ctx.UserName
             let! details = readDetailsBy id
             return
                 ctx
@@ -110,7 +109,7 @@ let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHan
     
 let import: EndpointHandler =
     fun ctx -> task {
-        let username = ctx.User.FindFirstValue(ClaimTypes.Name)
+        let username = ctx.UserName
         return ctx |> render (ImportExcelTemplate.Partial username None) (ImportExcelTemplate.FullPage username None)
     }
     
