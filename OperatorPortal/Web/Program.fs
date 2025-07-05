@@ -4,6 +4,7 @@ open System
 open Azure.Storage.Blobs
 open Layout
 open Microsoft.AspNetCore.Authentication.OpenIdConnect
+open Microsoft.AspNetCore.HttpOverrides
 open Microsoft.Identity.Web
 open PostgresPersistence.DapperFsharp
 open Microsoft.AspNetCore.Builder
@@ -59,6 +60,9 @@ let createServer () =
         options.ResponseType <- "code" 
         options.Scope.Add("https://graph.microsoft.com/User.ReadBasic.All"); 
     ) |> ignore
+    builder.Services.Configure<ForwardedHeadersOptions>(fun (options: ForwardedHeadersOptions) ->
+        options.ForwardedHeaders <- ForwardedHeaders.XForwardedProto ||| ForwardedHeaders.XForwardedHost
+    ) |> ignore
     let app = builder.Build()
     if app.Environment.EnvironmentName <> "Production"
         then app.Use(Authentication.fakeAuthenticate) |> ignore
@@ -69,6 +73,7 @@ let createServer () =
         .UseRouting()
         .UseStaticFiles()
         .UseAuthentication()
+        .UseForwardedHeaders()
         .UseAuthorization()
         .UseOxpecker(endpoints
                         (Organizations.CompositionRoot.build(dbConnect, blobServiceClient))
