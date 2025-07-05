@@ -62,6 +62,8 @@ let createServer () =
     ) |> ignore
     builder.Services.Configure<ForwardedHeadersOptions>(fun (options: ForwardedHeadersOptions) ->
         options.ForwardedHeaders <- ForwardedHeaders.XForwardedProto ||| ForwardedHeaders.XForwardedHost
+        options.KnownNetworks.Clear()
+        options.KnownProxies.Clear()
     ) |> ignore
     let app = builder.Build()
     if app.Environment.EnvironmentName <> "Production"
@@ -70,10 +72,10 @@ let createServer () =
         Migrations.main [|settings.DbConnectionString; AppDomain.CurrentDomain.BaseDirectory|] |> ignore
     app.Use(Culture.middleware) |> ignore
     app
+        .UseForwardedHeaders()
         .UseRouting()
         .UseStaticFiles()
         .UseAuthentication()
-        .UseForwardedHeaders()
         .UseAuthorization()
         .UseOxpecker(endpoints
                         (Organizations.CompositionRoot.build(dbConnect, blobServiceClient))
