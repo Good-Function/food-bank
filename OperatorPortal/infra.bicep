@@ -17,6 +17,10 @@ param image string
 @description('ACR Password')
 param acrpassword string 
 
+@secure()
+@description('Microsoft Entra - App Registration client secret')
+param msEntraClientSecret string
+
 @description('VNET Name')
 param vnetName string = 'foodbank-vnet'
 
@@ -194,6 +198,10 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
           value: acrpassword
         }
         {
+          name: 'msentraclientsecretref'
+          value: msEntraClientSecret
+        }
+        {
           name: 'dbconnectionstringref'
           value: 'Host=${dbServerName}.postgres.database.azure.com;Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
         }
@@ -228,6 +236,10 @@ resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
             {
               name: 'DbConnectionString'
               secretRef: 'dbconnectionstringref'
+            }
+            {
+              name: 'AzureAd__ClientSecret'
+              secretRef: 'msentraclientsecretref'
             }
             {
               name: 'BlobStorageConnectionString'
