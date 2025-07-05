@@ -10,6 +10,9 @@
       <PackageReference Include="FSharp.Data" Version="6.4.1" />
       <PackageReference Include="FsToolkit.ErrorHandling" Version="4.18.0" />
       <PackageReference Include="ClosedXML" Version="0.104.2" />  
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.6" />  
+      <PackageReference Include="Microsoft.Graph" Version="5.84.0" />  
+      <PackageReference Include="Microsoft.Identity.Web" Version="3.9.4" />  
       <PackageReference Include="Npgsql" Version="9.0.3" />
       <PackageReference Include="Oxpecker" Version="1.2.0" />
       <PackageReference Include="Oxpecker.Htmx" Version="1.0.0" />
@@ -22,6 +25,7 @@
         <Link>.dockerignore</Link>
       </Content>
       <Content Include="Dockerfile" />
+      <Compile Include="Permissions.fs" />
       <Compile Include="HttpContextExtensions.fs" />
       <Compile Include="renderBasedOnHtmx.fs" />
       <Content Include="postgres_extensions.sql">
@@ -119,6 +123,7 @@
       <Compile Include="Applications\Template.fs" />
       <Compile Include="Applications\Database.fs" />
       <Compile Include="Applications\CompositionRoot.fs" />
+      <Compile Include="Users\Management.fs" />
       <Compile Include="Applications\Router.fs" />
       <Compile Include="Authentication.fs" />
       <Compile Include="Culture.fs" />

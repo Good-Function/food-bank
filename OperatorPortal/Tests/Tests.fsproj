@@ -58,5 +58,6 @@
     <ItemGroup>
       <Compile Include="Learning\BlobUpload.fs" />
       <Content Include="Learning\file.txt" />
+      <Compile Include="Learning\Entra.fs" />
     </ItemGroup>
 </Project>

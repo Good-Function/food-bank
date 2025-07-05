@@ -12,9 +12,9 @@ let fakeAuthenticate =
     Func<HttpContext, RequestDelegate, Task>(fun ctx next ->
         task {
             let claims = [
-                Claim(ClaimTypes.Name, "developer.admin@bzsos.pl")
+                Claim("preferred_username", "developer.admin@bzsos.pl")
                 Claim(ClaimTypes.NameIdentifier, "0")
-                Claim(ClaimTypes.Role, "Administrator")
+                Claim(ClaimTypes.Role, "Admin")
             ]
             let identity = ClaimsIdentity(claims, "Test")
             let principal = ClaimsPrincipal(identity)

@@ -3,7 +3,8 @@ module Program
 open System
 open Azure.Storage.Blobs
 open Layout
-open Microsoft.AspNetCore.Authentication.Cookies
+open Microsoft.AspNetCore.Authentication.OpenIdConnect
+open Microsoft.Identity.Web
 open PostgresPersistence.DapperFsharp
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Http
@@ -34,7 +35,7 @@ let notFoundHandler (ctx: HttpContext) =
 
 let createServer () =
     let builder = WebApplication.CreateBuilder()
-
+    
     let settings =
       ConfigurationBuilder()
           .SetBasePath(AppContext.BaseDirectory)
@@ -48,8 +49,16 @@ let createServer () =
         .AddRouting()
         .AddOxpecker()
         .AddAuthorization()
-        .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-        .AddCookie(Authentication.configureAuthenticationCookie) |> ignore
+        .AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApp(fun options ->
+        options.Instance <- settings.AzureAd.Instance
+        options.TenantId <- settings.AzureAd.TenantId
+        options.ClientId <- settings.AzureAd.ClientId
+        options.ClientSecret <- settings.AzureAd.ClientSecret 
+        options.CallbackPath <- settings.AzureAd.CallbackPath
+        options.SaveTokens <- true
+        options.ResponseType <- "code" 
+        options.Scope.Add("https://graph.microsoft.com/User.ReadBasic.All"); 
+    ) |> ignore
     let app = builder.Build()
     if app.Environment.EnvironmentName <> "Production"
         then app.Use(Authentication.fakeAuthenticate) |> ignore

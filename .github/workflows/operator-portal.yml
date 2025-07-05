@@ -76,6 +76,7 @@ jobs:
             acrendpoint=${{ secrets.ACR_ENDPOINT }}
             acrlogin=${{ secrets.ACR_USERNAME }}
             acrpassword=${{ secrets.ACR_PASSWORD }}
+            msEntraClientSecret=${{ secrets.OPERATOR_PORTAL_ENTRA_CLIENT_SECRET }}
             dbAdminPassword=${{ secrets.DB_ADMIN_PASSWORD }}
             dbServerName=foodbank-postgres
             dbName=foodbankdb

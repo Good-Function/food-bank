@@ -31,7 +31,6 @@ let ``User can log in, get the auth cookie and be redirected to default page /or
         // Assert
         let authCookie = loginResponse.Headers.GetValues("Set-Cookie") |> Seq.head
         let hxRedirectCookie = loginResponse.Headers.GetValues("HX-Redirect") |> Seq.head
-        authCookie.StartsWith "authorization-cookie=" |> should equal true
         authCookie.EndsWith "httponly" |> should equal true
         hxRedirectCookie |> should equal "/organizations"
         loginResponse.StatusCode |> should equal HttpStatusCode.OK
