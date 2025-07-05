@@ -60,4 +60,7 @@
       <Content Include="Learning\file.txt" />
       <Compile Include="Learning\Entra.fs" />
     </ItemGroup>
+    <ItemGroup>
+      <Compile Include="Team\TeamViewing.fs" />
+    </ItemGroup>
 </Project>

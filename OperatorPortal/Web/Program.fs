@@ -19,7 +19,9 @@ let protect =  configureEndpoint _.RequireAuthorization()
 let endpoints 
     (orgDeps: Organizations.CompositionRoot.Dependencies)
     (loginDeps: Login.CompositionRoot.Dependencies)
-    (appDeps: Applications.CompositionRoot.Dependencies)=
+    (appDeps: Applications.CompositionRoot.Dependencies)
+    (usersDeps: Users.CompositionRoot.Dependencies)
+    =
     [
         GET [
             route "/" <| redirectTo "/organizations" false
@@ -28,6 +30,7 @@ let endpoints
         subRoute "/fragments" FragmentsRouter.Endpoints
         subRoute "/organizations" (Organizations.Router.Endpoints orgDeps) |> protect
         subRoute "/applications" (Applications.Router.Endpoints appDeps) |> protect
+        subRoute "/team" (Users.Router.Endpoints usersDeps) |> protect
     ]
 
 let notFoundHandler (ctx: HttpContext) =
@@ -81,6 +84,7 @@ let createServer () =
                         (Organizations.CompositionRoot.build(dbConnect, blobServiceClient))
                         (Login.CompositionRoot.build dbConnect)
                         (Applications.CompositionRoot.build dbConnect)
+                        (Users.CompositionRoot.build)
                     )
         .Run(notFoundHandler)
     app

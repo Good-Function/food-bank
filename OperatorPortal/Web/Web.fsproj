@@ -123,8 +123,11 @@
       <Compile Include="Applications\Template.fs" />
       <Compile Include="Applications\Database.fs" />
       <Compile Include="Applications\CompositionRoot.fs" />
-      <Compile Include="Users\Management.fs" />
       <Compile Include="Applications\Router.fs" />
+      <Compile Include="Users\Template.fs" />
+      <Compile Include="Users\Management.fs" />
+      <Compile Include="Users\CompositionRoot.fs" />
+      <Compile Include="Users\Router.fs" />
       <Compile Include="Authentication.fs" />
       <Compile Include="Culture.fs" />
       <Compile Include="Settings.fs" />
