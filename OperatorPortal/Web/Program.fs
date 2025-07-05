@@ -48,8 +48,6 @@ let createServer () =
     builder.Services
         .AddRouting()
         .AddOxpecker()
-        //.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-        //.AddCookie(Authentication.configureAuthenticationCookie) |> ignore
         .AddAuthorization()
         .AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApp(fun options ->
         options.Instance <- settings.AzureAd.Instance
