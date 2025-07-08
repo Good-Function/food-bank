@@ -47,7 +47,7 @@ let Template (query: Query)=
                             TableHeader.build query
                         }
                     }
-                    Indicators.TableShimmeringRows 6 9
+                    Indicators.TableShimmeringRows 6
                     tbody (id = "OrganizationsList") { }
                 }
             }

@@ -12,8 +12,8 @@ let OverlaySpinner (id: string) =
         div (style = "width:100px; margin:auto;") { Icons.Spinner }
     }
 
-let TableShimmeringRows amount colspan =
+let TableShimmeringRows amount =
     tbody(class' = "table-indicator") {
         for _ in 1..amount do
-            tr () { td (colspan = colspan) { div (class' = "shimmer", style = "padding-bottom:3px;") } }
+            tr () { td (colspan = 100) { div (class' = "shimmer", style = "padding-bottom:3px;") } }
     }

@@ -79,3 +79,7 @@ main {
 .in-table-file-input {
     font-size: .7rem !important;
 }
+
+td select, td input {
+    margin: 0;
+}

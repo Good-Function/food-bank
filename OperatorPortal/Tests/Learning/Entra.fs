@@ -15,23 +15,23 @@ let credential = ClientSecretCredential(tenantId, clientId, clientSecret)
 [<Fact(Skip="Learning entra")>]
 let ``List roles``() =
     task {
-        let! roles = Management.fetchRoles credential
+        let! roles = Management.fetchRoles credential ()
         roles |> List.map(_.Name) |> should subsetOf ["Admin"; "Reader"; "Editor"]
     }
     
 [<Fact(Skip="Learning entra")>]
 let ``List app users``() =
     task {
-        let! roles = Management.fetchAppUsers credential
+        let! roles = Management.fetchAppUsers credential ()
         roles |> List.map(_.Mail) |> should supersetOf ["Marcin Golenia"]
     }
     
 [<Fact(Skip="Learning entra")>]
 let ``Assign role to user``() =
     task {
-        let! roles = Management.fetchRoles credential
+        let! roles = Management.fetchRoles credential ()
         let editorRole = roles |> List.find(fun role -> role.Name = "Reader")
-        let! users = Management.fetchAppUsers credential
+        let! users = Management.fetchAppUsers credential ()
         let user = users |> List.find(fun user -> user.Mail = "Marcin Golenia")
         
         do! Management.assignRoleToUser credential user.Id editorRole.Id

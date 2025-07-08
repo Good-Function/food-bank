@@ -5,18 +5,7 @@ open System.Threading.Tasks
 open Azure.Identity
 open Microsoft.Graph
 open Microsoft.Graph.Models
-
-type UserId = Guid
-
-type Role =
-    { Id: Guid
-      Name: string
-      Description: string }
-
-type User =
-    { Id: UserId
-      Mail: string
-      RoleId: Guid option }
+open Users.Domain
 
 let scopes = [| "https://graph.microsoft.com/.default" |]
 
@@ -101,36 +90,54 @@ let inviteUser (credential:ClientSecretCredential) (mail: string) : Task =
         ()
     }
     
-let fetchRoles (credential: ClientSecretCredential): Task<Role list> =
-    task {
-        use client = new GraphServiceClient(credential, scopes)
-        let! principal =
-            client
-                .ServicePrincipalsWithAppId("03241880-d8b0-408f-800e-1a0aec3e8746")
-                .GetAsync(fun config -> config.QueryParameters.Expand <- [| "AppRoleAssignedTo" |])
+let fetchPhoto (credential: ClientSecretCredential): Queries.FetchProfilePhoto =
+    fun (userId: string) ->
+        task {
+            use client = new GraphServiceClient(credential, scopes)
+            try
+                let! photo = client.Users[userId].Photo.Content.GetAsync()
+                return Some photo
+            with
+            | :? ODataErrors.ODataError as ex when ex.Error.Code = "ImageNotFound"->
+                return None
+        }
+    
+let fetchRoles (credential: ClientSecretCredential): Queries.ListRoles =
+    fun () -> 
+        task {
+            use client = new GraphServiceClient(credential, scopes)
+            let! principal =
+                client
+                    .ServicePrincipalsWithAppId("03241880-d8b0-408f-800e-1a0aec3e8746")
+                    .GetAsync(fun config -> config.QueryParameters.Expand <- [| "AppRoleAssignedTo" |])
 
-        return principal.AppRoles |> Seq.toList |> List.map(fun role -> {
-            Id = role.Id.Value
-            Name = role.DisplayName
-            Description = role.Description
-        })
-    }
+            return principal.AppRoles |> Seq.toList |> List.map(fun role -> {
+                Id = role.Id.Value
+                Name = role.DisplayName
+                Description = role.Description
+            })
+        }
 
-let fetchAppUsers (credential: ClientSecretCredential) : Task<User list> =
-    task {
-        use client = new GraphServiceClient(credential, scopes)
+let fetchAppUsers (credential: ClientSecretCredential) : Queries.ListUsers =
+    fun () ->
+        task {
+            use client = new GraphServiceClient(credential, scopes)
 
-        let! principal =
-            client
-                .ServicePrincipalsWithAppId("03241880-d8b0-408f-800e-1a0aec3e8746")
-                .GetAsync(fun config -> config.QueryParameters.Expand <- [| "AppRoleAssignedTo" |])
-                
-        let assignments = principal.AppRoleAssignedTo |> Seq.toList
-
-        return
-            assignments
-            |> List.map (fun user ->
-                { Id = user.PrincipalId.Value
-                  Mail = user.PrincipalDisplayName
-                  RoleId = user.AppRoleId |> Option.ofNullable })
-    }
+            let! principal =
+                client
+                    .ServicePrincipalsWithAppId("03241880-d8b0-408f-800e-1a0aec3e8746")
+                    .GetAsync(fun config -> config.QueryParameters.Expand <- [| "AppRoleAssignedTo" |])
+                    
+            let assignments = principal.AppRoleAssignedTo |> Seq.toList |> List.filter(_.AppRoleId.HasValue)
+            let! users =
+                assignments |> List.map(fun assignment ->
+                    task {
+                        let! user = client.Users[assignment.PrincipalId.Value.ToString()].GetAsync()
+                        return {
+                            Id = UserId user.Id
+                            Mail = user.Mail
+                            RoleId = assignment.AppRoleId.Value
+                        }
+                    }) |> Task.WhenAll
+            return users |> Array.toList
+        }

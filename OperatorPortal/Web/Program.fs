@@ -44,6 +44,7 @@ let createServer () =
       ConfigurationBuilder()
           .SetBasePath(AppContext.BaseDirectory)
           .AddIniFile("settings.ini", false)
+          .AddIniFile($"settings.{builder.Environment.EnvironmentName}.ini", true)
           .AddEnvironmentVariables()
           .Build()
           .Get<Settings>()
@@ -84,7 +85,7 @@ let createServer () =
                         (Organizations.CompositionRoot.build(dbConnect, blobServiceClient))
                         (Login.CompositionRoot.build dbConnect)
                         (Applications.CompositionRoot.build dbConnect)
-                        (Users.CompositionRoot.build)
+                        (Users.CompositionRoot.build settings.AzureAd settings.Users)
                     )
         .Run(notFoundHandler)
     app

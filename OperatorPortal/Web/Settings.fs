@@ -1,19 +1,11 @@
 module Settings
 
-[<CLIMutable>]
-type AzureAdSettings = {
-    Instance: string
-    Domain: string
-    TenantId: string
-    ClientId: string
-    CallbackPath: string
-    ClientSecret: string //AzureAd__ClientSecret
-}
-
+open Users.Settings
 
 [<CLIMutable>]
 type Settings = {
       DbConnectionString: string
       BlobStorageConnectionString: string
       AzureAd: AzureAdSettings
+      Users: UsersSettings
     }

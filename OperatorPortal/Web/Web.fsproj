@@ -36,6 +36,9 @@
       </Content>
     </ItemGroup>
     <ItemGroup>
+        <Content Include="settings.Development.ini">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Compile Include="PostgresPersistence\OptionHandler.fs" />
         <Compile Include="PostgresPersistence\DapperFsharp.fs" />
     </ItemGroup>
@@ -124,8 +127,13 @@
       <Compile Include="Applications\Database.fs" />
       <Compile Include="Applications\CompositionRoot.fs" />
       <Compile Include="Applications\Router.fs" />
-      <Compile Include="Users\Template.fs" />
+      <Compile Include="Users\Domain.fs" />
+      <Compile Include="Users\Queries.fs" />
+      <Compile Include="Users\Templates\Index.fs" />
+      <Compile Include="Users\Templates\UsersTable.fs" />
       <Compile Include="Users\Management.fs" />
+      <Compile Include="Users\ManagementMock.fs" />
+      <Compile Include="Users\Settings.fs" />
       <Compile Include="Users\CompositionRoot.fs" />
       <Compile Include="Users\Router.fs" />
       <Compile Include="Authentication.fs" />
