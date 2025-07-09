@@ -39,7 +39,7 @@ let assignRoleToUser (credential: ClientSecretCredential) (userId: UserId) (appR
         ()
     }
 
-let removeUser (credential: ClientSecretCredential) (userId: Guid) =
+let removeUser (credential: ClientSecretCredential) (userId: UserId) =
     task {
         use client = new GraphServiceClient(credential, scopes)
         let! assignments =

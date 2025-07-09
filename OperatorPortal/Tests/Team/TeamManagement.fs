@@ -1,7 +1,9 @@
 module Team.TeamManagement
 
+open System
 open Bogus
 open Tools.FormDataBuilder
+open Users
 open Xunit
 open Tools.TestServer
 open FsUnit.Xunit
@@ -55,4 +57,23 @@ let ``POST /team/users/{id} adds user`` () =
         let! doc = response.HtmlContent()
         let rows = doc.CssSelect("td") |> List.map(_.InnerText())
         rows |> should contain emailToAdd
+    }
+    
+[<Fact>]
+let ``DELETE /team/users/{id} removes user`` () =
+    task {
+        // Arrange
+        let userToDelete: Domain.User = {
+            Id = Guid.NewGuid()
+            Mail = "admin@bzsoswaw.pl"
+            RoleId = ManagementMock.roles[0].Id }
+        ManagementMock.users <- userToDelete :: ManagementMock.users
+        let api = runTestApi() |> authenticate
+        // Act
+        let! response = api.DeleteAsync($"/team/users/{userToDelete.Id}")
+        // Assert
+        (int response.StatusCode) |> should equal HttpStatusCodes.OK
+        ManagementMock.users
+            |> List.contains(userToDelete)
+            |> should equal false
     }

@@ -1,5 +1,6 @@
 module Users.Router
 
+open System
 open CompositionRoot
 open HttpContextExtensions
 open Microsoft.AspNetCore.Http
@@ -17,6 +18,13 @@ let photo (fetchPhoto: Queries.FetchProfilePhoto) (userId: string): EndpointHand
             ctx.SetContentType "image/png"
             let path = "wwwroot/img/no-profile-picture.png"
             do! ctx.WriteFileStream(false, path, None, None)
+    }
+    
+let deleteUser (deleteUser: Commands.DeleteUser) (userId: string): EndpointHandler =
+    fun ctx -> task {
+        let userId: Domain.UserId = Guid(userId)
+        do! deleteUser userId
+        ctx.SetStatusCode(StatusCodes.Status200OK)
     }
 
 let page: EndpointHandler =
@@ -50,5 +58,8 @@ let Endpoints (deps: Dependencies)= [
     ]
     POST [
         route "/users" (addUser deps.AddUser deps.ListUsers deps.ListRoles)
+    ]
+    DELETE [
+        routef "/users/{%s}" (deleteUser deps.DeleteUser)
     ]
 ]

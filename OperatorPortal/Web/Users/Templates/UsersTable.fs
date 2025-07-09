@@ -3,6 +3,7 @@ module Users.Templates.UsersTable
 open Layout
 open Oxpecker.ViewEngine
 open Users.Domain
+open Oxpecker.Htmx
 
 let View (users: User list) (roles: Role list) =
     table(style="layout:fixed") {
@@ -30,7 +31,12 @@ let View (users: User list) (roles: Role list) =
                         }
                     }
                     td() {
-                        a(href="") {
+                        a(
+                            hxTarget = "closest tr",
+                            hxDelete =  $"/team/users/{user.Id}",
+                            hxConfirm="Czy na pewno chcesz usunąć tego użytkownika?",
+                            hxIndicator= "#UsersIndicator",
+                            href="") {
                             Icons.Delete
                         }
                     }

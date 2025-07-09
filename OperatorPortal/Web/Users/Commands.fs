@@ -8,3 +8,4 @@ type NewUser = {
 }
 
 type AddUser = NewUser -> Task<unit>
+type DeleteUser = Domain.UserId -> Task<unit>

@@ -37,7 +37,7 @@ let assignRoleToUser (userId: UserId) (appRoleId: Guid) =
                     user)
     }
 
-let removeUser (userId: Guid) =
+let removeUser (userId: UserId) =
     task { users <- users |> List.filter (fun user -> user.Id <> userId) }
 
 
