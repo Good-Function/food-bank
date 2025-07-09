@@ -8,14 +8,18 @@ open Oxpecker.Htmx
 
 let private page =
     Fragment() {
-        input(
-            type'="email",
-            name="Email",
-            placeholder="Email nowej osoby",
-            hxPost="/team/users",
-            hxTarget="#UsersTable",
-            hxIndicator="#UsersIndicator",
-            hxTrigger="keyup[key=='Enter']")
+        form(style="margin:auto;",
+             hxPost="/team/users",
+             hxTarget="#UsersTable",
+             hxIndicator="#UsersIndicator") {
+            fieldset().attr("role", "group") {
+                input(
+                    type'="email",
+                    name="Email",
+                    placeholder="Email nowej osoby")
+                input(type' = "submit", value = "Wyślij zaproszenie", style="font-size:1rem !important;")
+            }
+        }
         div(id="UsersTable", style="position:relative"){
             div (hxGet = "/team/users", hxTrigger = "revealed", hxSwap = "outerHTML") {
                 table(style="layout:fixed") {

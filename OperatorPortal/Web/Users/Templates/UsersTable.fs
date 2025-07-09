@@ -17,7 +17,7 @@ let View (users: User list) (roles: Role list) =
             for user in users do
                 tr() {
                     td() {
-                        img(src = $"/team/{user.Id}/photo", width = 64)
+                        img(src = $"/team/{user.Id}/photo", width = 64, style="border-radius:50%")
                     }
                     td(){
                         user.Mail
