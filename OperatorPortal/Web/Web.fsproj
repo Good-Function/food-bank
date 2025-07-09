@@ -129,6 +129,7 @@
       <Compile Include="Applications\Router.fs" />
       <Compile Include="Users\Domain.fs" />
       <Compile Include="Users\Queries.fs" />
+      <Compile Include="Users\Commands.fs" />
       <Compile Include="Users\Templates\Index.fs" />
       <Compile Include="Users\Templates\UsersTable.fs" />
       <Compile Include="Users\Management.fs" />

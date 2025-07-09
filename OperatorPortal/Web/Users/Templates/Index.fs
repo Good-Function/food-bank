@@ -8,16 +8,27 @@ open Oxpecker.Htmx
 
 let private page =
     Fragment() {
-        div (hxGet = "/team/users", hxTrigger = "revealed", hxSwap = "outerHTML") {
-            table(style="layout:fixed") {
-                thead() {
-                    th(style="width:128px; min-width:64px;") {}
-                    th(style="width:50%") {"Mail"}
-                    th(style="min-width:140px;") {"Rola"}
-                    th(style="width:128px") {}
+        input(
+            type'="email",
+            name="Email",
+            placeholder="Email nowej osoby",
+            hxPost="/team/users",
+            hxTarget="#UsersTable",
+            hxIndicator="#UsersIndicator",
+            hxTrigger="keyup[key=='Enter']")
+        div(id="UsersTable", style="position:relative"){
+            div (hxGet = "/team/users", hxTrigger = "revealed", hxSwap = "outerHTML") {
+                table(style="layout:fixed") {
+                    thead() {
+                        th(style="width:128px; min-width:64px;") {}
+                        th(style="width:50%") {"Mail"}
+                        th(style="min-width:140px;") {"Rola"}
+                        th(style="width:128px") {}
+                    }
+                    Indicators.TableShimmeringRows 3
                 }
-                Indicators.TableShimmeringRows 3
             }
+            Indicators.OverlaySpinner "UsersIndicator"
         }
     }
 

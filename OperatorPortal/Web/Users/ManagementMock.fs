@@ -41,15 +41,16 @@ let removeUser (userId: Guid) =
     task { users <- users |> List.filter (fun user -> user.Id <> userId) }
 
 
-let inviteUser (mail: string) : Task =
-    task {
-        let newUser =
-            { Id = UserId(Guid.NewGuid().ToString())
-              Mail = mail
-              RoleId = reader.Id }
+let inviteUser: Commands.AddUser =
+    fun newUser -> 
+        task {
+            let newUser =
+                { Id = UserId(Guid.NewGuid().ToString())
+                  Mail = newUser.Email
+                  RoleId = reader.Id }
 
-        users <- newUser :: users
-    }
+            users <- newUser :: users
+        }
 
 let fetchPhoto: Queries.FetchProfilePhoto = fun _ -> task { return None }
 

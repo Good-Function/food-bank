@@ -1,10 +1,11 @@
 module Users.Router
 
-open System.IO
 open CompositionRoot
 open HttpContextExtensions
+open Microsoft.AspNetCore.Http
 open Oxpecker
 open RenderBasedOnHtmx
+open Users
 
 let photo (fetchPhoto: Queries.FetchProfilePhoto) (userId: string): EndpointHandler =
     fun ctx -> task {
@@ -30,9 +31,24 @@ let users (listUsers: Queries.ListUsers) (listRoles: Queries.ListRoles): Endpoin
         let! roles = listRoles()
         return ctx.WriteHtmlView (Templates.UsersTable.View users roles)
     }
+    
+let addUser (addUser: Commands.AddUser) (listUsers: Queries.ListUsers) (listRoles: Queries.ListRoles): EndpointHandler =
+    fun ctx -> task {
+        let! newUser = ctx.BindForm<Commands.NewUser>()
+        do! addUser newUser
+        let! users = listUsers()
+        let! roles = listRoles()
+        ctx.SetStatusCode(StatusCodes.Status201Created)
+        return ctx.WriteHtmlView (Templates.UsersTable.View users roles)
+    }
 
 let Endpoints (deps: Dependencies)= [
-    route "/" page
-    route "/users" (users deps.ListUsers deps.ListRoles)
-    routef "/{%s}/photo" (photo deps.FetchProfilePhoto)
+    GET [
+        route "/" page
+        route "/users" (users deps.ListUsers deps.ListRoles)
+        routef "/{%s}/photo" (photo deps.FetchProfilePhoto)
+    ]
+    POST [
+        route "/users" (addUser deps.AddUser deps.ListUsers deps.ListRoles)
+    ]
 ]

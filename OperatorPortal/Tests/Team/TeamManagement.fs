@@ -1,5 +1,7 @@
-module Tests.Team.TeamViewing
+module Team.TeamManagement
 
+open Bogus
+open Tools.FormDataBuilder
 open Xunit
 open Tools.TestServer
 open FsUnit.Xunit
@@ -37,13 +39,20 @@ let ``/team/users displays team members and roles`` () =
         roles |> should supersetOf ["Reader"; "Editor"; "Admin"]
     }
     
-[<Fact(Skip="Next")>]
-let ``DELETE /team/users/{id} removes user`` () =
+[<Fact>]
+let ``POST /team/users/{id} adds user`` () =
     task {
         // Arrange
+        let emailToAdd = Faker().Person.Email
         let api = runTestApi() |> authenticate
+        let data = formData {
+            yield ("Email", emailToAdd)
+        }
         // Act
-        let! response = api.GetAsync "/team/users"
+        let! response = api.PostAsync("/team/users", data)
         // Assert
-        ()
+        (int response.StatusCode) |> should equal HttpStatusCodes.Created
+        let! doc = response.HtmlContent()
+        let rows = doc.CssSelect("td") |> List.map(_.InnerText())
+        rows |> should contain emailToAdd
     }

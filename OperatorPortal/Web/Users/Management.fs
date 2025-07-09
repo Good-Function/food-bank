@@ -60,35 +60,36 @@ let removeUser (credential: ClientSecretCredential) (userId: Guid) =
     }
 
     
-let inviteUser (credential:ClientSecretCredential) (mail: string) : Task =
-    task {
-        use client = new GraphServiceClient(credential, scopes)
-        let invitationRequest = 
-            Invitation(
-                InvitedUserEmailAddress = mail,
-                InviteRedirectUrl = "https://operator-portal.bluemeadow-0985b16b.polandcentral.azurecontainerapps.io/",
-                SendInvitationMessage = true
-            )
-        let! invitation = client.Invitations.PostAsync(invitationRequest)
-        
-        let! principal =
-            client
-                .ServicePrincipalsWithAppId("03241880-d8b0-408f-800e-1a0aec3e8746")
-                .GetAsync()
-                
-        let readerRole = 
-            principal.AppRoles
-            |> Seq.find (fun role -> role.Value = "Reader")
+let inviteUser (credential:ClientSecretCredential): Commands.AddUser =
+    fun newUser -> 
+        task {
+            use client = new GraphServiceClient(credential, scopes)
+            let invitationRequest = 
+                Invitation(
+                    InvitedUserEmailAddress = newUser.Email,
+                    InviteRedirectUrl = "https://operator-portal.bluemeadow-0985b16b.polandcentral.azurecontainerapps.io/",
+                    SendInvitationMessage = true
+                )
+            let! invitation = client.Invitations.PostAsync(invitationRequest)
             
-        let assignment = 
-            AppRoleAssignment(
-                PrincipalId = Guid invitation.InvitedUser.Id,
-                ResourceId = Guid principal.Id,
-                AppRoleId = readerRole.Id
-            )
-        let! _ = client.Users.[invitation.InvitedUser.Id].AppRoleAssignments.PostAsync(assignment)
-        ()
-    }
+            let! principal =
+                client
+                    .ServicePrincipalsWithAppId("03241880-d8b0-408f-800e-1a0aec3e8746")
+                    .GetAsync()
+                    
+            let readerRole = 
+                principal.AppRoles
+                |> Seq.find (fun role -> role.Value = "Reader")
+                
+            let assignment = 
+                AppRoleAssignment(
+                    PrincipalId = Guid invitation.InvitedUser.Id,
+                    ResourceId = Guid principal.Id,
+                    AppRoleId = readerRole.Id
+                )
+            let! _ = client.Users.[invitation.InvitedUser.Id].AppRoleAssignments.PostAsync(assignment)
+            ()
+        }
     
 let fetchPhoto (credential: ClientSecretCredential): Queries.FetchProfilePhoto =
     fun (userId: string) ->

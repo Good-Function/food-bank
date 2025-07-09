@@ -7,6 +7,7 @@ type Dependencies = {
     ListUsers: Queries.ListUsers
     ListRoles: Queries.ListRoles
     FetchProfilePhoto: Queries.FetchProfilePhoto
+    AddUser: Commands.AddUser
 }
 
 let build (azureAdSettings: AzureAdSettings) (settings: UsersSettings) =
@@ -24,4 +25,7 @@ let build (azureAdSettings: AzureAdSettings) (settings: UsersSettings) =
         FetchProfilePhoto = if settings.UseEntraMock
                             then ManagementMock.fetchPhoto
                             else Management.fetchPhoto credential
+        AddUser = if settings.UseEntraMock
+                  then ManagementMock.inviteUser
+                  else Management.inviteUser credential
     }

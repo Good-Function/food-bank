@@ -46,6 +46,6 @@ let ``Delete user``() =
 [<Fact(Skip="Learning entra")>]
 let ``Invite user``() =
     task {
-        do! Management.inviteUser credential "marcingolenia@gmail.com"
+        do! Management.inviteUser credential {Email = "marcingolenia@gmail.com"}
         printf "%s" "ok"// eff8d726-2f0c-4f22-9c5c-6f398592cf3b
     }

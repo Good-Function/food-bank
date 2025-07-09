@@ -61,6 +61,6 @@
       <Compile Include="Learning\Entra.fs" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Include="Team\TeamViewing.fs" />
+      <Compile Include="Team\TeamManagement.fs" />
     </ItemGroup>
 </Project>
