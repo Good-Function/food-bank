@@ -2,10 +2,11 @@ module Users.Templates.UsersTable
 
 open Layout
 open Oxpecker.ViewEngine
+open Permissions
 open Users.Domain
 open Oxpecker.Htmx
 
-let View (users: User list) (roles: Role list) =
+let View (users: User list) (roles: Role list) (userRole: string) =
     table(style="layout:fixed") {
         thead() {
             th(style="width:128px; min-width:64px;") {}
@@ -27,6 +28,7 @@ let View (users: User list) (roles: Role list) =
                             hxPut = $"/team/users/{user.Id}/roles",
                             hxTrigger="change",
                             hxTarget="closest table",
+                            disabled = not (userRole |> hasPermissionTo Permission.ManageUsers),
                             hxSwap="outerHTML",
                             name="RoleId",
                             hxIndicator= "#UsersIndicator"
@@ -38,14 +40,16 @@ let View (users: User list) (roles: Role list) =
                         }
                     }
                     td() {
-                        a(
-                            hxTarget = "closest tr",
-                            hxDelete =  $"/team/users/{user.Id}",
-                            hxConfirm="Czy na pewno chcesz usunąć tego użytkownika?",
-                            hxIndicator= "#UsersIndicator",
-                            href="") {
-                            Icons.Delete
-                        }
+                        if userRole |> hasPermissionTo Permission.ManageUsers then
+                            a(
+                                hxTarget = "closest tr",
+                                hxDelete =  $"/team/users/{user.Id}",
+                                hxConfirm="Czy na pewno chcesz usunąć tego użytkownika?",
+                                hxIndicator= "#UsersIndicator",
+                                href="") {
+                                Icons.Delete
+                            }
+                        else Fragment()
                     }
                 }
         }

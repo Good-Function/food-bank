@@ -5,21 +5,25 @@ open Layout.Navigation
 open Oxpecker.ViewEngine
 open Layout
 open Oxpecker.Htmx
+open Permissions
 
-let private page =
+let private page (role: string)  =
     Fragment() {
-        form(style="margin:auto;",
-             hxPost="/team/users",
-             hxTarget="#UsersTable",
-             hxIndicator="#UsersIndicator").attr("hx-on::after-request", "if(event.detail.successful) this.reset()") {
-            fieldset().attr("role", "group") {
-                input(
-                    type'="email",
-                    name="Email",
-                    placeholder="Email nowej osoby")
-                input(type' = "submit", value = "Wyślij zaproszenie", style="font-size:1rem !important;")
+        if role |> hasPermissionTo Permission.ManageUsers then
+            form(style="margin:auto;",
+                 hxPost="/team/users",
+                 hxTarget="#UsersTable",
+                 hxIndicator="#UsersIndicator").attr("hx-on::after-request", "if(event.detail.successful) this.reset()") {
+                fieldset().attr("role", "group") {
+                    input(
+                        type'="email",
+                        name="Email",
+                        placeholder="Email nowej osoby")
+                    input(type' = "submit", value = "Wyślij zaproszenie", style="font-size:1rem !important;")
+                }
             }
-        }
+        else
+            Fragment()
         div(id="UsersTable", style="position:relative"){
             div (hxGet = "/team/users", hxTrigger = "revealed", hxSwap = "outerHTML") {
                 table(style="layout:fixed") {
@@ -36,11 +40,11 @@ let private page =
         }
     }
 
-let Partial (userName: string) =
+let Partial (userName: string) (role: string)=
     Fragment() {
-        Body.Template page (Some Page.Team) userName
+        Body.Template (page role) (Some Page.Team) userName
         ReplaceTitle <| Page.Team.ToTitle()
     }
 
-let FullPage (userName: string) =
-    Head.Template (Partial userName) (Page.Team.ToTitle())
+let FullPage (userName: string) (role: string) =
+    Head.Template (Partial userName role) (Page.Team.ToTitle())

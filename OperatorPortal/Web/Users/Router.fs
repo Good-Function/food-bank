@@ -30,14 +30,16 @@ let deleteUser (deleteUser: Commands.DeleteUser) (userId: string): EndpointHandl
 let page: EndpointHandler =
     fun ctx -> task {
         let username = ctx.UserName
-        return ctx |> render (Index.Partial username) (Index.FullPage username)
+        let role = ctx.UserRole
+        return ctx |> render (Index.Partial username role) (Index.FullPage username role)
     }
     
 let users (listUsers: Queries.ListUsers) (listRoles: Queries.ListRoles): EndpointHandler =
     fun ctx -> task {
         let! users = listUsers()
         let! roles = listRoles()
-        return ctx.WriteHtmlView (Templates.UsersTable.View users roles)
+        let userRole = ctx.UserRole
+        return ctx.WriteHtmlView (Templates.UsersTable.View users roles userRole)
     }
     
 let addUser (addUser: Commands.AddUser) (listUsers: Queries.ListUsers) (listRoles: Queries.ListRoles): EndpointHandler =
@@ -46,8 +48,9 @@ let addUser (addUser: Commands.AddUser) (listUsers: Queries.ListUsers) (listRole
         do! addUser newUser
         let! users = listUsers()
         let! roles = listRoles()
+        let userRole = ctx.UserRole
         ctx.SetStatusCode(StatusCodes.Status201Created)
-        return ctx.WriteHtmlView (Templates.UsersTable.View users roles)
+        return ctx.WriteHtmlView (Templates.UsersTable.View users roles userRole)
     }
     
 let assignRole
@@ -56,6 +59,7 @@ let assignRole
         (listRoles: Queries.ListRoles)
         (userId: string): EndpointHandler =
     fun ctx -> task {
+        let userRole = ctx.UserRole
         let roleId = ctx.TryGetFormValue("RoleId") |> Option.defaultValue ""
         let userId: Domain.UserId = Guid(userId)
         let roleId: Domain.RoleId = Guid(roleId)
@@ -63,7 +67,7 @@ let assignRole
         let! users = listUsers()
         let! roles = listRoles()
         ctx.SetStatusCode(StatusCodes.Status200OK)
-        return ctx.WriteHtmlView (Templates.UsersTable.View users roles)
+        return ctx.WriteHtmlView (Templates.UsersTable.View users roles userRole)
     }
 
 let Endpoints (deps: Dependencies)= [

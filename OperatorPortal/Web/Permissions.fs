@@ -14,11 +14,11 @@ let rolePermissions =
         "Reader", [ ViewOrganization ]
     ]
     
-let can (requiredPermission: Permission) (user: ClaimsPrincipal) =
-    let role = user.FindFirstValue(ClaimTypes.Role)
-    match role with
-    | null -> false
-    | r ->
-        match rolePermissions.TryFind r with
+let hasPermissionTo (requiredPermission: Permission) (role: string) =
+    match rolePermissions.TryFind role with
         | Some perms -> perms |> List.contains requiredPermission
         | None -> false
+    
+let can (requiredPermission: Permission) (user: ClaimsPrincipal) =
+    let role = user.FindFirstValue(ClaimTypes.Role)
+    hasPermissionTo requiredPermission role
