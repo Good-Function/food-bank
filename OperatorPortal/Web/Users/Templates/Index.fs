@@ -11,7 +11,7 @@ let private page =
         form(style="margin:auto;",
              hxPost="/team/users",
              hxTarget="#UsersTable",
-             hxIndicator="#UsersIndicator") {
+             hxIndicator="#UsersIndicator").attr("hx-on::after-request", "if(event.detail.successful) this.reset()") {
             fieldset().attr("role", "group") {
                 input(
                     type'="email",

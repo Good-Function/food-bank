@@ -140,5 +140,5 @@ let fetchAppUsers (credential: ClientSecretCredential) : Queries.ListUsers =
                             RoleId = assignment.AppRoleId.Value
                         }
                     }) |> Task.WhenAll
-            return users |> Array.toList
+            return users |> Array.toList |> List.sortBy _.Mail
         }

@@ -49,10 +49,26 @@ let addUser (addUser: Commands.AddUser) (listUsers: Queries.ListUsers) (listRole
         ctx.SetStatusCode(StatusCodes.Status201Created)
         return ctx.WriteHtmlView (Templates.UsersTable.View users roles)
     }
+    
+let assignRole
+        (assignRole: Commands.AssignRole)
+        (listUsers: Queries.ListUsers)
+        (listRoles: Queries.ListRoles)
+        (userId: string): EndpointHandler =
+    fun ctx -> task {
+        let roleId = ctx.TryGetFormValue("RoleId") |> Option.defaultValue ""
+        let userId: Domain.UserId = Guid(userId)
+        let roleId: Domain.RoleId = Guid(roleId)
+        do! assignRole userId roleId
+        let! users = listUsers()
+        let! roles = listRoles()
+        ctx.SetStatusCode(StatusCodes.Status200OK)
+        return ctx.WriteHtmlView (Templates.UsersTable.View users roles)
+    }
 
 let Endpoints (deps: Dependencies)= [
     GET [
-        route "/" page
+        route "/" page 
         route "/users" (users deps.ListUsers deps.ListRoles)
         routef "/{%s}/photo" (photo deps.FetchProfilePhoto)
     ]
@@ -61,5 +77,8 @@ let Endpoints (deps: Dependencies)= [
     ]
     DELETE [
         routef "/users/{%s}" (deleteUser deps.DeleteUser)
+    ]
+    PUT [
+        routef "/users/{%s}/roles" (assignRole deps.AssignRole deps.ListUsers deps.ListRoles) 
     ]
 ]

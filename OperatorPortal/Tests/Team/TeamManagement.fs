@@ -60,6 +60,25 @@ let ``POST /team/users/{id} adds user`` () =
     }
     
 [<Fact>]
+let ``PUT /team/users/{id}/role/{roleId} assigns role`` () =
+    task {
+        // Arrange
+        let api = runTestApi() |> authenticate
+        let editorRole = ManagementMock.editor
+        let userIdToChangeRole = ManagementMock.users.Head.Id
+        let data = formData {
+            yield ("RoleId", editorRole.Id.ToString())
+        }
+        // Act
+        let! response = api.PutAsync($"/team/users/{userIdToChangeRole}/roles", data)
+        // Assert
+        (int response.StatusCode) |> should equal HttpStatusCodes.OK
+        let! doc = response.HtmlContent()
+        let selectedRole = doc.CssSelect("option[selected]").Head.InnerText()
+        selectedRole |> should equal editorRole.Name
+    }
+    
+[<Fact>]
 let ``DELETE /team/users/{id} removes user`` () =
     task {
         // Arrange

@@ -9,6 +9,7 @@ type Dependencies = {
     FetchProfilePhoto: Queries.FetchProfilePhoto
     AddUser: Commands.AddUser
     DeleteUser: Commands.DeleteUser
+    AssignRole: Commands.AssignRole
 }
 
 let build (azureAdSettings: AzureAdSettings) (settings: UsersSettings) =
@@ -32,4 +33,7 @@ let build (azureAdSettings: AzureAdSettings) (settings: UsersSettings) =
         DeleteUser = if settings.UseEntraMock
                      then ManagementMock.removeUser
                      else Management.removeUser credential
+        AssignRole = if settings.UseEntraMock
+                     then ManagementMock.assignRoleToUser
+                     else Management.assignRoleToUser credential
     }

@@ -3,9 +3,10 @@ module Users.Domain
 open System
 
 type UserId = Guid
+type RoleId = Guid
 
 type Role =
-    { Id: Guid
+    { Id: RoleId
       Name: string
       Description: string }
 

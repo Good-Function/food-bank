@@ -23,9 +23,16 @@ let View (users: User list) (roles: Role list) =
                         user.Mail
                     }
                     td() {
-                        select(){
+                        select(
+                            hxPut = $"/team/users/{user.Id}/roles",
+                            hxTrigger="change",
+                            hxTarget="closest table",
+                            hxSwap="outerHTML",
+                            name="RoleId",
+                            hxIndicator= "#UsersIndicator"
+                            ){
                             for role in roles do
-                                option(selected = (role.Id = user.RoleId), title = role.Description) {
+                                option(selected = (role.Id = user.RoleId), title = role.Description, value=role.Id.ToString()) {
                                     role.Name
                                 }
                         }
