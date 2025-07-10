@@ -27,7 +27,7 @@ let ``/ogranizations/summaries?search filters out and displays organization's mo
             Pagination = { Page = 1; Size = 50; }
         }
         let dbSummaryTeczkaIds = dbSummaries |> fst |> List.map(fun summary -> $"%i{summary.Teczka}")
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.GetAsync $"/organizations/summaries?search={org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc}"
         // Assert
@@ -74,7 +74,7 @@ let ``/ogranizations/summaries?search=xxx&sort=OstatnieOdwiedziny&dir=asc filter
                                     |> Arranger.setNazwaPlacowki $"{id}org1"
         do! orgVisitedToday |> (save Tools.DbConnection.connectDb)
         do! orgVisitedYesterday |> (save Tools.DbConnection.connectDb)
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.GetAsync $"/organizations/summaries?search={id}&sort=OstatnieOdwiedzinyData&dir={dir}"
         let! headersResponse = api.GetAsync "/organizations"
@@ -108,7 +108,7 @@ let ``/ogranizations/{id} shows correct Identyfikatory, kontakty, dokumenty, adr
         let teczkaid = organization.Teczka |> TeczkaId.unwrap
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.GetAsync $"/organizations/{teczkaid}"
         // Assert
@@ -210,7 +210,7 @@ let ``GET /ogranizations/{id}/dane-adresowe returns fields from dane adresowe`` 
         let teczkaid = organization.Teczka |> TeczkaId.unwrap
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.GetAsync $"/organizations/{teczkaid}/dane-adresowe"
         // Assert

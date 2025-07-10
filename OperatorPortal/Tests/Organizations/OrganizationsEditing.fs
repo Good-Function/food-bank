@@ -22,7 +22,7 @@ let ``GET /ogranizations/{id}/dane-adresowe/edit returns prefilled inputs to edi
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/dane-adresowe/edit"
         // Assert
@@ -57,7 +57,7 @@ let ``PUT /ogranizations/{id}/dane-adresowe modifies and returns updated data`` 
             yield ("Powiat", randomStuff)
         }
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/dane-adresowe", data)
         // Assert
@@ -83,7 +83,7 @@ let ``GET /ogranizations/{id}/kontakty/edit returns prefilled inputs to edit the
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/kontakty/edit"
         // Assert
@@ -129,7 +129,7 @@ let ``PUT /ogranizations/{id}/kontakty modifies and returns updated data`` () =
             yield ("TelefonOsobyOdbierajacej", randomStuff)
         }
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/kontakty", data)
         // Assert
@@ -159,7 +159,7 @@ let ``GET /ogranizations/{id}/beneficjenci/edit returns prefilled inputs to edit
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/beneficjenci/edit"
         // Assert
@@ -186,7 +186,7 @@ let ``PUT /ogranizations/{id}/beneficjenci modifies and returns updated data`` (
             yield ("Beneficjenci", expectedBeneficjenci)
         }
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/beneficjenci", data)
         // Assert
@@ -207,7 +207,7 @@ let ``GET /ogranizations/{id}/dokumenty/edit returns prefilled inputs to edit th
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/dokumenty/edit"
         // Assert
@@ -242,7 +242,7 @@ let ``PUT /ogranizations/{id}/dokumenty modifies and returns updated data`` () =
             yield ("DataUpowaznieniaDoOdbioru", expectedDate |> toInput)
         }
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/dokumenty", data)
         // Assert
@@ -267,7 +267,7 @@ let ``GET /ogranizations/{id}/zroda-zywnosci/edit returns prefilled inputs to ed
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/zrodla-zywnosci/edit"
         // Assert
@@ -304,7 +304,7 @@ let ``PUT /ogranizations/{id}/zrodla-zywnosci modifies and returns updated data`
             yield ("TylkoNaszMagazyn", "true")
         }
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/zrodla-zywnosci", data)
         // Assert
@@ -329,7 +329,7 @@ let ``GET /ogranizations/{id}/adresy-ksiegowosci/edit returns prefilled inputs t
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/adresy-ksiegowosci/edit"
         // Assert
@@ -357,7 +357,7 @@ let ``PUT /ogranizations/{id}/adresy-ksiegowosci modifies and returns updated da
             yield ("TelOrganProwadzacegoKsiegowosc", expectedText)
         }
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/adresy-ksiegowosci", data)
         // Assert
@@ -379,7 +379,7 @@ let ``GET /ogranizations/{id}/warunki-pomocy/edit returns prefilled inputs to ed
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.GetAsync $"/organizations/{organization.Teczka |> TeczkaId.unwrap}/warunki-pomocy/edit"
         // Assert
@@ -423,7 +423,7 @@ let ``PUT /ogranizations/{id}/warunki-pomocy modifies and returns updated data``
             yield ("TransportKategoria", expectedText)
         }
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/warunki-pomocy", data)
         // Assert

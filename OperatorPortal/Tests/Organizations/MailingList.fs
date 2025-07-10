@@ -13,7 +13,7 @@ open Tools.HttResponseMessageToHtml
 let ``Mailing list returns filtered mails``() =
     task {
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         let org = Arranger.AnOrganization()
         do! org |> save Tools.DbConnection.connectDb
         // Act

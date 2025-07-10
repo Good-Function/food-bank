@@ -13,7 +13,7 @@ open Xunit
 let ``POST /organizations/import/upload returns bad request when file is not xlsx`` () =
     task {
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         let fileBytes = File.ReadAllBytes(Path.Combine(__SOURCE_DIRECTORY__, "notExcel.txt"))
         let fileContent = new ByteArrayContent(fileBytes)
         use form = new MultipartFormDataContent()
@@ -31,7 +31,7 @@ let ``POST /organizations/import/upload returns bad request when file is not xls
 let ``POST /organizations/import/upload returns info with how many rows were important along with errors.`` () =
     task {
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         let fileBytes = File.ReadAllBytes(Path.Combine(__SOURCE_DIRECTORY__, "bank.xlsx"))
         let fileContent = new ByteArrayContent(fileBytes)
         use form = new MultipartFormDataContent()

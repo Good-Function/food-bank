@@ -23,7 +23,7 @@ let assignRoleToUser (credential: ClientSecretCredential) (userId: UserId) (appR
                 .GetAsync()
                 
         for oldAssignment in oldAssignments.Value do
-            if oldAssignment.ResourceId = Guid(principal.Id) then
+            if oldAssignment.ResourceId = Nullable(Guid(principal.Id)) then
                 do! client.Users.[userId.ToString()]
                         .AppRoleAssignments.[oldAssignment.Id.ToString()]
                         .DeleteAsync()
@@ -53,7 +53,7 @@ let removeUser (credential: ClientSecretCredential) (userId: UserId) =
                 .GetAsync()
 
         for assignment in assignments.Value do
-            if assignment.ResourceId = Guid(principal.Id) then
+            if assignment.ResourceId = Nullable(Guid(principal.Id)) then
                 do! client.Users.[userId.ToString()]
                         .AppRoleAssignments.[assignment.Id.ToString()]
                         .DeleteAsync()

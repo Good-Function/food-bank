@@ -11,7 +11,7 @@ open FSharp.Data
 let ``Navigations contains /ogranizations, /applications, /team links, /settings/password-change, /settings/csv-import`` () =
     task {
         // Arrange
-        let api = runTestApi() |> authenticate
+        let api = runTestApi()
         // Act
         let! response = api.GetAsync "/organizations"
         // Assert

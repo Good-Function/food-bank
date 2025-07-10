@@ -17,7 +17,7 @@ open FsUnit.Xunit
 [<Fact>]
 let ``Change password have fields to old and new password`` () =
     task {
-        let api = runTestApi () |> authenticate
+        let api = runTestApi ()
         // Act
         let! response = api.GetAsync "/login/password-change"
         // Assert
@@ -39,7 +39,7 @@ let ``Change password changes the password (wow!)`` () =
         let oldPasswordHash = oldPassword |> computeHash |> Password.create
         let expectedPassword = Guid.NewGuid().ToString()
         do! PasswordDao.changePassword connectDb {UserId = testUserId; NewPassword = oldPasswordHash}
-        let api = runTestApi () |> authenticate
+        let api = runTestApi ()
         let passwordChange = formData {
             yield ("OldPassword", oldPassword)
             yield ("NewPassword", expectedPassword)
@@ -56,7 +56,7 @@ let ``Change password changes the password (wow!)`` () =
 [<Fact>]
 let ``Change password shows error when old password is not correct`` () =
     task {
-        let api = runTestApi () |> authenticate
+        let api = runTestApi ()
         let passwordChange = formData {
             yield ("OldPassword", Guid.NewGuid().ToString())
             yield ("NewPassword", "whatever")
@@ -74,7 +74,7 @@ let ``Change password shows error when old password is not correct`` () =
 let ``Change password shows error when new passowrd confirmation doesn't match new password`` () =
     task {
         let! user = readUserBy connectDb 0
-        let api = runTestApi () |> authenticate
+        let api = runTestApi ()
         let passwordChange = formData {
             yield ("OldPassword", user.Password |> Password.value)
             yield ("NewPassword", "blabla1")

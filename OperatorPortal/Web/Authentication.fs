@@ -6,15 +6,15 @@ open System.Threading.Tasks
 open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Http
 
-let FakeAuthenticationHeader = "Authenticated"
+let mutable role = "Admin"
 
 let fakeAuthenticate =
     Func<HttpContext, RequestDelegate, Task>(fun ctx next ->
         task {
             let claims = [
-                Claim("preferred_username", "developer.admin@bzsos.pl")
+                Claim("preferred_username", "developer@bzsos.pl")
                 Claim(ClaimTypes.NameIdentifier, "0")
-                Claim(ClaimTypes.Role, "Admin")
+                Claim(ClaimTypes.Role, role)
             ]
             let identity = ClaimsIdentity(claims, "Test")
             let principal = ClaimsPrincipal(identity)
