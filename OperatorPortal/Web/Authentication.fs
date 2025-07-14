@@ -5,11 +5,11 @@ open System.Security.Claims
 open System.Threading.Tasks
 open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Http
-
-let mutable role = "Admin"
+open Oxpecker
 
 let fakeAuthenticate =
     Func<HttpContext, RequestDelegate, Task>(fun ctx next ->
+        let role = ctx.TryGetHeaderValue("role") |> Option.defaultValue "Admin"
         task {
             let claims = [
                 Claim("preferred_username", "developer@bzsos.pl")

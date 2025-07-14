@@ -7,9 +7,9 @@ open Layout
 open Oxpecker.Htmx
 open Permissions
 
-let private page (role: string)  =
+let private page permissions  =
     Fragment() {
-        if role |> hasPermissionTo Permission.ManageUsers then
+        if permissions |> List.contains Permission.ManageUsers then
             form(style="margin:auto;",
                  hxPost="/team/users",
                  hxTarget="#UsersTable",
@@ -40,11 +40,11 @@ let private page (role: string)  =
         }
     }
 
-let Partial (userName: string) (role: string)=
+let Partial (userName: string) permissions=
     Fragment() {
-        Body.Template (page role) (Some Page.Team) userName
+        Body.Template (page permissions) (Some Page.Team) userName
         ReplaceTitle <| Page.Team.ToTitle()
     }
 
-let FullPage (userName: string) (role: string) =
-    Head.Template (Partial userName role) (Page.Team.ToTitle())
+let FullPage (userName: string) permissions =
+    Head.Template (Partial userName permissions) (Page.Team.ToTitle())

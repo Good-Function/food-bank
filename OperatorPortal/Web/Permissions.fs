@@ -1,6 +1,8 @@
 module Permissions
 
 open System.Security.Claims
+open Microsoft.AspNetCore.Http
+open Oxpecker
 
 type Permission =
     | EditOrganization
@@ -14,11 +16,16 @@ let rolePermissions =
         "Reader", [ ViewOrganization ]
     ]
     
-let hasPermissionTo (requiredPermission: Permission) (role: string) =
+let can (requiredPermission: Permission) (user: ClaimsPrincipal) =
+    let role = user.FindFirstValue(ClaimTypes.Role)
     match rolePermissions.TryFind role with
         | Some perms -> perms |> List.contains requiredPermission
         | None -> false
     
-let can (requiredPermission: Permission) (user: ClaimsPrincipal) =
-    let role = user.FindFirstValue(ClaimTypes.Role)
-    hasPermissionTo requiredPermission role
+let authorize permission : EndpointMiddleware =
+     fun (next: EndpointHandler) (ctx: HttpContext) ->
+        if  ctx.User |> can permission then
+            next ctx
+        else
+            ctx.SetStatusCode 403
+            ctx.WriteText "Brak dostępu"

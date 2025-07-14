@@ -96,3 +96,13 @@ let ``DELETE /team/users/{id} removes user`` () =
             |> List.contains(userToDelete)
             |> should equal false
     }
+    
+[<Theory>]
+[<InlineData("Read")>]
+[<InlineData("Editor")>]
+let ``Delete /team/users/{id} returns Forbidden (403)`` role =
+     task {
+         let api = runTestApi() |> authenticate role
+         let! response = api.DeleteAsync("/team/users/10")
+         (int response.StatusCode) |> should equal HttpStatusCodes.Forbidden
+     }

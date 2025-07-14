@@ -6,7 +6,7 @@ open Permissions
 open Users.Domain
 open Oxpecker.Htmx
 
-let View (users: User list) (roles: Role list) (userRole: string) =
+let View (users: User list) (roles: Role list) permissions =
     table(style="layout:fixed") {
         thead() {
             th(style="width:128px; min-width:64px;") {}
@@ -28,7 +28,7 @@ let View (users: User list) (roles: Role list) (userRole: string) =
                             hxPut = $"/team/users/{user.Id}/roles",
                             hxTrigger="change",
                             hxTarget="closest table",
-                            disabled = not (userRole |> hasPermissionTo Permission.ManageUsers),
+                            disabled = not (permissions |> List.contains Permission.ManageUsers),
                             hxSwap="outerHTML",
                             name="RoleId",
                             hxIndicator= "#UsersIndicator"
@@ -40,7 +40,7 @@ let View (users: User list) (roles: Role list) (userRole: string) =
                         }
                     }
                     td() {
-                        if userRole |> hasPermissionTo Permission.ManageUsers then
+                        if permissions |> List.contains Permission.ManageUsers then
                             a(
                                 hxTarget = "closest tr",
                                 hxDelete =  $"/team/users/{user.Id}",
