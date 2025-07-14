@@ -6,6 +6,7 @@ open Organizations.Application.ReadModels.OrganizationDetails
 open Oxpecker.ViewEngine
 open Organizations.Templates.Formatters
 open Oxpecker.Htmx
+open Permissions
 
 let private documentEdit (doc: Document)=
     tr() {
@@ -55,9 +56,9 @@ let private documentView (teczka: int64) (doc: Document) =
         }
 }
 
-let View (documents: Document list) (teczka: int64) =
+let View (documents: Document list) (teczka: int64) (permissions: Permission list) =
     article () {
-        editableHeader "Dokumenty" $"/organizations/{teczka}/dokumenty/edit"
+        editableHeader "Dokumenty" $"/organizations/{teczka}/dokumenty/edit" permissions
         table(style="table-layout:fixed;") {
             thead() {
                 tr() {

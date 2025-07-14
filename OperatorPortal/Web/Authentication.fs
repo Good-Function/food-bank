@@ -9,7 +9,7 @@ open Oxpecker
 
 let fakeAuthenticate =
     Func<HttpContext, RequestDelegate, Task>(fun ctx next ->
-        let role = ctx.TryGetHeaderValue("role") |> Option.defaultValue "Admin"
+        let role = ctx.TryGetHeaderValue("role") |> Option.defaultValue "Reader"
         task {
             let claims = [
                 Claim("preferred_username", "developer@bzsos.pl")

@@ -20,7 +20,7 @@ let ``PUT /organizations/{id}/dokumenty returns 200 OK with link to document`` (
         // Arrange
         let organization = AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
-        let api = runTestApi()
+        let api = runTestApi() |> authenticate "Editor"
         let wniosekDate = DateOnly.FromDateTime(DateTime.Today)|> Some
         let umowaDate = DateOnly.FromDateTime(DateTime.Today)|> Some
         let rodoDate = DateOnly.FromDateTime(DateTime.Today)|> Some

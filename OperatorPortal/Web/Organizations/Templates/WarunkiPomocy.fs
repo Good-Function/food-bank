@@ -5,10 +5,11 @@ open Organizations.Application.ReadModels
 open Layout.Fields
 open Oxpecker.ViewEngine
 open Organizations.Templates.Formatters
+open Permissions
 
-let View (warunki: OrganizationDetails.WarunkiPomocy) (teczka: int64) =
+let View (warunki: OrganizationDetails.WarunkiPomocy) (teczka: int64) (permissions: Permission list)=
     article () {
-        editableHeader "Warunki udzielania pomocy żywnościowej"  $"/organizations/{teczka}/warunki-pomocy/edit"
+        editableHeader "Warunki udzielania pomocy żywnościowej" $"/organizations/{teczka}/warunki-pomocy/edit" permissions
         readonlyField "Kategoria" warunki.Kategoria
         readonlyField "Rodzaj pomocy" warunki.RodzajPomocy
         readonlyField "Sposób udzielania pomocy" warunki.SposobUdzielaniaPomocy

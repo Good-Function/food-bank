@@ -4,10 +4,11 @@ open Layout
 open Layout.Fields
 open Oxpecker.ViewEngine
 open Organizations.Application.ReadModels
+open Permissions
 
-let View (adresy: OrganizationDetails.AdresyKsiegowosci) (teczka: int64) =
+let View (adresy: OrganizationDetails.AdresyKsiegowosci) (teczka: int64) (permissions: Permission list) =
     article () {
-        editableHeader "Dane adresowe księgowości" $"/organizations/{teczka}/adresy-ksiegowosci/edit"
+        editableHeader "Dane adresowe księgowości" $"/organizations/{teczka}/adresy-ksiegowosci/edit" permissions
         readonlyField "Organizacja na którą wystawiamy WZ" adresy.NazwaOrganizacjiKsiegowanieDarowizn
         readonlyField "Adres" adresy.KsiegowanieAdres
         readonlyField "Telefon" adresy.TelOrganProwadzacegoKsiegowosc

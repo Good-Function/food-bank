@@ -4,10 +4,11 @@ open Layout
 open Organizations.Application.ReadModels
 open Oxpecker.ViewEngine
 open Layout.Fields
+open Permissions
 
-let View (adresy: OrganizationDetails.DaneAdresowe) (teczka: int64) =
+let View (adresy: OrganizationDetails.DaneAdresowe) (teczka: int64) (permissions: Permission list) =
     article () {
-        editableHeader "Dane adresowe" $"/organizations/{teczka}/dane-adresowe/edit"
+        editableHeader "Dane adresowe" $"/organizations/{teczka}/dane-adresowe/edit" permissions
         readonlyField "Organizacja, która podpisała umowę" adresy.NazwaOrganizacjiPodpisujacejUmowe
         readonlyField "Adres rejestrowy" adresy.AdresRejestrowy
         readonlyField "Placówka do której trafia żywność" adresy.NazwaPlacowkiTrafiaZywnosc

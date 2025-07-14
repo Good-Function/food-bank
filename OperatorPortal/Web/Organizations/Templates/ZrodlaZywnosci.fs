@@ -5,10 +5,11 @@ open Organizations.Application.ReadModels
 open Layout.Fields
 open Oxpecker.ViewEngine
 open Organizations.Templates.Formatters
+open Permissions
 
-let View (zrodla: OrganizationDetails.ZrodlaZywnosci) (teczka: int64) =
+let View (zrodla: OrganizationDetails.ZrodlaZywnosci) (teczka: int64) (permissions: Permission list)=
     article () {
-        editableHeader "Źródła żywności"  $"/organizations/{teczka}/zrodla-zywnosci/edit"
+        editableHeader "Źródła żywności"  $"/organizations/{teczka}/zrodla-zywnosci/edit" permissions
         readonlyField "Sieci" (zrodla.Sieci |> toTakNie)
         readonlyField "Bazarki" (zrodla.Bazarki |> toTakNie)
         readonlyField "Machfit" (zrodla.Machfit |> toTakNie)

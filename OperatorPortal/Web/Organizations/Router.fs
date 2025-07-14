@@ -100,11 +100,14 @@ let mailingList (readMailingList: ReadMailingList): EndpointHandler =
 let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
     fun ctx ->
         task {
+            let permissions = Permissions.rolePermissions[ctx.UserRole]
             let username = ctx.UserName
             let! details = readDetailsBy id
             return
                 ctx
-                |> render (DetailsTemplate.Template details) (DetailsTemplate.FullPage details username)
+                |> render
+                       (DetailsTemplate.Template details permissions)
+                       (DetailsTemplate.FullPage details permissions username)
         }
     
 let import: EndpointHandler =

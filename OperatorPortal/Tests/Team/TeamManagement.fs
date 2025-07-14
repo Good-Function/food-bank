@@ -46,7 +46,7 @@ let ``POST /team/users/{id} adds user`` () =
     task {
         // Arrange
         let emailToAdd = Faker().Person.Email
-        let api = runTestApi()
+        let api = runTestApi() |> authenticate "Admin"
         let data = formData {
             yield ("Email", emailToAdd)
         }
@@ -63,7 +63,7 @@ let ``POST /team/users/{id} adds user`` () =
 let ``PUT /team/users/{id}/role/{roleId} assigns role`` () =
     task {
         // Arrange
-        let api = runTestApi()
+        let api = runTestApi() |> authenticate "Admin"
         let editorRole = ManagementMock.editor
         let userIdToChangeRole = ManagementMock.users.Head.Id
         let data = formData {
@@ -87,7 +87,7 @@ let ``DELETE /team/users/{id} removes user`` () =
             Mail = "admin@bzsoswaw.pl"
             RoleId = ManagementMock.roles[0].Id }
         ManagementMock.users <- userToDelete :: ManagementMock.users
-        let api = runTestApi()
+        let api = runTestApi() |> authenticate "Admin"
         // Act
         let! response = api.DeleteAsync($"/team/users/{userToDelete.Id}")
         // Assert

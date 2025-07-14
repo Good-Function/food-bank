@@ -4,10 +4,11 @@ open Layout
 open Organizations.Application.ReadModels
 open Layout.Fields
 open Oxpecker.ViewEngine
+open Permissions
 
-let View (kontakty: OrganizationDetails.Kontakty) (teczka: int64) =
+let View (kontakty: OrganizationDetails.Kontakty) (teczka: int64) (permissions: Permission list) =
     article () {
-        editableHeader "Kontakty" $"/organizations/{teczka}/kontakty/edit"
+        editableHeader "Kontakty" $"/organizations/{teczka}/kontakty/edit" permissions
         readonlyField "www / facebook" kontakty.WwwFacebook
         readonlyField "Telefon" kontakty.Telefon
         readonlyField "Przedstawiciel" kontakty.Przedstawiciel

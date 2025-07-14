@@ -5,19 +5,22 @@ open Layout
 open Oxpecker.ViewEngine
 open Oxpecker.ViewEngine.Aria
 open Oxpecker.Htmx
+open Permissions
 
-let editableHeader (title: string) (formPath: string) =
+let editableHeader (title: string) (formPath: string) (permissions: Permission list) =
     header (class' = "action-header") {
         span () { title }
-        div (class' = "action-header-actions") {
-            span (
-                hxGet = formPath,
-                hxTarget = "closest article",
-                hxSwap = "outerHTML"
-            ) {
-                Icons.Pen
+        if permissions |> List.contains Permission.EditOrganization then
+            div (class' = "action-header-actions") {
+                span (
+                    hxGet = formPath,
+                    hxTarget = "closest article",
+                    hxSwap = "outerHTML"
+                ) {
+                    Icons.Pen
+                }
             }
-        }
+        else Fragment()
     }
 
 let activeEditableHeader (title: string) (formPath: string) (indicator: string)=

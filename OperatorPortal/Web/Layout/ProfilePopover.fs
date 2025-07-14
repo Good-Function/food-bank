@@ -7,13 +7,6 @@ let Template =
         nav () {
             ul () {
                 li (style = "display: block;") {
-                    a (href = "/login/password-change") {
-                        Icons.PassReset
-                        "Zmiana hasła"
-                    }
-                }
-
-                li (style = "display: block;") {
                     a (href = "/organizations/import") {
                         Icons.UploadFile
                         "Import csv"
