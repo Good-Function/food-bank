@@ -45,6 +45,14 @@ param authTenantName string
 @description('Tenant ID for authentication')
 param authTenantId string
 
+@secure()
+@description('Session hash key')
+param authHashKey string
+
+@secure()
+@description('Session block key')
+param authBlockKey string
+
 @description('OAuth state value')
 param authState string
 
