@@ -79,6 +79,14 @@ resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
           name: 'authtenantidref'
           value: authTenantId
         }
+        {
+          name: 'authhashkeyref'
+          value: authHashKey
+        }
+        {
+          name: 'authblockkeyref'
+          value: authBlockKey
+        }
       ]
       ingress: {
         external: true
@@ -121,6 +129,14 @@ resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
             {
               name: 'AUTH_TENANT_ID'
               secretRef: 'authtenantidref'
+            }
+            {
+              name: 'AUTH_HASH_KEY'
+              secretRef: 'authhashkeyref'
+            }
+            {
+              name: 'AUTH_BLOCK_KEY'
+              secretRef: 'authblockkeyref'
             }
             {
               name: 'AUTH_REDIRECT_URL'
