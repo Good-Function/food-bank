@@ -123,3 +123,12 @@ func (a *Auth) Decode(name, value string) (*UserClaims, error) {
 func SetUserContext(ctx context.Context, user *UserClaims) context.Context {
 	return context.WithValue(ctx, "user", user)
 }
+
+func IsSessionValid(ctx context.Context) bool {
+	user := ctx.Value("user")
+	if user == nil {
+		return false
+	}
+	_, ok := user.(*UserClaims)
+	return ok
+}

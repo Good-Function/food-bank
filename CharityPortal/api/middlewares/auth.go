@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"charity_portal/pkg/auth"
@@ -15,25 +15,22 @@ func NewAuthMiddleware(authProvicer auth.AuthProvider) *AuthMiddleware {
 	}
 }
 
-func (am *AuthMiddleware) Auth(h http.Handler) http.Handler {
+func (am *AuthMiddleware) LoggedOnly(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie("session")
-		if err != nil {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-			return
+		if !auth.IsSessionValid(r.Context()) {
+			clearSessionCookie(w)
+			http.Redirect(w, r, "/", http.StatusFound)
 		}
+		h.ServeHTTP(w, r)
+	})
+}
 
-		sessionData, err := am.authProvider.Decode("session", cookie.Value)
-		if err != nil {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+func (am *AuthMiddleware) NotLogged(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if auth.IsSessionValid(r.Context()) {
+			http.Redirect(w, r, "/dashboard", http.StatusFound)
 			return
 		}
-
-		if sessionData == nil {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-			return
-		}
-		r = r.WithContext(auth.SetUserContext(r.Context(), sessionData))
 		h.ServeHTTP(w, r)
 	})
 }
