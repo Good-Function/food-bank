@@ -19,7 +19,7 @@ On the top you can find most important tasks.
 
 ## CharityPortal
 1. Create & fill .env file based on .env.example
-2. Execute `execute source .env && air` 
+2. Execute `source .env && air` 
 
 
 ## Useful stuff
