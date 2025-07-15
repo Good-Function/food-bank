@@ -13,6 +13,7 @@ require (
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-jose/go-jose/v4 v4.0.5 // indirect
+	github.com/gorilla/securecookie v1.1.2
 	github.com/justinas/alice v1.2.0
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/crypto v0.38.0 // indirect

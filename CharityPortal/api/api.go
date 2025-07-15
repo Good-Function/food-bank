@@ -2,11 +2,14 @@ package api
 
 import (
 	"charity_portal/api/handlers"
-	middleware "charity_portal/api/middlewares"
+	"charity_portal/api/middlewares"
 	"charity_portal/config"
 	"charity_portal/pkg/auth"
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/justinas/alice"
 )
@@ -17,10 +20,13 @@ type API struct {
 }
 
 func NewAPI(cfg *config.Config) *API {
+	setupLogger(cfg.Logger)
+
 	authProvider, err := auth.NewAuth(cfg.AuthConfig)
 	if err != nil {
 		log.Fatalf("Failed to create auth provider: %v", err)
 	}
+
 	router := newRouter(authProvider)
 
 	server := http.Server{
@@ -36,15 +42,18 @@ func NewAPI(cfg *config.Config) *API {
 func newRouter(authProvider auth.AuthProvider) *http.ServeMux {
 	mux := http.NewServeMux()
 
-	middlewaresChain := alice.New(middleware.Log)
+	commonMiddlewares := alice.New(middlewares.Log, middlewares.NewSessionMiddleware(authProvider).Session)
+	notLoggedOnlyMiddlewares := commonMiddlewares.Extend(alice.New(middlewares.NewAuthMiddleware(authProvider).NotLogged))
+	loggedOnlyMiddleware := commonMiddlewares.Extend(alice.New(middlewares.NewAuthMiddleware(authProvider).LoggedOnly))
 
 	fs := http.FileServer(http.Dir("./web/static"))
-	mux.Handle("GET /static/", middlewaresChain.Then(http.StripPrefix("/static/", fs)))
+	mux.Handle("GET /static/", commonMiddlewares.Then(http.StripPrefix("/static/", fs)))
 
-	mux.Handle("POST /login", middlewaresChain.Then(handlers.NewLoginHandler(authProvider)))
-	mux.Handle("GET /login/callback", middlewaresChain.Then(handlers.NewLoginCallbackHandler(authProvider)))
+	mux.Handle("GET /", notLoggedOnlyMiddlewares.Then(handlers.NewHomeHandler()))
+	mux.Handle("POST /login", notLoggedOnlyMiddlewares.Then(handlers.NewLoginHandler(authProvider)))
+	mux.Handle("GET /login/callback", notLoggedOnlyMiddlewares.Then(handlers.NewLoginCallbackHandler(authProvider)))
 
-	mux.Handle("GET /{$}", middlewaresChain.Then(handlers.NewHomeHandler()))
+	mux.Handle("GET /dashboard", loggedOnlyMiddleware.Then(handlers.NewDashboardHandler()))
 	return mux
 }
 
@@ -53,4 +62,26 @@ func (a *API) Start() {
 }
 func (a *API) Shutdown() {
 	log.Fatalln(a.server.Close())
+}
+
+func setupLogger(cfg *config.Logger) {
+	slogLogLevel := slog.LevelDebug
+	switch strings.ToLower(cfg.Level) {
+	case "debug":
+		slogLogLevel = slog.LevelDebug
+	case "info":
+		slogLogLevel = slog.LevelInfo
+	case "warn":
+		slogLogLevel = slog.LevelWarn
+	case "error":
+		slogLogLevel = slog.LevelError
+	default:
+		log.Println("Invalid log level, defaulting to debug")
+		slogLogLevel = slog.LevelDebug
+
+	}
+	logHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slogLogLevel,
+	})
+	slog.SetDefault(slog.New(logHandler))
 }
