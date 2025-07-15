@@ -11,6 +11,6 @@ func Log(h http.Handler) http.Handler {
 		startProcessing := time.Now()
 		h.ServeHTTP(w, r)
 		took := time.Since(startProcessing).Milliseconds()
-		slog.With("METHOD", r.Method, "URL", r.URL.Path, "ms", took).Info("Request processed")
+		slog.With("METHOD", r.Method, "URL", r.URL.Path, "ms", took).Debug("Request processed")
 	})
 }

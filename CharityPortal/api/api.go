@@ -6,7 +6,9 @@ import (
 	"charity_portal/config"
 	"charity_portal/pkg/auth"
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
 
 	"github.com/justinas/alice"
 )
@@ -17,6 +19,11 @@ type API struct {
 }
 
 func NewAPI(cfg *config.Config) *API {
+	logHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	})
+	slog.SetDefault(slog.New(logHandler))
+
 	authProvider, err := auth.NewAuth(cfg.AuthConfig)
 	if err != nil {
 		log.Fatalf("Failed to create auth provider: %v", err)
