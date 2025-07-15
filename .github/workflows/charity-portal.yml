@@ -103,6 +103,8 @@ jobs:
             authTenantName=${{ secrets.AUTH_TENANT_NAME }}
             authTenantId=${{ secrets.AUTH_TENANT_ID }}
             authState=${{ secrets.AUTH_STATE }}
+            authHashKey=${{ secrets.AUTH_HASH_KEY}}
+            authBlockKey=${{ secrets.AUTH_BLOCK_KEY}}
           failOnStdErr: false
       - name: Show FQDN
         run: | 
