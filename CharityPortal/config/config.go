@@ -4,11 +4,23 @@ import "os"
 
 type Config struct {
 	AuthConfig *Auth
+	Logger     *Logger
 }
 
 func LoadConfig() *Config {
 	return &Config{
 		AuthConfig: buildAuthConfig(),
+		Logger:     buildLogger(),
+	}
+}
+
+type Logger struct {
+	Level string
+}
+
+func buildLogger() *Logger {
+	return &Logger{
+		Level: os.Getenv("LOG_LEVEL"),
 	}
 }
 

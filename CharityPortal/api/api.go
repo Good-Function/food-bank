@@ -9,6 +9,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/justinas/alice"
 )
@@ -19,10 +20,7 @@ type API struct {
 }
 
 func NewAPI(cfg *config.Config) *API {
-	logHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level: slog.LevelDebug,
-	})
-	slog.SetDefault(slog.New(logHandler))
+	setupLogger(cfg.Logger)
 
 	authProvider, err := auth.NewAuth(cfg.AuthConfig)
 	if err != nil {
@@ -64,4 +62,26 @@ func (a *API) Start() {
 }
 func (a *API) Shutdown() {
 	log.Fatalln(a.server.Close())
+}
+
+func setupLogger(cfg *config.Logger) {
+	slogLogLevel := slog.LevelDebug
+	switch strings.ToLower(cfg.Level) {
+	case "debug":
+		slogLogLevel = slog.LevelDebug
+	case "info":
+		slogLogLevel = slog.LevelInfo
+	case "warn":
+		slogLogLevel = slog.LevelWarn
+	case "error":
+		slogLogLevel = slog.LevelError
+	default:
+		log.Println("Invalid log level, defaulting to debug")
+		slogLogLevel = slog.LevelDebug
+
+	}
+	logHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slogLogLevel,
+	})
+	slog.SetDefault(slog.New(logHandler))
 }
