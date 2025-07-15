@@ -29,7 +29,7 @@ func Dashboard() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div>\"Welcome to the Dashboard! This is a placeholder for your dashboard content.\"</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div>\"Welcome to the Dashboard! This is a placeholder for your dashboard content.\"<form action=\"/logout\" method=\"POST\"><input type=\"submit\" name=\"Logout\" value=\"Wyloguj\"></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

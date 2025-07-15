@@ -52,6 +52,7 @@ func newRouter(authProvider auth.AuthProvider) *http.ServeMux {
 	mux.Handle("GET /", notLoggedOnlyMiddlewares.Then(handlers.NewHomeHandler()))
 	mux.Handle("POST /login", notLoggedOnlyMiddlewares.Then(handlers.NewLoginHandler(authProvider)))
 	mux.Handle("GET /login/callback", notLoggedOnlyMiddlewares.Then(handlers.NewLoginCallbackHandler(authProvider)))
+	mux.Handle("POST /logout", loggedOnlyMiddleware.Then(handlers.NewLogoutHandler()))
 
 	mux.Handle("GET /dashboard", loggedOnlyMiddleware.Then(handlers.NewDashboardHandler()))
 	return mux
