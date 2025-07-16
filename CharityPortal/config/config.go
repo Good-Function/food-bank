@@ -5,12 +5,14 @@ import "os"
 type Config struct {
 	AuthConfig *Auth
 	Logger     *Logger
+	Environment string
 }
 
 func LoadConfig() *Config {
 	return &Config{
 		AuthConfig: buildAuthConfig(),
 		Logger:     buildLogger(),
+		Environment: os.Getenv("APP_ENVIRONMENT"),
 	}
 }
 

@@ -19,15 +19,24 @@ type API struct {
 	authProvider *auth.Auth
 }
 
+const (
+	environmentDevelopment = "development"
+	environmentProduction  = "production"
+)
+
 func NewAPI(cfg *config.Config) *API {
 	setupLogger(cfg.Logger)
+	appEnvironment := environmentProduction
+	if strings.ToLower(cfg.Environment) == environmentDevelopment {
+		appEnvironment = environmentDevelopment
+	}
 
 	authProvider, err := auth.NewAuth(cfg.AuthConfig)
 	if err != nil {
 		log.Fatalf("Failed to create auth provider: %v", err)
 	}
 
-	router := newRouter(authProvider)
+	router := newRouter(authProvider, appEnvironment)
 
 	server := http.Server{
 		Addr:    ":8080",
@@ -39,10 +48,10 @@ func NewAPI(cfg *config.Config) *API {
 	}
 }
 
-func newRouter(authProvider auth.AuthProvider) *http.ServeMux {
+func newRouter(authProvider auth.AuthProvider, appEnvironment string) *http.ServeMux {
 	mux := http.NewServeMux()
 
-	commonMiddlewares := alice.New(middlewares.Log, middlewares.NewSessionMiddleware(authProvider).Session)
+	commonMiddlewares := alice.New(middlewares.Log, middlewares.NewSessionMiddleware(authProvider, appEnvironment).Session)
 	notLoggedOnlyMiddlewares := commonMiddlewares.Extend(alice.New(middlewares.NewAuthMiddleware(authProvider).NotLogged))
 	loggedOnlyMiddleware := commonMiddlewares.Extend(alice.New(middlewares.NewAuthMiddleware(authProvider).LoggedOnly))
 

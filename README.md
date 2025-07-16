@@ -18,8 +18,12 @@ https://github.com/orgs/Good-Function/projects/2/views/1
 On the top you can find most important tasks.
 
 ## CharityPortal
-1. Create & fill .env file based on .env.example
-2. Execute `source .env && air` 
+1. Make sure that templ & air is installed:
+    `go install github.com/air-verse/air@latest`
+    `go install github.com/a-h/templ/cmd/templ@latest`
+2. Create & fill .env file based on .env.example
+3. Load envs by executing `source .env` 
+4. Run project with `air`
 
 
 ## Useful stuff
