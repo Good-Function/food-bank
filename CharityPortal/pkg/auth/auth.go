@@ -124,6 +124,17 @@ func SetUserContext(ctx context.Context, user *UserClaims) context.Context {
 	return context.WithValue(ctx, "user", user)
 }
 
+func GetUserFromContext(ctx context.Context) *UserClaims {
+	user := ctx.Value("user")
+	if user == nil {
+		return nil
+	}
+	if claims, ok := user.(*UserClaims); ok {
+		return claims
+	}
+	return nil
+}
+
 func IsSessionValid(ctx context.Context) bool {
 	user := ctx.Value("user")
 	if user == nil {
