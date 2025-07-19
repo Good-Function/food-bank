@@ -57,6 +57,7 @@ func newRouter(authProvider auth.AuthProvider) *http.ServeMux {
 	mux.Handle("POST /logout", loggedOnlyMiddleware.Then(handlers.NewLogoutHandler()))
 
 	mux.Handle("GET /dashboard", loggedOnlyMiddleware.Then(handlers.NewDashboardHandler()))
+	mux.Handle("GET /data-confirmation", loggedOnlyMiddleware.Then(handlers.NewDataConfirmationHandler()))
 	return mux
 }
 

@@ -1,7 +1,8 @@
 package views
 
 templ Dashboard() {
-<div>
-	"Welcome to the Dashboard! This is a placeholder for your dashboard content."
-</div>
+	<div style="display: flex; flex-direction: column;">
+		Tutaj wyświetlić dane organizacji?
+		<button hx-get="/data-confirmation">Uzupełnij dane organizacji</button>
+	</div>
 }

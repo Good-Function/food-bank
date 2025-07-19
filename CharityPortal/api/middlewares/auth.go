@@ -20,6 +20,7 @@ func (am *AuthMiddleware) LoggedOnly(h http.Handler) http.Handler {
 		if !auth.IsSessionValid(r.Context()) {
 			clearSessionCookie(w)
 			http.Redirect(w, r, "/", http.StatusFound)
+			return
 		}
 		h.ServeHTTP(w, r)
 	})
