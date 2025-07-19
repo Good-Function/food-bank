@@ -11,3 +11,4 @@ nuget
 CharityPortal/.tool-versions
 CharityPortal/tmp
 CharityPortal/.env
+CharityPortal/.env.*
