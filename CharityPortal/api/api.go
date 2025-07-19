@@ -31,7 +31,7 @@ func NewAPI(cfg *config.Config) *API {
 		appEnvironment = environmentDevelopment
 	}
 
-	authProvider, err := auth.NewAuth(cfg.AuthConfig)
+	authProvider, err := setupAuthProvider(cfg, cfg.Environment)
 	if err != nil {
 		log.Fatalf("Failed to create auth provider: %v", err)
 	}
@@ -72,6 +72,13 @@ func (a *API) Start() {
 }
 func (a *API) Shutdown() {
 	log.Fatalln(a.server.Close())
+}
+
+func setupAuthProvider(cfg *config.Config, env string) (auth.AuthProvider, error) {
+	if env == environmentDevelopment {
+		return auth.NewFakeAuth()
+	}
+	return auth.NewAuth(cfg.AuthConfig)
 }
 
 func setupLogger(cfg *config.Logger) {
