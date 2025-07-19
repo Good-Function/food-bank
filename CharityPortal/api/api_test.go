@@ -11,7 +11,7 @@ import (
 
 func TestRegisteredRoutes(t *testing.T) {
 	authProvider, _ := auth.NewFakeAuth()
-	router := newRouter(authProvider, "development")
+	router := newRouter(authProvider)
 	if router == nil {
 		assert.Fail(t, "Router should not be nil")
 	}

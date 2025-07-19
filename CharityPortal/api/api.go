@@ -16,7 +16,6 @@ import (
 
 type API struct {
 	server       *http.Server
-	authProvider *auth.Auth
 }
 
 const (
@@ -26,17 +25,11 @@ const (
 
 func NewAPI(cfg *config.Config) *API {
 	setupLogger(cfg.Logger)
-	appEnvironment := environmentProduction
-	if strings.ToLower(cfg.Environment) == environmentDevelopment {
-		appEnvironment = environmentDevelopment
-	}
-
 	authProvider, err := setupAuthProvider(cfg, cfg.Environment)
 	if err != nil {
 		log.Fatalf("Failed to create auth provider: %v", err)
 	}
-
-	router := newRouter(authProvider, appEnvironment)
+	router := newRouter(authProvider)
 
 	server := http.Server{
 		Addr:    ":8080",
@@ -48,7 +41,7 @@ func NewAPI(cfg *config.Config) *API {
 	}
 }
 
-func newRouter(authProvider auth.AuthProvider, appEnvironment string) *http.ServeMux {
+func newRouter(authProvider auth.AuthProvider) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	commonMiddlewares := alice.New(middlewares.Log, middlewares.NewSessionMiddleware(authProvider).Session)
