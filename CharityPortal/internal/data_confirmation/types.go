@@ -1,5 +1,21 @@
 package dataconfirmation
 
+const (
+	StepOrganizationData = iota
+	StepContactData
+	StepAccountingData
+	StepBeneficiariesData
+	StepFoodSources
+	StepFoodAidConditions
+)
+
+const (
+	ACTION_NEXT     = "next"
+	ACTION_PREVIOUS = "prev"
+	ACTION_SAVE     = "save"
+	ACTION_ABANDON  = "abandon"
+)
+
 type OrganizationDataRender struct {
 	CurrentStep          int            `json:"current_step"`
 	NextStep             int            `json:"next_step"`
@@ -16,3 +32,4 @@ type OrgStepData struct {
 	Names  []string `json:"names"`
 	Values []string `json:"values"`
 }
+

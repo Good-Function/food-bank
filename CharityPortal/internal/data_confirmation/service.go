@@ -17,22 +17,6 @@ func NewDataConfirmationService() *DataConfirmationService {
 	}
 }
 
-const (
-	StepOrganizationData = iota
-	StepContactData
-	StepAccountingData
-	StepBeneficiariesData
-	StepFoodSources
-	StepFoodAidConditions
-)
-
-const (
-	ACTION_NEXT     = "next"
-	ACTION_PREVIOUS = "prev"
-	ACTION_SAVE     = "save"
-	ACTION_ABANDON  = "abandon"
-)
-
 func (dcs *DataConfirmationService) GetOrganizationDataFirstStep() (*OrganizationDataRender, error) {
 	return &OrganizationDataRender{
 		CurrentStep:          0,
