@@ -75,7 +75,7 @@ func (a *API) Shutdown() {
 }
 
 func setupAuthProvider(cfg *config.Config, env string) (auth.AuthProvider, error) {
-	if strings.ToLower("development") == environmentDevelopment {
+	if env == environmentDevelopment {
 		return auth.NewFakeAuth()
 	}
 	return auth.NewAuth(cfg.AuthConfig)
