@@ -3,6 +3,6 @@ package views
 templ Dashboard() {
 	<div style="display: flex; flex-direction: column;">
 		Tutaj wyświetlić dane organizacji?
-		<button hx-get="/data-confirmation">Uzupełnij dane organizacji</button>
+		<button hx-get="/data-confirmation" hx-swap="outerHTML">Uzupełnij dane organizacji</button>
 	</div>
 }
