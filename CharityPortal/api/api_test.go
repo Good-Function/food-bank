@@ -1,6 +1,7 @@
 package api
 
 import (
+	"charity_portal/pkg/auth"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -9,7 +10,8 @@ import (
 )
 
 func TestRegisteredRoutes(t *testing.T) {
-	router := newRouter(nil, "development") // Pass nil for authProvider since we are not testing auth here
+	authProvider, _ := auth.NewFakeAuth()
+	router := newRouter(authProvider)
 	if router == nil {
 		assert.Fail(t, "Router should not be nil")
 	}

@@ -6,46 +6,28 @@ import (
 )
 
 type SessionMiddleware struct {
-	authProvider   auth.AuthProvider
-	appEnvironment string
+	authProvider auth.AuthProvider
 }
 
-func NewSessionMiddleware(authProvicer auth.AuthProvider, appEnvironment string) *SessionMiddleware {
+func NewSessionMiddleware(authProvicer auth.AuthProvider) *SessionMiddleware {
 	return &SessionMiddleware{
-		authProvider:   authProvicer,
-		appEnvironment: appEnvironment,
+		authProvider: authProvicer,
 	}
 }
 
 func (am *SessionMiddleware) Session(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if am.appEnvironment == "development" {
-			// In development mode, we skip session management for simplicity.
-			sessionData := auth.UserClaims{
-				Name:  "test",
-				Email: "test@test.com",
-				Sub:   "test-sub",
-			}
-			r = r.WithContext(auth.SetUserContext(r.Context(), &sessionData))
-			h.ServeHTTP(w, r)
-			return
+		var cookieVal string
+		if cookie, err := r.Cookie("session"); err == nil {
+			cookieVal = cookie.Value
 		}
-		cookie, err := r.Cookie("session")
-		if err != nil {
-			h.ServeHTTP(w, r)
-			return
+		var sessionData *auth.UserClaims
+		var err error
+
+		if sessionData, err = am.authProvider.Decode("session", cookieVal); err == nil {
+			r = r.WithContext(auth.SetUserContext(r.Context(), sessionData))
 		}
-		sessionData, err := am.authProvider.Decode("session", cookie.Value)
-		if err != nil {
-			h.ServeHTTP(w, r)
-			return
-		}
-		if sessionData == nil {
-			clearSessionCookie(w)
-			h.ServeHTTP(w, r)
-			return
-		}
-		r = r.WithContext(auth.SetUserContext(r.Context(), sessionData))
+
 		h.ServeHTTP(w, r)
 	})
 }

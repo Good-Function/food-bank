@@ -29,8 +29,8 @@ func decodeUserClaimsResponse(t *testing.T, rr *httptest.ResponseRecorder) auth.
 }
 
 func TestSessionMiddleware_Development(t *testing.T) {
-	mockAuth := new(mocks.AuthProviderMock)
-	middleware := NewSessionMiddleware(mockAuth, "development")
+	fakeAuth, _ := auth.NewFakeAuth()
+	middleware := NewSessionMiddleware(fakeAuth)
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rr := httptest.NewRecorder()
@@ -41,9 +41,9 @@ func TestSessionMiddleware_Development(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rr.Code)
 
 	expectedUser := auth.UserClaims{
-		Name:  "test",
-		Email: "test@test.com",
-		Sub:   "test-sub",
+		Name:  "Test User",
+		Email: "test@example.com",
+		Sub:   "1234",
 	}
 	actualUser := decodeUserClaimsResponse(t, rr)
 	assert.Equal(t, expectedUser, actualUser)
@@ -51,7 +51,8 @@ func TestSessionMiddleware_Development(t *testing.T) {
 
 func TestSessionMiddleware_NoCookie(t *testing.T) {
 	mockAuth := new(mocks.AuthProviderMock)
-	middleware := NewSessionMiddleware(mockAuth, "production")
+	mockAuth.On("Decode", "session", "").Return(nil, assert.AnError)
+	middleware := NewSessionMiddleware(mockAuth)
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rr := httptest.NewRecorder()
@@ -66,7 +67,7 @@ func TestSessionMiddleware_InvalidCookie(t *testing.T) {
 	mockAuth := new(mocks.AuthProviderMock)
 	mockAuth.On("Decode", "session", "bad-cookie").Return(nil, assert.AnError)
 
-	middleware := NewSessionMiddleware(mockAuth, "production")
+	middleware := NewSessionMiddleware(mockAuth)
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.AddCookie(&http.Cookie{Name: "session", Value: "bad-cookie"})
@@ -83,7 +84,7 @@ func TestSessionMiddleware_NilSessionData(t *testing.T) {
 	mockAuth := new(mocks.AuthProviderMock)
 	mockAuth.On("Decode", "session", "empty-session").Return(nil, nil)
 
-	middleware := NewSessionMiddleware(mockAuth, "production")
+	middleware := NewSessionMiddleware(mockAuth)
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.AddCookie(&http.Cookie{Name: "session", Value: "empty-session"})
@@ -105,7 +106,7 @@ func TestSessionMiddleware_ValidSession(t *testing.T) {
 	}
 	mockAuth.On("Decode", "session", "valid-token").Return(sessionUser, nil)
 
-	middleware := NewSessionMiddleware(mockAuth, "production")
+	middleware := NewSessionMiddleware(mockAuth)
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.AddCookie(&http.Cookie{Name: "session", Value: "valid-token"})
