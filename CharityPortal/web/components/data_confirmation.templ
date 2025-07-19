@@ -14,7 +14,7 @@ templ DataConfirmation(orgDataSteps dataconfirmation.OrganizationDataRender) {
 					<h1 id="data-confirmation-step-name">{ currentStepData.Title }</h1>
 				</div>
 				<div>
-					<button type="submit" value="abandon" name="step_action"
+					<button value="abandon" name="step_action"
 						hx-post="/data-confirmation">
 						Porzuć zmiany
 					</button>

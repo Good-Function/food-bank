@@ -62,7 +62,7 @@ func DataConfirmation(orgDataSteps dataconfirmation.OrganizationDataRender) temp
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h1></div><div><button type=\"submit\" value=\"abandon\" name=\"step_action\" hx-post=\"/data-confirmation\">Porzuć zmiany</button></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h1></div><div><button value=\"abandon\" name=\"step_action\" hx-post=\"/data-confirmation\">Porzuć zmiany</button></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
