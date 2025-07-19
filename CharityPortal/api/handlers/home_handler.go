@@ -12,5 +12,5 @@ func NewHomeHandler() *HomeHandler {
 }
 
 func (ph *HomeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	views.Base(views.Home()).Render(r.Context(), w)
+	views.Base(views.Home(), nil).Render(r.Context(), w)
 }

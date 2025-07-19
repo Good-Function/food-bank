@@ -1,19 +1,32 @@
 package views
 
-templ Base(body templ.Component) {
+import "charity_portal/internal/user"
+
+templ Base(body templ.Component, userData *user.UserData) {
 	<!DOCTYPE html>
 	<html data-theme="light">
 		<head>
 			<script src="/static/htmx.min.js" hx-preserve="true"></script>
 			<link href="/static/pico.pumpkin.min.css" rel="stylesheet" hx-preserve="true"/>
+			<link href="/static/styles.css" rel="stylesheet" hx-preserve="true"/>
 		</head>
 		<body class="container">
-			<header style="">
-				<div style="display: flex; align-items: center; justify-content: center;">
-					<div></div><img src="/static/bzsoslogo.png" style="width:175px;"/>
+			<header
+				class="container"
+				style="display: flex; justify-content: space-between; align-items: center"
+			>
+				<div style="flex: 1;"></div>
+				<div style="flex: 1; text-align: center;">
+					<img src="/static/bzsoslogo.png" alt="Logo" style="width: 175px;"/>
 				</div>
-				<hr/>
+				<div style="flex: 1; text-align: right;">
+					if userData != nil {
+						<small>{ userData.Email }</small>
+						<button class="small-button" hx-post="/logout" hx-target="body">Wyloguj</button>
+					}
+				</div>
 			</header>
+			<hr/>
 			<div style="display: flex; align-items: center; justify-content: center;">
 				@body
 			</div>

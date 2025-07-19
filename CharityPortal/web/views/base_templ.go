@@ -8,7 +8,9 @@ package views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Base(body templ.Component) templ.Component {
+import "charity_portal/internal/user"
+
+func Base(body templ.Component, userData *user.UserData) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,7 +31,30 @@ func Base(body templ.Component) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html data-theme=\"light\"><head><script src=\"/static/htmx.min.js\" hx-preserve=\"true\"></script><link href=\"/static/pico.pumpkin.min.css\" rel=\"stylesheet\" hx-preserve=\"true\"></head><body class=\"container\"><header style=\"\"><div style=\"display: flex; align-items: center; justify-content: center;\"><div></div><img src=\"/static/bzsoslogo.png\" style=\"width:175px;\"></div><hr></header><div style=\"display: flex; align-items: center; justify-content: center;\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html data-theme=\"light\"><head><script src=\"/static/htmx.min.js\" hx-preserve=\"true\"></script><link href=\"/static/pico.pumpkin.min.css\" rel=\"stylesheet\" hx-preserve=\"true\"><link href=\"/static/styles.css\" rel=\"stylesheet\" hx-preserve=\"true\"></head><body class=\"container\"><header class=\"container\" style=\"display: flex; justify-content: space-between; align-items: center\"><div style=\"flex: 1;\"></div><div style=\"flex: 1; text-align: center;\"><img src=\"/static/bzsoslogo.png\" alt=\"Logo\" style=\"width: 175px;\"></div><div style=\"flex: 1; text-align: right;\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if userData != nil {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<small>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var2 string
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(userData.Email)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/base.templ`, Line: 24, Col: 29}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</small> <button class=\"small-button\" hx-post=\"/logout\" hx-target=\"body\">Wyloguj</button>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></header><hr><div style=\"display: flex; align-items: center; justify-content: center;\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -37,7 +62,7 @@ func Base(body templ.Component) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
