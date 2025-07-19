@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"charity_portal/internal/user"
+	"charity_portal/internal/auth"
 	"charity_portal/web/views"
 	"net/http"
 )
@@ -12,5 +14,10 @@ func NewDashboardHandler() *DashboardHandler {
 }
 
 func (ph *DashboardHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	views.Base(views.Dashboard()).Render(r.Context(), w)
+	userClaims := auth.GetUserFromContext(r.Context())
+	userData := &user.UserData{
+		ID:    userClaims.Sub,
+		Email: userClaims.Email,
+	}
+	views.Base(views.Dashboard(), userData).Render(r.Context(), w)
 }

@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"charity_portal/pkg/auth"
+	"charity_portal/internal/auth"
 	"charity_portal/tests/mocks"
 	"encoding/json"
 	"net/http"

@@ -4,7 +4,7 @@ import (
 	"charity_portal/api/handlers"
 	"charity_portal/api/middlewares"
 	"charity_portal/config"
-	"charity_portal/pkg/auth"
+	"charity_portal/internal/auth"
 	"log"
 	"log/slog"
 	"net/http"
@@ -57,6 +57,7 @@ func newRouter(authProvider auth.AuthProvider) *http.ServeMux {
 	mux.Handle("POST /logout", loggedOnlyMiddleware.Then(handlers.NewLogoutHandler()))
 
 	mux.Handle("GET /dashboard", loggedOnlyMiddleware.Then(handlers.NewDashboardHandler()))
+	mux.Handle("GET /data-confirmation", loggedOnlyMiddleware.Then(handlers.NewDataConfirmationHandler()))
 	return mux
 }
 

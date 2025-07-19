@@ -1,0 +1,18 @@
+package components
+
+templ DataConfirmation() {
+	<div class="container">
+		<h1>Potwierdzenie danych</h1>
+		<p>
+			Dziękujemy za przesłanie danych. Prosimy o ich potwierdzenie przed dalszym
+			przetwarzaniem.
+		</p>
+		<form hx-post="/confirm-data" hx-target="body">
+			<div class="form-group">
+				<label for="data">Dane do potwierdzenia:</label>
+				<textarea id="data" name="data" rows="5" required></textarea>
+			</div>
+			<button type="submit" class="button">Potwierdź dane</button>
+		</form>
+	</div>
+}

@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"charity_portal/pkg/auth"
+	"charity_portal/internal/auth"
 	"net/http"
 )
 
@@ -20,6 +20,7 @@ func (am *AuthMiddleware) LoggedOnly(h http.Handler) http.Handler {
 		if !auth.IsSessionValid(r.Context()) {
 			clearSessionCookie(w)
 			http.Redirect(w, r, "/", http.StatusFound)
+			return
 		}
 		h.ServeHTTP(w, r)
 	})
