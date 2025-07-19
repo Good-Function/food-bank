@@ -1,18 +1,21 @@
 package config
 
-import "os"
+import (
+	"os"
+	"strings"
+)
 
 type Config struct {
-	AuthConfig *Auth
-	Logger     *Logger
+	AuthConfig  *Auth
+	Logger      *Logger
 	Environment string
 }
 
 func LoadConfig() *Config {
 	return &Config{
-		AuthConfig: buildAuthConfig(),
-		Logger:     buildLogger(),
-		Environment: os.Getenv("APP_ENVIRONMENT"),
+		AuthConfig:  buildAuthConfig(),
+		Logger:      buildLogger(),
+		Environment: strings.ToLower(os.Getenv("APP_ENVIRONMENT")),
 	}
 }
 
