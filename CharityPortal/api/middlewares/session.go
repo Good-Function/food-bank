@@ -6,12 +6,12 @@ import (
 )
 
 type SessionMiddleware struct {
-	authProvider   auth.AuthProvider
+	authProvider auth.AuthProvider
 }
 
 func NewSessionMiddleware(authProvicer auth.AuthProvider) *SessionMiddleware {
 	return &SessionMiddleware{
-		authProvider:   authProvicer,
+		authProvider: authProvicer,
 	}
 }
 
@@ -21,17 +21,13 @@ func (am *SessionMiddleware) Session(h http.Handler) http.Handler {
 		if cookie, err := r.Cookie("session"); err == nil {
 			cookieVal = cookie.Value
 		}
-		sessionData, err := am.authProvider.Decode("session", cookieVal)
-		if sessionData == nil {
-			clearSessionCookie(w)
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-			return
+		var sessionData *auth.UserClaims
+		var err error
+
+		if sessionData, err = am.authProvider.Decode("session", cookieVal); err == nil {
+			r = r.WithContext(auth.SetUserContext(r.Context(), sessionData))
 		}
-		if err != nil {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-			return
-		}
-		r = r.WithContext(auth.SetUserContext(r.Context(), sessionData))
+
 		h.ServeHTTP(w, r)
 	})
 }
