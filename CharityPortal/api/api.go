@@ -51,7 +51,7 @@ func NewAPI(cfg *config.Config) *API {
 func newRouter(authProvider auth.AuthProvider, appEnvironment string) *http.ServeMux {
 	mux := http.NewServeMux()
 
-	commonMiddlewares := alice.New(middlewares.Log, middlewares.NewSessionMiddleware(authProvider, appEnvironment).Session)
+	commonMiddlewares := alice.New(middlewares.Log, middlewares.NewSessionMiddleware(authProvider).Session)
 	notLoggedOnlyMiddlewares := commonMiddlewares.Extend(alice.New(middlewares.NewAuthMiddleware(authProvider).NotLogged))
 	loggedOnlyMiddleware := commonMiddlewares.Extend(alice.New(middlewares.NewAuthMiddleware(authProvider).LoggedOnly))
 
