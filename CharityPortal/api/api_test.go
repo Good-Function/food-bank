@@ -112,7 +112,7 @@ func TestAuthorizedAccessRoutes(t *testing.T) {
 		},
 		{
 			name:           "authorized access to /data-confirmation should return 200",
-			method:         http.MethodGet,
+			method:         http.MethodPost,
 			path:           "/data-confirmation",
 			expectedStatus: http.StatusOK,
 		},

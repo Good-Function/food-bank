@@ -5,6 +5,7 @@ import (
 	"charity_portal/api/middlewares"
 	"charity_portal/config"
 	"charity_portal/internal/auth"
+	dataconfirmation "charity_portal/internal/data_confirmation"
 	"log"
 	"log/slog"
 	"net/http"
@@ -23,11 +24,11 @@ const (
 	environmentProduction  = "production"
 )
 
-func NewAPI(cfg *config.Config) *API {
+func NewAPI(cfg *config.Config) (*API, error) {
 	setupLogger(cfg.Logger)
 	authProvider, err := setupAuthProvider(cfg, cfg.Environment)
 	if err != nil {
-		log.Fatalf("Failed to create auth provider: %v", err)
+		return nil, err
 	}
 	router := newRouter(authProvider)
 
@@ -38,7 +39,7 @@ func NewAPI(cfg *config.Config) *API {
 
 	return &API{
 		server: &server,
-	}
+	}, nil
 }
 
 func newRouter(authProvider auth.AuthProvider) *http.ServeMux {
@@ -47,6 +48,7 @@ func newRouter(authProvider auth.AuthProvider) *http.ServeMux {
 	commonMiddlewares := alice.New(middlewares.Log, middlewares.NewSessionMiddleware(authProvider).Session)
 	notLoggedOnlyMiddlewares := commonMiddlewares.Extend(alice.New(middlewares.NewAuthMiddleware(authProvider).NotLogged))
 	loggedOnlyMiddleware := commonMiddlewares.Extend(alice.New(middlewares.NewAuthMiddleware(authProvider).LoggedOnly))
+	dataConfirmationService := dataconfirmation.NewDataConfirmationService()
 
 	fs := http.FileServer(http.Dir("./web/static"))
 	mux.Handle("GET /static/", commonMiddlewares.Then(http.StripPrefix("/static/", fs)))
@@ -57,7 +59,7 @@ func newRouter(authProvider auth.AuthProvider) *http.ServeMux {
 	mux.Handle("POST /logout", loggedOnlyMiddleware.Then(handlers.NewLogoutHandler()))
 
 	mux.Handle("GET /dashboard", loggedOnlyMiddleware.Then(handlers.NewDashboardHandler()))
-	mux.Handle("GET /data-confirmation", loggedOnlyMiddleware.Then(handlers.NewDataConfirmationHandler()))
+	mux.Handle("POST /data-confirmation", loggedOnlyMiddleware.Then(handlers.NewDataConfirmationHandler(dataConfirmationService)))
 	return mux
 }
 

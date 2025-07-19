@@ -3,6 +3,7 @@ module charity_portal
 go 1.24.4
 
 require (
+	github.com/PuerkitoBio/goquery v1.10.3
 	github.com/a-h/templ v0.3.887
 	github.com/coreos/go-oidc/v3 v3.14.1
 	github.com/stretchr/testify v1.10.0
@@ -10,7 +11,10 @@ require (
 	golang.org/x/oauth2 v0.30.0
 )
 
-require github.com/stretchr/objx v0.5.2 // indirect
+require (
+	github.com/andybalholm/cascadia v1.3.3 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
