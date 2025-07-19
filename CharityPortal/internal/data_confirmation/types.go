@@ -14,6 +14,7 @@ const (
 	ACTION_PREVIOUS = "prev"
 	ACTION_SAVE     = "save"
 	ACTION_ABANDON  = "abandon"
+	ACTION_VALIDATE = "validate"
 )
 
 type OrganizationDataRender struct {

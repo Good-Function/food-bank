@@ -14,8 +14,7 @@ templ DataConfirmation(orgDataSteps dataconfirmation.OrganizationDataRender) {
 					<h1 id="data-confirmation-step-name">{ currentStepData.Title }</h1>
 				</div>
 				<div>
-					<button value="abandon" name="step_action"
-						hx-post="/data-confirmation">
+					<button value="abandon" name="step_action" hx-post="/data-confirmation">
 						Porzuć zmiany
 					</button>
 				</div>
@@ -23,7 +22,9 @@ templ DataConfirmation(orgDataSteps dataconfirmation.OrganizationDataRender) {
 			for i := range len(currentStepData.Labels) {
 			<p>
 				<label><b>{ currentStepData.Labels[i] }</b></label>
-				<input type={ currentStepData.Types[i] } name={ currentStepData.Names[i] } value={
+				<input hx-trigger="change" hx-post="/data-confirmation"
+					hx-vals='{"step_action": "validate"}' hx-target="#data-confirmation-wizard"
+					type={ currentStepData.Types[i] } name={ currentStepData.Names[i] } value={
 					currentStepData.Values[i] } />
 			</p>
 			}
