@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"charity_portal/pkg/auth"
+	"charity_portal/internal/auth"
 	"context"
 	"net/url"
 

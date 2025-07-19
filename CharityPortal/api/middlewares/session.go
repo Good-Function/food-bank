@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"charity_portal/pkg/auth"
+	"charity_portal/internal/auth"
 	"net/http"
 )
 

@@ -4,7 +4,7 @@ import (
 	"charity_portal/api/handlers"
 	"charity_portal/api/middlewares"
 	"charity_portal/config"
-	"charity_portal/pkg/auth"
+	"charity_portal/internal/auth"
 	"log"
 	"log/slog"
 	"net/http"

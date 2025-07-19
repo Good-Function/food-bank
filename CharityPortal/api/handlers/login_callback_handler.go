@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"charity_portal/pkg/auth"
+	"charity_portal/internal/auth"
 	"log/slog"
 	"net/http"
 	"time"

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"charity_portal/internal/user"
-	"charity_portal/pkg/auth"
+	"charity_portal/internal/auth"
 	"charity_portal/web/views"
 	"net/http"
 )
