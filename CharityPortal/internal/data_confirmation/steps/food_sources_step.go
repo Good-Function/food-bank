@@ -1,7 +1,24 @@
-package dataconfirmation
+package steps
 
-func GetFoodSourcesStep() *OrgStepData {
-	return &OrgStepData{
+import "charity_portal/internal/data_confirmation/model"
+
+type FoodSourcesStep struct{}
+
+func (s *FoodSourcesStep) GetStepData() *model.OrgStepData {
+	return GetFoodSourcesStep()
+}
+
+func (s *FoodSourcesStep) ValidateStepData() error {
+	// Implement validation logic if needed
+	return nil
+}
+
+func NewFoodSourcesStep() *FoodSourcesStep {
+	return &FoodSourcesStep{}
+}
+
+func GetFoodSourcesStep() *model.OrgStepData {
+	return &model.OrgStepData{
 		Title: "Źródła żywności",
 		Labels: []string{
 			"Sieci",

@@ -1,4 +1,4 @@
-package dataconfirmation
+package model
 
 const (
 	StepOrganizationData = iota
@@ -33,4 +33,3 @@ type OrgStepData struct {
 	Names  []string `json:"names"`
 	Values []string `json:"values"`
 }
-

@@ -1,6 +1,7 @@
 package dataconfirmation
 
 import (
+	"charity_portal/internal/data_confirmation/model"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -19,16 +20,16 @@ func TestShouldReturnProperNextStepCalculatedValues(t *testing.T) {
 		expectedPreviousStep int
 	}{
 		{
-			currentStep:          StepOrganizationData,
-			expectedCurrentStep:  StepContactData,
-			expectedNextStep:     StepAccountingData,
-			expectedPreviousStep: StepOrganizationData,
+			currentStep:          model.StepOrganizationData,
+			expectedCurrentStep:  model.StepContactData,
+			expectedNextStep:     model.StepAccountingData,
+			expectedPreviousStep: model.StepOrganizationData,
 		},
 		{
-			currentStep:          StepFoodAidConditions,
-			expectedCurrentStep:  StepFoodAidConditions,
-			expectedNextStep:     StepFoodAidConditions,
-			expectedPreviousStep: StepFoodSources,
+			currentStep:          model.StepFoodAidConditions,
+			expectedCurrentStep:  model.StepFoodAidConditions,
+			expectedNextStep:     model.StepFoodAidConditions,
+			expectedPreviousStep: model.StepFoodSources,
 		},
 	}
 	for _, tc := range testCases {
@@ -45,8 +46,8 @@ func TestShouldReturnFirstStepOnInitialization(t *testing.T) {
 	service := NewDataConfirmationService()
 	render, err := service.GetOrganizationDataFirstStep()
 	assert.NoError(t, err, "Should not return an error")
-	assert.Equal(t, StepOrganizationData, render.CurrentStep, "Current step should be the first step, returned: %d", render.CurrentStep)
-	assert.Equal(t, StepContactData, render.NextStep, "Next step should be the second step, returned: %d", render.NextStep)
+	assert.Equal(t, model.StepOrganizationData, render.CurrentStep, "Current step should be the first step, returned: %d", render.CurrentStep)
+	assert.Equal(t, model.StepContactData, render.NextStep, "Next step should be the second step, returned: %d", render.NextStep)
 	assert.Equal(t, 0, render.PreviousStep, "Previous step should be zero for the first step, returned: %d", render.PreviousStep)
 }
 
@@ -58,22 +59,22 @@ func TestShouldReturnPreviousStepOnHandlePreviousStep(t *testing.T) {
 		expectedPreviousStep int
 	}{
 		{
-			currentStep:          StepOrganizationData,
-			expectedCurrentStep:  StepOrganizationData,
-			expectedNextStep:     StepContactData,
-			expectedPreviousStep: StepOrganizationData,
+			currentStep:          model.StepOrganizationData,
+			expectedCurrentStep:  model.StepOrganizationData,
+			expectedNextStep:     model.StepContactData,
+			expectedPreviousStep: model.StepOrganizationData,
 		},
 		{
-			currentStep:          StepContactData,
-			expectedCurrentStep:  StepOrganizationData,
-			expectedNextStep:     StepContactData,
-			expectedPreviousStep: StepOrganizationData,
+			currentStep:          model.StepContactData,
+			expectedCurrentStep:  model.StepOrganizationData,
+			expectedNextStep:     model.StepContactData,
+			expectedPreviousStep: model.StepOrganizationData,
 		},
 		{
-			currentStep:          StepFoodAidConditions,
-			expectedCurrentStep:  StepFoodSources,
-			expectedNextStep:     StepFoodAidConditions,
-			expectedPreviousStep: StepBeneficiariesData,
+			currentStep:          model.StepFoodAidConditions,
+			expectedCurrentStep:  model.StepFoodSources,
+			expectedNextStep:     model.StepFoodAidConditions,
+			expectedPreviousStep: model.StepBeneficiariesData,
 		},
 	}
 	for _, tc := range testCases {

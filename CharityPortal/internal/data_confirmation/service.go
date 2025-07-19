@@ -1,24 +1,39 @@
 package dataconfirmation
 
+import (
+	"charity_portal/internal/data_confirmation/model"
+	"charity_portal/internal/data_confirmation/steps"
+)
+
 type DataConfirmationService struct {
-	OrganizationData []*OrgStepData
+	Steps            map[int]steps.Step
+	OrganizationData []*model.OrgStepData
 }
 
 func NewDataConfirmationService() *DataConfirmationService {
+	orgStepsData := make(map[int]steps.Step)
+	orgStepsData[model.StepOrganizationData] = steps.NewAddressStep()
+	orgStepsData[model.StepContactData] = steps.NewContactStep()
+	orgStepsData[model.StepAccountingData] = steps.NewAccountingStep()
+	orgStepsData[model.StepBeneficiariesData] = steps.NewBeneficiariesStep()
+	orgStepsData[model.StepFoodSources] = steps.NewFoodSourcesStep()
+	orgStepsData[model.StepFoodAidConditions] = steps.NewFoodAidConditionsStep()
+
 	return &DataConfirmationService{
-		OrganizationData: []*OrgStepData{
-			GetAddressDataStep(),
-			GetContactDataStep(),
-			GetAccountingDataStep(),
-			GetBeneficiariesDataStep(),
-			GetFoodSourcesStep(),
-			GetFoodAidConditionsStep(),
+		Steps: orgStepsData,
+		OrganizationData: []*model.OrgStepData{
+			orgStepsData[model.StepOrganizationData].GetStepData(),
+			orgStepsData[model.StepContactData].GetStepData(),
+			orgStepsData[model.StepAccountingData].GetStepData(),
+			orgStepsData[model.StepBeneficiariesData].GetStepData(),
+			orgStepsData[model.StepFoodSources].GetStepData(),
+			orgStepsData[model.StepFoodAidConditions].GetStepData(),
 		},
 	}
 }
 
-func (dcs *DataConfirmationService) GetOrganizationDataFirstStep() (*OrganizationDataRender, error) {
-	return &OrganizationDataRender{
+func (dcs *DataConfirmationService) GetOrganizationDataFirstStep() (*model.OrganizationDataRender, error) {
+	return &model.OrganizationDataRender{
 		CurrentStep:          0,
 		NextStep:             1,
 		NextStepTitle:        dcs.GetNextStepTitle(0),
@@ -28,9 +43,9 @@ func (dcs *DataConfirmationService) GetOrganizationDataFirstStep() (*Organizatio
 	}, nil
 }
 
-func (dcs *DataConfirmationService) HandleNextStep(currentStep int) (*OrganizationDataRender, error) {
+func (dcs *DataConfirmationService) HandleNextStep(currentStep int) (*model.OrganizationDataRender, error) {
 	newCurrentStep := dcs.GetNewCurrentStep(currentStep)
-	return &OrganizationDataRender{
+	return &model.OrganizationDataRender{
 		CurrentStep:          newCurrentStep,
 		NextStep:             dcs.GetNewNextStep(newCurrentStep),
 		NextStepTitle:        dcs.GetNextStepTitle(newCurrentStep),
@@ -40,9 +55,9 @@ func (dcs *DataConfirmationService) HandleNextStep(currentStep int) (*Organizati
 	}, nil
 }
 
-func (dcs *DataConfirmationService) HandlePreviousStep(currentStep int) (*OrganizationDataRender, error) {
+func (dcs *DataConfirmationService) HandlePreviousStep(currentStep int) (*model.OrganizationDataRender, error) {
 	newCurrentStep := dcs.GetNewPreviousStep(currentStep)
-	return &OrganizationDataRender{
+	return &model.OrganizationDataRender{
 		CurrentStep:          newCurrentStep,
 		NextStep:             dcs.GetNewNextStep(newCurrentStep),
 		NextStepTitle:        dcs.GetNextStepTitle(newCurrentStep),

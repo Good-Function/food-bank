@@ -1,7 +1,24 @@
-package dataconfirmation
+package steps
 
-func GetContactDataStep() *OrgStepData {
-	return &OrgStepData{
+import "charity_portal/internal/data_confirmation/model"
+
+type ContactStep struct{}
+
+func (s *ContactStep) GetStepData() *model.OrgStepData {
+	return GetContactDataStep()
+}
+
+func (s *ContactStep) ValidateStepData() error {
+	// Implement validation logic if needed
+	return nil
+}
+
+func NewContactStep() *ContactStep {
+	return &ContactStep{}
+}
+
+func GetContactDataStep() *model.OrgStepData {
+	return &model.OrgStepData{
 		Title: "Dane kontaktowe",
 		Labels: []string{
 			"www / facebook",

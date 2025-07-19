@@ -1,7 +1,24 @@
-package dataconfirmation
+package steps
 
-func GetAddressDataStep() *OrgStepData {
-	return &OrgStepData{
+import "charity_portal/internal/data_confirmation/model"
+
+type AddressStep struct{}
+
+func (a AddressStep) GetStepData() *model.OrgStepData {
+	return getAddressDataStep()
+}
+
+func NewAddressStep() *AddressStep {
+	return &AddressStep{}
+}
+
+func (a AddressStep) ValidateStepData() error {
+	// Implement validation logic if needed
+	return nil
+}
+
+func getAddressDataStep() *model.OrgStepData {
+	return &model.OrgStepData{
 		Title: "Dane adresowe",
 		Labels: []string{
 			"Organizacja, która podpisała umowę",

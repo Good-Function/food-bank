@@ -1,8 +1,8 @@
 package components
 
-import dataconfirmation "charity_portal/internal/data_confirmation"
+import "charity_portal/internal/data_confirmation/model"
 
-templ DataConfirmation(orgDataSteps dataconfirmation.OrganizationDataRender) {
+templ DataConfirmation(orgDataSteps model.OrganizationDataRender) {
 <div class="container" id="data-confirmation-wizard">
 	<form>
 		<article>

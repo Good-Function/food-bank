@@ -1,7 +1,24 @@
-package dataconfirmation
+package steps
 
-func GetFoodAidConditionsStep() *OrgStepData {
-	return &OrgStepData{
+import "charity_portal/internal/data_confirmation/model"
+
+type FoodAidConditionsStep struct{}
+
+func (s *FoodAidConditionsStep) GetStepData() *model.OrgStepData {
+	return GetFoodAidConditionsStep()
+}
+
+func (s *FoodAidConditionsStep) ValidateStepData() error {
+	// Implement validation logic if needed
+	return nil
+}
+
+func NewFoodAidConditionsStep() *FoodAidConditionsStep {
+	return &FoodAidConditionsStep{}
+}
+
+func GetFoodAidConditionsStep() *model.OrgStepData {
+	return &model.OrgStepData{
 		Title: "Warunki udzielania pomocy żywnościowej",
 		Labels: []string{
 			"Kategoria",

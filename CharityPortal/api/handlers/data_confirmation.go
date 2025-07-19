@@ -1,7 +1,8 @@
 package handlers
 
 import (
-	dataconfirmation "charity_portal/internal/data_confirmation"
+	"charity_portal/internal/data_confirmation"
+	"charity_portal/internal/data_confirmation/model"
 	"charity_portal/web/components"
 	"net/http"
 	"strconv"
@@ -29,16 +30,16 @@ func (dch *DataConfirmationHandler) ServeHTTP(w http.ResponseWriter, r *http.Req
 		currentStep = 0
 	}
 
-	var renderData *dataconfirmation.OrganizationDataRender
+	var renderData *model.OrganizationDataRender
 
 	stepAction := r.FormValue("step_action")
 	switch stepAction {
-	case dataconfirmation.ACTION_NEXT:
+	case model.ACTION_NEXT:
 		renderData, _ = dch.dataConfirmationService.HandleNextStep(currentStep)
-	case dataconfirmation.ACTION_PREVIOUS:
+	case model.ACTION_PREVIOUS:
 		renderData, _ = dch.dataConfirmationService.HandlePreviousStep(currentStep)
-	case dataconfirmation.ACTION_SAVE:
-	case dataconfirmation.ACTION_ABANDON:
+	case model.ACTION_SAVE:
+	case model.ACTION_ABANDON:
 	default:
 		if currentStep != 0 {
 			http.Error(w, "Invalid step action", http.StatusBadRequest)

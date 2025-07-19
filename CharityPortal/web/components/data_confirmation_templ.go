@@ -8,9 +8,9 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import dataconfirmation "charity_portal/internal/data_confirmation"
+import "charity_portal/internal/data_confirmation/model"
 
-func DataConfirmation(orgDataSteps dataconfirmation.OrganizationDataRender) templ.Component {
+func DataConfirmation(orgDataSteps model.OrganizationDataRender) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
