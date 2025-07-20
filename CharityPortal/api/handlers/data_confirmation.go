@@ -44,7 +44,14 @@ func (dch *DataConfirmationHandler) ServeHTTP(w http.ResponseWriter, r *http.Req
 	case model.ACTION_VALIDATE:
 		triggeredField := r.Header.Get("Hx-Trigger-Name")
 		fmt.Println(triggeredField)
-		renderData, _ = dch.dataConfirmationService.HandleNextStep(currentStep)
+		fieldValue := r.FormValue(triggeredField)
+		field, err := dch.dataConfirmationService.ValidateStepFieldInput(currentStep, triggeredField, fieldValue)
+		if err != nil {
+			http.Error(w, "Validation error", http.StatusBadRequest)
+			return
+		}
+		components.InputField(field.FieldLabel, field.FieldName, field.FieldValue, field.FiledType, field.FieldError).Render(r.Context(), w)
+		return
 	default:
 		if currentStep != 0 {
 			http.Error(w, "Invalid step action", http.StatusBadRequest)

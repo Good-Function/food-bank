@@ -2,7 +2,6 @@ package components
 
 import (
 	"charity_portal/internal/data_confirmation/model"
-	dataconfirmation "charity_portal/web/components/data_confirmation"
 )
 
 templ DataConfirmation(orgDataSteps model.OrganizationDataStep) {
@@ -24,7 +23,7 @@ templ DataConfirmation(orgDataSteps model.OrganizationDataStep) {
 				</div>
 				for _, inputField := range orgDataSteps.FieldsOrder {
 					<p>
-						@dataconfirmation.InputField(
+						@InputField(
 							orgDataSteps.Fields[inputField].FieldLabel,
 							orgDataSteps.Fields[inputField].FieldName,
 							orgDataSteps.Fields[inputField].FieldValue,

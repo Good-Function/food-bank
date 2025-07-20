@@ -2,6 +2,7 @@ package dataconfirmation
 
 import (
 	"charity_portal/internal/data_confirmation/model"
+	"charity_portal/internal/data_confirmation/model/validators"
 	"charity_portal/internal/data_confirmation/steps"
 )
 
@@ -23,8 +24,30 @@ func NewDataConfirmationService() *DataConfirmationService {
 	}
 }
 
-func (dcs *DataConfirmationService) ValidateStepFieldInput(step, fieldID, fieldValue string) (*model.OrganizationDataStep, error) {
-	return nil, nil
+func (dcs *DataConfirmationService) ValidateStepFieldInput(step int, fieldID, fieldValue string) (*model.FieldInput, error) {
+	if step < 0 || step >= len(dcs.Steps) {
+		return nil, nil
+	}
+	stepData, ok := dcs.Steps[step]
+	if !ok {
+		return nil, nil
+	}
+
+	inputType := stepData.GetStepData().Fields[fieldID].FiledType
+	var errMsg string
+	switch inputType {
+	case "text":
+		errMsg = validators.IsTextFieldValid(fieldValue, false)
+	default:
+	}
+
+	return &model.FieldInput{
+		FieldLabel: stepData.GetStepData().Fields[fieldID].FieldLabel,
+		FieldName:  stepData.GetStepData().Fields[fieldID].FieldName,
+		FiledType:  stepData.GetStepData().Fields[fieldID].FiledType,
+		FieldValue: fieldValue,
+		FieldError: errMsg,
+	}, nil
 }
 
 func (dcs *DataConfirmationService) GetOrganizationDataFirstStep() (*model.OrganizationDataStep, error) {
