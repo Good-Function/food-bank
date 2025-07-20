@@ -45,12 +45,12 @@ func getAddressDataStep() *model.OrgStepData {
 			"county",
 		},
 		Values: []string{
-			"Oddział Rejonowy Polskiego Związku Emerytów Rencistów i Inwalidów w Michałowicach",
-			"ul. Raszyńska 34,",
-			"Polski Związek Emerytów, Rencistów i Inwalidów Koło Terenowe Nr1 w Komorowie",
-			"ul. Mari Dąbrowskiej 12/20, 05-806 Komorów",
-			"Michałowice",
-			"pruszkowski",
+			"Odział rejonowy ",
+			"ul. Ulicowa 34,",
+			"Polski ziązek",
+			"ul. Brsadfacka 3 lok. 44, 88-888 Miasto",
+			"Warszawa",
+			"warszawa",
 		},
 	}
 }

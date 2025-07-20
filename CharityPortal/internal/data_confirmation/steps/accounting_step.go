@@ -36,9 +36,9 @@ func GetAccountingDataStep() *model.OrgStepData {
 			"accounting_phone",
 		},
 		Values: []string{
-			"Polski Związek Emerytów Rencistów i Inwalidów Zarząd Główny",
-			"ul. Bracka 5 lok. 10, 00-501 Warszawa",
-			"22 827 09 15\n22 827 28 19",
+			"Jakis polski związek",
+			"ul. Brsadfacka 3 lok. 44, 88-888 Miasto",
+			"532-123-123",
 		},
 	}
 }
