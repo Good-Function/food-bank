@@ -4,7 +4,6 @@ import (
 	"charity_portal/internal/data_confirmation"
 	"charity_portal/internal/data_confirmation/model"
 	"charity_portal/web/components"
-	"fmt"
 	"net/http"
 	"strconv"
 )
@@ -43,7 +42,6 @@ func (dch *DataConfirmationHandler) ServeHTTP(w http.ResponseWriter, r *http.Req
 	case model.ACTION_ABANDON:
 	case model.ACTION_VALIDATE:
 		triggeredField := r.Header.Get("Hx-Trigger-Name")
-		fmt.Println(triggeredField)
 		fieldValue := r.FormValue(triggeredField)
 		field, err := dch.dataConfirmationService.ValidateStepFieldInput(currentStep, triggeredField, fieldValue)
 		if err != nil {
