@@ -1,0 +1,18 @@
+package components
+
+templ InputField(label string, name string, value string, inputType string, errorMsg string) {
+<div id={name}>
+	<label><b>{ label }</b></label>
+	<input 
+	hx-trigger="change" 
+	hx-post="/data-confirmation" 
+	hx-vals='{"step_action": "validate"}' 
+	hx-target={"#" + name}
+	hx-swap="outerHTML"
+	style={
+		templ.KV("border-color: red", errorMsg !="" ), } type={ inputType } name={ name } value={ value } />
+	if errorMsg != "" {
+	<small style="color: red;">{ errorMsg }</small>
+	}
+</div>
+}

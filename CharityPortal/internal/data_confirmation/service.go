@@ -2,80 +2,92 @@ package dataconfirmation
 
 import (
 	"charity_portal/internal/data_confirmation/model"
+	"charity_portal/internal/data_confirmation/model/validators"
 	"charity_portal/internal/data_confirmation/steps"
 )
 
 type DataConfirmationService struct {
-	Steps            map[int]steps.Step
-	OrganizationData []*model.OrgStepData
+	Steps map[int]steps.Step
 }
 
 func NewDataConfirmationService() *DataConfirmationService {
-	orgStepsData := make(map[int]steps.Step)
-	orgStepsData[model.StepOrganizationData] = steps.NewAddressStep()
-	orgStepsData[model.StepContactData] = steps.NewContactStep()
-	orgStepsData[model.StepAccountingData] = steps.NewAccountingStep()
-	orgStepsData[model.StepBeneficiariesData] = steps.NewBeneficiariesStep()
-	orgStepsData[model.StepFoodSources] = steps.NewFoodSourcesStep()
-	orgStepsData[model.StepFoodAidConditions] = steps.NewFoodAidConditionsStep()
+	orgSteps := make(map[int]steps.Step)
+	orgSteps[model.StepOrganizationData] = steps.NewAddressStep()
+	orgSteps[model.StepContactData] = steps.NewContactStep()
+	orgSteps[model.StepAccountingData] = steps.NewAccountingStep()
+	orgSteps[model.StepBeneficiariesData] = steps.NewBeneficiariesStep()
+	orgSteps[model.StepFoodSources] = steps.NewFoodSourcesStep()
+	orgSteps[model.StepFoodAidConditions] = steps.NewFoodAidConditionsStep()
 
 	return &DataConfirmationService{
-		Steps: orgStepsData,
-		OrganizationData: []*model.OrgStepData{
-			orgStepsData[model.StepOrganizationData].GetStepData(),
-			orgStepsData[model.StepContactData].GetStepData(),
-			orgStepsData[model.StepAccountingData].GetStepData(),
-			orgStepsData[model.StepBeneficiariesData].GetStepData(),
-			orgStepsData[model.StepFoodSources].GetStepData(),
-			orgStepsData[model.StepFoodAidConditions].GetStepData(),
-		},
+		Steps: orgSteps,
 	}
 }
 
-func (dcs *DataConfirmationService) GetOrganizationDataFirstStep() (*model.OrganizationDataRender, error) {
-	return &model.OrganizationDataRender{
-		CurrentStep:          0,
-		NextStep:             1,
-		NextStepTitle:        dcs.GetNextStepTitle(0),
-		PreviousStep:         0,
-		PreviousStepTitle:    "",
-		StepOrganizationData: dcs.OrganizationData,
+func (dcs *DataConfirmationService) ValidateStepFieldInput(step int, fieldID, fieldValue string) (*model.FieldInput, error) {
+	if step < 0 || step >= len(dcs.Steps) {
+		return nil, nil
+	}
+	stepData, ok := dcs.Steps[step]
+	if !ok {
+		return nil, nil
+	}
+
+	inputType := stepData.GetStepData().Fields[fieldID].FiledType
+	var errMsg string
+	switch inputType {
+	case "text":
+		errMsg = validators.IsTextFieldValid(fieldValue, false)
+	default:
+	}
+
+	return &model.FieldInput{
+		FieldLabel: stepData.GetStepData().Fields[fieldID].FieldLabel,
+		FieldName:  stepData.GetStepData().Fields[fieldID].FieldName,
+		FiledType:  stepData.GetStepData().Fields[fieldID].FiledType,
+		FieldValue: fieldValue,
+		FieldError: errMsg,
 	}, nil
 }
 
-func (dcs *DataConfirmationService) HandleNextStep(currentStep int) (*model.OrganizationDataRender, error) {
+func (dcs *DataConfirmationService) GetOrganizationDataFirstStep() (*model.OrganizationDataStep, error) {
+	currentStep := 0
+	return dcs.FillOrgDataStep(currentStep), nil
+}
+
+func (dcs *DataConfirmationService) HandleNextStep(currentStep int) (*model.OrganizationDataStep, error) {
 	newCurrentStep := dcs.GetNewCurrentStep(currentStep)
-	return &model.OrganizationDataRender{
-		CurrentStep:          newCurrentStep,
-		NextStep:             dcs.GetNewNextStep(newCurrentStep),
-		NextStepTitle:        dcs.GetNextStepTitle(newCurrentStep),
-		PreviousStep:         dcs.GetNewPreviousStep(newCurrentStep),
-		PreviousStepTitle:    dcs.GetPreviousStepTitle(newCurrentStep),
-		StepOrganizationData: dcs.OrganizationData,
-	}, nil
+	return dcs.FillOrgDataStep(newCurrentStep), nil
 }
 
-func (dcs *DataConfirmationService) HandlePreviousStep(currentStep int) (*model.OrganizationDataRender, error) {
+func (dcs *DataConfirmationService) HandlePreviousStep(currentStep int) (*model.OrganizationDataStep, error) {
 	newCurrentStep := dcs.GetNewPreviousStep(currentStep)
-	return &model.OrganizationDataRender{
-		CurrentStep:          newCurrentStep,
-		NextStep:             dcs.GetNewNextStep(newCurrentStep),
-		NextStepTitle:        dcs.GetNextStepTitle(newCurrentStep),
-		PreviousStep:         dcs.GetNewPreviousStep(newCurrentStep),
-		PreviousStepTitle:    dcs.GetPreviousStepTitle(newCurrentStep),
-		StepOrganizationData: dcs.OrganizationData,
-	}, nil
+	return dcs.FillOrgDataStep(newCurrentStep), nil
+}
+
+func (dcs *DataConfirmationService) FillOrgDataStep(step int) *model.OrganizationDataStep {
+	stepData := dcs.Steps[step].GetStepData()
+	return &model.OrganizationDataStep{
+		CurrentStep:       step,
+		CurrentStepTitle:  stepData.Title,
+		NextStep:          dcs.GetNewNextStep(step),
+		NextStepTitle:     dcs.GetNextStepTitle(step),
+		PreviousStep:      dcs.GetNewPreviousStep(step),
+		PreviousStepTitle: dcs.GetPreviousStepTitle(step),
+		Fields:            stepData.Fields,
+		FieldsOrder:       stepData.FieldsOrder,
+	}
 }
 
 func (dcs *DataConfirmationService) GetNewCurrentStep(currentStep int) int {
-	if currentStep+1 < len(dcs.OrganizationData) {
+	if currentStep+1 < len(dcs.Steps) {
 		return currentStep + 1
 	}
 	return currentStep
 }
 
 func (dcs *DataConfirmationService) GetNewNextStep(currentStep int) int {
-	if currentStep+1 < len(dcs.OrganizationData) {
+	if currentStep+1 < len(dcs.Steps) {
 		return currentStep + 1
 	}
 	return currentStep
@@ -89,15 +101,15 @@ func (dcs *DataConfirmationService) GetNewPreviousStep(currentStep int) int {
 }
 
 func (dcs *DataConfirmationService) GetNextStepTitle(currentStep int) string {
-	if currentStep+1 < len(dcs.OrganizationData) {
-		return dcs.OrganizationData[currentStep+1].Title
+	if currentStep+1 < len(dcs.Steps) {
+		return dcs.Steps[currentStep+1].GetStepData().Title
 	}
 	return ""
 }
 
 func (dcs *DataConfirmationService) GetPreviousStepTitle(currentStep int) string {
 	if currentStep-1 >= 0 {
-		return dcs.OrganizationData[currentStep-1].Title
+		return dcs.Steps[currentStep-1].GetStepData().Title
 	}
 	return ""
 }

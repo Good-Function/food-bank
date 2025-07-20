@@ -1,60 +1,79 @@
 package components
 
-import "charity_portal/internal/data_confirmation/model"
+import (
+	"charity_portal/internal/data_confirmation/model"
+)
 
-templ DataConfirmation(orgDataSteps model.OrganizationDataRender) {
-<div class="container" id="data-confirmation-wizard">
-	<form>
-		<article>
-			<input type="hidden" name="current_step" value={ orgDataSteps.CurrentStep } />
-			{{ currentStepData := orgDataSteps.StepOrganizationData[orgDataSteps.CurrentStep] }}
-			<div
-				style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
-				<div>
-					<h1 id="data-confirmation-step-name">{ currentStepData.Title }</h1>
+templ DataConfirmation(orgDataSteps model.OrganizationDataStep) {
+	<div class="container" id="data-confirmation-wizard">
+		<form>
+			<article>
+				<input type="hidden" name="current_step" value={ orgDataSteps.CurrentStep }/>
+				<div
+					style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;"
+				>
+					<div>
+						<h1 id="data-confirmation-step-name">{ orgDataSteps.CurrentStepTitle }</h1>
+					</div>
+					<div>
+						<button value="abandon" name="step_action" hx-post="/data-confirmation">
+							Porzuć zmiany
+						</button>
+					</div>
 				</div>
-				<div>
-					<button value="abandon" name="step_action" hx-post="/data-confirmation">
-						Porzuć zmiany
-					</button>
+				for _, inputField := range orgDataSteps.FieldsOrder {
+					<p>
+						@InputField(
+							orgDataSteps.Fields[inputField].FieldLabel,
+							orgDataSteps.Fields[inputField].FieldName,
+							orgDataSteps.Fields[inputField].FieldValue,
+							orgDataSteps.Fields[inputField].FiledType,
+							orgDataSteps.Fields[inputField].FieldError,
+						)
+					</p>
+				}
+				<div
+					style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-top: 2rem;"
+				>
+					<div style="justify-self: start;">
+						if orgDataSteps.CurrentStep > 0 {
+							<button
+								type="submit"
+								value="prev"
+								name="step_action"
+								hx-post="/data-confirmation"
+								hx-target="#data-confirmation-wizard"
+							>
+								{ orgDataSteps.PreviousStepTitle }
+							</button>
+						}
+					</div>
+					<div style="justify-self: center;">
+						if orgDataSteps.CurrentStep == orgDataSteps.NextStep {
+							<button
+								type="submit"
+								value="save"
+								name="step_action"
+								hx-post="/data-confirmation"
+								hx-target="#data-confirmation-wizard"
+							>Zapisz</button>
+						}
+					</div>
+					<div style="justify-self: end;">
+						if orgDataSteps.CurrentStep != orgDataSteps.NextStep {
+							<button
+								type="submit"
+								value="next"
+								name="step_action"
+								hx-post="/data-confirmation"
+								hx-target="#data-confirmation-wizard"
+							>
+								{ orgDataSteps.NextStepTitle }
+							</button>
+						}
+					</div>
 				</div>
-			</div>
-			for i := range len(currentStepData.Labels) {
-			<p>
-				<label><b>{ currentStepData.Labels[i] }</b></label>
-				<input hx-trigger="change" hx-post="/data-confirmation"
-					hx-vals='{"step_action": "validate"}' hx-target="#data-confirmation-wizard"
-					type={ currentStepData.Types[i] } name={ currentStepData.Names[i] } value={
-					currentStepData.Values[i] } />
-			</p>
-			}
-			<div
-				style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-top: 2rem;">
-				<div style="justify-self: start;">
-					if orgDataSteps.CurrentStep > 0 {
-					<button type="submit" value="prev" name="step_action"
-						hx-post="/data-confirmation" hx-target="#data-confirmation-wizard">
-						{ orgDataSteps.PreviousStepTitle }
-					</button>
-					}
-				</div>
-				<div style="justify-self: center;">
-					if orgDataSteps.CurrentStep == orgDataSteps.NextStep {
-					<button type="submit" value="save" name="step_action"
-						hx-post="/data-confirmation"
-						hx-target="#data-confirmation-wizard">Zapisz</button>
-					}
-				</div>
-				<div style="justify-self: end;">
-					if orgDataSteps.CurrentStep != orgDataSteps.NextStep {
-					<button type="submit" value="next" name="step_action"
-						hx-post="/data-confirmation" hx-target="#data-confirmation-wizard">
-						{ orgDataSteps.NextStepTitle }
-					</button>
-					}
-				</div>
-			</div>
-		</article>
-	</form>
-</div>
+			</article>
+		</form>
+	</div>
 }

@@ -17,24 +17,32 @@ func NewBeneficiariesStep() *BeneficiariesStep {
 	return &BeneficiariesStep{}
 }
 
-func GetBeneficiariesDataStep() *model.OrgStepData{
+var BeneficiariesStepFieldsMap = map[string]*model.FieldInput{
+	"beneficiary_count": {
+		FieldLabel: "Liczba Beneficjentów",
+		FieldName:  "beneficiary_count",
+		FiledType:  "number",
+		FieldValue: "100",
+		FieldError: "",
+	},
+	"beneficiary_group": {
+		FieldLabel: "Beneficjenci",
+		FieldName:  "beneficiary_group",
+		FiledType:  "text",
+		FieldValue: "seniorzy",
+		FieldError: "",
+	},
+}
+
+var BeneficiariesStepFieldsOrder = []string{
+	"beneficiary_count",
+	"beneficiary_group",
+}
+
+func GetBeneficiariesDataStep() *model.OrgStepData {
 	return &model.OrgStepData{
-		Title: "Beneficjenci",
-		Labels: []string{
-			"Liczba Beneficjentów",
-			"Beneficjenci",
-		},
-		Types: []string{
-			"number",
-			"text",
-		},
-		Names: []string{
-			"beneficiary_count",
-			"beneficiary_group",
-		},
-		Values: []string{
-			"100",
-			"seniorzy",
-		},
+		Title:   "Beneficjenci",
+		Fields:      BeneficiariesStepFieldsMap,
+		FieldsOrder: BeneficiariesStepFieldsOrder,
 	}
 }

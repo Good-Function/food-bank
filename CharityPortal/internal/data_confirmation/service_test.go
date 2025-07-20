@@ -7,11 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewDataConfirmationService_InitializesAllSteps(t *testing.T) {
-	service := NewDataConfirmationService()
-	assert.Equal(t, 6, len(service.OrganizationData), "Should initialize all 6 steps")
-}
-
 func TestShouldReturnProperNextStepCalculatedValues(t *testing.T) {
 	testCases := []struct {
 		currentStep          int

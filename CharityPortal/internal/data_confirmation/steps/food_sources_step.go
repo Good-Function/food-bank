@@ -17,40 +17,64 @@ func NewFoodSourcesStep() *FoodSourcesStep {
 	return &FoodSourcesStep{}
 }
 
+var FoodSourcesStepFieldsMap = map[string]*model.FieldInput{
+	"source_networks": {
+		FieldLabel: "Sieci",
+		FieldName:  "source_networks",
+		FiledType:  "text",
+		FieldValue: "Nie",
+		FieldError: "",
+	},
+	"source_markets": {
+		FieldLabel: "Bazarki",
+		FieldName:  "source_markets",
+		FiledType:  "text",
+		FieldValue: "Nie",
+		FieldError: "",
+	},
+	"source_machfit": {
+		FieldLabel: "Machfit",
+		FieldName:  "source_machfit",
+		FiledType:  "text",
+		FieldValue: "Nie",
+		FieldError: "",
+	},
+	"source_fepz": {
+		FieldLabel: "FEPŻ 2024",
+		FieldName:  "source_fepz",
+		FiledType:  "text",
+		FieldValue: "Nie",
+		FieldError: "",
+	},
+	"source_short_term": {
+		FieldLabel: "Odbiór Krótki Termin",
+		FieldName:  "source_short_term",
+		FiledType:  "text",
+		FieldValue: "Nie",
+		FieldError: "",
+	},
+	"source_internal_only": {
+		FieldLabel: "Tylko nasz magazyn",
+		FieldName:  "source_internal_only",
+		FiledType:  "text",
+		FieldValue: "Nie",
+		FieldError: "",
+	},
+}
+
+var FoodSourcesStepFieldsOrder = []string{
+	"source_networks",
+	"source_markets",
+	"source_machfit",
+	"source_fepz",
+	"source_short_term",
+	"source_internal_only",
+}
+
 func GetFoodSourcesStep() *model.OrgStepData {
 	return &model.OrgStepData{
-		Title: "Źródła żywności",
-		Labels: []string{
-			"Sieci",
-			"Bazarki",
-			"Machfit",
-			"FEPŻ 2024",
-			"Odbiór Krótki Termin",
-			"Tylko nasz magazyn",
-		},
-		Types: []string{
-			"text",
-			"text",
-			"text",
-			"text",
-			"text",
-			"text",
-		},
-		Names: []string{
-			"source_networks",
-			"source_markets",
-			"source_machfit",
-			"source_fepz",
-			"source_short_term",
-			"source_internal_only",
-		},
-		Values: []string{
-			"Nie",
-			"Nie",
-			"Nie",
-			"Nie",
-			"Nie",
-			"Nie",
-		},
+		Fields:      FoodSourcesStepFieldsMap,
+		FieldsOrder: FoodSourcesStepFieldsOrder,
+		Title:   "Źródła żywności",
 	}
 }
