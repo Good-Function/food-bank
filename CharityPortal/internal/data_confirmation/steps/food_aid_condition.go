@@ -17,49 +17,80 @@ func NewFoodAidConditionsStep() *FoodAidConditionsStep {
 	return &FoodAidConditionsStep{}
 }
 
+var FoodAidConditionsStepFieldsMap = map[string]*model.FieldInput{
+	"category": {
+		FieldLabel: "Kategoria",
+		FieldName:  "category",
+		FiledType:  "text",
+		FieldValue: "paczki",
+		FieldError: "",
+	},
+	"aid_type": {
+		FieldLabel: "Rodzaj pomocy",
+		FieldName:  "aid_type",
+		FiledType:  "text",
+		FieldValue: "P",
+		FieldError: "",
+	},
+	"aid_method": {
+		FieldLabel: "Sposób udzielania pomocy",
+		FieldName:  "aid_method",
+		FiledType:  "text",
+		FieldValue: "",
+		FieldError: "",
+	},
+	"storage_conditions": {
+		FieldLabel: "Warunki magazynowe",
+		FieldName:  "storage_conditions",
+		FiledType:  "text",
+		FieldValue: "",
+		FieldError: "",
+	},
+	"haccp": {
+		FieldLabel: "HACCP",
+		FieldName:  "haccp",
+		FiledType:  "text",
+		FieldValue: "Nie",
+		FieldError: "",
+	},
+	"sanepid": {
+		FieldLabel: "Sanepid",
+		FieldName:  "sanepid",
+		FiledType:  "text",
+		FieldValue: "Nie",
+		FieldError: "",
+	},
+	"transport_description": {
+		FieldLabel: "Transport - opis",
+		FieldName:  "transport_description",
+		FiledType:  "text",
+		FieldValue: "",
+		FieldError: "",
+	},
+	"transport_category": {
+		FieldLabel: "Transport - kategoria",
+		FieldName:  "transport_category",
+		FiledType:  "text",
+		FieldValue: "",
+		FieldError: "",
+	},
+}
+
+var FoodAidConditionsStepFieldsOrder = []string{
+	"category",
+	"aid_type",
+	"aid_method",
+	"storage_conditions",
+	"haccp",
+	"sanepid",
+	"transport_description",
+	"transport_category",
+}
+
 func GetFoodAidConditionsStep() *model.OrgStepData {
 	return &model.OrgStepData{
-		Title: "Warunki udzielania pomocy żywnościowej",
-		Labels: []string{
-			"Kategoria",
-			"Rodzaj pomocy",
-			"Sposób udzielania pomocy",
-			"Warunki magazynowe",
-			"HACCP",
-			"Sanepid",
-			"Transport - opis",
-			"Transport - kategoria",
-		},
-		Types: []string{
-			"text",
-			"text",
-			"text",
-			"text",
-			"text",
-			"text",
-			"text",
-			"text",
-		},
-		Names: []string{
-			"category",
-			"aid_type",
-			"aid_method",
-			"storage_conditions",
-			"haccp",
-			"sanepid",
-			"transport_description",
-			"transport_category",
-		},
-		Values: []string{
-			"paczki",
-			"P",
-			"",
-			"",
-			"Nie",
-			"Nie",
-			"",
-			"",
-		},
+		Title:   "Warunki udzielania pomocy żywnościowej",
+		Fields:      FoodAidConditionsStepFieldsMap,
+		FieldsOrder: FoodAidConditionsStepFieldsOrder,
 	}
-
 }

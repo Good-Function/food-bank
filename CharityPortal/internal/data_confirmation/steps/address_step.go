@@ -13,44 +13,67 @@ func NewAddressStep() *AddressStep {
 }
 
 func (a AddressStep) ValidateStepData() error {
-	// Implement validation logic if needed
 	return nil
+}
+
+var AddressStepFieldsMap = map[string]*model.FieldInput{
+	"organization": {
+		FieldLabel: "Organizacja, która podpisała umowę",
+		FieldName:  "organization",
+		FiledType:  "text",
+		FieldValue: "Odział rejonowy ",
+		FieldError: "",
+	},
+	"registered_address": {
+		FieldLabel: "Adres rejestrowy",
+		FieldName:  "registered_address",
+		FiledType:  "text",
+		FieldValue: "ul. Ulicowa 34,",
+		FieldError: "",
+	},
+	"delivery_point": {
+		FieldLabel: "Placówka do której trafia żywność",
+		FieldName:  "delivery_point",
+		FiledType:  "text",
+		FieldValue: "Polski związek",
+		FieldError: "",
+	},
+	"delivery_address": {
+		FieldLabel: "Adres dostawy żywności",
+		FieldName:  "delivery_address",
+		FiledType:  "text",
+		FieldValue: "ul. Brsadfacka 3 lok. 44, 88-888 Miasto",
+		FieldError: "",
+	},
+	"district": {
+		FieldLabel: "Gmina / Dzielnica",
+		FieldName:  "district",
+		FiledType:  "text",
+		FieldValue: "Warszawa",
+		FieldError: "",
+	},
+	"county": {
+		FieldLabel: "Powiat",
+		FieldName:  "county",
+		FiledType:  "text",
+		FieldValue: "warszawa",
+		FieldError: "",
+	},
+}
+
+var AddressStepFieldsOrder = []string{
+	"organization",
+	"registered_address",
+	"delivery_point",
+	"delivery_address",
+	"district",
+	"county",
 }
 
 func getAddressDataStep() *model.OrgStepData {
 	return &model.OrgStepData{
-		Title: "Dane adresowe",
-		Labels: []string{
-			"Organizacja, która podpisała umowę",
-			"Adres rejestrowy",
-			"Placówka do której trafia żywność",
-			"Adres dostawy żywności",
-			"Gmina / Dzielnica",
-			"Powiat",
-		},
-		Types: []string{
-			"text",
-			"text",
-			"text",
-			"text",
-			"text",
-			"text",
-		},
-		Names: []string{
-			"organization",
-			"registered_address",
-			"delivery_point",
-			"delivery_address",
-			"district",
-			"county",
-		},
-		Values: []string{
-			"Odział rejonowy ",
-			"ul. Ulicowa 34,",
-			"Polski ziązek",
-			"ul. Brsadfacka 3 lok. 44, 88-888 Miasto",
-			"Warszawa",
-			"warszawa",
-		},
+		Title:   "Dane adresowe",
+		Fields:      AddressStepFieldsMap,
+		FieldsOrder: AddressStepFieldsOrder,
 	}
 }

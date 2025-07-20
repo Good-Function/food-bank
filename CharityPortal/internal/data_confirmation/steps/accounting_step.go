@@ -17,28 +17,40 @@ func (s *AccountingStep) ValidateStepData() error {
 	return nil
 }
 
+var AccountingStepFieldsMap = map[string]*model.FieldInput{
+	"accounting_organization": {
+		FieldLabel: "Organizacja na którą wystawiamy WZ",
+		FieldName:  "accounting_organization",
+		FiledType:  "text",
+		FieldValue: "Polski Związek Emerytów Rencistów i Inwalidów Zarząd Główny",
+		FieldError: "",
+	},
+	"accounting_address": {
+		FieldLabel: "Adres",
+		FieldName:  "accounting_address",
+		FiledType:  "text",
+		FieldValue: "ul. Bracka 5 lok. 10, 00-501 Warszawa",
+		FieldError: "",
+	},
+	"accounting_phone": {
+		FieldLabel: "Telefon",
+		FieldName:  "accounting_phone",
+		FiledType:  "text",
+		FieldValue: "22 827 09 15\n22 827 28 19",
+		FieldError: "",
+	},
+}
+
+var AccountingStepFieldsOrder = []string{
+	"accounting_organization",
+	"accounting_address",
+	"accounting_phone",
+}
+
 func GetAccountingDataStep() *model.OrgStepData {
 	return &model.OrgStepData{
-		Title: "Dane adresowe księgowości",
-		Labels: []string{
-			"Organizacja na którą wystawiamy WZ",
-			"Adres",
-			"Telefon",
-		},
-		Types: []string{
-			"text",
-			"text",
-			"text",
-		},
-		Names: []string{
-			"accounting_organization",
-			"accounting_address",
-			"accounting_phone",
-		},
-		Values: []string{
-			"Jakis polski związek",
-			"ul. Brsadfacka 3 lok. 44, 88-888 Miasto",
-			"532-123-123",
-		},
+		Title:   "Księgowość",
+		Fields:      AccountingStepFieldsMap,
+		FieldsOrder: AccountingStepFieldsOrder,
 	}
 }

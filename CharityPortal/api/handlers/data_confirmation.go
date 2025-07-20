@@ -4,6 +4,7 @@ import (
 	"charity_portal/internal/data_confirmation"
 	"charity_portal/internal/data_confirmation/model"
 	"charity_portal/web/components"
+	"fmt"
 	"net/http"
 	"strconv"
 )
@@ -30,7 +31,7 @@ func (dch *DataConfirmationHandler) ServeHTTP(w http.ResponseWriter, r *http.Req
 		currentStep = 0
 	}
 
-	var renderData *model.OrganizationDataRender
+	var renderData *model.OrganizationDataStep
 
 	stepAction := r.FormValue("step_action")
 	switch stepAction {
@@ -40,6 +41,10 @@ func (dch *DataConfirmationHandler) ServeHTTP(w http.ResponseWriter, r *http.Req
 		renderData, _ = dch.dataConfirmationService.HandlePreviousStep(currentStep)
 	case model.ACTION_SAVE:
 	case model.ACTION_ABANDON:
+	case model.ACTION_VALIDATE:
+		triggeredField := r.Header.Get("Hx-Trigger-Name")
+		fmt.Println(triggeredField)
+		renderData, _ = dch.dataConfirmationService.HandleNextStep(currentStep)
 	default:
 		if currentStep != 0 {
 			http.Error(w, "Invalid step action", http.StatusBadRequest)
