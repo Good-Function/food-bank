@@ -12,7 +12,7 @@ templ InputField(label string, name string, value string, inputType string, erro
 	style={
 		templ.KV("border-color: red", errorMsg !="" ), } type={ inputType } name={ name } value={ value } />
 	if errorMsg != "" {
-	<small style="color: red;">{ errorMsg }</small>
+	<small id="fieldError" style="color: red;">{ errorMsg }</small>
 	}
 </div>
 }
