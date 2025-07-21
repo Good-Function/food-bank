@@ -35,9 +35,10 @@ type OrgStepData struct {
 }
 
 type FieldInput struct {
-	FieldLabel string `json:"field_label"`
-	FieldName  string `json:"field_name"`
-	FiledType  string `json:"field_type"`
-	FieldValue string `json:"field_value"`
-	FieldError string `json:"field_error"`
+	FieldLabel         string   `json:"field_label"`
+	FieldName          string   `json:"field_name"`
+	FiledType          string   `json:"field_type"`
+	FieldValue         string   `json:"field_value"`
+	FieldError         string   `json:"field_error"`
+	SelectFieldOptions []string `json:"select_field_options"`
 }

@@ -1,18 +1,16 @@
 package components
 
+import "strconv"
+
 templ InputField(label string, name string, value string, inputType string, errorMsg string) {
-<div id={name}>
+{{ hasError := errorMsg != "" }}
+<div id={ name }>
 	<label><b>{ label }</b></label>
-	<input 
-	hx-trigger="change" 
-	hx-post="/data-confirmation" 
-	hx-vals='{"step_action": "validate"}' 
-	hx-target={"#" + name}
-	hx-swap="outerHTML"
-	style={
-		templ.KV("border-color: red", errorMsg !="" ), } type={ inputType } name={ name } value={ value } />
-	if errorMsg != "" {
-	<small style="color: red;">{ errorMsg }</small>
-	}
+	<input hx-trigger="change" hx-post="/data-confirmation" hx-vals='{"step_action": "validate"}' hx-target={ "#" +
+		name } hx-swap="outerHTML" aria-invalid={ strconv.FormatBool(hasError) } aria-describedby={ errorMsg }
+		type={ inputType } name={ name } value={ value } />
+	<small id="invalid-helper">
+		{ errorMsg }
+	</small>
 </div>
 }
