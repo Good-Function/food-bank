@@ -1,7 +1,5 @@
 package storage
 
-import "encoding/json"
-
 type OrganizationDTO struct {
 	NIP                                 string          `db:"NIP"`
 	Regon                               string          `db:"Regon"`
