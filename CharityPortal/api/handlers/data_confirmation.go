@@ -1,9 +1,10 @@
 package handlers
 
 import (
-	"charity_portal/internal/data_confirmation"
+	dataconfirmation "charity_portal/internal/data_confirmation"
 	"charity_portal/internal/data_confirmation/model"
 	"charity_portal/web/components"
+	"charity_portal/web/views"
 	"net/http"
 	"strconv"
 )
@@ -40,6 +41,8 @@ func (dch *DataConfirmationHandler) ServeHTTP(w http.ResponseWriter, r *http.Req
 		renderData, _ = dch.dataConfirmationService.HandlePreviousStep(currentStep)
 	case model.ACTION_SAVE:
 	case model.ACTION_ABANDON:
+		views.Dashboard().Render(r.Context(), w)
+		return
 	case model.ACTION_VALIDATE:
 		triggeredField := r.Header.Get("Hx-Trigger-Name")
 		fieldValue := r.FormValue(triggeredField)

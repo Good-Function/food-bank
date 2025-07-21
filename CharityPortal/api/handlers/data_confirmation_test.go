@@ -196,3 +196,20 @@ func TestDataConfirmationStepFieldValidation(t *testing.T) {
 		})
 	}
 }
+
+func TestDataConfirmationAbandonAction(t *testing.T) {
+	dataConfirmationService := dataconfirmation.NewDataConfirmationService()
+	handler := NewDataConfirmationHandler(dataConfirmationService)
+
+	req := httptest.NewRequest("POST", "/data-confirmation", nil)
+	req.Form = map[string][]string{
+		"current_step": {"0"},
+		"step_action":  {"abandon"},
+	}
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusOK, rr.Code, "Expected status code 200 for abandon action")
+	assert.Contains(t, rr.Body.String(), "Uzupełnij dane organizacji", "Should redirect to dashboard after abandoning data confirmation")
+}
