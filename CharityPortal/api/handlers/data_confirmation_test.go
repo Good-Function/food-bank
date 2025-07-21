@@ -2,6 +2,7 @@ package handlers
 
 import (
 	dataconfirmation "charity_portal/internal/data_confirmation"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -190,7 +191,7 @@ func TestDataConfirmationStepFieldValidation(t *testing.T) {
 				assert.NoError(t, err)
 				assert.NotNil(t, doc)
 
-				errorText := doc.Find("#fieldError").Text()
+				errorText := doc.Find("#invalid-helper").Text()
 				assert.Equal(t, tc.expectedErrorText, errorText, "Expected error message for field to match")
 			}
 		})
@@ -212,4 +213,33 @@ func TestDataConfirmationAbandonAction(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, rr.Code, "Expected status code 200 for abandon action")
 	assert.Contains(t, rr.Body.String(), "Uzupełnij dane organizacji", "Should redirect to dashboard after abandoning data confirmation")
+}
+
+func TestShouldReturnSelectWithOptions(t *testing.T) {
+	dataConfirmationService := dataconfirmation.NewDataConfirmationService()
+	handler := NewDataConfirmationHandler(dataConfirmationService)
+
+	req := httptest.NewRequest("POST", "/data-confirmation", nil)
+	req.Form = map[string][]string{
+		"current_step": {"3"},
+		"step_action":  {"next"},
+	}
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusOK, rr.Code, "Expected status code 200 for food sources step")
+	returnedHtml := rr.Body.String()
+	fmt.Println(returnedHtml)
+
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(returnedHtml))
+	assert.NoError(t, err, "Should not return an error when parsing HTML")
+	assert.NotNil(t, doc, "Parsed document should not be nil")
+
+	selectField := doc.Find(`select[name="source_networks"]`)
+	assert.Equal(t, 1, selectField.Length(), "Should have one select field for source_networks")
+	options := selectField.Find("option")
+	assert.Equal(t, 2, options.Length(), "Should have two options in the select field for source_networks")
+	assert.Equal(t, "Nie", options.Eq(0).Text(), "First option should be 'Nie'")
+	assert.Equal(t, "Tak", options.Eq(1).Text(), "Second option should be 'Tak'")
 }

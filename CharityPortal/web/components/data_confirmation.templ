@@ -21,13 +21,25 @@ templ DataConfirmation(orgDataSteps model.OrganizationDataStep) {
 			</div>
 			for _, inputField := range orgDataSteps.FieldsOrder {
 			<p>
-				@InputField(
-				orgDataSteps.Fields[inputField].FieldLabel,
-				orgDataSteps.Fields[inputField].FieldName,
-				orgDataSteps.Fields[inputField].FieldValue,
-				orgDataSteps.Fields[inputField].FiledType,
-				orgDataSteps.Fields[inputField].FieldError,
-				)
+				switch orgDataSteps.Fields[inputField].FiledType {
+				case "select":
+					@SelectInputField(
+					orgDataSteps.Fields[inputField].FieldLabel,
+					orgDataSteps.Fields[inputField].FieldName,
+					orgDataSteps.Fields[inputField].FieldValue,
+					orgDataSteps.Fields[inputField].FiledType,
+					orgDataSteps.Fields[inputField].FieldError,
+					orgDataSteps.Fields[inputField].SelectFieldOptions,
+					)
+				default:
+					@InputField(
+					orgDataSteps.Fields[inputField].FieldLabel,
+					orgDataSteps.Fields[inputField].FieldName,
+					orgDataSteps.Fields[inputField].FieldValue,
+					orgDataSteps.Fields[inputField].FiledType,
+					orgDataSteps.Fields[inputField].FieldError,
+					)
+				}
 			</p>
 			}
 			<div

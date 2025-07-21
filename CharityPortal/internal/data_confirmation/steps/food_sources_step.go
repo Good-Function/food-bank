@@ -17,48 +17,59 @@ func NewFoodSourcesStep() *FoodSourcesStep {
 	return &FoodSourcesStep{}
 }
 
+var defaultSelectFieldOptions = []string{
+	"Nie",
+	"Tak",
+}
+
 var FoodSourcesStepFieldsMap = map[string]*model.FieldInput{
 	"source_networks": {
 		FieldLabel: "Sieci",
 		FieldName:  "source_networks",
-		FiledType:  "text",
+		FiledType:  "select",
 		FieldValue: "Nie",
 		FieldError: "",
+		SelectFieldOptions: defaultSelectFieldOptions,
 	},
 	"source_markets": {
 		FieldLabel: "Bazarki",
 		FieldName:  "source_markets",
-		FiledType:  "text",
+		FiledType:  "select",
 		FieldValue: "Nie",
 		FieldError: "",
+		SelectFieldOptions: defaultSelectFieldOptions,
 	},
 	"source_machfit": {
 		FieldLabel: "Machfit",
 		FieldName:  "source_machfit",
-		FiledType:  "text",
+		FiledType:  "select",
 		FieldValue: "Nie",
 		FieldError: "",
+		SelectFieldOptions: defaultSelectFieldOptions,
 	},
 	"source_fepz": {
 		FieldLabel: "FEPŻ 2024",
 		FieldName:  "source_fepz",
-		FiledType:  "text",
+		FiledType:  "select",
 		FieldValue: "Nie",
 		FieldError: "",
+		SelectFieldOptions: defaultSelectFieldOptions,
 	},
 	"source_short_term": {
 		FieldLabel: "Odbiór Krótki Termin",
 		FieldName:  "source_short_term",
-		FiledType:  "text",
+		FiledType:  "select",
 		FieldValue: "Nie",
 		FieldError: "",
+		SelectFieldOptions: defaultSelectFieldOptions,
 	},
 	"source_internal_only": {
 		FieldLabel: "Tylko nasz magazyn",
 		FieldName:  "source_internal_only",
-		FiledType:  "text",
+		FiledType:  "select",
 		FieldValue: "Nie",
 		FieldError: "",
+		SelectFieldOptions: defaultSelectFieldOptions,
 	},
 }
 

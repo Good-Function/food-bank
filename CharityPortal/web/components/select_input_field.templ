@@ -1,0 +1,12 @@
+package components
+
+templ SelectInputField(label string, name string, value string, inputType string, errorMsg string, options []string) {
+<div id={ name }>
+	<label><b>{ label }</b></label>
+	<select type={ inputType } name={ name } value={ value }>
+		for _, option := range options {
+		<option >{ option }</option>
+		}
+	</select>
+</div>
+}
