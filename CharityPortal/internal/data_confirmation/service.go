@@ -38,6 +38,12 @@ func (dcs *DataConfirmationService) ValidateStepFieldInput(step int, fieldID, fi
 	switch inputType {
 	case "text":
 		errMsg = validators.IsTextFieldValid(fieldValue, false)
+	case "email":
+		errMsg = validators.IsEmailFieldValid(fieldValue, false)
+	case "tel":
+		errMsg = validators.IsTelFieldValid(fieldValue, false)
+	case "number":
+		errMsg = validators.IsNumberFieldValid(fieldValue, false)
 	default:
 	}
 
