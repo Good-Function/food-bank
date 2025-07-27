@@ -14,5 +14,5 @@ func NewLoginHandler(auth auth.AuthProvider) *LoginHandler {
 }
 
 func (lh *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, lh.authProvider.GetLoginURL(), http.StatusFound)
+	//http.Redirect(w, r, lh.authProvider.GetLoginURL(), http.StatusFound)
 }

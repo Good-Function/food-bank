@@ -31,36 +31,33 @@ func NewAPI(cfg *config.Config) (*API, error) {
 		return nil, err
 	}
 	router := newRouter(authProvider)
-
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: router,
 	}
-
+	slog.Info("started http://localhost:8080")
 	return &API{
 		server: &server,
 	}, nil
 }
 
-func newRouter(authProvider auth.AuthProvider) *http.ServeMux {
+func newRouter(authProvider auth.AuthProvider) http.Handler {
 	mux := http.NewServeMux()
 
-	commonMiddlewares := alice.New(middlewares.Log, middlewares.NewSessionMiddleware(authProvider).Session)
-	notLoggedOnlyMiddlewares := commonMiddlewares.Extend(alice.New(middlewares.NewAuthMiddleware(authProvider).NotLogged))
-	loggedOnlyMiddleware := commonMiddlewares.Extend(alice.New(middlewares.NewAuthMiddleware(authProvider).LoggedOnly))
 	dataConfirmationService := dataconfirmation.NewDataConfirmationService()
+	protected := alice.New(middlewares.NewAuth2Middleware(authProvider).Protect)
 
 	fs := http.FileServer(http.Dir("./web/static"))
-	mux.Handle("GET /static/", commonMiddlewares.Then(http.StripPrefix("/static/", fs)))
+	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
 
-	mux.Handle("GET /", notLoggedOnlyMiddlewares.Then(handlers.NewHomeHandler()))
-	mux.Handle("POST /login", notLoggedOnlyMiddlewares.Then(handlers.NewLoginHandler(authProvider)))
-	mux.Handle("GET /login/callback", notLoggedOnlyMiddlewares.Then(handlers.NewLoginCallbackHandler(authProvider)))
-	mux.Handle("POST /logout", loggedOnlyMiddleware.Then(handlers.NewLogoutHandler()))
+	mux.Handle("GET /", handlers.NewHomeHandler())
+	mux.Handle("POST /login", handlers.NewLoginHandler(authProvider))
+	mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(authProvider))
+	mux.Handle("POST /logout", protected.Then(handlers.NewLogoutHandler()))
 
-	mux.Handle("GET /dashboard", loggedOnlyMiddleware.Then(handlers.NewDashboardHandler()))
-	mux.Handle("POST /data-confirmation", loggedOnlyMiddleware.Then(handlers.NewDataConfirmationHandler(dataConfirmationService)))
-	return mux
+	mux.Handle("GET /dashboard", handlers.NewDashboardHandler())
+	mux.Handle("POST /data-confirmation", protected.Then(handlers.NewDataConfirmationHandler(dataConfirmationService)))
+	return middlewares.Log(mux)
 }
 
 func (a *API) Start() {
