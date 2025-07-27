@@ -3,6 +3,8 @@ package config
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"runtime"
 
 	"github.com/BurntSushi/toml"
 )
@@ -29,8 +31,12 @@ type Auth struct {
 }
 
 func LoadConfig() *Config {
+	_, filename, _, _ := runtime.Caller(0)
+	root := filepath.Dir(filepath.Dir(filename))
+	configPath := filepath.Join(root, "config.toml")
+
 	var fileCfg Config
-	_, err := toml.DecodeFile("../config.toml", &fileCfg)
+	_, err := toml.DecodeFile(configPath, &fileCfg)
 	if err != nil {
 		fmt.Println("Warning: could not read config.toml:", err)
 	}
