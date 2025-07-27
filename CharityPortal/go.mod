@@ -3,6 +3,7 @@ module charity_portal
 go 1.24.4
 
 require (
+	github.com/BurntSushi/toml v1.5.0
 	github.com/PuerkitoBio/goquery v1.10.3
 	github.com/a-h/templ v0.3.887
 	github.com/coreos/go-oidc/v3 v3.14.1
