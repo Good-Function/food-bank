@@ -16,7 +16,7 @@ import (
 )
 
 type API struct {
-	server       *http.Server
+	server *http.Server
 }
 
 const (
@@ -74,7 +74,7 @@ func setupAuthProvider(cfg *config.Config, env string) (auth.AuthProvider, error
 	if env == environmentDevelopment {
 		return auth.NewFakeAuth()
 	}
-	return auth.NewAuth(cfg.AuthConfig)
+	return auth.NewAuth(cfg.Auth)
 }
 
 func setupLogger(cfg *config.Logger) {
