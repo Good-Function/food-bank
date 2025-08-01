@@ -6,31 +6,60 @@ import (
 	"charity_portal/config"
 	"charity_portal/internal/auth"
 	dataconfirmation "charity_portal/internal/data_confirmation"
+	"context"
+	"fmt"
 	"log"
 	"log/slog"
 	"net/http"
 	"os"
 	"strings"
 
-	"github.com/justinas/alice"
+	"github.com/coreos/go-oidc/v3/oidc"
+	"golang.org/x/oauth2"
 )
 
 type API struct {
 	server *http.Server
 }
 
-const (
-	environmentDevelopment = "development"
-	environmentProduction  = "production"
-)
+func buildAuth(cfg config.Auth) (*oauth2.Config, *oidc.IDTokenVerifier, error) {
+	ctx := context.Background()
+	providerURL := fmt.Sprintf("https://%s.ciamlogin.com/%s/v2.0", cfg.TenantID, cfg.TenantID)
+	provider, err := oidc.NewProvider(ctx, providerURL)
+	if err != nil {
+		return nil, nil, fmt.Errorf("cannot create oidc provider; %w", err)
+	}
+
+	oidcConfig := &oidc.Config{ClientID: cfg.ClientID}
+	verifier := provider.Verifier(oidcConfig)
+
+	oauth2Config := &oauth2.Config{
+		ClientID:     cfg.ClientID,
+		ClientSecret: cfg.ClientSecret,
+		RedirectURL:  cfg.RedirectURL,
+		Endpoint:     provider.Endpoint(),
+		Scopes:       []string{oidc.ScopeOpenID, "profile", "email"},
+	}
+	return oauth2Config, verifier, nil
+}
+
+const environmentDevelopment = "development"
 
 func NewAPI(cfg *config.Config) (*API, error) {
 	setupLogger(cfg.Logger)
-	authProvider, err := setupAuthProvider(cfg, cfg.Environment)
+	oauth2Config, verifier, err := buildAuth(*cfg.Auth)
 	if err != nil {
 		return nil, err
 	}
-	router := newRouter(authProvider)
+	sessionManager := auth.NewSessionManager(cfg.Auth.HashKey, cfg.Auth.BlockKey)
+	var protect func(next http.HandlerFunc) http.HandlerFunc
+	if cfg.Environment == environmentDevelopment {
+		protect = middlewares.ProtectFake
+	} else {
+		protect = middlewares.BuildProtect(sessionManager)
+	}
+
+	router := newRouter(oauth2Config, verifier, protect, sessionManager)
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: router,
@@ -41,22 +70,23 @@ func NewAPI(cfg *config.Config) (*API, error) {
 	}, nil
 }
 
-func newRouter(authProvider auth.AuthProvider) http.Handler {
+func newRouter(
+	authConfig *oauth2.Config, 
+	tokenVerifier *oidc.IDTokenVerifier,
+	protect func(next http.HandlerFunc) http.HandlerFunc,
+	sessionManager *auth.SessionManager,
+	) http.Handler {
 	mux := http.NewServeMux()
 
 	dataConfirmationService := dataconfirmation.NewDataConfirmationService()
-	protected := alice.New(middlewares.NewAuth2Middleware(authProvider).Protect)
-
 	fs := http.FileServer(http.Dir("./web/static"))
 	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
-
 	mux.Handle("GET /", handlers.NewHomeHandler())
-	mux.Handle("POST /login", handlers.NewLoginHandler(authProvider))
-	mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(authProvider))
-	mux.Handle("POST /logout", protected.Then(handlers.NewLogoutHandler()))
-
-	mux.Handle("GET /dashboard", handlers.NewDashboardHandler())
-	mux.Handle("POST /data-confirmation", protected.Then(handlers.NewDataConfirmationHandler(dataConfirmationService)))
+    mux.Handle("GET /login", handlers.LoginHandler(authConfig, sessionManager))
+    mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(authConfig, tokenVerifier, sessionManager))
+    mux.Handle("GET /dashboard", protect(handlers.NewDashboardHandler().ServeHTTP))
+	mux.Handle("POST /logout", handlers.NewLogoutHandler())
+ 	mux.Handle("POST /data-confirmation", protect(handlers.NewDataConfirmationHandler(dataConfirmationService).ServeHTTP))
 	return middlewares.Log(mux)
 }
 
@@ -65,13 +95,6 @@ func (a *API) Start() {
 }
 func (a *API) Shutdown() {
 	log.Fatalln(a.server.Close())
-}
-
-func setupAuthProvider(cfg *config.Config, env string) (auth.AuthProvider, error) {
-	if env == environmentDevelopment {
-		return auth.NewFakeAuth()
-	}
-	return auth.NewAuth(cfg.Auth)
 }
 
 func setupLogger(cfg *config.Logger) {

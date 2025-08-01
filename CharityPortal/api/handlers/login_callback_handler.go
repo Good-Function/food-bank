@@ -1,51 +1,65 @@
 package handlers
 
 import (
-	"charity_portal/internal/auth"
 	"log/slog"
 	"net/http"
-	"time"
+
+	"charity_portal/internal/auth"
+
+	"github.com/coreos/go-oidc/v3/oidc"
+	"golang.org/x/oauth2"
 )
 
 type LoginCallbackHandler struct {
-	authProvider auth.AuthProvider
+	authConfig *oauth2.Config
+	verifier *oidc.IDTokenVerifier
+    sessionManager *auth.SessionManager
 }
 
-func NewLoginCallbackHandler(auth auth.AuthProvider) *LoginCallbackHandler {
-	return &LoginCallbackHandler{auth}
+func NewLoginCallbackHandler(
+    auth *oauth2.Config, 
+    verifier *oidc.IDTokenVerifier,
+    sessionManager *auth.SessionManager,
+    ) *LoginCallbackHandler {
+	return &LoginCallbackHandler{auth, verifier, sessionManager}
 }
 
 func (lh *LoginCallbackHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	slog.With("handler", "LoginCallbackHandler").Info("Processing login callback")
-	user, err := lh.authProvider.ExchangeToken(r.Context(), r.URL.Query())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	ctx := r.Context()
 
-	sessionData := map[string]string{
-		"email": user.Email,
-		"name":  user.Name,
-		"sub":   user.Sub,
-	}
+    if err := lh.sessionManager.ValidateState(r); err != nil {
+        http.Error(w, "Invalid state", http.StatusBadRequest)
+        return
+    }
 
-	encodedCookie, err := lh.authProvider.Encode("session", sessionData)
+    token, err := lh.authConfig.Exchange(ctx, r.FormValue("code"))
+    if err != nil {
+        http.Error(w, "Failed to exchange token", http.StatusInternalServerError)
+        return
+    }
 
-	if err != nil {
-		slog.Error("Failed to encode session data", "error", err)
-		http.Error(w, "Failed to encode session data", http.StatusInternalServerError)
-		return
-	}
+    rawIDToken, ok := token.Extra("id_token").(string)
+    if !ok {
+        http.Error(w, "Missing id_token", http.StatusInternalServerError)
+        return
+    }
 
-	http.SetCookie(w, &http.Cookie{
-		Name:     "session",
-		Value:    encodedCookie,
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
-		Expires:  time.Now().Add(24 * time.Hour),
-	})
+    idToken, err := lh.verifier.Verify(ctx, rawIDToken)
+    if err != nil {
+        http.Error(w, "Invalid ID token", http.StatusInternalServerError)
+        return
+    }
 
-	http.Redirect(w, r, "/dashboard", http.StatusFound)
+    var claims struct {
+        Email string `json:"email"`
+    }
+
+    if err := idToken.Claims(&claims); err != nil {
+        http.Error(w, "Invalid claims", http.StatusInternalServerError)
+        return
+    }
+
+    _ = lh.sessionManager.WriteSession(w, claims.Email)
+    http.Redirect(w, r, "/dashboard", http.StatusFound)
 }
