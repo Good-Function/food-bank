@@ -1,0 +1,14 @@
+environment="development"
+
+[auth]
+client_id = "3e93972c-5601-4a3f-946d-c46c4f93337e"
+client_secret = ""
+redirect_url = "http://localhost:8080/login/callback"
+tenant_name = "bzoscharitywaw"
+tenant_id = "454bf1c2-b7b2-4015-b836-a35ce5eed838"
+state = ""
+hash_key = ""
+block_key = ""
+
+[logger]
+level = "debug"
