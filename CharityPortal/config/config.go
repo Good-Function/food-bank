@@ -23,9 +23,7 @@ type Auth struct {
 	ClientID     string `toml:"client_id"`
 	ClientSecret string `toml:"client_secret"`
 	RedirectURL  string `toml:"redirect_url"`
-	TenantName   string `toml:"tenant_name"`
 	TenantID     string `toml:"tenant_id"`
-	State        string `toml:"state"`
 	HashKey      string `toml:"hash_key"`
 	BlockKey     string `toml:"block_key"`
 }
@@ -48,11 +46,8 @@ func overrideFromEnv(config *Config) {
 	config.Auth.ClientID = getEnv("AUTH_CLIENT_ID", config.Auth.ClientID)
 	config.Auth.ClientSecret = getEnv("AUTH_CLIENT_SECRET", config.Auth.ClientSecret)
 	config.Auth.RedirectURL = getEnv("AUTH_REDIRECT_URL", config.Auth.RedirectURL)
-	config.Auth.TenantName = getEnv("AUTH_TENANT_NAME", config.Auth.TenantName)
 	config.Auth.TenantID = getEnv("AUTH_TENANT_ID", config.Auth.TenantID)
-	config.Auth.State = getEnv("AUTH_STATE", config.Auth.State)
 	config.Auth.HashKey = getEnv("AUTH_HASH_KEY", config.Auth.HashKey)
-	config.Auth.BlockKey = getEnv("AUTH_BLOCK_KEY", config.Auth.BlockKey)
 	config.Logger.Level = getEnv("LOG_LEVEL", config.Logger.Level)
 	config.Environment = getEnv("APP_ENVIRONMENT", config.Environment)
 }

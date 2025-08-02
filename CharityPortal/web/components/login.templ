@@ -2,7 +2,7 @@ package components
 
 templ Login() {
 <div style="width: 50%;">
-	<form action="/login" method="POST" hx-target="#ErrorContainer" hx-indicator="#spinner">
+	<form action="/login" method="GET" hx-target="#ErrorContainer" hx-indicator="#spinner">
 		<input type="submit" name="Login" value="Zaloguj" />
 		<div id="ErrorContainer"></div>
 		<div id="spinner" class="htmx-indicator" style="text-align:center; height:50px;">

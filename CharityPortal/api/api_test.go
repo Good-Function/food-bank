@@ -1,8 +1,7 @@
 package api
 
 import (
-	"charity_portal/internal/auth"
-	"charity_portal/tests/mocks"
+	"charity_portal/api/middlewares"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -11,8 +10,7 @@ import (
 )
 
 func TestRegisteredRoutes(t *testing.T) {
-	authProvider, _ := auth.NewFakeAuth()
-	router := newRouter(authProvider)
+	router := newRouter(nil, nil, middlewares.ProtectFake)
 	if router == nil {
 		assert.Fail(t, "Router should not be nil")
 	}
@@ -27,9 +25,8 @@ func TestRegisteredRoutes(t *testing.T) {
 }
 
 func TestUnauthorizedAccessRoutes(t *testing.T) {
-	mockAuth := new(mocks.AuthProviderMock)
-	mockAuth.On("Decode", "session", "").Return(nil, assert.AnError)
-	router := newRouter(mockAuth)
+	//todomg
+	router := newRouter(nil, nil, middlewares.ProtectFake)
 
 	tests := []struct {
 		name           string
@@ -89,14 +86,8 @@ func TestUnauthorizedAccessRoutes(t *testing.T) {
 }
 
 func TestAuthorizedAccessRoutes(t *testing.T) {
-	mockAuth := new(mocks.AuthProviderMock)
-	mockAuth.On("Decode", "session", "valid-token").Return(&auth.UserClaims{
-		Name:  "test",
-		Email: "test@example.com",
-		Sub:   "12345",
-	}, nil)
-
-	router := newRouter(mockAuth)
+	// todomg
+	router := newRouter(nil, nil, middlewares.ProtectFake)
 	tests := []struct {
 		name           string
 		method         string
