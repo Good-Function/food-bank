@@ -81,7 +81,7 @@ func newRouter(
 	dataConfirmationService := dataconfirmation.NewDataConfirmationService()
 	fs := http.FileServer(http.Dir("./web/static"))
 	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
-	mux.Handle("GET /", handlers.NewHomeHandler())
+	mux.Handle("GET /", protect(handlers.NewDashboardHandler().ServeHTTP))
     mux.Handle("GET /login", handlers.LoginHandler(authConfig, sessionManager))
     mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(authConfig, tokenVerifier, sessionManager))
     mux.Handle("GET /dashboard", protect(handlers.NewDashboardHandler().ServeHTTP))
