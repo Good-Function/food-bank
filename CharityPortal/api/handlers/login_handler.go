@@ -3,14 +3,11 @@ package handlers
 import (
 	"charity_portal/internal/auth"
 	"net/http"
-
-	"golang.org/x/oauth2"
 )
 
-func LoginHandler(authConfig *oauth2.Config, sessionManager *auth.SessionManager) http.HandlerFunc {
+func LoginHandler(sessionManager *auth.SessionManager) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		state := auth.GenerateRandomState()
-		_ = sessionManager.WriteStateCookie(w, state)
-		http.Redirect(w, r, authConfig.AuthCodeURL(state), http.StatusFound)
+		url := sessionManager.AuthProviderUrl(w)
+		http.Redirect(w, r, url, http.StatusFound)
 	}
 }

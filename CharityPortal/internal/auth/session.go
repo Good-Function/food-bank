@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
@@ -8,17 +9,20 @@ import (
 	"time"
 
 	"github.com/gorilla/securecookie"
+	"golang.org/x/oauth2"
 )
 
 type UserContextKey struct{}
 
 type SessionManager struct {
     cookieCodec *securecookie.SecureCookie
+    authConfig *oauth2.Config
 }
 
-func NewSessionManager(secretKey, blockKey string) *SessionManager {
+func NewSessionManager(secretKey, blockKey string, authConfig *oauth2.Config) *SessionManager {
     return &SessionManager{
         cookieCodec: securecookie.New([]byte(secretKey), nil),
+        authConfig: authConfig,
     }
 }
 
@@ -26,6 +30,10 @@ func GenerateRandomState() string {
     b := make([]byte, 32)
     rand.Read(b)
     return base64.URLEncoding.EncodeToString(b)
+}
+
+func (s *SessionManager) ExchangeCodeForToken(ctx context.Context, code string) (*oauth2.Token, error) {
+    return s.authConfig.Exchange(ctx, code)
 }
 
 func (s *SessionManager) WriteStateCookie(w http.ResponseWriter, state string) error {
@@ -59,6 +67,12 @@ func (s *SessionManager) ValidateState(r *http.Request) error {
     }
 
     return nil
+}
+
+func (s *SessionManager) AuthProviderUrl (w http.ResponseWriter) string {
+    state := GenerateRandomState()
+    s.WriteStateCookie(w, state)
+    return s.authConfig.AuthCodeURL(state)
 }
 
 func (s *SessionManager) WriteSession(w http.ResponseWriter, email string) error {

@@ -22,7 +22,7 @@ type API struct {
 	server *http.Server
 }
 
-func buildAuth(cfg config.Auth) (*oauth2.Config, *oidc.IDTokenVerifier, error) {
+func configureAuth(cfg config.Auth) (*oauth2.Config, *oidc.IDTokenVerifier, error) {
 	ctx := context.Background()
 	providerURL := fmt.Sprintf("https://%s.ciamlogin.com/%s/v2.0", cfg.TenantID, cfg.TenantID)
 	provider, err := oidc.NewProvider(ctx, providerURL)
@@ -47,11 +47,11 @@ const environmentDevelopment = "development"
 
 func NewAPI(cfg *config.Config) (*API, error) {
 	setupLogger(cfg.Logger)
-	oauth2Config, verifier, err := buildAuth(*cfg.Auth)
+	oauth2Config, tokenVerifier, err := configureAuth(*cfg.Auth)
 	if err != nil {
 		return nil, err
 	}
-	sessionManager := auth.NewSessionManager(cfg.Auth.HashKey, cfg.Auth.BlockKey)
+	sessionManager := auth.NewSessionManager(cfg.Auth.HashKey, cfg.Auth.BlockKey, oauth2Config)
 	var protect func(next http.HandlerFunc) http.HandlerFunc
 	if cfg.Environment == environmentDevelopment {
 		protect = middlewares.ProtectFake
@@ -59,7 +59,7 @@ func NewAPI(cfg *config.Config) (*API, error) {
 		protect = middlewares.BuildProtect(sessionManager)
 	}
 
-	router := newRouter(oauth2Config, verifier, protect, sessionManager)
+	router := newRouter(tokenVerifier, sessionManager, protect)
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: router,
@@ -70,11 +70,10 @@ func NewAPI(cfg *config.Config) (*API, error) {
 	}, nil
 }
 
-func newRouter(
-	authConfig *oauth2.Config, 
+func newRouter( 
 	tokenVerifier *oidc.IDTokenVerifier,
-	protect func(next http.HandlerFunc) http.HandlerFunc,
 	sessionManager *auth.SessionManager,
+	protect func(next http.HandlerFunc) http.HandlerFunc,
 	) http.Handler {
 	mux := http.NewServeMux()
 
@@ -82,8 +81,8 @@ func newRouter(
 	fs := http.FileServer(http.Dir("./web/static"))
 	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
 	mux.Handle("GET /", protect(handlers.NewDashboardHandler().ServeHTTP))
-    mux.Handle("GET /login", handlers.LoginHandler(authConfig, sessionManager))
-    mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(authConfig, tokenVerifier, sessionManager))
+    mux.Handle("GET /login", handlers.LoginHandler(sessionManager))
+    mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(tokenVerifier, sessionManager))
     mux.Handle("GET /dashboard", protect(handlers.NewDashboardHandler().ServeHTTP))
 	mux.Handle("POST /logout", handlers.NewLogoutHandler())
  	mux.Handle("POST /data-confirmation", protect(handlers.NewDataConfirmationHandler(dataConfirmationService).ServeHTTP))

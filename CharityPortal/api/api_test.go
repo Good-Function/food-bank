@@ -1,6 +1,7 @@
 package api
 
 import (
+	"charity_portal/api/middlewares"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -9,8 +10,7 @@ import (
 )
 
 func TestRegisteredRoutes(t *testing.T) {
-	// todomg
-	router := newRouter(nil, nil, nil, nil)
+	router := newRouter(nil, nil, middlewares.ProtectFake)
 	if router == nil {
 		assert.Fail(t, "Router should not be nil")
 	}
@@ -25,7 +25,8 @@ func TestRegisteredRoutes(t *testing.T) {
 }
 
 func TestUnauthorizedAccessRoutes(t *testing.T) {
-	router := newRouter(nil, nil, nil, nil)
+	//todomg
+	router := newRouter(nil, nil, middlewares.ProtectFake)
 
 	tests := []struct {
 		name           string
@@ -86,7 +87,7 @@ func TestUnauthorizedAccessRoutes(t *testing.T) {
 
 func TestAuthorizedAccessRoutes(t *testing.T) {
 	// todomg
-	router := newRouter(nil, nil, nil, nil)
+	router := newRouter(nil, nil, middlewares.ProtectFake)
 	tests := []struct {
 		name           string
 		method         string

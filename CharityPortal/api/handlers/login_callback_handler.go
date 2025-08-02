@@ -7,21 +7,18 @@ import (
 	"charity_portal/internal/auth"
 
 	"github.com/coreos/go-oidc/v3/oidc"
-	"golang.org/x/oauth2"
 )
 
 type LoginCallbackHandler struct {
-	authConfig *oauth2.Config
 	verifier *oidc.IDTokenVerifier
     sessionManager *auth.SessionManager
 }
 
 func NewLoginCallbackHandler(
-    auth *oauth2.Config, 
     verifier *oidc.IDTokenVerifier,
     sessionManager *auth.SessionManager,
     ) *LoginCallbackHandler {
-	return &LoginCallbackHandler{auth, verifier, sessionManager}
+	return &LoginCallbackHandler{verifier, sessionManager}
 }
 
 func (lh *LoginCallbackHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +30,7 @@ func (lh *LoginCallbackHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
         return
     }
 
-    token, err := lh.authConfig.Exchange(ctx, r.FormValue("code"))
+    token, err := lh.sessionManager.ExchangeCodeForToken(ctx, r.FormValue("code"))
     if err != nil {
         http.Error(w, "Failed to exchange token", http.StatusInternalServerError)
         return
