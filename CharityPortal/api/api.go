@@ -56,7 +56,7 @@ func NewAPI(cfg *config.Config) (*API, error) {
 	if cfg.Environment == environmentDevelopment {
 		protect = middlewares.ProtectFake
 	} else {
-		protect = middlewares.BuildProtect(sessionManager)
+		protect = middlewares.BuildProtect(sessionManager.ReadSession)
 	}
 
 	router := newRouter(tokenVerifier, sessionManager, protect)
@@ -79,8 +79,8 @@ func newRouter(
 
 	dataConfirmationService := dataconfirmation.NewDataConfirmationService()
 	fs := http.FileServer(http.Dir("./web/static"))
-	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
-	mux.Handle("GET /", protect(handlers.NewDashboardHandler().ServeHTTP))
+	mux.Handle("GET /static/", http.StripPrefix("/static/",fs))
+	mux.Handle("GET /", handlers.NewHomeHandler())
     mux.Handle("GET /login", handlers.LoginHandler(sessionManager))
     mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(tokenVerifier, sessionManager))
     mux.Handle("GET /dashboard", protect(handlers.NewDashboardHandler().ServeHTTP))

@@ -6,10 +6,10 @@ import (
 	"net/http"
 )
 
-func BuildProtect(sessionManager *auth.SessionManager) func(http.HandlerFunc) http.HandlerFunc {
+func BuildProtect(readSession  func(r *http.Request) (string, error)) func(http.HandlerFunc) http.HandlerFunc {
     return func(next http.HandlerFunc) http.HandlerFunc {
         return func(w http.ResponseWriter, r *http.Request) {
-            email, err := sessionManager.ReadSession(r)
+            email, err := readSession(r)
             if err != nil {
                 http.Redirect(w, r, "/login", http.StatusFound)
                 return
