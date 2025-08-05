@@ -72,7 +72,7 @@ var AddressStepFieldsOrder = []string{
 
 func getAddressDataStep() *model.OrgStepData {
 	return &model.OrgStepData{
-		Title:   "Dane adresowe",
+		Title:       "Dane adresowe",
 		Fields:      AddressStepFieldsMap,
 		FieldsOrder: AddressStepFieldsOrder,
 	}

@@ -89,7 +89,7 @@ var FoodAidConditionsStepFieldsOrder = []string{
 
 func GetFoodAidConditionsStep() *model.OrgStepData {
 	return &model.OrgStepData{
-		Title:   "Warunki udzielania pomocy żywnościowej",
+		Title:       "Warunki udzielania pomocy żywnościowej",
 		Fields:      FoodAidConditionsStepFieldsMap,
 		FieldsOrder: FoodAidConditionsStepFieldsOrder,
 	}

@@ -113,7 +113,7 @@ var ContactStepFieldsOrder = []string{
 
 func GetContactDataStep() *model.OrgStepData {
 	return &model.OrgStepData{
-		Title:   "Dane kontaktowe",
+		Title:       "Dane kontaktowe",
 		Fields:      ContactStepFieldsMap,
 		FieldsOrder: ContactStepFieldsOrder,
 	}

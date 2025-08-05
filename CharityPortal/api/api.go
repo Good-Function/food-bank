@@ -70,22 +70,22 @@ func NewAPI(cfg *config.Config) (*API, error) {
 	}, nil
 }
 
-func newRouter( 
+func newRouter(
 	tokenVerifier *oidc.IDTokenVerifier,
 	sessionManager *auth.SessionManager,
 	protect func(next http.HandlerFunc) http.HandlerFunc,
-	) http.Handler {
+) http.Handler {
 	mux := http.NewServeMux()
 
 	dataConfirmationService := dataconfirmation.NewDataConfirmationService()
 	fs := http.FileServer(http.Dir("./web/static"))
-	mux.Handle("GET /static/", http.StripPrefix("/static/",fs))
+	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
 	mux.Handle("GET /", handlers.NewHomeHandler())
-    mux.Handle("GET /login", handlers.LoginHandler(sessionManager))
-    mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(tokenVerifier, sessionManager))
-    mux.Handle("GET /dashboard", protect(handlers.NewDashboardHandler().ServeHTTP))
+	mux.Handle("GET /login", handlers.LoginHandler(sessionManager))
+	mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(tokenVerifier, sessionManager))
+	mux.Handle("GET /dashboard", protect(handlers.NewDashboardHandler().ServeHTTP))
 	mux.Handle("POST /logout", handlers.NewLogoutHandler())
- 	mux.Handle("POST /data-confirmation", protect(handlers.NewDataConfirmationHandler(dataConfirmationService).ServeHTTP))
+	mux.Handle("POST /data-confirmation", protect(handlers.NewDataConfirmationHandler(dataConfirmationService).ServeHTTP))
 	return middlewares.Log(mux)
 }
 

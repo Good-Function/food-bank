@@ -49,7 +49,7 @@ var AccountingStepFieldsOrder = []string{
 
 func GetAccountingDataStep() *model.OrgStepData {
 	return &model.OrgStepData{
-		Title:   "Księgowość",
+		Title:       "Księgowość",
 		Fields:      AccountingStepFieldsMap,
 		FieldsOrder: AccountingStepFieldsOrder,
 	}
