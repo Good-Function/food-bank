@@ -41,7 +41,7 @@ var BeneficiariesStepFieldsOrder = []string{
 
 func GetBeneficiariesDataStep() *model.OrgStepData {
 	return &model.OrgStepData{
-		Title:   "Beneficjenci",
+		Title:       "Beneficjenci",
 		Fields:      BeneficiariesStepFieldsMap,
 		FieldsOrder: BeneficiariesStepFieldsOrder,
 	}

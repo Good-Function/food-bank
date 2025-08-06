@@ -1,51 +1,62 @@
 package handlers
 
 import (
-	"charity_portal/internal/auth"
 	"log/slog"
 	"net/http"
-	"time"
+
+	"charity_portal/internal/auth"
+
+	"github.com/coreos/go-oidc/v3/oidc"
 )
 
 type LoginCallbackHandler struct {
-	authProvider auth.AuthProvider
+	verifier       *oidc.IDTokenVerifier
+	sessionManager *auth.SessionManager
 }
 
-func NewLoginCallbackHandler(auth auth.AuthProvider) *LoginCallbackHandler {
-	return &LoginCallbackHandler{auth}
+func NewLoginCallbackHandler(
+	verifier *oidc.IDTokenVerifier,
+	sessionManager *auth.SessionManager,
+) *LoginCallbackHandler {
+	return &LoginCallbackHandler{verifier, sessionManager}
 }
 
 func (lh *LoginCallbackHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	slog.With("handler", "LoginCallbackHandler").Info("Processing login callback")
-	user, err := lh.authProvider.ExchangeToken(r.Context(), r.URL.Query())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	ctx := r.Context()
+
+	if err := lh.sessionManager.ValidateState(r); err != nil {
+		http.Error(w, "Invalid state", http.StatusBadRequest)
 		return
 	}
 
-	sessionData := map[string]string{
-		"email": user.Email,
-		"name":  user.Name,
-		"sub":   user.Sub,
-	}
-
-	encodedCookie, err := lh.authProvider.Encode("session", sessionData)
-
+	token, err := lh.sessionManager.ExchangeCodeForToken(ctx, r.FormValue("code"))
 	if err != nil {
-		slog.Error("Failed to encode session data", "error", err)
-		http.Error(w, "Failed to encode session data", http.StatusInternalServerError)
+		http.Error(w, "Failed to exchange token", http.StatusInternalServerError)
 		return
 	}
 
-	http.SetCookie(w, &http.Cookie{
-		Name:     "session",
-		Value:    encodedCookie,
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
-		Expires:  time.Now().Add(24 * time.Hour),
-	})
+	rawIDToken, ok := token.Extra("id_token").(string)
+	if !ok {
+		http.Error(w, "Missing id_token", http.StatusInternalServerError)
+		return
+	}
 
+	idToken, err := lh.verifier.Verify(ctx, rawIDToken)
+	if err != nil {
+		http.Error(w, "Invalid ID token", http.StatusInternalServerError)
+		return
+	}
+
+	var claims struct {
+		Email string `json:"email"`
+	}
+
+	if err := idToken.Claims(&claims); err != nil {
+		http.Error(w, "Invalid claims", http.StatusInternalServerError)
+		return
+	}
+
+	_ = lh.sessionManager.WriteSession(w, claims.Email)
 	http.Redirect(w, r, "/dashboard", http.StatusFound)
 }
