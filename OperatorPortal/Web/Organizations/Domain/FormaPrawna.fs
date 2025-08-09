@@ -15,7 +15,7 @@ module FormaPrawna =
     let tryCreate (formaPrawna: string, krs: string) : Result<FormaPrawna, KrsError> =
         result {
             match formaPrawna with
-            | "Organizacja Kościelna" | "PCK" ->
+            | "Organizacja Kościelna" | "PCK" | "Stowarzyszenie zwykłe" ->
                 return { Nazwa = formaPrawna; Rejestracja = Rejestracja.PozaRejestrem krs }
             | _ ->
                 let! krsValue = Krs.create krs
