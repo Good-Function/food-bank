@@ -13,6 +13,7 @@ type Config struct {
 	Auth        *Auth
 	Logger      *Logger
 	Environment string `toml:"environment"`
+	OperatorDbConnectionString string `toml:"operator_db_connection_string"`
 }
 
 type Logger struct {
@@ -50,6 +51,7 @@ func overrideFromEnv(config *Config) {
 	config.Auth.HashKey = getEnv("AUTH_HASH_KEY", config.Auth.HashKey)
 	config.Logger.Level = getEnv("LOG_LEVEL", config.Logger.Level)
 	config.Environment = getEnv("APP_ENVIRONMENT", config.Environment)
+	config.OperatorDbConnectionString = getEnv("OPERATOR_DB_CONNECTION_STRING", config.OperatorDbConnectionString)
 }
 
 func getEnv(key, fallback string) string {

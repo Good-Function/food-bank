@@ -2,7 +2,6 @@ package api
 
 import (
 	"charity_portal/api/middlewares"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -11,7 +10,7 @@ import (
 )
 
 func TestRegisteredRoutes(t *testing.T) {
-	router := newRouter(nil, nil, middlewares.ProtectFake)
+	router := newRouter(nil, nil, middlewares.ProtectFake, nil)
 	if router == nil {
 		assert.Fail(t, "Router should not be nil")
 	}
@@ -26,7 +25,7 @@ func TestRegisteredRoutes(t *testing.T) {
 }
 
 func TestUnauthorizedAccessRoutes(t *testing.T) {
-	router := newUnauthenticatedRouter()
+	router := NewUnauthenticatedRouter()
 
 	tests := []struct {
 		name           string
@@ -80,22 +79,8 @@ func TestUnauthorizedAccessRoutes(t *testing.T) {
 	}
 }
 
-func newAuthenticatedRouter() http.Handler {
-	readSession := func(r *http.Request) (string, error) {
-		return "tester@jester.com", nil
-	}
-	return newRouter(nil, nil, middlewares.BuildProtect(readSession))
-}
-
-func newUnauthenticatedRouter() http.Handler {
-	readSession := func(r *http.Request) (string, error) {
-		return "", fmt.Errorf("ała!")
-	}
-	return newRouter(nil, nil, middlewares.BuildProtect(readSession))
-}
-
 func TestAuthorizedAccessRoutes(t *testing.T) {
-	router := newAuthenticatedRouter()
+	router := NewAuthenticatedRouter()
 	tests := []struct {
 		name           string
 		method         string

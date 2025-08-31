@@ -1,0 +1,42 @@
+package charityupdate
+
+import (
+	"charity_portal/charity_update/database"
+	"charity_portal/web/views"
+	"context"
+	"fmt"
+	"net/http"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+type dependencies = struct {
+	readCharityByEmail database.ReadCharityByEmail
+}
+
+func Compose(operatorDbConnectionPool *pgxpool.Pool, environment string) *dependencies {
+	var readCharityByEmail database.ReadCharityByEmail
+	if environment == "development" {
+		readCharityByEmail = database.ReadCharityByEmailMock
+	} else {
+		readCharityByEmail = database.New(operatorDbConnectionPool).ReadCharity
+	}
+	return &dependencies{
+		readCharityByEmail:readCharityByEmail,
+	}
+}
+
+func welcomeHandler(readCharity func (ctx context.Context, email string) (database.Organizacje, error)) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		charity, err := readCharity(r.Context(), "kontakt@dobroczynnosc.org")
+		println(err)
+		orgStr := fmt.Sprintf("%+v\n", charity)
+		views.Base(Welcome(orgStr), "").Render(r.Context(), w)
+	}
+}
+
+func CreateRouter(dependencies *dependencies) *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.Handle("GET /", welcomeHandler(dependencies.readCharityByEmail))
+	return mux
+}
