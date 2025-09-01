@@ -41,8 +41,8 @@ param dbServerName string = 'foodbank-postgres'
 param dbName string = 'foodbankdb'
 
 @secure()
-@description('Password for charity user')
-param dbCharityPassword string
+@description('PostgreSQL charity_user Password')
+param dbCharityUserPassword string
 
 @description('Storage Account Name')
 param storageAccountName string = 'storage0${uniqueString(resourceGroup().id)}'
@@ -173,7 +173,7 @@ resource createReadonlyUser 'Microsoft.Resources/deploymentScripts@2020-10-01' =
       }
       {
         name: 'CHARITY_PASSWORD'
-        secureValue: dbCharityPassword
+        secureValue: dbCharityUserPassword
       }
     ]
     
