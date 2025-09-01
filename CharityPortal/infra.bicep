@@ -63,6 +63,7 @@ resource managedEnv 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
 resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: name
   location: location
+  identity: { type: 'SystemAssigned' }
   properties: {
     managedEnvironmentId: managedEnv.id
     configuration: {

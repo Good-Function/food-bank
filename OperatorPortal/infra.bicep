@@ -189,6 +189,7 @@ resource environment 'Microsoft.App/managedEnvironments@2022-03-01' = {
 resource foodbankapp 'Microsoft.App/containerApps@2022-03-01' = {
   name: name
   location: location
+  identity: { type: 'SystemAssigned' }
   properties: {
     managedEnvironmentId: environment.id
     configuration: {
