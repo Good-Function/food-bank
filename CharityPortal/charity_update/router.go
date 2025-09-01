@@ -28,7 +28,7 @@ func Compose(operatorDbConnectionPool *pgxpool.Pool, environment string) *depend
 
 func welcomeHandler(readCharity func (ctx context.Context, email string) (database.Organizacje, error)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		charity, err := readCharity(r.Context(), "kontakt@dobroczynnosc.org")
+		charity, err := readCharity(r.Context(), "domopieki2@poczta.onet.pl")
 		println(err)
 		orgStr := fmt.Sprintf("%+v\n", charity)
 		views.Base(Welcome(orgStr), "").Render(r.Context(), w)
