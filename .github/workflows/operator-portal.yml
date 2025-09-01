@@ -80,7 +80,7 @@ jobs:
             dbAdminPassword=${{ secrets.DB_ADMIN_PASSWORD }}
             dbServerName=foodbank-postgres
             dbName=foodbankdb
-            dbCharityUserPassword=${{ DB_CHARITY_USER_PASSWORD }}
+            dbCharityUserPassword=${{ secrets.DB_CHARITY_USER_PASSWORD }}
             vnetName=foodbank-vnet
             subnetDbName=postgres-subnet
             subnetAppName=containerapp-subnet
