@@ -94,7 +94,9 @@ func newRouter(
 	mux.Handle("POST /logout", handlers.NewLogoutHandler())
 	mux.Handle("POST /data-confirmation", protect(handlers.NewDataConfirmationHandler(dataConfirmationService).ServeHTTP))
 	mux.Handle("/charity-update/", http.StripPrefix("/charity-update", charityRouter))
-	return middlewares.WithLog(middlewares.WithNotFound(mux))
+	notFoundWrapped := middlewares.WithNotFound(mux)
+	forwardedWrapped := middlewares.WithForwardedHost(notFoundWrapped)
+	return middlewares.WithLog(forwardedWrapped)
 }
 
 func (a *API) Start() {
