@@ -24,6 +24,10 @@ On the top you can find most important tasks.
 2. Create & fill .env file based on .env.example
 3. Load envs by executing `source .env` 
 4. Run project with `air`
+5. To geenrate typesafe queries project uses sqlc:
+    `go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest`
+
+
 
 
 ## Useful stuff

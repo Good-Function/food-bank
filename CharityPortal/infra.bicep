@@ -18,14 +18,11 @@ param image string
 param acrpassword string 
 
 @secure()
-@description('PostgreSQL Admin Password')
-param dbAdminPassword string
+@description('PostgreSQL charity_user Password')
+param dbCharityUserPassword string
 
 @description('PostgreSQL Server Name')
 param dbServerName string = 'foodbank-postgres'
-
-@description('PostgreSQL Database Name')
-param dbName string = 'foodbankdb'
 
 @secure()
 @description('Client ID for authentication')
@@ -73,8 +70,8 @@ resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
           value: acrpassword
         }
         {
-          name: 'dbconnectionstringref'
-          value: 'Host=${dbServerName}.postgres.database.azure.com;Database=${dbName};Username=pgadmin;Password=${dbAdminPassword};SslMode=Require;'
+          name: 'operatordbconnectionstringref'
+          value: 'host=${dbServerName}.postgres.database.azure.com user=charity_user@foodbank-postgres password=${dbCharityUserPassword} dbname=foodbankdb sslmode=require'
         }
         {
           name: 'authclientidref'
@@ -120,8 +117,8 @@ resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
           }
           env: [
             {
-              name: 'DbConnectionString'
-              secretRef: 'dbconnectionstringref'
+              name: 'OPERATOR_DB_CONNECTION_STRING'
+              secretRef: 'operatordbconnectionstringref'
             }
             {
               name: 'ASPNETCORE_ENVIRONMENT'

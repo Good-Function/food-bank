@@ -3,6 +3,7 @@ package api
 import (
 	"charity_portal/api/handlers"
 	"charity_portal/api/middlewares"
+	charity "charity_portal/charity_update"
 	"charity_portal/config"
 	"charity_portal/internal/auth"
 	dataconfirmation "charity_portal/internal/data_confirmation"
@@ -15,6 +16,7 @@ import (
 	"strings"
 
 	"github.com/coreos/go-oidc/v3/oidc"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/oauth2"
 )
 
@@ -58,8 +60,12 @@ func NewAPI(cfg *config.Config) (*API, error) {
 	} else {
 		protect = middlewares.BuildProtect(sessionManager.ReadSession)
 	}
-
-	router := newRouter(tokenVerifier, sessionManager, protect)
+	operatorDbConnection, err := pgxpool.New(context.Background(), cfg.OperatorDbConnectionString) 
+	if err != nil {
+		return nil, err
+	}
+	charityRouter := protect(charity.CreateRouter(charity.Compose(operatorDbConnection, cfg.Environment)).ServeHTTP)
+	router := newRouter(tokenVerifier, sessionManager, protect, &charityRouter)
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: router,
@@ -74,18 +80,20 @@ func newRouter(
 	tokenVerifier *oidc.IDTokenVerifier,
 	sessionManager *auth.SessionManager,
 	protect func(next http.HandlerFunc) http.HandlerFunc,
+	charityRouter *http.HandlerFunc,
 ) http.Handler {
 	mux := http.NewServeMux()
 
 	dataConfirmationService := dataconfirmation.NewDataConfirmationService()
 	fs := http.FileServer(http.Dir("./web/static"))
-	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
-	mux.Handle("GET /", handlers.NewHomeHandler())
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	mux.Handle("/", handlers.NewHomeHandler())
 	mux.Handle("GET /login", handlers.LoginHandler(sessionManager))
 	mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(tokenVerifier, sessionManager))
 	mux.Handle("GET /dashboard", protect(handlers.NewDashboardHandler().ServeHTTP))
 	mux.Handle("POST /logout", handlers.NewLogoutHandler())
 	mux.Handle("POST /data-confirmation", protect(handlers.NewDataConfirmationHandler(dataConfirmationService).ServeHTTP))
+	mux.Handle("/charity-update/", http.StripPrefix("/charity-update", charityRouter))
 	return middlewares.Log(mux)
 }
 

@@ -94,9 +94,8 @@ jobs:
             acrendpoint=${{ secrets.ACR_ENDPOINT }}
             acrlogin=${{ secrets.ACR_USERNAME }}
             acrpassword=${{ secrets.ACR_PASSWORD }}
-            dbAdminPassword=${{ secrets.DB_ADMIN_PASSWORD }}
+            dbCharityUserPassword=${{ secrets.DB_CHARITY_USER_PASSWORD }}
             dbServerName=foodbank-postgres
-            dbName=foodbankdb
             authClientId=${{ secrets.AUTH_CLIENT_ID }}
             authClientSecret=${{ secrets.AUTH_CLIENT_SECRET }}
             authRedirectUrl=${{ secrets.AUTH_REDIRECT_URL }}
