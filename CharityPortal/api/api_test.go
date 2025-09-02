@@ -42,11 +42,11 @@ func TestUnauthorizedAccessRoutes(t *testing.T) {
 			redirectURL:    "/login",
 		},
 		{
-			name:           "unauthorized access to / should return 200",
+			name:           "unauthorized access to / should return 302",
 			method:         http.MethodGet,
 			path:           "/",
-			expectedStatus: http.StatusOK,
-			redirectURL:    "/",
+			expectedStatus: http.StatusFound,
+			redirectURL:    "/login",
 		},
 		{
 			name:           "unauthorized logout should redirect",
