@@ -16,9 +16,7 @@ import (
 func TestWhenVisitingCharityUpdateThenShowsOrganization(t *testing.T) {
 	// Arrange
 	testCharity, _ := database.ReadCharityByEmailMock(context.Background(), "email")
-	router := CreateRouter(&dependencies{
-		readCharityByEmail: database.ReadCharityByEmailMock,
-	})
+	router := CreateRouter(Compose(nil, "development"))
 	rr := httptest.NewRecorder()
 	// Act
 	router.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/", nil))

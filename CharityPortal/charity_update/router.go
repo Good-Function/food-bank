@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"log/slog"
+
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -29,7 +31,9 @@ func Compose(operatorDbConnectionPool *pgxpool.Pool, environment string) *depend
 func welcomeHandler(readCharity func (ctx context.Context, email string) (database.Organizacje, error)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		charity, err := readCharity(r.Context(), "domopieki2@poczta.onet.pl")
-		println(err)
+		if err != nil {
+			slog.Error("Can't read organization", "err", err)
+		}
 		orgStr := fmt.Sprintf("%+v\n", charity)
 		views.Base(Welcome(orgStr), "").Render(r.Context(), w)
 	}
