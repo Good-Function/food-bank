@@ -30,7 +30,6 @@ COPY --from=build /app/config.toml ./config.toml
 # Expose application port
 EXPOSE 8080
 
-
 # Command to run the application
 CMD ["./main"]
 
