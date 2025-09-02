@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func Log(h http.Handler) http.Handler {
+func WithLog(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		startProcessing := time.Now()
 		h.ServeHTTP(w, r)

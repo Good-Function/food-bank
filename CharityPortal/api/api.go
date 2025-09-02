@@ -87,14 +87,14 @@ func newRouter(
 	dataConfirmationService := dataconfirmation.NewDataConfirmationService()
 	fs := http.FileServer(http.Dir("./web/static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
-	mux.Handle("/", handlers.NewHomeHandler())
+	mux.Handle("/",  protect(handlers.NewDashboardHandler().ServeHTTP))
 	mux.Handle("GET /login", handlers.LoginHandler(sessionManager))
 	mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(tokenVerifier, sessionManager))
 	mux.Handle("GET /dashboard", protect(handlers.NewDashboardHandler().ServeHTTP))
 	mux.Handle("POST /logout", handlers.NewLogoutHandler())
 	mux.Handle("POST /data-confirmation", protect(handlers.NewDataConfirmationHandler(dataConfirmationService).ServeHTTP))
 	mux.Handle("/charity-update/", http.StripPrefix("/charity-update", charityRouter))
-	return middlewares.Log(mux)
+	return middlewares.WithLog(middlewares.WithNotFound(mux))
 }
 
 func (a *API) Start() {
