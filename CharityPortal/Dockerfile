@@ -25,6 +25,7 @@ WORKDIR /root/
 # Copy the compiled binary from the build stage
 COPY --from=build /app/main ./
 COPY --from=build /app/web/static ./web/static
+COPY --from=build /app/config.toml ./config.toml
 
 # Expose application port
 EXPOSE 8080
