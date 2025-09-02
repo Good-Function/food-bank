@@ -39,8 +39,21 @@ func welcomeHandler(readCharity func (ctx context.Context, email string) (databa
 	}
 }
 
+func operatorHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		operatorResponse, err := TestFetch()
+		if err != nil {
+			slog.Error("Can't read fetch", "err", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		views.Base(Welcome(*operatorResponse), "").Render(r.Context(), w)
+	}
+}
+
 func CreateRouter(dependencies *dependencies) *http.ServeMux {
 	mux := http.NewServeMux()
+	mux.Handle("GET /operator", operatorHandler())
 	mux.Handle("GET /", welcomeHandler(dependencies.readCharityByEmail))
 	return mux
 }
