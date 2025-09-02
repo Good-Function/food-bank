@@ -71,10 +71,10 @@ let createServer () =
     ) |> ignore
     let app = builder.Build()
     if app.Environment.EnvironmentName <> "Production"
-        then app.Use(Authentication.fakeAuthenticate) |> ignore
+        then app.Use Authentication.fakeAuthenticate |> ignore
     else
         Migrations.main [|settings.DbConnectionString; AppDomain.CurrentDomain.BaseDirectory|] |> ignore
-    app.Use(Culture.middleware) |> ignore
+    app.Use Culture.middleware |> ignore
     app
         .UseForwardedHeaders()
         .UseRouting()
@@ -87,7 +87,7 @@ let createServer () =
                         (Applications.CompositionRoot.build dbConnect)
                         (Users.CompositionRoot.build settings.AzureAd settings.Users)
                     )
-        .Run(notFoundHandler)
+        .Run notFoundHandler
     app
    
 createServer().Run()
