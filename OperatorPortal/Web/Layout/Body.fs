@@ -9,7 +9,7 @@ let Template (content: HtmlElement) (currentPath: Navigation.Page option) (userN
     body (class' = "container", hxBoost = true) {
         header () {
             div (style = "display: flex; align-items: center; justify-content: space-between;") {
-                div ( class'="bzsos-logo" )
+                div ( class'="bzsos-logo", title="v0.0.1" )
                 Navigation.Template currentPath
                 div(style="display: inline-flex; flex-direction: column; vertical-align:top; text-align:right;") {   
                     div () {
