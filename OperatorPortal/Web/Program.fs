@@ -24,6 +24,7 @@ let endpoints
     =
     [
         GET [
+            route "/api/pong" <| json {| response= "pong"|}
             route "/" <| redirectTo "/organizations" false
         ]
         subRoute "/login" (Login.Router.Endpoints loginDeps)
