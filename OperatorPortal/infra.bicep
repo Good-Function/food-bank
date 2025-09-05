@@ -159,47 +159,46 @@ resource database 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2024-11-0
   }
 }
 
-resource createReadonlyUser 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
-  name: 'createCharityUser'
-  location: location
-  kind: 'AzureCLI'
-  properties: {
-    azCliVersion: '2.37.0'
-    retentionInterval: 'P1D'
-    environmentVariables: [
-      {
-        name: 'PGPASSWORD'
-        secureValue: dbAdminPassword
-      }
-      {
-        name: 'CHARITY_PASSWORD'
-        secureValue: dbCharityUserPassword
-      }
-    ]
+// resource createReadonlyUser 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
+//   name: 'createCharityUser'
+//   location: location
+//   kind: 'AzureCLI'
+//   properties: {
+//     azCliVersion: '2.37.0'
+//     retentionInterval: 'P1D'
+//     environmentVariables: [
+//       {
+//         name: 'PGPASSWORD'
+//         secureValue: dbAdminPassword
+//       }
+//       {
+//         name: 'CHARITY_PASSWORD'
+//         secureValue: dbCharityUserPassword
+//       }
+//     ]
     
-    scriptContent: '''
-      echo "Creating charityUser user if not exists..."
-      psql "host=${dbServerName}.postgres.database.azure.com port=5432 dbname=${dbName} user=pgadmin@${dbServerName} sslmode=require" \
-       -v CHARITY_PASSWORD="'$CHARITY_PASSWORD'" <<'EOF'
-      DO
-      $do$
-      BEGIN
-        IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'charity_user') THEN
-          CREATE USER charity_user WITH PASSWORD :'CHARITY_PASSWORD';
-        END IF;
-      END
-      $do$;
+//     scriptContent: '''
+//       echo "Creating charityUser user if not exists..."
+//       psql "host=${dbServerName}.postgres.database.azure.com port=5432 dbname=${dbName} user=pgadmin@${dbServerName} sslmode=require" \
+//        -v CHARITY_PASSWORD="'$CHARITY_PASSWORD'" <<'EOF'
+//       DO
+//       $do$
+//       BEGIN
+//         IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'charity_user') THEN
+//           CREATE USER charity_user WITH PASSWORD :'CHARITY_PASSWORD';
+//         END IF;
+//       END
+//       $do$;
 
-      GRANT CONNECT ON DATABASE ${dbName} TO charity_user;
-      GRANT USAGE ON SCHEMA public TO charity_user;
-      GRANT SELECT ON TABLE organizacje TO charity_user;
-      EOF
-    '''
-  }
-  dependsOn: [
-    database
-  ]
-}
+//       GRANT CONNECT ON DATABASE ${dbName} TO charity_user;
+//       GRANT USAGE ON SCHEMA public TO charity_user;
+//       GRANT SELECT ON TABLE organizacje TO charity_user;
+//     '''
+//   }
+//   dependsOn: [
+//     database
+//   ]
+// }
 
 resource law 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
   name: name
