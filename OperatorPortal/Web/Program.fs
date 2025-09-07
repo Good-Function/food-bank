@@ -3,9 +3,11 @@ module Program
 open System
 open Azure.Storage.Blobs
 open Layout
+open Microsoft.AspNetCore.Authentication.JwtBearer
 open Microsoft.AspNetCore.Authentication.OpenIdConnect
 open Microsoft.AspNetCore.HttpOverrides
 open Microsoft.Identity.Web
+open Microsoft.IdentityModel.Tokens
 open PostgresPersistence.DapperFsharp
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Http
@@ -19,7 +21,7 @@ let protect =  configureEndpoint _.RequireAuthorization()
 let testApiAuth: EndpointHandler =
     fun ctx -> task {
         let auth = ctx.TryGetHeaderValue "Authorization"
-        return json {| response = "pong"; auth = auth |}
+        return! ctx.WriteJson {| response = "pong"; auth = auth |}
     }
 
 let endpoints 
@@ -61,15 +63,25 @@ let createServer () =
         .AddRouting()
         .AddOxpecker()
         .AddAuthorization()
-        .AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApp(fun options ->
-        options.Instance <- settings.AzureAd.Instance
-        options.TenantId <- settings.AzureAd.TenantId
-        options.ClientId <- settings.AzureAd.ClientId
-        options.ClientSecret <- settings.AzureAd.ClientSecret 
-        options.CallbackPath <- settings.AzureAd.CallbackPath
-        options.SaveTokens <- true
-        options.ResponseType <- "code" 
-        options.Scope.Add("https://graph.microsoft.com/User.ReadBasic.All"); 
+        .AddAuthentication(fun options ->
+            options.DefaultScheme <- OpenIdConnectDefaults.AuthenticationScheme
+            options.DefaultChallengeScheme <- OpenIdConnectDefaults.AuthenticationScheme)
+        .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, fun options ->
+            options.Authority <- $"{settings.AzureAd.Instance}{settings.AzureAd.TenantId}/v2.0"
+            options.Audience <- settings.AzureAd.ClientId 
+            options.TokenValidationParameters <- TokenValidationParameters(
+                ValidateIssuer = true
+            )
+        )
+        .AddMicrosoftIdentityWebApp(fun options ->
+            options.Instance <- settings.AzureAd.Instance
+            options.TenantId <- settings.AzureAd.TenantId
+            options.ClientId <- settings.AzureAd.ClientId
+            options.ClientSecret <- settings.AzureAd.ClientSecret 
+            options.CallbackPath <- settings.AzureAd.CallbackPath
+            options.SaveTokens <- true
+            options.ResponseType <- "code" 
+            options.Scope.Add("https://graph.microsoft.com/User.ReadBasic.All");
     ) |> ignore
     builder.Services.Configure<ForwardedHeadersOptions>(fun (options: ForwardedHeadersOptions) ->
         options.ForwardedHeaders <- ForwardedHeaders.XForwardedProto ||| ForwardedHeaders.XForwardedHost
