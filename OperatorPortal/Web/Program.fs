@@ -16,6 +16,12 @@ open Settings
 
 let protect =  configureEndpoint _.RequireAuthorization()
 
+let testApiAuth: EndpointHandler =
+    fun ctx -> task {
+        let auth = ctx.TryGetHeaderValue "Authorization"
+        return json {| response = "pong"; auth = auth |}
+    }
+
 let endpoints 
     (orgDeps: Organizations.CompositionRoot.Dependencies)
     (loginDeps: Login.CompositionRoot.Dependencies)
@@ -24,7 +30,7 @@ let endpoints
     =
     [
         GET [
-            route "/api/ping" <| json {| response= "pong"|}
+            route "/api/ping" testApiAuth
             route "/" <| redirectTo "/organizations" false
         ]
         subRoute "/login" (Login.Router.Endpoints loginDeps)
