@@ -32,6 +32,7 @@ let endpoints
     =
     [
         GET [
+            route "/api/pingp" testApiAuth |> protect
             route "/api/ping" testApiAuth
             route "/" <| redirectTo "/organizations" false
         ]
