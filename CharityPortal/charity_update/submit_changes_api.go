@@ -24,7 +24,7 @@ func TestFetch() (*string, error) {
         slog.Error("Failed to get token", "err", err)
 	}
     client := &http.Client{}
-	req, err := http.NewRequest("GET", "https://operator-portal.bluemeadow-0985b16b.polandcentral.azurecontainerapps.io/api/ping", nil)
+	req, err := http.NewRequest("GET", "https://operator-portal.bluemeadow-0985b16b.polandcentral.azurecontainerapps.io/api/pingp", nil)
     // internal?
 	if err != nil {
         slog.Error("Failed to create request", "err", err)
