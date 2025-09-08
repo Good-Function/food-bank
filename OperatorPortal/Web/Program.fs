@@ -16,7 +16,7 @@ open Microsoft.Extensions.Configuration
 open Oxpecker
 open Settings
 
-let protect =  configureEndpoint _.RequireAuthorization("UserPolicy")
+let protect =  configureEndpoint _.RequireAuthorization()
 let protectApi =  configureEndpoint _.RequireAuthorization("ServicePolicy")
 
 let testApiAuth: EndpointHandler =
@@ -64,12 +64,7 @@ let createServer () =
     builder.Services
         .AddRouting()
         .AddOxpecker()
-        .AddAuthorization()
         .AddAuthorization(fun options ->
-        options.AddPolicy("UserPolicy", fun policy ->
-            policy.AuthenticationSchemes.Add(OpenIdConnectDefaults.AuthenticationScheme)
-            policy.RequireAuthenticatedUser() |> ignore)
-
         options.AddPolicy("ServicePolicy", fun policy ->
             policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme)
             policy.RequireAuthenticatedUser() |> ignore)

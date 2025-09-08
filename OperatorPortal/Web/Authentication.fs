@@ -4,6 +4,7 @@ open System
 open System.Security.Claims
 open System.Threading.Tasks
 open Microsoft.AspNetCore.Authentication.Cookies
+open Microsoft.AspNetCore.Authentication.OpenIdConnect
 open Microsoft.AspNetCore.Http
 open Oxpecker
 
@@ -16,7 +17,7 @@ let fakeAuthenticate =
                 Claim(ClaimTypes.NameIdentifier, "0")
                 Claim(ClaimTypes.Role, role)
             ]
-            let identity = ClaimsIdentity(claims, "Test")
+            let identity = ClaimsIdentity(claims, OpenIdConnectDefaults.AuthenticationScheme)
             let principal = ClaimsPrincipal(identity)
             ctx.User <- principal
             return! next.Invoke(ctx)
