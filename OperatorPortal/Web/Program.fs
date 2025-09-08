@@ -8,6 +8,7 @@ open Microsoft.AspNetCore.Authentication.OpenIdConnect
 open Microsoft.AspNetCore.HttpOverrides
 open Microsoft.Identity.Web
 open Microsoft.IdentityModel.Tokens
+open Microsoft.IdentityModel.Validators
 open PostgresPersistence.DapperFsharp
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Http
@@ -15,6 +16,9 @@ open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Configuration
 open Oxpecker
 open Settings
+open Microsoft.AspNetCore.Authentication.JwtBearer
+open Microsoft.AspNetCore.Authentication.OpenIdConnect
+open Microsoft.Extensions.DependencyInjection
 
 let protect =  configureEndpoint _.RequireAuthorization()
 let protectApi =  configureEndpoint _.RequireAuthorization("ServicePolicy")
@@ -75,8 +79,13 @@ let createServer () =
         .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, fun options ->
             options.Authority <- $"{settings.AzureAd.Instance}{settings.AzureAd.TenantId}/v2.0"   
             options.Audience <- $"api://{settings.AzureAd.ClientId}"
+            // options.TokenValidationParameters <- TokenValidationParameters(
+            //     ValidateIssuer = true
+            // )
             options.TokenValidationParameters <- TokenValidationParameters(
-                ValidateIssuer = true
+                IssuerValidator = fun issuer securityToken validationParameters ->
+                    let validator = AadIssuerValidator.GetAadIssuerValidator(options.Authority)
+                    validator.Validate(issuer, securityToken, validationParameters)
             )
         )
         .AddMicrosoftIdentityWebApp(fun options ->
