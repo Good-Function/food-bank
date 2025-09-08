@@ -74,7 +74,7 @@ let createServer () =
             options.DefaultChallengeScheme <- OpenIdConnectDefaults.AuthenticationScheme)
         .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, fun options ->
             options.Authority <- $"{settings.AzureAd.Instance}{settings.AzureAd.TenantId}/v2.0"   
-            options.Audience <- $"{settings.AzureAd.ClientId}{settings.AzureAd.TenantId}/v2.0"  "03241880-d8b0-408f-800e-1a0aec3e8746" settings.AzureAd.ClientId 
+            options.Audience <- $"api://{settings.AzureAd.ClientId}"
             options.TokenValidationParameters <- TokenValidationParameters(
                 ValidateIssuer = true
             )
