@@ -16,7 +16,8 @@ open Microsoft.Extensions.Configuration
 open Oxpecker
 open Settings
 
-let protect =  configureEndpoint _.RequireAuthorization()
+let protect =  configureEndpoint _.RequireAuthorization("UserPolicy")
+let protectApi =  configureEndpoint _.RequireAuthorization("ServicePolicy")
 
 let testApiAuth: EndpointHandler =
     fun ctx -> task {
@@ -32,7 +33,7 @@ let endpoints
     =
     [
         GET [
-            route "/api/pingp" testApiAuth |> protect
+            route "/api/pingp" testApiAuth |> protectApi
             route "/api/ping" testApiAuth
             route "/" <| redirectTo "/organizations" false
         ]
@@ -64,6 +65,15 @@ let createServer () =
         .AddRouting()
         .AddOxpecker()
         .AddAuthorization()
+        .AddAuthorization(fun options ->
+        options.AddPolicy("UserPolicy", fun policy ->
+            policy.AuthenticationSchemes.Add(OpenIdConnectDefaults.AuthenticationScheme)
+            policy.RequireAuthenticatedUser() |> ignore)
+
+        options.AddPolicy("ServicePolicy", fun policy ->
+            policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme)
+            policy.RequireAuthenticatedUser() |> ignore)
+    )
         .AddAuthentication(fun options ->
             options.DefaultScheme <- OpenIdConnectDefaults.AuthenticationScheme
             options.DefaultChallengeScheme <- OpenIdConnectDefaults.AuthenticationScheme)
