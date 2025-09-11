@@ -23,7 +23,7 @@ func Compose(config Config) *dependencies {
 	}
 
 	return &dependencies{
-		readDaneKontaktoweBy: adapters.MśakeFetchDaneKontakowe(callOperator),
+		readDaneKontaktoweBy: adapters.MakeFetchDaneKontakowe(callOperator),
 	}
 }
 
