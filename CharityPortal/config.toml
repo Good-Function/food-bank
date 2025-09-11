@@ -1,5 +1,9 @@
 environment="development"
-operator_db_connection_string = "host=localhost port=5432 user=postgres password=Strong!Passw0rd dbname=food_bank"
+
+[charityUpdate]
+operator_api_client_id = "03241880-d8b0-408f-800e-1a0aec3e8746"
+operator_api_base_url = "https://operator-portal.bluemeadow-0985b16b.polandcentral.azurecontainerapps.io"
+mock_operator_api = true
 
 [auth]
 client_id = "3e93972c-5601-4a3f-946d-c46c4f93337e"

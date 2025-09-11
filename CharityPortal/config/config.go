@@ -1,6 +1,7 @@
 package config
 
 import (
+	charityupdate "charity_portal/charity_update"
 	"fmt"
 	"os"
 
@@ -10,6 +11,7 @@ import (
 type Config struct {
 	Auth        *Auth
 	Logger      *Logger
+	CharityUpdate *charityupdate.Config
 	Environment string `toml:"environment"`
 	OperatorDbConnectionString string `toml:"operator_db_connection_string"`
 }
