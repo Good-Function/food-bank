@@ -2,8 +2,19 @@ package queries
 
 import "context"
 
-type DaneKontakowe struct {
-	Adres string
+type Kontakty struct {
+    WwwFacebook                string `json:"wwwFacebook"`
+    Telefon                    string `json:"telefon"`
+    Przedstawiciel             string `json:"przedstawiciel"`
+    Kontakt                    string `json:"kontakt"`
+    Email                      string `json:"email"`
+    Dostepnosc                 string `json:"dostepnosc"`
+    OsobaDoKontaktu            string `json:"osobaDoKontaktu"`
+    TelefonOsobyKontaktowej    string `json:"telefonOsobyKontaktowej"`
+    MailOsobyKontaktowej       string `json:"mailOsobyKontaktowej"`
+    OsobaOdbierajacaZywnosc   string `json:"osobaOdbierajacaZywnosc"`
+    TelefonOsobyOdbierajacej  string `json:"telefonOsobyOdbierajacej"`
 }
 
-type ReadDaneKontaktoweBy func(context.Context, string) (DaneKontakowe, error)
+
+type ReadKontaktyBy func(context.Context, string) (Kontakty, error)

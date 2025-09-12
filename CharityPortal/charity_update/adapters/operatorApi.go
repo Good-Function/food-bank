@@ -12,24 +12,8 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 )
 
-type Test = struct {
-	Name string
-}
 
 type CallOperator = func(method, url string, out any) error
-
-var CallOperatorMock CallOperator = func(method, url string, out any) error {
-	switch v := out.(type) {
-	case *string:
-		*v = "test"
-		return nil
-	case *Test:
-		*v = Test{ Name: "Mock User"}
-		return nil
-	default:
-		return fmt.Errorf("unsupported type in mock: %T", out)
-	}
-}
 
 func AuthenticateForJwt(operatorApiClientId string) (*string, error) {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)

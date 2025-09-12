@@ -10,7 +10,7 @@ import (
 )
 
 type dependencies = struct {
-	readDaneKontaktoweBy queries.ReadDaneKontaktoweBy
+	readDaneKontaktoweBy queries.ReadKontaktyBy
 }
 
 func Compose(config Config) *dependencies {
@@ -23,11 +23,11 @@ func Compose(config Config) *dependencies {
 	}
 
 	return &dependencies{
-		readDaneKontaktoweBy: adapters.MakeFetchDaneKontakowe(callOperator),
+		readDaneKontaktoweBy: adapters.MakeFetchKontakty(callOperator),
 	}
 }
 
-func welcomeHandler(readDaneKontaktoweBy queries.ReadDaneKontaktoweBy) http.HandlerFunc {
+func welcomeHandler(readDaneKontaktoweBy queries.ReadKontaktyBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		charity, err := readDaneKontaktoweBy(r.Context(), "domopieki2@poczta.onet.pl")
 		if err != nil {

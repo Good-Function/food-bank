@@ -9,7 +9,7 @@ type Permission =
     | ViewOrganization
     | ManageUsers
     
-let rolePermissions =
+let byRole =
     Map.ofList [
         "Admin", [ EditOrganization; ViewOrganization; ManageUsers]
         "Editor", [ EditOrganization; ViewOrganization; ]
@@ -18,7 +18,7 @@ let rolePermissions =
     
 let can (requiredPermission: Permission) (user: ClaimsPrincipal) =
     let role = user.FindFirstValue(ClaimTypes.Role)
-    match rolePermissions.TryFind role with
+    match byRole.TryFind role with
         | Some perms -> perms |> List.contains requiredPermission
         | None -> false
     
