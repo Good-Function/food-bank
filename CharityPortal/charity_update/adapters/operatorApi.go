@@ -19,13 +19,13 @@ type CallOperator = func(method, url string, out any) error
 func AuthenticateForJwt(operatorApiClientId string) (*string, error) {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to create credentials", err)
+		return nil, fmt.Errorf("failed to create credentials: %w", err)
 	}
     token, err := cred.GetToken(context.Background(), policy.TokenRequestOptions{
         Scopes: []string{ fmt.Sprintf("api://%s/.default", operatorApiClientId)},
     })
 	if err != nil {
-		return nil, fmt.Errorf("Failed to obtain token", err)
+		return nil, fmt.Errorf("failed to obtain token %w", err)
 	}
 	return &token.Token, nil
 }
