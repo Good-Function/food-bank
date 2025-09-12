@@ -124,6 +124,10 @@ resource charityPortalApp 'Microsoft.App/containerApps@2022-03-01' = {
               name: 'ASPNETCORE_ENVIRONMENT'
               value: 'Production'
             }
+            { 
+              name: 'OPERATOR_API_BASE_URL'
+              value: 'https://operator-portal.bluemeadow-0985b16b.polandcentral.azurecontainerapps.io'
+            }
             {
               name: 'AUTH_CLIENT_ID'
               secretRef: 'authclientidref'

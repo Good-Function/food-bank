@@ -2,8 +2,8 @@ environment="development"
 
 [charityUpdate]
 operator_api_client_id = "03241880-d8b0-408f-800e-1a0aec3e8746"
-operator_api_base_url = "https://operator-portal.bluemeadow-0985b16b.polandcentral.azurecontainerapps.io"
-mock_operator_api = true
+operator_api_base_url = "http://localhost:5221"
+mock_operator_api = false
 
 [auth]
 client_id = "3e93972c-5601-4a3f-946d-c46c4f93337e"

@@ -49,6 +49,7 @@ func overrideFromEnv(config *Config) {
 	config.Logger.Level = getEnv("LOG_LEVEL", config.Logger.Level)
 	config.Environment = getEnv("APP_ENVIRONMENT", config.Environment)
 	config.OperatorDbConnectionString = getEnv("OPERATOR_DB_CONNECTION_STRING", config.OperatorDbConnectionString)
+	config.CharityUpdate.OperatorApiBaseUrl = getEnv("OPERATOR_API_BASE_URL", config.CharityUpdate.OperatorApiBaseUrl)
 }
 
 func getEnv(key, fallback string) string {

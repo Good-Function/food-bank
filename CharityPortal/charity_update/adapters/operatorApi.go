@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"encoding/json"
 
@@ -31,17 +32,22 @@ func AuthenticateForJwt(operatorApiClientId string) (*string, error) {
 
 func MakeCallOperator(operatorApiClientId, baseUrl string) CallOperator {
 	return func(method, url string, out any) error {
-		token, err := AuthenticateForJwt(operatorApiClientId)
-		if err != nil {
-			return err
+		token := "" // initial value
+		if !strings.Contains(baseUrl, "localhost") {
+			tokenPtr, err := AuthenticateForJwt(operatorApiClientId)
+			if err != nil {
+				return err
+			}
+			if tokenPtr != nil {
+				token = *tokenPtr
+			}
 		}
-
 		client := &http.Client{}
 		req, err := http.NewRequest(method, baseUrl + url, nil)
 		if err != nil {
 			return fmt.Errorf("failed to create request: %w", err)
 		}
-		req.Header.Add("Authorization", "Bearer "+*token)
+		req.Header.Add("Authorization", "Bearer "+token)
 
 		resp, err := client.Do(req)
 		if err != nil {
