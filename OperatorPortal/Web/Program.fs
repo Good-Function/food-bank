@@ -31,6 +31,7 @@ let testApiAuth: EndpointHandler =
 
 let endpoints 
     (orgDeps: Organizations.CompositionRoot.Dependencies)
+    (orgApiDeps: Organizations.CompositionRoot.DataApiDependencies)
     (loginDeps: Login.CompositionRoot.Dependencies)
     (appDeps: Applications.CompositionRoot.Dependencies)
     (usersDeps: Users.CompositionRoot.Dependencies)
@@ -44,6 +45,7 @@ let endpoints
         subRoute "/login" (Login.Router.Endpoints loginDeps)
         subRoute "/fragments" FragmentsRouter.Endpoints
         subRoute "/organizations" (Organizations.Router.Endpoints orgDeps) |> protect
+        subRoute "/api/organizations" (Organizations.DataApi.Endpoints orgApiDeps) |> protectApi
         subRoute "/applications" (Applications.Router.Endpoints appDeps) |> protect
         subRoute "/team" (Users.Router.Endpoints usersDeps) |> protect
     ]
@@ -70,7 +72,8 @@ let createServer () =
         .AddOxpecker()
         .AddAuthorization(fun options ->
         options.AddPolicy("ServicePolicy", fun policy ->
-            policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme)
+            if builder.Environment.EnvironmentName = "Production" then
+                policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme)
             policy.RequireAuthenticatedUser() |> ignore)
     )
         .AddAuthentication(fun options ->
@@ -79,9 +82,6 @@ let createServer () =
         .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, fun options ->
             options.Authority <- $"{settings.AzureAd.Instance}{settings.AzureAd.TenantId}/v2.0"   
             options.Audience <- $"api://{settings.AzureAd.ClientId}"
-            // options.TokenValidationParameters <- TokenValidationParameters(
-            //     ValidateIssuer = true
-            // )
             options.TokenValidationParameters <- TokenValidationParameters(
                 IssuerValidator = fun issuer securityToken validationParameters ->
                     let validator = AadIssuerValidator.GetAadIssuerValidator(options.Authority)
@@ -117,6 +117,7 @@ let createServer () =
         .UseAuthorization()
         .UseOxpecker(endpoints
                         (Organizations.CompositionRoot.build(dbConnect, blobServiceClient))
+                        (Organizations.CompositionRoot.buildDataApi(dbConnect))
                         (Login.CompositionRoot.build dbConnect)
                         (Applications.CompositionRoot.build dbConnect)
                         (Users.CompositionRoot.build settings.AzureAd settings.Users)

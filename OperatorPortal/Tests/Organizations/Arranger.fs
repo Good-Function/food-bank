@@ -119,6 +119,10 @@ let AnOrganization () : Organization =
 let setOstatnieOdwiedziny (newDate: DateOnly) (org: Organization) =
     { org with
         Organization.Dokumenty.Odwiedziny = { Date = Some <| newDate; FileName = None } }
+    
+let setEmail(email: string) (org: Organization) =
+    { org with
+        Organization.Kontakty.Email = email }
 
 let setNazwaPlacowki (newName: string) (org: Organization) =
     { org with

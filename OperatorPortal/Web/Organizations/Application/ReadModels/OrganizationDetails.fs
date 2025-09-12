@@ -124,3 +124,4 @@ type OrganizationDetails =
       WarunkiPomocy: WarunkiPomocy }
     
 type ReadOrganizationDetailsBy = int64 -> Async<OrganizationDetails>
+type ReadOrganizationDetailsByEmail = string -> Async<OrganizationDetails>

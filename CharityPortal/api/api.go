@@ -16,7 +16,6 @@ import (
 	"strings"
 
 	"github.com/coreos/go-oidc/v3/oidc"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/oauth2"
 )
 
@@ -60,11 +59,7 @@ func NewAPI(cfg *config.Config) (*API, error) {
 	} else {
 		protect = middlewares.BuildProtect(sessionManager.ReadSession)
 	}
-	operatorDbConnection, err := pgxpool.New(context.Background(), cfg.OperatorDbConnectionString) 
-	if err != nil {
-		return nil, err
-	}
-	charityRouter := protect(charity.CreateRouter(charity.Compose(operatorDbConnection, cfg.Environment)).ServeHTTP)
+	charityRouter := protect(charity.CreateRouter(charity.Compose(*cfg.CharityUpdate)).ServeHTTP)
 	router := newRouter(tokenVerifier, sessionManager, protect, &charityRouter)
 	server := http.Server{
 		Addr:    ":8080",

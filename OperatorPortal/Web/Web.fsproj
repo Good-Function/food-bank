@@ -123,6 +123,7 @@
       <Compile Include="Organizations\CompositionRoot.fs" />
       <Compile Include="Organizations\SectionsRouter.fs" />
       <Compile Include="Organizations\Router.fs" />
+      <Compile Include="Organizations\DataApi.fs" />
       <Compile Include="Applications\Template.fs" />
       <Compile Include="Applications\Database.fs" />
       <Compile Include="Applications\CompositionRoot.fs" />

@@ -1,4 +1,4 @@
-module OrganizationViewing
+module OrganizationsViewing
 
 open System
 open System.Net

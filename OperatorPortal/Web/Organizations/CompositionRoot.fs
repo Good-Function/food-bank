@@ -30,15 +30,22 @@ let build (connectDb: unit -> Async<IDbConnection>, blobServiceClient: BlobServi
       ChangeDaneAdresowe = OrganizationsDao.changeDaneAdresowe connectDb
       ChangeKontakty = OrganizationsDao.changeKontakty connectDb
       ChangeBeneficjenci = OrganizationsDao.changeBeneficjenci connectDb
-      SaveDocument = DocumentHandlers.saveDocumentHandler
-                        (BlobStorage.upload blobServiceClient)
-                        (OrganizationsDao.saveDocMetadata connectDb)
+      SaveDocument =
+        DocumentHandlers.saveDocumentHandler
+            (BlobStorage.upload blobServiceClient)
+            (OrganizationsDao.saveDocMetadata connectDb)
       DeleteDocument = BlobStorage.delete blobServiceClient
       GenerateDownloadUri = BlobStorage.generateDownloadUri blobServiceClient
       ChangeAdresyKsiegowosci = OrganizationsDao.changeAdresyKsiegowosci connectDb
       ChangeZrodlaZywnosci = OrganizationsDao.changeZrodlaZywnosci connectDb
       ChangeWarunkiPomocy = OrganizationsDao.changeWarunkiPomocy connectDb
-      Import = CreateOrganizationCommandHandler.importOrganizations
-                ClosedXmlExcelImport.import
-                (OrganizationsDao.saveMany connectDb)
-       }
+      Import =
+        CreateOrganizationCommandHandler.importOrganizations
+            ClosedXmlExcelImport.import
+            (OrganizationsDao.saveMany connectDb) }
+
+type DataApiDependencies =
+    { ReadOrganizationDetailsByEmail: ReadOrganizationDetailsByEmail }
+
+let buildDataApi (connectDb: unit -> Async<IDbConnection>) : DataApiDependencies =
+    { ReadOrganizationDetailsByEmail = OrganizationsDao.readByEmail connectDb }

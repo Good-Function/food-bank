@@ -299,6 +299,14 @@ let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: int64) =
         return row.ToReadModel()
     }
     
+let readByEmail (connectDB: unit -> Async<IDbConnection>): OrganizationDetails.ReadOrganizationDetailsByEmail =
+    fun email ->
+        async {
+            use! db = connectDB()
+            let! row = db.Single<OrganizationDetailsRow> "SELECT * FROM organizacje WHERE email = @email" {|email = email|}
+            return row.ToReadModel()
+        }
+
 let private saveOnConnection (dbConnection: IDbConnection) (org: Organization) =
     async {
         let row = OrganizationDetailsRow.From org
