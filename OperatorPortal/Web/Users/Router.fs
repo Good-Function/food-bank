@@ -34,7 +34,7 @@ let page: EndpointHandler =
     fun ctx ->
         task {
             let username = ctx.UserName
-            let permissions = rolePermissions[ctx.UserRole]
+            let permissions = byRole[ctx.UserRole]
 
             return
                 ctx
@@ -46,7 +46,7 @@ let users (listUsers: Queries.ListUsers) (listRoles: Queries.ListRoles) : Endpoi
         task {
             let! users = listUsers ()
             let! roles = listRoles ()
-            let permissions = rolePermissions[ctx.UserRole]
+            let permissions = byRole[ctx.UserRole]
             return ctx.WriteHtmlView(Templates.UsersTable.View users roles permissions)
         }
 
@@ -61,7 +61,7 @@ let addUser
             do! addUser newUser
             let! users = listUsers ()
             let! roles = listRoles ()
-            let permissions = rolePermissions[ctx.UserRole]
+            let permissions = byRole[ctx.UserRole]
             ctx.SetStatusCode(StatusCodes.Status201Created)
             return ctx.WriteHtmlView(Templates.UsersTable.View users roles permissions)
         }
@@ -74,7 +74,7 @@ let assignRole
     : EndpointHandler =
     fun ctx ->
         task {
-            let permissions = rolePermissions[ctx.UserRole]
+            let permissions = byRole[ctx.UserRole]
             let roleId = ctx.TryGetFormValue("RoleId") |> Option.defaultValue ""
             let userId: Domain.UserId = Guid(userId)
             let roleId: Domain.RoleId = Guid(roleId)

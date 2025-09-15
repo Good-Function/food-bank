@@ -1,36 +1,35 @@
 package charityupdate
 
 import (
-	"charity_portal/charity_update/database"
+	"charity_portal/charity_update/adapters"
+	"charity_portal/charity_update/queries"
 	"charity_portal/web/views"
-	"context"
 	"fmt"
-	"net/http"
-
 	"log/slog"
-
-	"github.com/jackc/pgx/v5/pgxpool"
+	"net/http"
 )
 
 type dependencies = struct {
-	readCharityByEmail database.ReadCharityByEmail
+	readDaneKontaktoweBy queries.ReadKontaktyBy
 }
 
-func Compose(operatorDbConnectionPool *pgxpool.Pool, environment string) *dependencies {
-	var readCharityByEmail database.ReadCharityByEmail
-	if environment == "development" {
-		readCharityByEmail = database.ReadCharityByEmailMock
+func Compose(config Config) *dependencies {
+
+	var callOperator adapters.CallOperator
+	if config.MockOperatorApi {
+		callOperator = adapters.CallOperatorMock
 	} else {
-		readCharityByEmail = database.New(operatorDbConnectionPool).ReadCharity
+		callOperator = adapters.MakeCallOperator(config.OperatorApiBaseUrl, config.OperatorApiBaseUrl)
 	}
+
 	return &dependencies{
-		readCharityByEmail:readCharityByEmail,
+		readDaneKontaktoweBy: adapters.MakeFetchKontakty(callOperator),
 	}
 }
 
-func welcomeHandler(readCharity func (ctx context.Context, email string) (database.Organizacje, error)) http.HandlerFunc {
+func welcomeHandler(readDaneKontaktoweBy queries.ReadKontaktyBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		charity, err := readCharity(r.Context(), "domopieki2@poczta.onet.pl")
+		charity, err := readDaneKontaktoweBy(r.Context(), "domopieki2@poczta.onet.pl")
 		if err != nil {
 			slog.Error("Can't read organization", "err", err)
 		}
@@ -39,21 +38,8 @@ func welcomeHandler(readCharity func (ctx context.Context, email string) (databa
 	}
 }
 
-func operatorHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		operatorResponse, err := TestFetch()
-		if err != nil {
-			slog.Error("Can't read fetch", "err", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		views.Base(Welcome(*operatorResponse), "").Render(r.Context(), w)
-	}
-}
-
 func CreateRouter(dependencies *dependencies) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.Handle("GET /operator", operatorHandler())
-	mux.Handle("GET /", welcomeHandler(dependencies.readCharityByEmail))
+	mux.Handle("GET /", welcomeHandler(dependencies.readDaneKontaktoweBy))
 	return mux
 }
