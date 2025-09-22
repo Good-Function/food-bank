@@ -14,12 +14,12 @@ type dependencies = struct {
 }
 
 func Compose(config Config) *dependencies {
-
+	slog.Info("CREATING ADAPTER", "config", config)
 	var callOperator adapters.CallOperator
 	if config.MockOperatorApi {
 		callOperator = adapters.CallOperatorMock
 	} else {
-		callOperator = adapters.MakeCallOperator(config.OperatorApiBaseUrl, config.OperatorApiBaseUrl)
+		callOperator = adapters.MakeCallOperator(config.OperatorApiClientId, config.OperatorApiBaseUrl)
 	}
 
 	return &dependencies{
