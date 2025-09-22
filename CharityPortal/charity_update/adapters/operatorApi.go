@@ -22,7 +22,7 @@ func AuthenticateForJwt(operatorApiClientId string) (*string, error) {
 		return nil, fmt.Errorf("failed to create credentials: %w", err)
 	}
     token, err := cred.GetToken(context.Background(), policy.TokenRequestOptions{
-        Scopes: []string{ fmt.Sprintf("api://%s/.default", operatorApiClientId)},
+        Scopes: []string{ "api://03241880-d8b0-408f-800e-1a0aec3e8746/.default"},
     })
 	if err != nil {
 		return nil, fmt.Errorf("failed to obtain token %w", err)
