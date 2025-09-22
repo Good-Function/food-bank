@@ -129,7 +129,10 @@ let fetchAppUsers (credential: ClientSecretCredential) : Queries.ListUsers =
                     .ServicePrincipalsWithAppId("03241880-d8b0-408f-800e-1a0aec3e8746")
                     .GetAsync(fun config -> config.QueryParameters.Expand <- [| "AppRoleAssignedTo" |])
                     
-            let assignments = principal.AppRoleAssignedTo |> Seq.toList |> List.filter(_.AppRoleId.HasValue)
+            let assignments = principal.AppRoleAssignedTo
+                              |> Seq.toList
+                              |> List.filter(fun appRole -> appRole.AppRoleId.HasValue &&
+                                                            appRole.PrincipalType = "User")
             let! users =
                 assignments |> List.map(fun assignment ->
                     task {
