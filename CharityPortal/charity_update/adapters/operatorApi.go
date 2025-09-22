@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"strings"
 
@@ -42,6 +43,7 @@ func MakeCallOperator(operatorApiClientId, baseUrl string) CallOperator {
 				token = *tokenPtr
 			}
 		}
+		slog.Info("TOKEN HERE!!!!!", "token", token)
 		client := &http.Client{}
 		req, err := http.NewRequest(method, baseUrl + url, nil)
 		if err != nil {
