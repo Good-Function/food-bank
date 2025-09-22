@@ -47,7 +47,7 @@ func overrideFromEnv(config *Config) {
 	config.Auth.TenantID = getEnv("AUTH_TENANT_ID", config.Auth.TenantID)
 	config.Auth.HashKey = getEnv("AUTH_HASH_KEY", config.Auth.HashKey)
 	config.Logger.Level = getEnv("LOG_LEVEL", config.Logger.Level)
-	config.Environment = getEnv("APP_ENVIRONMENT", config.Environment)
+	config.Environment = getEnv("ASPNETCORE_ENVIRONMENT", config.Environment)
 	config.OperatorDbConnectionString = getEnv("OPERATOR_DB_CONNECTION_STRING", config.OperatorDbConnectionString)
 	config.CharityUpdate.OperatorApiBaseUrl = getEnv("OPERATOR_API_BASE_URL", config.CharityUpdate.OperatorApiBaseUrl)
 }

@@ -44,7 +44,7 @@ func configureAuth(cfg config.Auth) (*oauth2.Config, *oidc.IDTokenVerifier, erro
 	return oauth2Config, verifier, nil
 }
 
-const environmentDevelopment = "development"
+const environmentDevelopment = "Development"
 
 func NewAPI(cfg *config.Config) (*API, error) {
 	setupLogger(cfg.Logger)

@@ -1,4 +1,4 @@
-environment="development"
+environment="Development"
 
 [charityUpdate]
 operator_api_client_id = "03241880-d8b0-408f-800e-1a0aec3e8746"
