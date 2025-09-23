@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log/slog"
 	"net/http"
 	"strings"
 
@@ -33,7 +32,7 @@ func AuthenticateForJwt(operatorApiClientId string) (*string, error) {
 
 func MakeCallOperator(operatorApiClientId, baseUrl string) CallOperator {
 	return func(method, url string, out any) error {
-		token := "" // initial value
+		token := "" 
 		if !strings.Contains(baseUrl, "localhost") {
 			tokenPtr, err := AuthenticateForJwt(operatorApiClientId)
 			if err != nil {
@@ -43,7 +42,6 @@ func MakeCallOperator(operatorApiClientId, baseUrl string) CallOperator {
 				token = *tokenPtr
 			}
 		}
-		slog.Info("TOKEN HERE!!!!!", "token", token)
 		client := &http.Client{}
 		req, err := http.NewRequest(method, baseUrl + url, nil)
 		if err != nil {

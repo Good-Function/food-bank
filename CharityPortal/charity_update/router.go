@@ -14,7 +14,6 @@ type dependencies = struct {
 }
 
 func Compose(config Config) *dependencies {
-	slog.Info("CREATING ADAPTER", "config", config)
 	var callOperator adapters.CallOperator
 	if config.MockOperatorApi {
 		callOperator = adapters.CallOperatorMock
