@@ -1,6 +1,5 @@
 module Organizations.Database.OrganizationsDao
 
-open System
 open System.Data
 open Organizations.Application
 open Organizations.Application.DocumentType
@@ -10,14 +9,8 @@ open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Database.DateOnlyCoder
 open Organizations.Domain.Organization
 open PostgresPersistence.DapperFsharp
-open Organizations.Application.Commands
 open Thoth.Json.Net
-open Web.Organizations.Database.OrganizationRow
-
-let toDb (opt: 'a option) =
-    match opt with
-    | Some x -> x
-    | None -> null
+open OrganizationRow
 
 let searchOrgsSql sortBy dir filterClause = $"""
 SELECT 
@@ -94,77 +87,6 @@ let readSummaries (connectDB: unit -> Async<IDbConnection>): ReadOrganizationSum
                                 |}
             return summaries, total
         }
-    
-let changeDaneAdresowe (connectDB: unit -> Async<IDbConnection>) (teczkaId: TeczkaId, daneAdresowe: DaneAdresowe) =
-    async {
-        use! db = connectDB()
-        do! db.Execute """
-UPDATE organizacje
-SET 
-    NazwaOrganizacjiPodpisujacejUmowe = @NazwaOrganizacjiPodpisujacejUmowe,
-    AdresRejestrowy = @AdresRejestrowy,
-    NazwaPlacowkiTrafiaZywnosc = @NazwaPlacowkiTrafiaZywnosc,
-    AdresPlacowkiTrafiaZywnosc = @AdresPlacowkiTrafiaZywnosc,
-    GminaDzielnica = @GminaDzielnica,
-    Powiat = @Powiat
-WHERE Teczka = @Teczka;""" {|
-                              Teczka = teczkaId
-                              NazwaOrganizacjiPodpisujacejUmowe = daneAdresowe.NazwaOrganizacjiPodpisujacejUmowe
-                              AdresRejestrowy = daneAdresowe.AdresRejestrowy
-                              NazwaPlacowkiTrafiaZywnosc = daneAdresowe.NazwaPlacowkiTrafiaZywnosc
-                              AdresPlacowkiTrafiaZywnosc = daneAdresowe.AdresPlacowkiTrafiaZywnosc
-                              GminaDzielnica = daneAdresowe.GminaDzielnica
-                              Powiat = daneAdresowe.Powiat
-                            |}
-    }
-    
-let changeKontakty (connectDB: unit -> Async<IDbConnection>) (teczkaId: TeczkaId, kontakty: Kontakty) =
-    async {
-        use! db = connectDB()
-        do! db.Execute """
-UPDATE organizacje
-SET 
-    WwwFacebook = @WwwFacebook,
-    Telefon = @Telefon,
-    Przedstawiciel = @Przedstawiciel,
-    Kontakt = @Kontakt,
-    Email = @Email,
-    Dostepnosc = @Dostepnosc,
-    OsobaDoKontaktu = @OsobaDoKontaktu,
-    TelefonOsobyKontaktowej = @TelefonOsobyKontaktowej,
-    MailOsobyKontaktowej = @MailOsobyKontaktowej,
-    OsobaOdbierajacaZywnosc = @OsobaOdbierajacaZywnosc,
-    TelefonOsobyOdbierajacej = @TelefonOsobyOdbierajacej
-WHERE Teczka = @Teczka;""" {|
-                                Teczka = teczkaId
-                                WwwFacebook = kontakty.WwwFacebook
-                                Telefon = kontakty.Telefon
-                                Przedstawiciel = kontakty.Przedstawiciel
-                                Kontakt = kontakty.Kontakt
-                                Email = kontakty.Email
-                                Dostepnosc = kontakty.Dostepnosc
-                                OsobaDoKontaktu = kontakty.OsobaDoKontaktu
-                                TelefonOsobyKontaktowej = kontakty.TelefonOsobyKontaktowej
-                                MailOsobyKontaktowej = kontakty.MailOsobyKontaktowej
-                                OsobaOdbierajacaZywnosc = kontakty.OsobaOdbierajacaZywnosc
-                                TelefonOsobyOdbierajacej = kontakty.TelefonOsobyOdbierajacej
-                            |}
-    }
-    
-let changeBeneficjenci (connectDB: unit -> Async<IDbConnection>) (teczkaId: TeczkaId, beneficjenci: Beneficjenci) =
-    async {
-        use! db = connectDB()
-        do! db.Execute """
-UPDATE organizacje
-SET 
-    LiczbaBeneficjentow = @LiczbaBeneficjentow,
-    Beneficjenci = @Beneficjenci
-WHERE Teczka = @Teczka;""" {|
-                             Teczka = teczkaId
-                             LiczbaBeneficjentow = beneficjenci.LiczbaBeneficjentow
-                             Beneficjenci = beneficjenci.Beneficjenci
-                             |}
-    }
 
 let saveDocMetadata (connectDB: unit -> Async<IDbConnection>) : DocumentHandlers.SaveDocMetadata =
     fun (teczkaId, metadata) ->
@@ -191,94 +113,6 @@ WHERE Teczka = @Teczka; """ {|
                             |}
         }
     
-let changeDokumenty (connectDB: unit -> Async<IDbConnection>) (teczkaId: TeczkaId, dokumenty: Dokumenty) =
-    async {
-        use! db = connectDB()
-        do! db.Execute """
-UPDATE organizacje
-SET 
-    Wniosek = @Wniosek,
-    UmowaZDn = @UmowaZDn,
-    UmowaRODO = @UmowaRODO,
-    OstatnieOdwiedzinyData = @OstatnieOdwiedzinyData,
-    DataUpowaznieniaDoOdbioru = @DataUpowaznieniaDoOdbioru
-WHERE Teczka = @Teczka;""" {|
-                Teczka = teczkaId
-                Wniosek = dokumenty.WniosekDate
-                UmowaZDn = dokumenty.UmowaDate
-                UmowaRODO = dokumenty.RODODate
-                OstatnieOdwiedzinyData = dokumenty.OdwiedzinyDate
-                DataUpowaznieniaDoOdbioru = dokumenty.UpowaznienieDoOdbioruDate
-            |}
-    }
-    
-let changeZrodlaZywnosci (connectDB: unit -> Async<IDbConnection>) (teczkaId: TeczkaId, zrodlaZywnosci: ZrodlaZywnosci) =
-    async {
-        use! db = connectDB()
-        do! db.Execute """
-UPDATE organizacje
-SET 
-    bazarki = @Bazarki,
-    machfit = @Machfit,
-    sieci = @Sieci,
-    fepz2024 = @FEPZ2024,
-    odbiorkrotkitermin = @OdbiorKrotkiTermin,
-    tylkonaszmagazyn = @TylkoNaszMagazyn
-WHERE Teczka = @Teczka;""" {|
-                Teczka = teczkaId
-                Bazarki = zrodlaZywnosci.Bazarki
-                Machfit = zrodlaZywnosci.Machfit
-                Sieci = zrodlaZywnosci.Sieci
-                FEPZ2024 = zrodlaZywnosci.FEPZ2024
-                OdbiorKrotkiTermin = zrodlaZywnosci.OdbiorKrotkiTermin
-                TylkoNaszMagazyn = zrodlaZywnosci.TylkoNaszMagazyn
-            |}
-    }
-    
-let changeWarunkiPomocy (connectDB: unit -> Async<IDbConnection>) (teczkaId: TeczkaId, warunkiPomocy: WarunkiPomocy) =
-    async {
-        use! db = connectDB()
-        do! db.Execute """
-UPDATE organizacje
-SET 
-    kategoria = @Kategoria,
-    sanepid = @Sanepid,
-    rodzajPomocy = @RodzajPomocy,
-    transportKategoria = @TransportKategoria,
-    TransportOpis = @TransportOpis,
-    WarunkiMagazynowe = @WarunkiMagazynowe,
-    SposobUdzielaniaPomocy = @SposobUdzielaniaPomocy,
-    HACCP = @HACCP
-WHERE Teczka = @Teczka;""" {|
-                Teczka = teczkaId
-                Kategoria = warunkiPomocy.Kategoria
-                Sanepid = warunkiPomocy.Sanepid
-                RodzajPomocy = warunkiPomocy.RodzajPomocy
-                TransportKategoria = warunkiPomocy.TransportKategoria
-                TransportOpis = warunkiPomocy.TransportOpis
-                WarunkiMagazynowe = warunkiPomocy.WarunkiMagazynowe
-                SposobUdzielaniaPomocy = warunkiPomocy.SposobUdzielaniaPomocy
-                HACCP = warunkiPomocy.HACCP
-            |}
-    }
-    
-let changeAdresyKsiegowosci (connectDB: unit -> Async<IDbConnection>) (teczkaId: TeczkaId, adresy: AdresyKsiegowosci) =
-    async {
-        use! db = connectDB()
-        do! db.Execute """
-UPDATE organizacje
-SET 
-    KsiegowanieAdres = @KsiegowanieAdres,
-    NazwaOrganizacjiKsiegowanieDarowizn = @NazwaOrganizacjiKsiegowanieDarowizn,
-    TelOrganProwadzacegoKsiegowosc = @TelOrganProwadzacegoKsiegowosc
-WHERE Teczka = @Teczka;""" {|
-                Teczka = teczkaId
-                KsiegowanieAdres = adresy.KsiegowanieAdres
-                NazwaOrganizacjiKsiegowanieDarowizn = adresy.NazwaOrganizacjiKsiegowanieDarowizn
-                TelOrganProwadzacegoKsiegowosc = adresy.TelOrganProwadzacegoKsiegowosc
-            |}
-    }
-    
 let readMailingListBy (connectDB: unit-> Async<IDbConnection>): MailingList.ReadMailingList =
     fun (searchTerm, filters) ->
         async {
@@ -292,7 +126,7 @@ let readMailingListBy (connectDB: unit-> Async<IDbConnection>): MailingList.Read
             return mails
         }
         
-let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: int64) =
+let readDetailsBy (connectDB: unit -> Async<IDbConnection>) (teczka: int64) =
     async {
         use! db = connectDB()
         let! row = db.Single<OrganizationDetailsRow> "SELECT * FROM organizacje WHERE teczka = @teczka" {|teczka = teczka|}
@@ -306,6 +140,13 @@ let readByEmail (connectDB: unit -> Async<IDbConnection>): OrganizationDetails.R
             let! row = db.Single<OrganizationDetailsRow> "SELECT * FROM organizacje WHERE email = @email" {|email = email|}
             return row.ToReadModel()
         }
+
+let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: Organizations.Domain.Identifiers.TeczkaId) =
+    async {
+        use! db = connectDB()
+        let! row = db.Single<OrganizationDetailsRow> "SELECT * FROM organizacje WHERE teczka = @teczka" {|teczka = teczka |> Organizations.Domain.Identifiers.TeczkaId.unwrap|}
+        return row.ToDomain()
+    }
 
 let private saveOnConnection (dbConnection: IDbConnection) (org: Organization) =
     async {
@@ -403,7 +244,51 @@ let private saveOnConnection (dbConnection: IDbConnection) (org: Organization) =
         @TransportKategoria,
         @Documents::jsonb
     )
-ON CONFLICT DO NOTHING;
+ON CONFLICT (Teczka) DO UPDATE
+    SET
+        IdentyfikatorEnova = @IdentyfikatorEnova,
+        NIP = @NIP,
+        Regon = @Regon,
+        KrsNr = @KrsNr,
+        FormaPrawna = @FormaPrawna,
+        OPP = @OPP,
+        NazwaOrganizacjiPodpisujacejUmowe = @NazwaOrganizacjiPodpisujacejUmowe,
+        AdresRejestrowy = @AdresRejestrowy,
+        NazwaPlacowkiTrafiaZywnosc = @NazwaPlacowkiTrafiaZywnosc,
+        AdresPlacowkiTrafiaZywnosc = @AdresPlacowkiTrafiaZywnosc,
+        GminaDzielnica = @GminaDzielnica,
+        Powiat = @Powiat,
+        NazwaOrganizacjiKsiegowanieDarowizn = @NazwaOrganizacjiKsiegowanieDarowizn,
+        KsiegowanieAdres = @KsiegowanieAdres,
+        TelOrganProwadzacegoKsiegowosc = @TelOrganProwadzacegoKsiegowosc,
+        WwwFacebook = @WwwFacebook,
+        Telefon = @Telefon,
+        Przedstawiciel = @Przedstawiciel,
+        Kontakt = @Kontakt,
+        Email = @Email,
+        Dostepnosc = @Dostepnosc,
+        OsobaDoKontaktu = @OsobaDoKontaktu,
+        TelefonOsobyKontaktowej = @TelefonOsobyKontaktowej,
+        MailOsobyKontaktowej = @MailOsobyKontaktowej,
+        OsobaOdbierajacaZywnosc = @OsobaOdbierajacaZywnosc,
+        TelefonOsobyOdbierajacej = @TelefonOsobyOdbierajacej,
+        LiczbaBeneficjentow = @LiczbaBeneficjentow,
+        Beneficjenci = @Beneficjenci,
+        Sieci = @Sieci,
+        Bazarki = @Bazarki,
+        Machfit = @Machfit,
+        FEPZ2024 = @FEPZ2024,
+        OdbiorKrotkiTermin = @OdbiorKrotkiTermin,
+        TylkoNaszMagazyn = @TylkoNaszMagazyn,
+        Kategoria = @Kategoria,
+        RodzajPomocy = @RodzajPomocy,
+        SposobUdzielaniaPomocy = @SposobUdzielaniaPomocy,
+        WarunkiMagazynowe = @WarunkiMagazynowe,
+        HACCP = @HACCP,
+        Sanepid = @Sanepid,
+        TransportOpis = @TransportOpis,
+        TransportKategoria = @TransportKategoria,
+        Documents = @Documents::jsonb;
     """
     }
     

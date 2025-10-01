@@ -48,6 +48,7 @@
       <Compile Include="Organizations\OrganizationsFileUpload.fs" />
       <Compile Include="Organizations\MailingList.fs" />
       <Compile Include="Organizations\ImportFromExcel.fs" />
+      <Compile Include="Organizations\AuditTrailTests.fs" />
       <Content Include="Organizations\bank.xlsx" />
       <Content Include="Organizations\notExcel.txt" />
       <Content Include="Organizations\doc.pdf" />

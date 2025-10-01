@@ -16,8 +16,8 @@ module FormaPrawna =
         result {
             match formaPrawna with
             | "Organizacja Kościelna" | "PCK" | "Stowarzyszenie zwykłe" ->
-                return { Nazwa = formaPrawna; Rejestracja = Rejestracja.PozaRejestrem krs }
+                return { Nazwa = formaPrawna; Rejestracja = PozaRejestrem krs }
             | _ ->
                 let! krsValue = Krs.create krs
-                return { Nazwa = formaPrawna; Rejestracja = Rejestracja.WRejestrzeKRS krsValue }
+                return { Nazwa = formaPrawna; Rejestracja = WRejestrzeKRS krsValue }
         }

@@ -26,19 +26,37 @@ type Dependencies =
 let build (connectDb: unit -> Async<IDbConnection>, blobServiceClient: BlobServiceClient) : Dependencies =
     { ReadOrganizationSummaries = OrganizationsDao.readSummaries connectDb
       ReadMailingList = OrganizationsDao.readMailingListBy connectDb
-      ReadOrganizationDetailsBy = OrganizationsDao.readBy connectDb
-      ChangeDaneAdresowe = OrganizationsDao.changeDaneAdresowe connectDb
-      ChangeKontakty = OrganizationsDao.changeKontakty connectDb
-      ChangeBeneficjenci = OrganizationsDao.changeBeneficjenci connectDb
+      ReadOrganizationDetailsBy = OrganizationsDao.readDetailsBy connectDb
+      ChangeDaneAdresowe = Handlers.changeDaneAdresowe 
+                        (OrganizationsDao.readBy connectDb)
+                        (OrganizationsDao.save connectDb) 
+                        (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeKontakty = Handlers.changeKontakty 
+                        (OrganizationsDao.readBy connectDb)
+                        (OrganizationsDao.save connectDb) 
+                        (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeBeneficjenci = Handlers.changeBeneficjenci 
+                        (OrganizationsDao.readBy connectDb)
+                        (OrganizationsDao.save connectDb) 
+                        (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
       SaveDocument =
         DocumentHandlers.saveDocumentHandler
             (BlobStorage.upload blobServiceClient)
             (OrganizationsDao.saveDocMetadata connectDb)
       DeleteDocument = BlobStorage.delete blobServiceClient
       GenerateDownloadUri = BlobStorage.generateDownloadUri blobServiceClient
-      ChangeAdresyKsiegowosci = OrganizationsDao.changeAdresyKsiegowosci connectDb
-      ChangeZrodlaZywnosci = OrganizationsDao.changeZrodlaZywnosci connectDb
-      ChangeWarunkiPomocy = OrganizationsDao.changeWarunkiPomocy connectDb
+      ChangeAdresyKsiegowosci = Handlers.changeAdresyKsiegowosci 
+                        (OrganizationsDao.readBy connectDb)
+                        (OrganizationsDao.save connectDb) 
+                        (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeZrodlaZywnosci = Handlers.changeZrodlaZywnosci 
+                        (OrganizationsDao.readBy connectDb)
+                        (OrganizationsDao.save connectDb) 
+                        (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeWarunkiPomocy = Handlers.changeWarunkiPomocy 
+                        (OrganizationsDao.readBy connectDb)
+                        (OrganizationsDao.save connectDb) 
+                        (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
       Import =
         CreateOrganizationCommandHandler.importOrganizations
             ClosedXmlExcelImport.import

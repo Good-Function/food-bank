@@ -7,13 +7,13 @@ open Oxpecker
 let kontakty (readDetailsBy: ReadOrganizationDetailsByEmail) : EndpointHandler =
     fun ctx ->
         task {
-            match ctx.TryGetQueryValue("email") with
+            match ctx.TryGetQueryValue "email" with
             | Some email -> 
                 let! details = readDetailsBy email
-                return! ctx.WriteJson(details.Kontakty)
+                return! ctx.WriteJson details.Kontakty
             | None ->
-                ctx.SetStatusCode(StatusCodes.Status400BadRequest)
-                return! ctx.WriteText("Bad Request, Email is required")
+                ctx.SetStatusCode StatusCodes.Status400BadRequest
+                return! ctx.WriteText "Bad Request, Email is required"
         }
         
 let warunkiPomocy (readDetailsBy: ReadOrganizationDetailsByEmail) : EndpointHandler =
@@ -74,3 +74,4 @@ let Endpoints (dependencies: CompositionRoot.DataApiDependencies) =
             route "/warunki-pomocy" (warunkiPomocy dependencies.ReadOrganizationDetailsByEmail)
           ]
     ]
+   

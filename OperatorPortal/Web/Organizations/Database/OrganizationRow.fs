@@ -1,4 +1,4 @@
-module Web.Organizations.Database.OrganizationRow
+module Organizations.Database.OrganizationRow
 
 open System
 open System.Text.Json
@@ -7,6 +7,12 @@ open Organizations.Application.ReadModels.OrganizationDetails
 open Organizations.Domain.FormaPrawna
 open Organizations.Domain.Identifiers
 open Organizations.Domain.Organization
+
+let getOrThrow (res: Result<'T, 'Error>) : 'T =
+    match res with
+    | Ok v -> v
+    | Error e -> failwith (e.ToString())
+
 
 type Document = {
     Date: DateOnly option
@@ -106,7 +112,71 @@ type OrganizationDetailsRow = {
             Sanepid = org.WarunkiPomocy.Sanepid
             TransportOpis = org.WarunkiPomocy.TransportOpis
             TransportKategoria = org.WarunkiPomocy.TransportKategoria
-            Documents = JsonSerializer.Serialize(org.Dokumenty)
+            Documents = JsonSerializer.Serialize org.Dokumenty
+        }
+    member this.ToDomain(): Organization =
+        {
+            Teczka = TeczkaId.create this.Teczka |> getOrThrow
+            IdentyfikatorEnova = this.IdentyfikatorEnova
+            NIP = Nip.create this.NIP |> getOrThrow
+            Regon = Regon.create this.Regon |> getOrThrow
+            FormaPrawna = FormaPrawna.tryCreate(this.FormaPrawna, this.KrsNr) |> getOrThrow
+            OPP = this.OPP
+            DaneAdresowe = {
+                NazwaOrganizacjiPodpisujacejUmowe = this.NazwaOrganizacjiPodpisujacejUmowe
+                AdresRejestrowy = this.AdresRejestrowy
+                NazwaPlacowkiTrafiaZywnosc = this.NazwaPlacowkiTrafiaZywnosc
+                AdresPlacowkiTrafiaZywnosc = this.AdresPlacowkiTrafiaZywnosc
+                GminaDzielnica = this.GminaDzielnica
+                Powiat = this.Powiat
+            }
+            AdresyKsiegowosci = {
+                NazwaOrganizacjiKsiegowanieDarowizn = this.NazwaOrganizacjiKsiegowanieDarowizn
+                KsiegowanieAdres = this.KsiegowanieAdres
+                TelOrganProwadzacegoKsiegowosc = this.TelOrganProwadzacegoKsiegowosc
+            }
+            Kontakty = {
+                WwwFacebook = this.WwwFacebook
+                Telefon = this.Telefon
+                Przedstawiciel = this.Przedstawiciel
+                Kontakt = this.Kontakt
+                Email = this.Email
+                Dostepnosc = this.Dostepnosc
+                OsobaDoKontaktu = this.OsobaDoKontaktu
+                TelefonOsobyKontaktowej = this.TelefonOsobyKontaktowej
+                MailOsobyKontaktowej = this.MailOsobyKontaktowej
+                OsobaOdbierajacaZywnosc = this.OsobaOdbierajacaZywnosc
+                TelefonOsobyOdbierajacej = this.TelefonOsobyOdbierajacej
+            }
+            WarunkiPomocy = {
+                SposobUdzielaniaPomocy = this.SposobUdzielaniaPomocy
+                WarunkiMagazynowe = this.WarunkiMagazynowe
+                HACCP = this.HACCP
+                Sanepid = this.Sanepid
+                TransportOpis = this.TransportOpis
+                Kategoria = this.Kategoria
+                RodzajPomocy = this.RodzajPomocy
+                TransportKategoria = this.TransportKategoria
+            }
+            ZrodlaZywnosci = {
+                Sieci = this.Sieci
+                Bazarki = this.Bazarki
+                Machfit = this.Machfit
+                FEPZ2024 = this.FEPZ2024
+                OdbiorKrotkiTermin = this.OdbiorKrotkiTermin
+                TylkoNaszMagazyn = this.TylkoNaszMagazyn
+            }
+            Beneficjenci = {
+                LiczbaBeneficjentow = this.LiczbaBeneficjentow
+                Beneficjenci = this.Beneficjenci
+            }
+            Dokumenty = JsonSerializer.Deserialize<Documents>(this.Documents) |> fun docs -> {
+                Wniosek = docs.Wniosek
+                Umowa = docs.Umowa
+                Rodo = docs.Rodo
+                Odwiedziny = docs.Odwiedziny
+                UpowaznienieDoOdbioru = docs.UpowaznienieDoOdbioru
+            }
         }
     member this.ToReadModel (): OrganizationDetails =
         {

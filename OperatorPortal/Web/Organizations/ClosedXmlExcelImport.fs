@@ -98,8 +98,8 @@ let mapRow (row: IXLRow): Result<Organization, string list> =
     let parseColumn (col: int) (parse: string -> Result<'T, 'E>): Result<'T, string> =
         let textValue = getCellText col row
         parse textValue |> Result.mapError(fun _ -> $"""Niepoprawna wartość: "%s{textValue}" w kolumnie [%s{expectedHeaders[col-1]}].""")
-    let formaPrawna = (getCellText 6 row)
-    let krs = (getCellText 5 row)
+    let formaPrawna = getCellText 6 row
+    let krs = getCellText 5 row
     let parsedColumns = validation {
         let! teczkaId = parseColumn 1 TeczkaId.parse
         and! nip = parseColumn 3 Nip.create

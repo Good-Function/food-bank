@@ -9,6 +9,7 @@ type Setup() =
     do
         let postgres =
             PostgreSqlBuilder()
+                .WithImage("postgres:17") 
                 .WithReuse(true)
                 .WithName("foodbank_db")
                 .WithEnvironment("POSTGRES_USER", "postgres")

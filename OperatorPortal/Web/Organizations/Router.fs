@@ -100,7 +100,7 @@ let mailingList (readMailingList: ReadMailingList): EndpointHandler =
 let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = Permissions.permissionsMap[ctx.UserRole]
             let username = ctx.UserName
             let! details = readDetailsBy id
             return
@@ -123,10 +123,10 @@ let upload (import: CreateOrganizationCommandHandler.Import): EndpointHandler =
             match! import (file.OpenReadStream()) with
             | Ok output -> return! ctx.WriteHtmlView (ImportExcelResultTemplate.Template output)
             | Error err ->
-                ctx.SetStatusCode(StatusCodes.Status400BadRequest)
+                ctx.SetStatusCode StatusCodes.Status400BadRequest
                 return! ctx.WriteHtmlView (ImportExcelTemplate.Upload (Some $"%A{err}"))
         | None ->
-            ctx.SetStatusCode(StatusCodes.Status400BadRequest)
+            ctx.SetStatusCode StatusCodes.Status400BadRequest
             return! ctx.WriteHtmlView (ImportExcelTemplate.Upload (Some "Niepoprawny plik excel (.xlsx)"))
     }
 

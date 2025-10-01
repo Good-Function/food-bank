@@ -7,12 +7,28 @@ type TeczkaIdError = InvalidTeczkaId
 type KrsError = InvalidKrs
 type RegonError = InvalidRegon
 type NipError = InvalidNip
+type InvalidEmail = InvalidEmail of string
 
 type NotEmptyString = private NotEmptyString of string
 type TeczkaId = private TeczkaId of int64
 type Krs = private Krs of string
+type Email = private Email of string
 type Regon = private Regon of string
 type Nip = private Nip of string
+
+module Email =
+    open System.Text.RegularExpressions
+
+    let create (input: string) =
+        let trimmed = input.Trim()
+        let emailRegex = @"^[^\s@]+@[^\s@]+\.[^\s@]+$"
+
+        if String.IsNullOrWhiteSpace trimmed || not (Regex.IsMatch(trimmed, emailRegex)) then
+            Error (InvalidEmail input)
+        else
+            Ok(Email trimmed)
+
+    let unwrap (Email s) = s
 
 module Regon =
     let create (input: string) =
