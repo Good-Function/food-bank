@@ -25,7 +25,7 @@ let ``Audit Trail diff finds fields which value differs and dao can persist the 
 
         let auditTrail: AuditTrail =
             { Who = "marcin"
-              OccuredAt = DateTime.Now
+              OccuredAt =DateTime.UtcNow
               Kind = "Test"
               EntityId = 100
               Diff = findDiff oldValue newValue }

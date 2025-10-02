@@ -32,7 +32,7 @@ let changeDaneAdresowe (handle: Handlers.ChangeDaneAdresowe) (teczka: int64) :En
         task {
             let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.DaneAdresowe>()
-            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.Now}, cmd)
+            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.UtcNow}, cmd)
             return ctx.WriteHtmlView(DaneAdresowe.View (cmd |> DaneAdresowe.FromCommand) teczka permissions)
         }
 
@@ -56,7 +56,7 @@ let changeKontakty (handle: Handlers.ChangeKontakty) (teczka: int64) :EndpointHa
         task {
             let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.Kontakty>()
-            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.Now}, cmd)
+            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.UtcNow}, cmd)
             return ctx.WriteHtmlView(Kontakty.View (cmd |> Kontakty.FromCommand) teczka permissions)
         }
         
@@ -80,7 +80,7 @@ let changeBeneficjenci (handle: Handlers.ChangeBeneficjenci) (teczka: int64) :En
         task {
             let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.Beneficjenci>()
-            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.Now}, cmd)
+            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.UtcNow}, cmd)
             return ctx.WriteHtmlView(Beneficjenci.View (cmd |> Beneficjenci.FromCommand) teczka permissions)
         }
         
@@ -195,7 +195,7 @@ let changeZrodlaZywnosci (handle: Handlers.ChangeZrodlaZywnosci) (teczka: int64)
         task {
             let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.ZrodlaZywnosci>()
-            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.Now}, cmd)
+            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.UtcNow}, cmd)
             return ctx.WriteHtmlView(ZrodlaZywnosci.View (cmd |> ZrodlaZywnosci.FromCommand) teczka permissions)
         }
         
@@ -219,7 +219,7 @@ let changeAdresyKsiegowosci (handle: Handlers.ChangeAdresyKsiegowosci) (teczka: 
         task {
             let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.AdresyKsiegowosci>()
-            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.Now}, cmd)
+            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.UtcNow}, cmd)
             return ctx.WriteHtmlView(AdresyKsiegowosci.View (cmd |> AdresyKsiegowosci.FromCommand) teczka permissions)
         }
      
@@ -243,7 +243,7 @@ let changeWarunkiPomocy (handle: Handlers.ChangeWarunkiPomocy) (teczka: int64): 
         task {
             let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.WarunkiPomocy>()
-            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.Now}, cmd)
+            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.UtcNow}, cmd)
             return ctx.WriteHtmlView(WarunkiPomocy.View (cmd |> WarunkiPomocy.FromCommand) teczka permissions)
         }
 

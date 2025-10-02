@@ -2,5 +2,18 @@
     "FSharp.inlayHints.parameterNames": false,
     "[fsharp]": {
         "editor.inlayHints.enabled": "off"
-    }
+    },
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "foodbank",
+            "database": "food_bank",
+            "username": "postgres",
+            "password": "Strong!Passw0rd"
+        }
+    ]
 }
