@@ -21,6 +21,7 @@
       <PackageReference Include="Thoth.Json.Net" Version="12.0.0" />
     </ItemGroup>
     <ItemGroup>
+      <Compile Include="Transaction.fs" />
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
@@ -78,6 +79,8 @@
       <Compile Include="Organizations\Domain\Identifiers.fs" />
       <Compile Include="Organizations\Domain\FormaPrawna.fs" />
       <Compile Include="Organizations\Domain\Organization.fs" />
+      <Compile Include="Organizations\Application\Audit.fs" />
+      <Compile Include="Organizations\Application\FindDiffForAudit.fs" />
       <Compile Include="Organizations\Application\DocumentType.fs" />
       <Compile Include="Organizations\Application\Commands.fs" />
       <Compile Include="Organizations\Application\CommandHandlers\Handlers.fs" />
@@ -92,12 +95,16 @@
       <Content Include="Organizations\Database\migrations.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <Content Include="Organizations\Database\audit_trail_migrations.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Content Include="Organizations\Database\sample.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Compile Include="Organizations\Database\DateOnlyCoder.fs" />
       <Compile Include="Organizations\Database\OrganizationRow.fs" />
       <Compile Include="Organizations\Database\OrganizationsDao.fs" />
+      <Compile Include="Organizations\Database\AuditTrailDao.fs" />
       <Compile Include="Organizations\Templates\Formatters.fs" />
       <Compile Include="Organizations\Templates\PageComposer.fs" />
       <Compile Include="Organizations\Templates\DaneAdresowe.fs" />

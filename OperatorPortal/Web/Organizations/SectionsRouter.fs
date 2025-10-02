@@ -1,11 +1,13 @@
 module Organizations.SectionsRouter
 
+open System
 open HttpContextExtensions
 open Microsoft.AspNetCore.Http
 open Organizations.Application
 open Organizations.Application.DocumentType
 open Organizations.Templates
 open Oxpecker
+open FsToolkit.ErrorHandling
 open Organizations.Application.ReadModels.OrganizationDetails
 open Organizations.CompositionRoot
 open Permissions
@@ -13,7 +15,7 @@ open Permissions
 let daneAdresowe (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! details = readDetailsBy teczka
             return ctx.WriteHtmlView(DaneAdresowe.View details.DaneAdresowe teczka permissions)
         }
@@ -28,16 +30,16 @@ let daneAdresoweEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) 
 let changeDaneAdresowe (handle: Handlers.ChangeDaneAdresowe) (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.DaneAdresowe>()
-            do! handle(teczka, cmd)
+            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.UtcNow}, cmd)
             return ctx.WriteHtmlView(DaneAdresowe.View (cmd |> DaneAdresowe.FromCommand) teczka permissions)
         }
 
 let kontakty (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! details = readDetailsBy teczka
             return ctx.WriteHtmlView(Kontakty.View details.Kontakty teczka permissions)
         }
@@ -52,16 +54,16 @@ let kontaktyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : En
 let changeKontakty (handle: Handlers.ChangeKontakty) (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.Kontakty>()
-            do! handle(teczka, cmd)
+            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.UtcNow}, cmd)
             return ctx.WriteHtmlView(Kontakty.View (cmd |> Kontakty.FromCommand) teczka permissions)
         }
         
 let beneficjenci (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! details = readDetailsBy teczka
             return ctx.WriteHtmlView(Beneficjenci.View details.Beneficjenci teczka permissions)
         }
@@ -76,16 +78,16 @@ let beneficjenciEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) 
 let changeBeneficjenci (handle: Handlers.ChangeBeneficjenci) (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.Beneficjenci>()
-            do! handle(teczka, cmd)
+            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.UtcNow}, cmd)
             return ctx.WriteHtmlView(Beneficjenci.View (cmd |> Beneficjenci.FromCommand) teczka permissions)
         }
         
 let dokumenty (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! details = readDetailsBy teczka
             return ctx.WriteHtmlView(Dokumenty.View details.Dokumenty teczka permissions)
         }
@@ -111,7 +113,7 @@ let changeDokumenty (saveDocument: DocumentHandlers.SaveFile)
                     (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.Dokumenty>()
             let readFile = readFileByType ctx
             let wniosek, wniosekFileName = readFile Wniosek cmd.Wniosek       
@@ -176,7 +178,7 @@ let changeDokumenty (saveDocument: DocumentHandlers.SaveFile)
 let zrodlaZywnosci (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! details = readDetailsBy teczka
             return ctx.WriteHtmlView(ZrodlaZywnosci.View details.ZrodlaZywnosci teczka permissions)
         }
@@ -191,16 +193,16 @@ let zrodlaZywnosciEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64
 let changeZrodlaZywnosci (handle: Handlers.ChangeZrodlaZywnosci) (teczka: int64) :EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.ZrodlaZywnosci>()
-            do! handle(teczka, cmd)
+            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.UtcNow}, cmd)
             return ctx.WriteHtmlView(ZrodlaZywnosci.View (cmd |> ZrodlaZywnosci.FromCommand) teczka permissions)
         }
         
 let adresyKsiegowosci (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64): EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! details = readDetailsBy teczka
             return ctx.WriteHtmlView(AdresyKsiegowosci.View details.AdresyKsiegowosci teczka permissions)
         }
@@ -215,16 +217,16 @@ let adresyKsiegowosciEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: in
 let changeAdresyKsiegowosci (handle: Handlers.ChangeAdresyKsiegowosci) (teczka: int64): EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.AdresyKsiegowosci>()
-            do! handle(teczka, cmd)
+            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.UtcNow}, cmd)
             return ctx.WriteHtmlView(AdresyKsiegowosci.View (cmd |> AdresyKsiegowosci.FromCommand) teczka permissions)
         }
      
 let warunkiPomocy (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64): EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! details = readDetailsBy teczka
             return ctx.WriteHtmlView(WarunkiPomocy.View details.WarunkiPomocy teczka permissions)
         }
@@ -239,9 +241,9 @@ let warunkiPomocyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64)
 let changeWarunkiPomocy (handle: Handlers.ChangeWarunkiPomocy) (teczka: int64): EndpointHandler =
     fun ctx ->
         task {
-            let permissions = Permissions.byRole[ctx.UserRole]
+            let permissions = permissionsMap[ctx.UserRole]
             let! cmd = ctx.BindForm<Commands.WarunkiPomocy>()
-            do! handle(teczka, cmd)
+            let! _ = handle(teczka, {Who = ctx.UserName; OccuredAt = DateTime.UtcNow}, cmd)
             return ctx.WriteHtmlView(WarunkiPomocy.View (cmd |> WarunkiPomocy.FromCommand) teczka permissions)
         }
 
