@@ -14,6 +14,11 @@ import (
 
 type UserContextKey struct{}
 
+type SessionData struct {
+	Email string
+	OrgID *int64
+}
+
 type SessionManager struct {
 	cookieCodec *securecookie.SecureCookie
 	authConfig  *oauth2.Config
@@ -75,8 +80,12 @@ func (s *SessionManager) AuthProviderUrl(w http.ResponseWriter) string {
 	return s.authConfig.AuthCodeURL(state)
 }
 
-func (s *SessionManager) WriteSession(w http.ResponseWriter, email string) error {
-	encoded, err := s.cookieCodec.Encode("session", email)
+func (s *SessionManager) WriteSession(w http.ResponseWriter, email string, orgId *int64) error {
+	data := SessionData{
+		Email: email,
+		OrgID: orgId,
+	}
+	encoded, err := s.cookieCodec.Encode("session", data)
 	if err != nil {
 		return err
 	}
@@ -93,16 +102,16 @@ func (s *SessionManager) WriteSession(w http.ResponseWriter, email string) error
 	return nil
 }
 
-func (s *SessionManager) ReadSession(r *http.Request) (string, error) {
+func (s *SessionManager) ReadSession(r *http.Request) (*SessionData, error) {
 	cookie, err := r.Cookie("session")
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	var email string
-	if err := s.cookieCodec.Decode("session", cookie.Value, &email); err != nil {
-		return "", err
+	var data SessionData
+	if err := s.cookieCodec.Decode("session", cookie.Value, &data); err != nil {
+		return nil, err
 	}
 
-	return email, nil
+	return &data, nil
 }

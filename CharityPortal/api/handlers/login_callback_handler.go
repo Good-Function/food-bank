@@ -9,6 +9,11 @@ import (
 	"github.com/coreos/go-oidc/v3/oidc"
 )
 
+func LookupOrCreateOrgIDByEmail(email string) (*int64, error) {
+    orgID := int64(105) 
+    return &orgID, nil
+}
+
 type LoginCallbackHandler struct {
 	verifier       *oidc.IDTokenVerifier
 	sessionManager *auth.SessionManager
@@ -57,6 +62,12 @@ func (lh *LoginCallbackHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	_ = lh.sessionManager.WriteSession(w, claims.Email)
+	orgID, err := LookupOrCreateOrgIDByEmail(claims.Email)
+	if err != nil {
+		http.Error(w, "Failed to resolve organization", http.StatusInternalServerError)
+		return
+	}
+
+	_ = lh.sessionManager.WriteSession(w, claims.Email, orgID)
 	http.Redirect(w, r, "/dashboard", http.StatusFound)
 }

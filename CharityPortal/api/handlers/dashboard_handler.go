@@ -3,6 +3,7 @@ package handlers
 import (
 	"charity_portal/internal/auth"
 	"charity_portal/web/views"
+	"fmt"
 	"net/http"
 )
 
@@ -13,6 +14,10 @@ func NewDashboardHandler() *DashboardHandler {
 }
 
 func (ph *DashboardHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	email := r.Context().Value(auth.UserContextKey{}).(string)
-	views.Base(views.Dashboard(), email).Render(r.Context(), w)
+	session := r.Context().Value(auth.UserContextKey{}).(*auth.SessionData)
+	orgId := "None"
+	if(session.OrgID != nil) {
+		orgId = fmt.Sprintf("%d", *session.OrgID)
+	}
+	views.Base(views.Dashboard(), session.Email + orgId).Render(r.Context(), w)
 }
