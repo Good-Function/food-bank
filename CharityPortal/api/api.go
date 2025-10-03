@@ -4,6 +4,8 @@ import (
 	"charity_portal/api/handlers"
 	"charity_portal/api/middlewares"
 	charity "charity_portal/charity_update"
+	"charity_portal/charity_update/adapters"
+	"charity_portal/charity_update/queries"
 	"charity_portal/config"
 	"charity_portal/internal/auth"
 	dataconfirmation "charity_portal/internal/data_confirmation"
@@ -59,8 +61,14 @@ func NewAPI(cfg *config.Config) (*API, error) {
 	} else {
 		protect = middlewares.BuildProtect(sessionManager.ReadSession)
 	}
+	var callOperator adapters.CallOperator
+	if cfg.CharityUpdate.MockOperatorApi {
+		callOperator = adapters.CallOperatorMock
+	} else {
+		callOperator = adapters.MakeCallOperator(cfg.CharityUpdate.OperatorApiClientId, cfg.CharityUpdate.OperatorApiBaseUrl)
+	}
 	charityRouter := protect(charity.CreateRouter(charity.Compose(*cfg.CharityUpdate)).ServeHTTP)
-	router := newRouter(tokenVerifier, sessionManager, protect, &charityRouter)
+	router := newRouter(tokenVerifier, sessionManager, protect, &charityRouter, adapters.MakeReadOrganizationInfoBeEmail(callOperator))
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: router,
@@ -76,6 +84,7 @@ func newRouter(
 	sessionManager *auth.SessionManager,
 	protect func(next http.HandlerFunc) http.HandlerFunc,
 	charityRouter *http.HandlerFunc,
+	readOrgInfo queries.ReadOrganizationIdByEmail,
 ) http.Handler {
 	mux := http.NewServeMux()
 
@@ -84,7 +93,7 @@ func newRouter(
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.Handle("/",  protect(handlers.NewDashboardHandler().ServeHTTP))
 	mux.Handle("GET /login", handlers.LoginHandler(sessionManager))
-	mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(tokenVerifier, sessionManager))
+	mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(tokenVerifier, sessionManager, readOrgInfo))
 	mux.Handle("GET /dashboard", protect(handlers.NewDashboardHandler().ServeHTTP))
 	mux.Handle("POST /logout", handlers.NewLogoutHandler())
 	mux.Handle("POST /data-confirmation", protect(handlers.NewDataConfirmationHandler(dataConfirmationService).ServeHTTP))

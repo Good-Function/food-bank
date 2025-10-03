@@ -20,7 +20,7 @@ var MockKontakty = queries.Kontakty {
 }
 
 
-var CallOperatorMock CallOperator = func(method, url string, out any) error {
+var CallOperatorMock CallOperator = func(method, url string, in any, out any) error {
 	switch v := out.(type) {
 	case *queries.Kontakty:
 		*v = MockKontakty

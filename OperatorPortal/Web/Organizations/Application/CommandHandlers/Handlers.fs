@@ -40,7 +40,7 @@ let changeWarunkiPomocy
             do! track {
                 Who = audit.Who
                 OccuredAt = audit.OccuredAt
-                Kind = "Kontakty"
+                Kind = "WarunkiPomocy"
                 Diff = findDiff organization.WarunkiPomocy updatedOrg.WarunkiPomocy
                 EntityId = id
             }
@@ -148,7 +148,7 @@ let changeZrodlaZywnosci
             do! track {
                 Who = audit.Who
                 OccuredAt = audit.OccuredAt
-                Kind = "DaneAdresowe"
+                Kind = "ZrodlaZywnosci"
                 Diff = findDiff organization.ZrodlaZywnosci updatedOrg.ZrodlaZywnosci
                 EntityId = id
             }

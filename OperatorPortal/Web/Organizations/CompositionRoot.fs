@@ -27,43 +27,89 @@ let build (connectDb: unit -> Async<IDbConnection>, blobServiceClient: BlobServi
     { ReadOrganizationSummaries = OrganizationsDao.readSummaries connectDb
       ReadMailingList = OrganizationsDao.readMailingListBy connectDb
       ReadOrganizationDetailsBy = OrganizationsDao.readDetailsBy connectDb
-      ChangeDaneAdresowe = Handlers.changeDaneAdresowe 
-                        (OrganizationsDao.readBy connectDb)
-                        (OrganizationsDao.save connectDb) 
-                        (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
-      ChangeKontakty = Handlers.changeKontakty 
-                        (OrganizationsDao.readBy connectDb)
-                        (OrganizationsDao.save connectDb) 
-                        (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
-      ChangeBeneficjenci = Handlers.changeBeneficjenci 
-                        (OrganizationsDao.readBy connectDb)
-                        (OrganizationsDao.save connectDb) 
-                        (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeDaneAdresowe =
+        Handlers.changeDaneAdresowe
+            (OrganizationsDao.readBy connectDb)
+            (OrganizationsDao.save connectDb)
+            (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeKontakty =
+        Handlers.changeKontakty
+            (OrganizationsDao.readBy connectDb)
+            (OrganizationsDao.save connectDb)
+            (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeBeneficjenci =
+        Handlers.changeBeneficjenci
+            (OrganizationsDao.readBy connectDb)
+            (OrganizationsDao.save connectDb)
+            (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeAdresyKsiegowosci =
+        Handlers.changeAdresyKsiegowosci
+            (OrganizationsDao.readBy connectDb)
+            (OrganizationsDao.save connectDb)
+            (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeZrodlaZywnosci =
+        Handlers.changeZrodlaZywnosci
+            (OrganizationsDao.readBy connectDb)
+            (OrganizationsDao.save connectDb)
+            (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeWarunkiPomocy =
+        Handlers.changeWarunkiPomocy
+            (OrganizationsDao.readBy connectDb)
+            (OrganizationsDao.save connectDb)
+            (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
       SaveDocument =
         DocumentHandlers.saveDocumentHandler
             (BlobStorage.upload blobServiceClient)
             (OrganizationsDao.saveDocMetadata connectDb)
       DeleteDocument = BlobStorage.delete blobServiceClient
       GenerateDownloadUri = BlobStorage.generateDownloadUri blobServiceClient
-      ChangeAdresyKsiegowosci = Handlers.changeAdresyKsiegowosci 
-                        (OrganizationsDao.readBy connectDb)
-                        (OrganizationsDao.save connectDb) 
-                        (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
-      ChangeZrodlaZywnosci = Handlers.changeZrodlaZywnosci 
-                        (OrganizationsDao.readBy connectDb)
-                        (OrganizationsDao.save connectDb) 
-                        (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
-      ChangeWarunkiPomocy = Handlers.changeWarunkiPomocy 
-                        (OrganizationsDao.readBy connectDb)
-                        (OrganizationsDao.save connectDb) 
-                        (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
       Import =
         CreateOrganizationCommandHandler.importOrganizations
             ClosedXmlExcelImport.import
             (OrganizationsDao.saveMany connectDb) }
 
 type DataApiDependencies =
-    { ReadOrganizationDetailsByEmail: ReadOrganizationDetailsByEmail }
+    { ReadOrganizationDetailsByEmail: ReadOrganizationDetailsByEmail
+      ReadOrganizationDetailsBy: ReadOrganizationDetailsBy
+      ChangeDaneAdresowe: Handlers.ChangeDaneAdresowe
+      ChangeKontakty: Handlers.ChangeKontakty
+      ChangeBeneficjenci: Handlers.ChangeBeneficjenci
+      ChangeAdresyKsiegowosci: Handlers.ChangeAdresyKsiegowosci
+      ChangeZrodlaZywnosci: Handlers.ChangeZrodlaZywnosci
+      ChangeWarunkiPomocy: Handlers.ChangeWarunkiPomocy }
 
 let buildDataApi (connectDb: unit -> Async<IDbConnection>) : DataApiDependencies =
-    { ReadOrganizationDetailsByEmail = OrganizationsDao.readByEmail connectDb }
+    { ReadOrganizationDetailsByEmail = OrganizationsDao.readByEmail connectDb
+      ReadOrganizationDetailsBy = OrganizationsDao.readDetailsBy connectDb
+      ChangeDaneAdresowe =
+        Handlers.changeDaneAdresowe
+            (OrganizationsDao.readBy connectDb)
+            (OrganizationsDao.save connectDb)
+            (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeKontakty =
+        Handlers.changeKontakty
+            (OrganizationsDao.readBy connectDb)
+            (OrganizationsDao.save connectDb)
+            (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeBeneficjenci =
+        Handlers.changeBeneficjenci
+            (OrganizationsDao.readBy connectDb)
+            (OrganizationsDao.save connectDb)
+            (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeAdresyKsiegowosci =
+        Handlers.changeAdresyKsiegowosci
+            (OrganizationsDao.readBy connectDb)
+            (OrganizationsDao.save connectDb)
+            (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeZrodlaZywnosci =
+        Handlers.changeZrodlaZywnosci
+            (OrganizationsDao.readBy connectDb)
+            (OrganizationsDao.save connectDb)
+            (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+      ChangeWarunkiPomocy =
+        Handlers.changeWarunkiPomocy
+            (OrganizationsDao.readBy connectDb)
+            (OrganizationsDao.save connectDb)
+            (AuditTrailDao.AuditTrailDao(connectDb).SaveAuditTrail)
+
+    }

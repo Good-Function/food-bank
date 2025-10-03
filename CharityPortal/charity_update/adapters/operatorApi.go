@@ -14,7 +14,7 @@ import (
 )
 
 
-type CallOperator = func(method, url string, out any) error
+type CallOperator = func(method, url string, in any, out any) error
 
 func AuthenticateForJwt(operatorApiClientId string) (*string, error) {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
@@ -31,7 +31,7 @@ func AuthenticateForJwt(operatorApiClientId string) (*string, error) {
 }
 
 func MakeCallOperator(operatorApiClientId, baseUrl string) CallOperator {
-	return func(method, url string, out any) error {
+	return func(method, url string, in any, out any) error {
 		token := "" 
 		if !strings.Contains(baseUrl, "localhost") {
 			tokenPtr, err := AuthenticateForJwt(operatorApiClientId)
@@ -42,8 +42,16 @@ func MakeCallOperator(operatorApiClientId, baseUrl string) CallOperator {
 				token = *tokenPtr
 			}
 		}
+		var reqBody io.Reader
+		if in != nil {
+			jsonData, err := json.Marshal(in)
+			if err != nil {
+				return fmt.Errorf("failed to marshal request body: %w", err)
+			}
+			reqBody = strings.NewReader(string(jsonData))
+		}
 		client := &http.Client{}
-		req, err := http.NewRequest(method, baseUrl + url, nil)
+		req, err := http.NewRequest(method, baseUrl + url, reqBody)
 		if err != nil {
 			return fmt.Errorf("failed to create request: %w", err)
 		}

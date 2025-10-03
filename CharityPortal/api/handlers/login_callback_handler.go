@@ -4,26 +4,24 @@ import (
 	"log/slog"
 	"net/http"
 
+	"charity_portal/charity_update/queries"
 	"charity_portal/internal/auth"
 
 	"github.com/coreos/go-oidc/v3/oidc"
 )
 
-func LookupOrCreateOrgIDByEmail(email string) (*int64, error) {
-    orgID := int64(105) 
-    return &orgID, nil
-}
-
 type LoginCallbackHandler struct {
 	verifier       *oidc.IDTokenVerifier
 	sessionManager *auth.SessionManager
+	readOrgId queries.ReadOrganizationIdByEmail
 }
 
 func NewLoginCallbackHandler(
 	verifier *oidc.IDTokenVerifier,
 	sessionManager *auth.SessionManager,
+	readOrgId queries.ReadOrganizationIdByEmail,
 ) *LoginCallbackHandler {
-	return &LoginCallbackHandler{verifier, sessionManager}
+	return &LoginCallbackHandler{verifier, sessionManager, readOrgId}
 }
 
 func (lh *LoginCallbackHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -62,12 +60,12 @@ func (lh *LoginCallbackHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	orgID, err := LookupOrCreateOrgIDByEmail(claims.Email)
+	orgInfo, err := lh.readOrgId(ctx, claims.Email)
 	if err != nil {
 		http.Error(w, "Failed to resolve organization", http.StatusInternalServerError)
 		return
 	}
 
-	_ = lh.sessionManager.WriteSession(w, claims.Email, orgID)
+	_ = lh.sessionManager.WriteSession(w, claims.Email, orgInfo.Id)
 	http.Redirect(w, r, "/dashboard", http.StatusFound)
 }

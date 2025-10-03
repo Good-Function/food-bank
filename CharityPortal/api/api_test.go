@@ -10,7 +10,7 @@ import (
 )
 
 func TestRegisteredRoutes(t *testing.T) {
-	router := newRouter(nil, nil, middlewares.ProtectFake, nil)
+	router := newRouter(nil, nil, middlewares.ProtectFake, nil, nil)
 	if router == nil {
 		assert.Fail(t, "Router should not be nil")
 	}

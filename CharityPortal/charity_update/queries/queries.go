@@ -16,5 +16,11 @@ type Kontakty struct {
     TelefonOsobyOdbierajacej  string `json:"telefonOsobyOdbierajacej"`
 }
 
+type OrgInfo struct {
+    Id                         *int64  `json:"id"`
+    Name                       string `json:"name"`
+}
 
-type ReadKontaktyBy func(context.Context, string) (Kontakty, error)
+
+type ReadKontaktyBy func(context.Context, int64) (Kontakty, error)
+type ReadOrganizationIdByEmail func(context.Context, string) (OrgInfo, error)

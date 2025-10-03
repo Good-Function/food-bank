@@ -3,6 +3,7 @@ package charityupdate
 import (
 	"charity_portal/charity_update/adapters"
 	"charity_portal/charity_update/queries"
+	"charity_portal/internal/auth"
 	"charity_portal/web/views"
 	"fmt"
 	"log/slog"
@@ -28,7 +29,12 @@ func Compose(config Config) *dependencies {
 
 func welcomeHandler(readDaneKontaktoweBy queries.ReadKontaktyBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		charity, err := readDaneKontaktoweBy(r.Context(), "domopieki2@poczta.onet.pl")
+		session := r.Context().Value(auth.UserContextKey{}).(*auth.SessionData)
+		if session == nil || session.OrgID == nil {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+		charity, err := readDaneKontaktoweBy(r.Context(), *session.OrgID)
 		if err != nil {
 			slog.Error("Can't read organization", "err", err)
 		}

@@ -15,12 +15,12 @@ func NewAuthenticatedRouter() http.Handler {
 		}
 		return &sessionData, nil
 	}
-	return newRouter(nil, nil, middlewares.BuildProtect(readSession), nil)
+	return newRouter(nil, nil, middlewares.BuildProtect(readSession), nil, nil)
 }
 
 func NewUnauthenticatedRouter() http.Handler {
 	readSession := func(r *http.Request) (*auth.SessionData, error) {
 		return nil, fmt.Errorf("ała")
 	}
-	return newRouter(nil, nil, middlewares.BuildProtect(readSession), nil)
+	return newRouter(nil, nil, middlewares.BuildProtect(readSession), nil, nil)
 }
