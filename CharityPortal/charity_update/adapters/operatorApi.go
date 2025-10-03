@@ -56,6 +56,9 @@ func MakeCallOperator(operatorApiClientId, baseUrl string) CallOperator {
 			return fmt.Errorf("failed to create request: %w", err)
 		}
 		req.Header.Add("Authorization", "Bearer "+token)
+		if in != nil {
+			req.Header.Add("Content-Type", "application/json")
+		}
 
 		resp, err := client.Do(req)
 		if err != nil {

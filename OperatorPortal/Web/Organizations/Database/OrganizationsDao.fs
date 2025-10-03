@@ -137,8 +137,8 @@ let readByEmail (connectDB: unit -> Async<IDbConnection>): OrganizationDetails.R
     fun email ->
         async {
             use! db = connectDB()
-            let! row = db.Single<OrganizationDetailsRow> "SELECT * FROM organizacje WHERE email = @email" {|email = email|}
-            return row.ToReadModel()
+            let! row = db.trySingle<OrganizationDetailsRow> "SELECT * FROM organizacje WHERE email = @email" {|email = email|}
+            return row |> Option.map _.ToReadModel()
         }
 
 let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: Organizations.Domain.Identifiers.TeczkaId) =

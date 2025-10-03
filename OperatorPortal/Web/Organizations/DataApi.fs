@@ -52,8 +52,9 @@ let lookup (readDetailsBy: ReadOrganizationDetailsByEmail) : EndpointHandler =
     fun ctx ->
         task {
              let! body = ctx.BindJson<{|email: string|}>()
-             let! details = readDetailsBy body.email
-             return! ctx.WriteJson {| id = details.Teczka; name = details.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc |}
+             match! readDetailsBy body.email with
+             | Some org -> return! ctx.WriteJson {| id = org.Teczka; name = org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc |}
+             | None -> return! ctx.WriteJson {| id = null; name = null |}
         }
         
 let changeDaneAdresowe (handle: Handlers.ChangeDaneAdresowe) (teczka: int64): EndpointHandler =
