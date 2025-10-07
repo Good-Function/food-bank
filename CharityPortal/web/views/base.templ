@@ -14,18 +14,9 @@ templ Base(body templ.Component, email string) {
 		<body class="container">
 			<header
 				class="container"
-				style="display: flex; justify-content: space-between; align-items: center"
-			>
-				<div style="flex: 1;"></div>
-				<div style="flex: 1; text-align: center;">
+				style="text-align:center">
 					<img src="/static/bzsoslogo.png" alt="Logo" style="width: 175px;"/>
-				</div>
-				<div style="flex: 1; text-align: right;">
-					<small>{ email }</small>
-					<button class="small-button" hx-post="/logout" hx-target="body">Wyloguj</button>
-				</div>
 			</header>
-			<hr/>
 			<div style="display: flex; align-items: center; justify-content: center;">
 				@body
 			</div>

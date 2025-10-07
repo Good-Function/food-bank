@@ -29,20 +29,7 @@ func Base(body templ.Component, email string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html data-theme=\"light\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta name=\"color-scheme\" content=\"light dark\"><meta name=\"htmx-config\" content='{\"responseHandling\": [{\"code\":\".*\", \"swap\": true}]}'><script src=\"/static/htmx.min.js\" hx-preserve=\"true\"></script><link href=\"/static/pico.pumpkin.min.css\" rel=\"stylesheet\" hx-preserve=\"true\"><link href=\"/static/styles.css\" rel=\"stylesheet\" hx-preserve=\"true\"></head><body class=\"container\"><header class=\"container\" style=\"display: flex; justify-content: space-between; align-items: center\"><div style=\"flex: 1;\"></div><div style=\"flex: 1; text-align: center;\"><img src=\"/static/bzsoslogo.png\" alt=\"Logo\" style=\"width: 175px;\"></div><div style=\"flex: 1; text-align: right;\"><small>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(email)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/base.templ`, Line: 24, Col: 19}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</small> <button class=\"small-button\" hx-post=\"/logout\" hx-target=\"body\">Wyloguj</button></div></header><hr><div style=\"display: flex; align-items: center; justify-content: center;\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html data-theme=\"light\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta name=\"color-scheme\" content=\"light dark\"><meta name=\"htmx-config\" content='{\"responseHandling\": [{\"code\":\".*\", \"swap\": true}]}'><script src=\"/static/htmx.min.js\" hx-preserve=\"true\"></script><link href=\"/static/pico.pumpkin.min.css\" rel=\"stylesheet\" hx-preserve=\"true\"><link href=\"/static/styles.css\" rel=\"stylesheet\" hx-preserve=\"true\"></head><body class=\"container\"><header class=\"container\" style=\"text-align:center\"><img src=\"/static/bzsoslogo.png\" alt=\"Logo\" style=\"width: 175px;\"></header><div style=\"display: flex; align-items: center; justify-content: center;\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -50,7 +37,7 @@ func Base(body templ.Component, email string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

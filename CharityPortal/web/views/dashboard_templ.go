@@ -29,7 +29,7 @@ func Dashboard() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"dashboard\" style=\"display: flex; flex-direction: column; width: 90%;\">Dashboard2 <button hx-post=\"/data-confirmation\" hx-swap=\"outerHTML\" hx-push-url=\"true\">Uzupełnij dane organizacji</button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"dashboard\"><article><header><b>🗓️ Aktualizacja danych</b></header>Prosimy Cię o krótką aktualizację informacji o Twojej organizacji — to pomoże nam lepiej i szybciej nieść pomoc.<hr><details name=\"charity_update\"><summary class=\"outline\" role=\"button\">🗹 Dane adresowe</summary><p>Test testowy</p></details> <details name=\"charity_update\"><summary class=\"outline\" role=\"button\">□ Kontakty</summary><ul><li>...</li><li>...</li></ul></details> <details name=\"charity_update\"><summary class=\"outline\" role=\"button\">□ Beneficjenci</summary><p>...</p></details> <details name=\"charity_update\"><summary class=\"outline\" role=\"button\">□ Źródła żywności</summary><p>...</p></details> <details name=\"charity_update\"><summary class=\"outline\" role=\"button\">□ Warunki udzielania pomocy żywnościowej</summary><p>...</p></details></article></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

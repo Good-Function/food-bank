@@ -19,10 +19,11 @@ main {
     cursor: pointer;
 }
 
-.active {
-    background-color: var(--pico-primary-background);
-    color: var(--pico-primary-inverse);
+a:hover {
     text-decoration: none;
+}
+.active {
+    border-bottom: 2px solid var(--pico-primary-inverse);
 }
 
 .bzsos-logo {
