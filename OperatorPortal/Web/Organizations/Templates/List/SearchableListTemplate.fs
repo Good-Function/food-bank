@@ -40,7 +40,7 @@ let Template (query: Query)=
             hxIndicator = ".big-table"
         )
         small (style="position:relative;") {
-            div (style = "overflow-x: scroll; height: 66vh";) {
+            div (style = "overflow-x: scroll; height: 72vh";) {
                 table (class' = "striped big-table") {
                     thead () {
                         tr (id="OrganizationHeadersRow") {
