@@ -38,7 +38,7 @@ let Template (currentPath: Page option) =
                 li (style="padding: 0px 0px 8px 0px; box-sizing:content-box;", class' = if Some path = currentPath then "active" else "") {
                     a (
                         href = path.ToPath(),
-                        style = "text-align:center; height: 40px; padding:0; padding-top:4px;"
+                        style = "text-align:center; height: 40px; padding:0; padding-top:4px; box-sizing: content-box;"
                     ) {
                         path.Icon()
                         small () { path.ToTitle() }

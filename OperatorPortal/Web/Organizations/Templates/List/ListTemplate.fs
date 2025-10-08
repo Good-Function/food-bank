@@ -43,7 +43,7 @@ let Template (data: OrganizationSummary list) (filter: Query) (total: int) =
         for row in data do
             tr (style = "position: relative") {
                 td () {
-                    a (href = $"/organizations/%i{row.Teczka}", hxTarget = "#OrganizationsPage") {
+                    a (href = $"/organizations/%i{row.Teczka}", hxTarget = "main", hxSwap="innerHTML show:window:top") {
                         $"%i{row.Teczka}"
                     }
                 }

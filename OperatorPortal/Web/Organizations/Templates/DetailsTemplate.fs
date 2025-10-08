@@ -5,7 +5,6 @@ open Layout.Navigation
 open Organizations.Application.ReadModels.OrganizationDetails
 open Layout.Fields
 open Oxpecker.ViewEngine
-open Permissions
 open Web.Organizations
 open PageComposer
 open Organizations.Templates.Formatters
