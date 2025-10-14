@@ -1,11 +1,11 @@
 package adapters
 
 import (
-	"charity_portal/charity_update/queries"
+	"charity_portal/charity_update/operator_api"
 	"fmt"
 )
 
-var MockKontakty = queries.Kontakty {
+var MockKontakty = operator_api.Kontakty {
 	Kontakt: "A nie wiem",
 	WwwFacebook: "http://onet.pl",
 	Telefon: "726 221 122",
@@ -22,7 +22,7 @@ var MockKontakty = queries.Kontakty {
 
 var CallOperatorMock CallOperator = func(method, url string, in any, out any) error {
 	switch v := out.(type) {
-	case *queries.Kontakty:
+	case *operator_api.Kontakty:
 		*v = MockKontakty
 		return nil
 	default:

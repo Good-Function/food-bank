@@ -1,4 +1,4 @@
-package queries
+package operator_api
 
 import "context"
 

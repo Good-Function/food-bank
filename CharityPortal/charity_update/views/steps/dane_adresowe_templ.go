@@ -8,9 +8,9 @@ package steps
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "charity_portal/charity_update/queries"
+import "charity_portal/charity_update/operator_api"
 
-func DaneAdresoweForm(data queries.DaneAdresowe, teczkaId int64) templ.Component {
+func DaneAdresoweForm(data operator_api.DaneAdresowe, teczkaId int64) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {

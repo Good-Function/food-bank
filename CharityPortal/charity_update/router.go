@@ -1,7 +1,7 @@
 package charityupdate
 
 import (
-	"charity_portal/charity_update/queries"
+	"charity_portal/charity_update/operator_api"
 	"charity_portal/charity_update/views"
 	"charity_portal/charity_update/views/steps"
 	"charity_portal/internal/auth"
@@ -67,7 +67,7 @@ func wizardHandler(w http.ResponseWriter, r *http.Request) {
 		}	
 	}
 
-func daneAdresoweHandler(readDaneAdresoweBy queries.ReadDaneAdresoweBy) http.HandlerFunc {
+func daneAdresoweHandler(readDaneAdresoweBy operator_api.ReadDaneAdresoweBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		session := sessionOrError(r,w)
 		daneAdresowe, err := readDaneAdresoweBy(r.Context(), *session.OrgID)
@@ -82,14 +82,14 @@ func daneAdresoweHandler(readDaneAdresoweBy queries.ReadDaneAdresoweBy) http.Han
 	}
 }
 
-func updateDaneAdresoweHandler(updateDaneAdresoweBy queries.UpdateDaneAdresoweBy) http.HandlerFunc {
+func updateDaneAdresoweHandler(updateDaneAdresoweBy operator_api.UpdateDaneAdresoweBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "Invalid form data", http.StatusBadRequest)
 			return
 		}
 		session := sessionOrError(r,w)
-		daneAdresowe := queries.DaneAdresowe{
+		daneAdresowe := operator_api.DaneAdresowe{
 			NazwaOrganizacjiPodpisujacejUmowe: r.FormValue("NazwaOrganizacjiPodpisujacejUmowe"),
 			AdresRejestrowy:                   r.FormValue("AdresRejestrowy"),
 			NazwaPlacowkiTrafiaZywnosc:        r.FormValue("NazwaPlacowkiTrafiaZywnosc"),
@@ -102,7 +102,7 @@ func updateDaneAdresoweHandler(updateDaneAdresoweBy queries.UpdateDaneAdresoweBy
 	}
 }
 
-func daneKontaktoweHandler(readDaneKontaktoweBy queries.ReadKontaktyBy) http.HandlerFunc {
+func daneKontaktoweHandler(readDaneKontaktoweBy operator_api.ReadKontaktyBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		session := sessionOrError(r,w)
 		kontakty, err := readDaneKontaktoweBy(r.Context(), *session.OrgID)
@@ -117,14 +117,14 @@ func daneKontaktoweHandler(readDaneKontaktoweBy queries.ReadKontaktyBy) http.Han
 	}
 }
 
-func updateKontaktyHandler(updateDaneKontaktoweBy queries.UpdateKontaktyBy) http.HandlerFunc {
+func updateKontaktyHandler(updateDaneKontaktoweBy operator_api.UpdateKontaktyBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "Invalid form data", http.StatusBadRequest)
 			return
 		}
 		session := sessionOrError(r,w)
-		kontakty := queries.Kontakty{
+		kontakty := operator_api.Kontakty{
 			WwwFacebook:              r.FormValue("WwwFacebook"),
 			Telefon:                  r.FormValue("Telefon"),
 			Przedstawiciel:           r.FormValue("Przedstawiciel"),
@@ -142,7 +142,7 @@ func updateKontaktyHandler(updateDaneKontaktoweBy queries.UpdateKontaktyBy) http
 	}
 }
 
-func beneficjenciHandler(readDaneKontaktoweBy queries.ReadBeneficjenciBy) http.HandlerFunc {
+func beneficjenciHandler(readDaneKontaktoweBy operator_api.ReadBeneficjenciBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		session := sessionOrError(r,w)
 		beneficjenci, err := readDaneKontaktoweBy(r.Context(), *session.OrgID)
@@ -157,14 +157,14 @@ func beneficjenciHandler(readDaneKontaktoweBy queries.ReadBeneficjenciBy) http.H
 	}
 }
 
-func updateBeneficjenciHandler(updateBeneficjenciBy queries.UpdateBeneficjenciBy) http.HandlerFunc {
+func updateBeneficjenciHandler(updateBeneficjenciBy operator_api.UpdateBeneficjenciBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "Invalid form data", http.StatusBadRequest)
 			return
 		}
 		session := sessionOrError(r,w)
-		beneficjenci := queries.Beneficjenci{
+		beneficjenci := operator_api.Beneficjenci{
 			LiczbaBeneficjentow: func() int {
 				var val int
 				fmt.Sscanf(r.FormValue("LiczbaBeneficjentow"), "%d", &val)
@@ -177,7 +177,7 @@ func updateBeneficjenciHandler(updateBeneficjenciBy queries.UpdateBeneficjenciBy
 	}
 }
 
-func zrodlaZywnosciHandler(readZrodlaZywnosciBy queries.ReadZrodlaZywnosciBy) http.HandlerFunc {
+func zrodlaZywnosciHandler(readZrodlaZywnosciBy operator_api.ReadZrodlaZywnosciBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		session := sessionOrError(r,w)
 		zrodla, err := readZrodlaZywnosciBy(r.Context(), *session.OrgID)
@@ -192,14 +192,14 @@ func zrodlaZywnosciHandler(readZrodlaZywnosciBy queries.ReadZrodlaZywnosciBy) ht
 	}
 }
 
-func updateZrodlaZywnosciHandler(updateZrodlaZywnosciBy queries.UpdateZrodlaZywnosciBy) http.HandlerFunc {
+func updateZrodlaZywnosciHandler(updateZrodlaZywnosciBy operator_api.UpdateZrodlaZywnosciBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "Invalid form data", http.StatusBadRequest)
 			return
 		}
 		session := sessionOrError(r,w)
-		zrodla := queries.ZrodlaZywnosci{
+		zrodla := operator_api.ZrodlaZywnosci{
 			Sieci:              r.FormValue("Sieci") == "on",
 			Bazarki:            r.FormValue("Bazarki") == "on",
 			Machfit:            r.FormValue("Machfit") == "on",
@@ -212,7 +212,7 @@ func updateZrodlaZywnosciHandler(updateZrodlaZywnosciBy queries.UpdateZrodlaZywn
 	}
 }
 
-func warunkiUdzielaniaPomocyHandler(readWarunkiPomocy queries.ReadWarunkiPomocyBy) http.HandlerFunc {
+func warunkiUdzielaniaPomocyHandler(readWarunkiPomocy operator_api.ReadWarunkiPomocyBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		session := sessionOrError(r, w)
 		warunki, err := readWarunkiPomocy(r.Context(), *session.OrgID)
@@ -227,14 +227,14 @@ func warunkiUdzielaniaPomocyHandler(readWarunkiPomocy queries.ReadWarunkiPomocyB
 	}
 }
 
-func updateWarunkiUdzielaniaPomocyHandler(updateWarunkiPomocyBy queries.UpdateWarunkiPomocyBy) http.HandlerFunc {
+func updateWarunkiUdzielaniaPomocyHandler(updateWarunkiPomocyBy operator_api.UpdateWarunkiPomocyBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "Invalid form data", http.StatusBadRequest)
 			return
 		}
 		session := sessionOrError(r, w)
-		warunki := queries.WarunkiPomocy{
+		warunki := operator_api.WarunkiPomocy{
 			Kategoria: 			r.FormValue("Kategoria"),
 			RodzajPomocy: 		r.FormValue("RodzajPomocy"),
 			SposobUdzielaniaPomocy: r.FormValue("SposobUdzielaniaPomocy"),

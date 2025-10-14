@@ -5,7 +5,7 @@ import (
 	"charity_portal/api/middlewares"
 	charity "charity_portal/charity_update"
 	"charity_portal/charity_update/adapters"
-	"charity_portal/charity_update/queries"
+	"charity_portal/charity_update/operator_api"
 	"charity_portal/config"
 	"charity_portal/internal/auth"
 	dataconfirmation "charity_portal/internal/data_confirmation"
@@ -84,7 +84,7 @@ func newRouter(
 	sessionManager *auth.SessionManager,
 	protect func(next http.HandlerFunc) http.HandlerFunc,
 	charityRouter *http.HandlerFunc,
-	readOrgInfo queries.ReadOrganizationIdByEmail,
+	readOrgInfo operator_api.ReadOrganizationIdByEmail,
 ) http.Handler {
 	mux := http.NewServeMux()
 

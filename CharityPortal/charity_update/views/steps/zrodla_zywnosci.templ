@@ -1,8 +1,8 @@
 package steps
 
-import "charity_portal/charity_update/queries"
+import "charity_portal/charity_update/operator_api"
 
-templ ZrodlaZywnosciForm(data queries.ZrodlaZywnosci, teczkaId int64) {
+templ ZrodlaZywnosciForm(data operator_api.ZrodlaZywnosci, teczkaId int64) {
 	<form>
 		<fieldset class="two-col-form">
 			<label for="Sieci">Sieci handlowe</label>

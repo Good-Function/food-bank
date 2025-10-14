@@ -1,7 +1,7 @@
 package adapters
 
 import (
-	"charity_portal/charity_update/queries"
+	"charity_portal/charity_update/operator_api"
 	"context"
 	"fmt"
 )
@@ -10,9 +10,9 @@ type orgReqBody struct {
 	Email string `json:"email"`
 }
 
-func MakeReadOrganizationInfoByEmail(fetcher CallOperator) queries.ReadOrganizationIdByEmail {
-	return func(ctx context.Context, email string) (queries.OrgInfo, error) {
-		var orgInfo queries.OrgInfo
+func MakeReadOrganizationInfoByEmail(fetcher CallOperator) operator_api.ReadOrganizationIdByEmail {
+	return func(ctx context.Context, email string) (operator_api.OrgInfo, error) {
+		var orgInfo operator_api.OrgInfo
 		reqBody := orgReqBody{Email: email}
 		if err := fetcher("POST", "/api/organizations/lookup-by-email", reqBody, &orgInfo); err != nil {
 			panic(err)
