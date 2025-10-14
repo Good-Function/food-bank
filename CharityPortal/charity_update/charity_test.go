@@ -1,8 +1,8 @@
 package charityupdate
 
 import (
+	"charity_portal/web"
 	"charity_portal/charity_update/adapters"
-	"charity_portal/internal/auth"
 	"context"
 	"fmt"
 	"net/http"
@@ -19,13 +19,13 @@ func TestWhenVisitingCharityUpdateThenShowsKontakty(t *testing.T) {
 	router := CreateRouter(Compose(Config{MockOperatorApi: true}))
 	rr := httptest.NewRecorder()
 	orgId := int64(105)
-	session := &auth.SessionData{
+	session := &web.SessionData{
 		OrgID: &orgId,
 		Email:   "test@example.com",
 	}
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req = req.WithContext(
-		context.WithValue(req.Context(), auth.UserContextKey{}, session),
+		context.WithValue(req.Context(), web.UserContextKey{}, session),
 	)
 	// Act
 	router.ServeHTTP(rr, req)

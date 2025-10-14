@@ -1,10 +1,10 @@
 package charityupdate
 
 import (
+	"charity_portal/web"
 	"charity_portal/charity_update/operator_api"
 	"charity_portal/charity_update/views"
 	"charity_portal/charity_update/views/steps"
-	"charity_portal/internal/auth"
 	"charity_portal/web/layout"
 	"fmt"
 	"log/slog"
@@ -32,8 +32,8 @@ func ParseStep(s string) views.WizardStep {
 	}
 }
 
-func sessionOrError(r *http.Request, w http.ResponseWriter) *auth.SessionData {
-	session := r.Context().Value(auth.UserContextKey{}).(*auth.SessionData)
+func sessionOrError(r *http.Request, w http.ResponseWriter) *web.SessionData {
+	session := r.Context().Value(web.UserContextKey{}).(*web.SessionData)
 	if session == nil || session.OrgID == nil {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return nil

@@ -5,20 +5,20 @@ import (
 	"net/http"
 
 	"charity_portal/charity_update/operator_api"
-	"charity_portal/internal/auth"
+	"charity_portal/web"
 
 	"github.com/coreos/go-oidc/v3/oidc"
 )
 
 type LoginCallbackHandler struct {
 	verifier       *oidc.IDTokenVerifier
-	sessionManager *auth.SessionManager
+	sessionManager *web.SessionManager
 	readOrgId operator_api.ReadOrganizationIdByEmail
 }
 
 func NewLoginCallbackHandler(
 	verifier *oidc.IDTokenVerifier,
-	sessionManager *auth.SessionManager,
+	sessionManager *web.SessionManager,
 	readOrgId operator_api.ReadOrganizationIdByEmail,
 ) *LoginCallbackHandler {
 	return &LoginCallbackHandler{verifier, sessionManager, readOrgId}

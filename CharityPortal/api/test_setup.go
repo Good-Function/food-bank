@@ -2,14 +2,14 @@ package api
 
 import (
 	"charity_portal/api/middlewares"
-	"charity_portal/internal/auth"
+	"charity_portal/web"
 	"fmt"
 	"net/http"
 )
 
 func NewAuthenticatedRouter() http.Handler {
-	readSession := func(r *http.Request) (*auth.SessionData, error) {
-		sessionData := auth.SessionData{
+	readSession := func(r *http.Request) (*web.SessionData, error) {
+		sessionData := web.SessionData{
 			Email: "tester@jester.pl",
 			OrgID: nil,
 		}
@@ -19,7 +19,7 @@ func NewAuthenticatedRouter() http.Handler {
 }
 
 func NewUnauthenticatedRouter() http.Handler {
-	readSession := func(r *http.Request) (*auth.SessionData, error) {
+	readSession := func(r *http.Request) (*web.SessionData, error) {
 		return nil, fmt.Errorf("ała")
 	}
 	return newRouter(nil, nil, middlewares.BuildProtect(readSession), nil, nil)
