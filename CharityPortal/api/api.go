@@ -68,7 +68,7 @@ func NewAPI(cfg *config.Config) (*API, error) {
 		callOperator = adapters.MakeCallOperator(cfg.CharityUpdate.OperatorApiClientId, cfg.CharityUpdate.OperatorApiBaseUrl)
 	}
 	charityRouter := protect(charity.CreateRouter(charity.Compose(*cfg.CharityUpdate)).ServeHTTP)
-	router := newRouter(tokenVerifier, sessionManager, protect, &charityRouter, adapters.MakeReadOrganizationInfoBeEmail(callOperator))
+	router := newRouter(tokenVerifier, sessionManager, protect, &charityRouter, adapters.MakeReadOrganizationInfoByEmail(callOperator))
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: router,
@@ -91,10 +91,10 @@ func newRouter(
 	dataConfirmationService := dataconfirmation.NewDataConfirmationService()
 	fs := http.FileServer(http.Dir("./web/static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
-	mux.Handle("/",  protect(handlers.NewDashboardHandler().ServeHTTP))
+	mux.Handle("/",  protect(handlers.NewDashboardHandler().ServeHTTP)) // this
 	mux.Handle("GET /login", handlers.LoginHandler(sessionManager))
 	mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(tokenVerifier, sessionManager, readOrgInfo))
-	mux.Handle("GET /dashboard", protect(handlers.NewDashboardHandler().ServeHTTP))
+	mux.Handle("GET /dashboard", protect(handlers.NewDashboardHandler().ServeHTTP)) // this
 	mux.Handle("POST /logout", handlers.NewLogoutHandler())
 	mux.Handle("POST /data-confirmation", protect(handlers.NewDataConfirmationHandler(dataConfirmationService).ServeHTTP))
 	mux.Handle("/charity-update/", http.StripPrefix("/charity-update", charityRouter))

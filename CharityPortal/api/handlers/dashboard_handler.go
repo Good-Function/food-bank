@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"charity_portal/internal/auth"
-	"charity_portal/web/views"
+	"charity_portal/web/layout"
 	"fmt"
 	"net/http"
 )
@@ -19,5 +19,5 @@ func (ph *DashboardHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if(session.OrgID != nil) {
 		orgId = fmt.Sprintf("%d", *session.OrgID)
 	}
-	views.Base(views.Dashboard(), session.Email + orgId).Render(r.Context(), w)
+	layout.Base(layout.Dashboard(), session.Email + orgId).Render(r.Context(), w)
 }

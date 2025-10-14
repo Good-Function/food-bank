@@ -1,0 +1,14 @@
+package steps
+
+import "charity_portal/charity_update/queries"
+
+templ DaneAdresoweForm(data queries.DaneAdresowe, teczkaId int64) {
+<form>
+  <fieldset class="two-col-form">
+    <label for="NazwaPlacowkiTrafiaZywnosc">Nazwa placowki gdzie trafia żywnosc</label>
+    <input name="NazwaPlacowkiTrafiaZywnosc" id="NazwaPlacowkiTrafiaZywnosc" type="text" value={ data.NazwaPlacowkiTrafiaZywnosc } />
+  </fieldset>
+
+  <input class="secondary" type="submit" value="Zapisz" hx-put="/charity-update/kontakty" hx-target="#wizard" hx-push-url="true" />
+</form>
+}

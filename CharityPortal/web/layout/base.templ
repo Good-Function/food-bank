@@ -1,4 +1,4 @@
-package views
+package layout
 templ Base(body templ.Component, email string) {
 	<!DOCTYPE html>
 	<html data-theme="light">
@@ -11,15 +11,15 @@ templ Base(body templ.Component, email string) {
 			<link href="/static/pico.pumpkin.min.css" rel="stylesheet" hx-preserve="true"/>
 			<link href="/static/styles.css" rel="stylesheet" hx-preserve="true"/>
 		</head>
-		<body class="container">
+		<body class="container" hx-boost="true">
 			<header
 				class="container"
 				style="text-align:center">
 					<img src="/static/bzsoslogo.png" alt="Logo" style="width: 175px;"/>
 			</header>
-			<div style="display: flex; align-items: center; justify-content: center;">
+			<main>
 				@body
-			</div>
+			</main>
 		</body>
 	</html>
 }

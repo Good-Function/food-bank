@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"charity_portal/web/views"
+	"charity_portal/web/layout"
 	"net/http"
 )
 
@@ -12,5 +12,5 @@ func NewHomeHandler() *HomeHandler {
 }
 
 func (ph *HomeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	views.Base(views.Home(), "").Render(r.Context(), w)
+	layout.Base(layout.Home(), "").Render(r.Context(), w)
 }

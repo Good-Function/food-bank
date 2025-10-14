@@ -1,0 +1,14 @@
+package steps
+
+import "charity_portal/charity_update/queries"
+
+templ ZrodlaZywnosciForm(data queries.ZrodlaZywnosci, teczkaId int64) {
+<form>
+  <fieldset class="two-col-form">
+    <label for="TylkoNaszMagazyn">Tylko nasz magazyn</label>
+    <input name="TylkoNaszMagazyn" id="TylkoNaszMagazyn" type="checkbox" value={ data.TylkoNaszMagazyn } />
+  </fieldset>
+
+  <input class="secondary" type="submit" value="Zapisz" hx-put="/charity-update/kontakty" hx-target="#wizard" hx-push-url="true" />
+</form>
+}
