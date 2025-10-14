@@ -3,12 +3,25 @@ package steps
 import "charity_portal/charity_update/queries"
 
 templ WarunkiUdzielaniaPomocy(data queries.WarunkiPomocy, teczkaId int64) {
-<form>
-  <fieldset class="two-col-form">
-    <label for="Kategoria">Kategoria</label>
-    <input name="Kategoria" id="Kategoria" type="text" value={ data.Kategoria } />
-  </fieldset>
-
-  <input class="secondary" type="submit" value="Zapisz" hx-put="/charity-update/kontakty" hx-target="#wizard" hx-push-url="true" />
-</form>
+	<form>
+		<fieldset class="two-col-form">
+			<label for="Kategoria">Kategoria</label>
+			<input name="Kategoria" id="Kategoria" type="text" value={ data.Kategoria }/>
+			<label for="RodzajPomocy">Rodzaj pomocy</label>
+			<input name="RodzajPomocy" id="RodzajPomocy" type="text" value={ data.RodzajPomocy }/>
+			<label for="SposobUdzielaniaPomocy">Sposób udzielania pomocy</label>
+			<input name="SposobUdzielaniaPomocy" id="SposobUdzielaniaPomocy" type="text" value={ data.SposobUdzielaniaPomocy }/>
+			<label for="WarunkiMagazynowe">Warunki magazynowe</label>
+			<input name="WarunkiMagazynowe" id="WarunkiMagazynowe" type="text" value={ data.WarunkiMagazynowe }/>
+			<label for="HACCP">Czy posiada HACCP</label>
+			<input name="HACCP" id="HACCP" type="checkbox" checked={ data.HACCP }/>
+			<label for="Sanepid">Czy posiada opinię Sanepidu</label>
+			<input name="Sanepid" id="Sanepid" type="checkbox" checked={ data.Sanepid }/>
+			<label for="TransportOpis">Opis transportu</label>
+			<input name="TransportOpis" id="TransportOpis" type="text" value={ data.TransportOpis }/>
+			<label for="TransportKategoria">Kategoria transportu</label>
+			<input name="TransportKategoria" id="TransportKategoria" type="text" value={ data.TransportKategoria }/>
+		</fieldset>
+		<input class="secondary" type="submit" value="Zapisz" hx-put="/charity-update/warunki-udzielania-pomocy-form" hx-target="#wizard" hx-push-url="true"/>
+	</form>
 }

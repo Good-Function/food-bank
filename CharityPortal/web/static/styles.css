@@ -16,12 +16,13 @@
   .two-col-form label {
     text-align: right;
     font-weight: bold;
+    margin:0;
+    margin-inline-end: 0 !important;
   }
   
-  .two-col-form input {
+  .two-col-form input:not([type="checkbox"]) {
     width: 100%;
-    margin: 0;
-   height: 2.5rem;
+    height: 2.5rem;
   }
 
 /*Shimmers animation*/

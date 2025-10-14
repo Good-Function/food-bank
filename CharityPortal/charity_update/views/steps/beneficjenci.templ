@@ -7,8 +7,10 @@ templ BeneficenciForm(data queries.Beneficjenci, teczkaId int64) {
   <fieldset class="two-col-form">
     <label for="Beneficjenci">Beneficjenci</label>
     <input name="Beneficjenci" id="Beneficjenci" required value={ data.Beneficjenci } />
+    <label for="LiczbaBeneficjentow">Liczba beneficjentów</label>
+    <input type="number" name="LiczbaBeneficjentow" id="LiczbaBeneficjentow" required value={ data.LiczbaBeneficjentow } />
   </fieldset>
 
-  <input class="secondary" type="submit" value="Zapisz" hx-put="/charity-update/kontakty" hx-target="#wizard" hx-push-url="true" />
+  <input class="secondary" type="submit" value="Zapisz" hx-put="/charity-update/beneficjenci-form" hx-target="#wizard" hx-push-url="true" />
 </form>
 }

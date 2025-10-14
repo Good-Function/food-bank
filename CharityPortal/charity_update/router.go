@@ -6,15 +6,14 @@ import (
 	"charity_portal/charity_update/views/steps"
 	"charity_portal/internal/auth"
 	"charity_portal/web/layout"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"strings"
 )
 
 // Todo:
-// 1. Renderować dobre następny stepy po zapisaniu
-// 3. Rozszezyć update
-// 4. Rozszerzyć formularze
+// 1. Robić redirect na prawidlowy url po przejsciu do kroku
 
 func ParseStep(s string) views.WizardStep {
 	switch s {
@@ -83,6 +82,26 @@ func daneAdresoweHandler(readDaneAdresoweBy queries.ReadDaneAdresoweBy) http.Han
 	}
 }
 
+func updateDaneAdresoweHandler(updateDaneAdresoweBy queries.UpdateDaneAdresoweBy) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "Invalid form data", http.StatusBadRequest)
+			return
+		}
+		session := sessionOrError(r,w)
+		daneAdresowe := queries.DaneAdresowe{
+			NazwaOrganizacjiPodpisujacejUmowe: r.FormValue("NazwaOrganizacjiPodpisujacejUmowe"),
+			AdresRejestrowy:                   r.FormValue("AdresRejestrowy"),
+			NazwaPlacowkiTrafiaZywnosc:        r.FormValue("NazwaPlacowkiTrafiaZywnosc"),
+			AdresPlacowkiTrafiaZywnosc:        r.FormValue("AdresPlacowkiTrafiaZywnosc"),
+			GminaDzielnica:                    r.FormValue("GminaDzielnica"),
+			Powiat:                            r.FormValue("Powiat"),
+		}
+		updateDaneAdresoweBy(r.Context(), *session.OrgID, daneAdresowe)
+		views.Wizard(views.Kontakty).Render(r.Context(), w)
+	}
+}
+
 func daneKontaktoweHandler(readDaneKontaktoweBy queries.ReadKontaktyBy) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		session := sessionOrError(r,w)
@@ -94,51 +113,6 @@ func daneKontaktoweHandler(readDaneKontaktoweBy queries.ReadKontaktyBy) http.Han
 			steps.KontaktyForm(kontakty, *session.OrgID).Render(r.Context(), w)
 		} else {
 			layout.Base(steps.KontaktyForm(kontakty, *session.OrgID), "").Render(r.Context(), w)
-		}
-	}
-}
-
-func beneficjenciHandler(readDaneKontaktoweBy queries.ReadBeneficjenciBy) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		session := sessionOrError(r,w)
-		beneficjenci, err := readDaneKontaktoweBy(r.Context(), *session.OrgID)
-		if err != nil {
-			slog.Error("Can't read organization", "err", err)
-		}
-		if r.Header.Get("HX-Request") != "" {
-			steps.BeneficenciForm(beneficjenci, *session.OrgID).Render(r.Context(), w)
-		} else {
-			layout.Base(steps.BeneficenciForm(beneficjenci, *session.OrgID), "").Render(r.Context(), w)
-		}
-	}
-}
-
-func zrodlaZywnosciHandler(readZrodlaZywnosciBy queries.ReadZrodlaZywnosciBy) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		session := sessionOrError(r,w)
-		zrodla, err := readZrodlaZywnosciBy(r.Context(), *session.OrgID)
-		if err != nil {
-			slog.Error("Can't read organization", "err", err)
-		}
-		if r.Header.Get("HX-Request") != "" {
-			steps.ZrodlaZywnosciForm(zrodla, *session.OrgID).Render(r.Context(), w)
-		} else {
-			layout.Base(steps.ZrodlaZywnosciForm(zrodla, *session.OrgID), "").Render(r.Context(), w)
-		}
-	}
-}
-
-func warunkiUdzielaniaPomocyHandler(readWarunkiPomocy queries.ReadWarunkiPomocyBy) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		session := sessionOrError(r, w)
-		warunki, err := readWarunkiPomocy(r.Context(), *session.OrgID)
-		if err != nil {
-			slog.Error("Can't read organization", "err", err)
-		}
-		if r.Header.Get("HX-Request") != "" {
-			steps.WarunkiUdzielaniaPomocy(warunki, *session.OrgID).Render(r.Context(), w)
-		} else {
-			layout.Base(steps.WarunkiUdzielaniaPomocy(warunki, *session.OrgID), "").Render(r.Context(), w)
 		}
 	}
 }
@@ -168,19 +142,130 @@ func updateKontaktyHandler(updateDaneKontaktoweBy queries.UpdateKontaktyBy) http
 	}
 }
 
+func beneficjenciHandler(readDaneKontaktoweBy queries.ReadBeneficjenciBy) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		session := sessionOrError(r,w)
+		beneficjenci, err := readDaneKontaktoweBy(r.Context(), *session.OrgID)
+		if err != nil {
+			slog.Error("Can't read organization", "err", err)
+		}
+		if r.Header.Get("HX-Request") != "" {
+			steps.BeneficenciForm(beneficjenci, *session.OrgID).Render(r.Context(), w)
+		} else {
+			layout.Base(steps.BeneficenciForm(beneficjenci, *session.OrgID), "").Render(r.Context(), w)
+		}
+	}
+}
+
+func updateBeneficjenciHandler(updateBeneficjenciBy queries.UpdateBeneficjenciBy) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "Invalid form data", http.StatusBadRequest)
+			return
+		}
+		session := sessionOrError(r,w)
+		beneficjenci := queries.Beneficjenci{
+			LiczbaBeneficjentow: func() int {
+				var val int
+				fmt.Sscanf(r.FormValue("LiczbaBeneficjentow"), "%d", &val)
+				return val
+			}(),
+			Beneficjenci: r.FormValue("Beneficjenci"),
+		}
+		updateBeneficjenciBy(r.Context(), *session.OrgID, beneficjenci)
+		views.Wizard(views.ZrodlaZywnosci).Render(r.Context(), w)
+	}
+}
+
+func zrodlaZywnosciHandler(readZrodlaZywnosciBy queries.ReadZrodlaZywnosciBy) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		session := sessionOrError(r,w)
+		zrodla, err := readZrodlaZywnosciBy(r.Context(), *session.OrgID)
+		if err != nil {
+			slog.Error("Can't read organization", "err", err)
+		}
+		if r.Header.Get("HX-Request") != "" {
+			steps.ZrodlaZywnosciForm(zrodla, *session.OrgID).Render(r.Context(), w)
+		} else {
+			layout.Base(steps.ZrodlaZywnosciForm(zrodla, *session.OrgID), "").Render(r.Context(), w)
+		}
+	}
+}
+
+func updateZrodlaZywnosciHandler(updateZrodlaZywnosciBy queries.UpdateZrodlaZywnosciBy) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "Invalid form data", http.StatusBadRequest)
+			return
+		}
+		session := sessionOrError(r,w)
+		zrodla := queries.ZrodlaZywnosci{
+			Sieci:              r.FormValue("Sieci") == "on",
+			Bazarki:            r.FormValue("Bazarki") == "on",
+			Machfit:            r.FormValue("Machfit") == "on",
+			FEPZ2024:           r.FormValue("FEPZ2024") == "on",
+			OdbiorKrotkiTermin: r.FormValue("OdbiorKrotkiTermin") == "on",
+			TylkoNaszMagazyn:   r.FormValue("TylkoNaszMagazyn") == "on",
+		}
+		updateZrodlaZywnosciBy(r.Context(), *session.OrgID, zrodla)
+		views.Wizard(views.WarunkiUdzielaniaPomocy).Render(r.Context(), w)
+	}
+}
+
+func warunkiUdzielaniaPomocyHandler(readWarunkiPomocy queries.ReadWarunkiPomocyBy) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		session := sessionOrError(r, w)
+		warunki, err := readWarunkiPomocy(r.Context(), *session.OrgID)
+		if err != nil {
+			slog.Error("Can't read organization", "err", err)
+		}
+		if r.Header.Get("HX-Request") != "" {
+			steps.WarunkiUdzielaniaPomocy(warunki, *session.OrgID).Render(r.Context(), w)
+		} else {
+			layout.Base(steps.WarunkiUdzielaniaPomocy(warunki, *session.OrgID), "").Render(r.Context(), w)
+		}
+	}
+}
+
+func updateWarunkiUdzielaniaPomocyHandler(updateWarunkiPomocyBy queries.UpdateWarunkiPomocyBy) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "Invalid form data", http.StatusBadRequest)
+			return
+		}
+		session := sessionOrError(r, w)
+		warunki := queries.WarunkiPomocy{
+			Kategoria: 			r.FormValue("Kategoria"),
+			RodzajPomocy: 		r.FormValue("RodzajPomocy"),
+			SposobUdzielaniaPomocy: r.FormValue("SposobUdzielaniaPomocy"),
+			WarunkiMagazynowe: 	r.FormValue("WarunkiMagazynowe"),
+			HACCP:              r.FormValue("HACCP") == "on",
+			Sanepid:            r.FormValue("Sanepid") == "on",
+			TransportOpis:      r.FormValue("TransportOpis"),
+			TransportKategoria: r.FormValue("TransportKategoria"),
+		}
+		updateWarunkiPomocyBy(r.Context(), *session.OrgID, warunki)
+		views.Wizard(views.Start).Render(r.Context(), w)
+	}
+}
+
 func CreateRouter(dependencies *dependencies) *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", wizardHandler)
 	mux.HandleFunc("GET /dane-adresowe-form", daneAdresoweHandler(dependencies.readDaneAdresoweBy))
+	mux.HandleFunc("PUT /dane-adresowe-form", updateDaneAdresoweHandler(dependencies.updateDaneAdresoweBy))
 	mux.HandleFunc("GET /dane-adresowe", wizardHandler)
 	mux.HandleFunc("GET /kontakty-form", daneKontaktoweHandler(dependencies.readDaneKontaktoweBy))
 	mux.HandleFunc("PUT /kontakty-form", updateKontaktyHandler(dependencies.updateDaneKontaktoweBy))
 	mux.HandleFunc("GET /kontakty", wizardHandler)
 	mux.HandleFunc("GET /beneficjenci-form", beneficjenciHandler(dependencies.readBeneficjenciBy))
+	mux.HandleFunc("PUT /beneficjenci-form", updateBeneficjenciHandler(dependencies.updateBeneficjenciBy))
 	mux.HandleFunc("GET /beneficjenci", wizardHandler)
 	mux.HandleFunc("GET /zrodla-zywnosci-form", zrodlaZywnosciHandler(dependencies.readZrodlaZywnosciBy))
+	mux.HandleFunc("PUT /zrodla-zywnosci-form", updateZrodlaZywnosciHandler(dependencies.updateZrodlaZywnosciBy))
 	mux.HandleFunc("GET /zrodla-zywnosci", wizardHandler)
 	mux.HandleFunc("GET /warunki-udzielania-pomocy-form", warunkiUdzielaniaPomocyHandler(dependencies.readWarunkiUdzielaniaPomocyBy))
+	mux.HandleFunc("PUT /warunki-udzielania-pomocy-form", updateWarunkiUdzielaniaPomocyHandler(dependencies.updateWarunkiUdzielaniaPomocyBy))
 	mux.HandleFunc("GET /warunki-udzielania-pomocy", wizardHandler)
 	mux.Handle("GET /finito", finitoHandler())
 	return mux
