@@ -3,11 +3,11 @@ package api
 import (
 	"charity_portal/api/handlers"
 	"charity_portal/api/middlewares"
-	"charity_portal/web"
 	charity "charity_portal/charity_update"
 	"charity_portal/charity_update/adapters"
 	"charity_portal/charity_update/operator_api"
 	"charity_portal/config"
+	"charity_portal/web"
 	"context"
 	"fmt"
 	"log"
@@ -93,7 +93,10 @@ func newRouter(
 	mux.Handle("GET /login", handlers.LoginHandler(sessionManager))
 	mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(tokenVerifier, sessionManager, readOrgInfo))
 	mux.Handle("POST /logout", handlers.NewLogoutHandler())
-	mux.Handle("/charity-update/", http.StripPrefix("/charity-update", charityRouter))
+	mux.Handle("/charity-update/", protect(http.StripPrefix("/charity-update", charityRouter).ServeHTTP))
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/charity-update", http.StatusSeeOther)
+	})
 	notFoundWrapped := middlewares.WithNotFound(mux)
 	forwardedWrapped := middlewares.WithForwardedHost(notFoundWrapped)
 	return middlewares.WithLog(forwardedWrapped)
