@@ -14,9 +14,9 @@ templ WarunkiUdzielaniaPomocy(data operator_api.WarunkiPomocy, teczkaId int64) {
 			<label for="WarunkiMagazynowe">Warunki magazynowe</label>
 			<input name="WarunkiMagazynowe" id="WarunkiMagazynowe" type="text" value={ data.WarunkiMagazynowe }/>
 			<label for="HACCP">Czy posiada HACCP</label>
-			<input name="HACCP" id="HACCP" type="checkbox" checked={ data.HACCP }/>
+			<input name="HACCP" id="HACCP" type="checkbox" checked?={ data.HACCP }/>
 			<label for="Sanepid">Czy posiada opinię Sanepidu</label>
-			<input name="Sanepid" id="Sanepid" type="checkbox" checked={ data.Sanepid }/>
+			<input name="Sanepid" id="Sanepid" type="checkbox" checked?={ data.Sanepid }/>
 			<label for="TransportOpis">Opis transportu</label>
 			<input name="TransportOpis" id="TransportOpis" type="text" value={ data.TransportOpis }/>
 			<label for="TransportKategoria">Kategoria transportu</label>

@@ -244,7 +244,7 @@ func Wizard(step WizardStep) templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<div id=\"wizard\"><article><header><b>🗓️ Aktualizacja danych</b></header>Prosimy Cię o krótką aktualizację informacji o Twojej organizacji — to pomoże nam lepiej i szybciej nieść pomoc.<hr>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<div id=\"wizard\"><article><header><b>🗓️ Aktualizacja danych</b></header>Prosimy Cię o krótką aktualizację informacji o Twojej organizacji — to pomoże nam lepiej i szybciej nieść pomoc. Pamiętaj, aby zapisać zmiany w każdej sekcji nim przejdziesz dalej.<hr>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
