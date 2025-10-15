@@ -22,6 +22,12 @@ templ WarunkiUdzielaniaPomocy(data operator_api.WarunkiPomocy, teczkaId int64) {
 			<label for="TransportKategoria">Kategoria transportu</label>
 			<input name="TransportKategoria" id="TransportKategoria" type="text" value={ data.TransportKategoria }/>
 		</fieldset>
-		<input class="secondary" type="submit" value="Zapisz" hx-put="/charity-update/warunki-udzielania-pomocy-form" hx-target="#wizard" hx-push-url="true"/>
+		<input
+			class="secondary"
+			type="submit"
+			value="Zapisz"
+			hx-put="/charity-update/warunki-udzielania-pomocy-form"
+			hx-target="#wizard"
+		/>
 	</form>
 }

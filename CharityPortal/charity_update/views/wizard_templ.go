@@ -23,22 +23,52 @@ type SectionMeta struct {
 	Title     string
 	WizardUrl string
 	FormUrl   string
+	Id        string
 }
 
 func (s WizardStep) Meta() SectionMeta {
 	switch s {
 	case DaneAdresowe:
-		return SectionMeta{Title: "Dane adresowe", WizardUrl: "/charity-update/dane-adresowe", FormUrl: "/charity-update/dane-adresowe-form"}
+		return SectionMeta{
+			Title:     "Dane adresowe",
+			WizardUrl: "/charity-update/dane-adresowe",
+			FormUrl:   "/charity-update/dane-adresowe-form",
+			Id:        "dane-adresowe",
+		}
 	case Kontakty:
-		return SectionMeta{Title: "Kontakty", WizardUrl: "/charity-update/kontakty", FormUrl: "/charity-update/kontakty-form"}
+		return SectionMeta{
+			Title:     "Kontakty",
+			WizardUrl: "/charity-update/kontakty",
+			FormUrl:   "/charity-update/kontakty-form",
+			Id:        "kontakty",
+		}
 	case Beneficjenci:
-		return SectionMeta{Title: "Beneficjenci", WizardUrl: "/charity-update/beneficjenci", FormUrl: "/charity-update/beneficjenci-form"}
+		return SectionMeta{
+			Title:     "Beneficjenci",
+			WizardUrl: "/charity-update/beneficjenci",
+			FormUrl:   "/charity-update/beneficjenci-form",
+			Id:        "beneficjenci",
+		}
 	case ZrodlaZywnosci:
-		return SectionMeta{Title: "Źrodła żywności", WizardUrl: "/charity-update/zrodla-zywnosci", FormUrl: "/charity-update/zrodla-zywnosci-form"}
+		return SectionMeta{
+			Title:     "Źrodła żywności",
+			WizardUrl: "/charity-update/zrodla-zywnosci",
+			FormUrl:   "/charity-update/zrodla-zywnosci-form",
+			Id:        "zrodla-zywnosci",
+		}
 	case WarunkiUdzielaniaPomocy:
-		return SectionMeta{Title: "Warunki udzielania pomocy", WizardUrl: "/charity-update/warunki-udzielania-pomocy", FormUrl: "/charity-update/warunki-udzielania-pomocy-form"}
+		return SectionMeta{
+			Title:     "Warunki udzielania pomocy",
+			WizardUrl: "/charity-update/warunki-udzielania-pomocy",
+			FormUrl:   "/charity-update/warunki-udzielania-pomocy-form",
+			Id:        "warunki-udzielania-pomocy",
+		}
 	default:
-		return SectionMeta{Title: "", WizardUrl: "", FormUrl: ""}
+		return SectionMeta{
+			Title:     "",
+			WizardUrl: "",
+			FormUrl:   "",
+		}
 	}
 }
 
@@ -111,59 +141,72 @@ func Section(step, currentStep WizardStep) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(step.Meta().WizardUrl)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/Wizard.templ`, Line: 44, Col: 142}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/wizard.templ`, Line: 78, Col: 32}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-push-url=\"true\" hx-target=\"#wizard\" hx-swap=\"outerHTML\"><div style=\"display:flex; flex-direction: row; justify-content:space-between\"><span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-push-url=\"true\" hx-target=\"#wizard\" hx-swap=\"outerHTML\" id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(step.Meta().Title)
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(step.Meta().Id)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/Wizard.templ`, Line: 46, Col: 27}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/wizard.templ`, Line: 82, Col: 21}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\"><div style=\"display:flex; flex-direction: row; justify-content:space-between\"><span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if step == DaneAdresowe {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div style=\"background-image: var(--pico-icon-chevron); width: 1rem;\"></div>")
+		var templ_7745c5c3_Var5 string
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(step.Meta().Title)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/wizard.templ`, Line: 85, Col: 28}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span> ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if step == currentStep {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div style=\"background-image: var(--pico-icon-chevron); width: 1rem;\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div style=\"background-image: var(--pico-icon-chevron); width: 1rem; transform: rotate(-90deg);\"></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div style=\"background-image: var(--pico-icon-chevron); width: 1rem; transform: rotate(-90deg);\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div></button> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div></button> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if currentStep == step {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div hx-get=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div hx-get=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var5 string
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(step.Meta().FormUrl)
+			var templ_7745c5c3_Var6 string
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(step.Meta().FormUrl)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/Wizard.templ`, Line: 55, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/wizard.templ`, Line: 94, Col: 35}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" hx-trigger=\"revealed\" hx-target=\"this\" hx-swap=\"outerHTML\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" hx-trigger=\"revealed\" hx-target=\"this\" hx-swap=\"outerHTML\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -171,7 +214,7 @@ func Section(step, currentStep WizardStep) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -196,12 +239,12 @@ func Wizard(step WizardStep) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var6 == nil {
-			templ_7745c5c3_Var6 = templ.NopComponent
+		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var7 == nil {
+			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div id=\"wizard\"><article><header><b>🗓️ Aktualizacja danych</b></header>Prosimy Cię o krótką aktualizację informacji o Twojej organizacji — to pomoże nam lepiej i szybciej nieść pomoc.<hr>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<div id=\"wizard\"><article><header><b>🗓️ Aktualizacja danych</b></header>Prosimy Cię o krótką aktualizację informacji o Twojej organizacji — to pomoże nam lepiej i szybciej nieść pomoc.<hr>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -225,7 +268,7 @@ func Wizard(step WizardStep) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<hr><button style=\"width:100%\" hx-get=\"/charity-update/finito\" hx-push-url=\"true\" hx-target=\"main\">Zakończ</button></article></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<hr><button style=\"width:100%\" hx-get=\"/charity-update/finito\" hx-push-url=\"true\" hx-target=\"main\">Zakończ</button></article></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -135,7 +135,7 @@ func WarunkiUdzielaniaPomocy(data operator_api.WarunkiPomocy, teczkaId int64) te
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\"></fieldset><input class=\"secondary\" type=\"submit\" value=\"Zapisz\" hx-put=\"/charity-update/warunki-udzielania-pomocy-form\" hx-target=\"#wizard\" hx-push-url=\"true\"></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\"></fieldset><input class=\"secondary\" type=\"submit\" value=\"Zapisz\" hx-put=\"/charity-update/warunki-udzielania-pomocy-form\" hx-target=\"#wizard\"></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

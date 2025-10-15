@@ -18,6 +18,12 @@ templ ZrodlaZywnosciForm(data operator_api.ZrodlaZywnosci, teczkaId int64) {
 			<label for="TylkoNaszMagazyn">Tylko nasz magazyn</label>
 			<input name="TylkoNaszMagazyn" id="TylkoNaszMagazyn" type="checkbox" checked={ data.TylkoNaszMagazyn }/>
 		</fieldset>
-		<input class="secondary" type="submit" value="Zapisz" hx-put="/charity-update/zrodla-zywnosci-form" hx-target="#wizard" hx-push-url="true"/>
+		<input
+			class="secondary"
+			type="submit"
+			value="Zapisz"
+			hx-put="/charity-update/zrodla-zywnosci-form"
+			hx-target="#wizard"
+		/>
 	</form>
 }

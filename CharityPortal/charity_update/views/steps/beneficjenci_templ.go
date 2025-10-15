@@ -38,7 +38,7 @@ func BeneficenciForm(data operator_api.Beneficjenci, teczkaId int64) templ.Compo
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(data.Beneficjenci)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/beneficjenci.templ`, Line: 9, Col: 83}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/beneficjenci.templ`, Line: 9, Col: 82}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -51,13 +51,13 @@ func BeneficenciForm(data operator_api.Beneficjenci, teczkaId int64) templ.Compo
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(data.LiczbaBeneficjentow)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/beneficjenci.templ`, Line: 11, Col: 118}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/beneficjenci.templ`, Line: 11, Col: 117}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"></fieldset><input class=\"secondary\" type=\"submit\" value=\"Zapisz\" hx-put=\"/charity-update/beneficjenci-form\" hx-target=\"#wizard\" hx-push-url=\"true\"></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"></fieldset><input class=\"secondary\" type=\"submit\" value=\"Zapisz\" hx-put=\"/charity-update/beneficjenci-form\" hx-target=\"#wizard\"></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

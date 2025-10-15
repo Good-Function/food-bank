@@ -1,19 +1,16 @@
 package charityupdate
 
 import (
-	"charity_portal/web"
 	"charity_portal/charity_update/operator_api"
 	"charity_portal/charity_update/views"
 	"charity_portal/charity_update/views/steps"
+	"charity_portal/web"
 	"charity_portal/web/layout"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"strings"
 )
-
-// Todo:
-// 1. Robić redirect na prawidlowy url po przejsciu do kroku
 
 func ParseStep(s string) views.WizardStep {
 	switch s {
@@ -98,7 +95,8 @@ func updateDaneAdresoweHandler(updateDaneAdresoweBy operator_api.UpdateDaneAdres
 			Powiat:                            r.FormValue("Powiat"),
 		}
 		updateDaneAdresoweBy(r.Context(), *session.OrgID, daneAdresowe)
-		views.Wizard(views.Kontakty).Render(r.Context(), w)
+		w.Header().Set("HX-Redirect", "/charity-update/kontakty#kontakty")
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
@@ -138,7 +136,8 @@ func updateKontaktyHandler(updateDaneKontaktoweBy operator_api.UpdateKontaktyBy)
 			TelefonOsobyOdbierajacej: r.FormValue("TelefonOsobyOdbierajacej"),
 		}
 		updateDaneKontaktoweBy(r.Context(), *session.OrgID, kontakty)
-		views.Wizard(views.Beneficjenci).Render(r.Context(), w)
+		w.Header().Set("HX-Redirect", "/charity-update/beneficjenci#beneficjenci")
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
@@ -173,7 +172,8 @@ func updateBeneficjenciHandler(updateBeneficjenciBy operator_api.UpdateBeneficje
 			Beneficjenci: r.FormValue("Beneficjenci"),
 		}
 		updateBeneficjenciBy(r.Context(), *session.OrgID, beneficjenci)
-		views.Wizard(views.ZrodlaZywnosci).Render(r.Context(), w)
+		w.Header().Set("HX-Redirect", "/charity-update/zrodla-zywnosci#zrodla-zywnosci")
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
@@ -208,7 +208,8 @@ func updateZrodlaZywnosciHandler(updateZrodlaZywnosciBy operator_api.UpdateZrodl
 			TylkoNaszMagazyn:   r.FormValue("TylkoNaszMagazyn") == "on",
 		}
 		updateZrodlaZywnosciBy(r.Context(), *session.OrgID, zrodla)
-		views.Wizard(views.WarunkiUdzielaniaPomocy).Render(r.Context(), w)
+		w.Header().Set("HX-Redirect", "/charity-update/warunki-udzielania-pomocy#warunki-udzielania-pomocy")
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
@@ -245,7 +246,8 @@ func updateWarunkiUdzielaniaPomocyHandler(updateWarunkiPomocyBy operator_api.Upd
 			TransportKategoria: r.FormValue("TransportKategoria"),
 		}
 		updateWarunkiPomocyBy(r.Context(), *session.OrgID, warunki)
-		views.Wizard(views.Start).Render(r.Context(), w)
+		w.Header().Set("HX-Redirect", "/charity-update")
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
