@@ -19,11 +19,35 @@ var MockKontakty = operator_api.Kontakty {
 	TelefonOsobyOdbierajacej: "726 221 122",
 }
 
+var MockDaneAdresowe = operator_api.DaneAdresowe {
+	NazwaOrganizacjiPodpisujacejUmowe: "Fundacja Testowa",
+	AdresRejestrowy: "ul. Testowa 12, 00-001 Warszawa",
+	NazwaPlacowkiTrafiaZywnosc: "Magazyn Główny",
+	AdresPlacowkiTrafiaZywnosc: "ul. Magazynowa 5, 00-002 Warszawa",
+	GminaDzielnica: "Mokotów",
+	Powiat: "Warszawa",
+}
+
+var MockZrodlaZywnosci = operator_api.ZrodlaZywnosci {
+	Sieci: true,
+	Bazarki: false,
+	Machfit: true,
+	FEPZ2024: false,
+	OdbiorKrotkiTermin: true,
+	TylkoNaszMagazyn: false,
+}
+
 
 var CallOperatorMock CallOperator = func(method, url string, in any, out any) error {
 	switch v := out.(type) {
 	case *operator_api.Kontakty:
 		*v = MockKontakty
+		return nil
+	case *operator_api.DaneAdresowe:
+		*v = MockDaneAdresowe
+		return nil
+	case *operator_api.ZrodlaZywnosci:
+		*v = MockZrodlaZywnosci
 		return nil
 	default:
 		return fmt.Errorf("unsupported type in mock: %T", out)
