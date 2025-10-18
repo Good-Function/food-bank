@@ -5,6 +5,11 @@ import (
 	"fmt"
 )
 
+var Beneficjenci = operator_api.Beneficjenci {
+	LiczbaBeneficjentow: 150,
+	Beneficjenci: "Osoby bezdomne, rodziny wielodzietne",
+}
+
 var MockKontakty = operator_api.Kontakty {
 	Kontakt: "A nie wiem",
 	WwwFacebook: "http://onet.pl",
@@ -37,6 +42,17 @@ var MockZrodlaZywnosci = operator_api.ZrodlaZywnosci {
 	TylkoNaszMagazyn: false,
 }
 
+var MockWarunkiPomocy = operator_api.WarunkiPomocy {
+	Kategoria: "Organizacja pozarządowa",
+	RodzajPomocy: "Dystrybucja żywności",
+	SposobUdzielaniaPomocy: "Bezpośrednia dystrybucja",
+	WarunkiMagazynowe: "Posiadamy chłodnię",
+	HACCP: true,
+	Sanepid: true,
+	TransportOpis: "Posiadamy własny transport",
+	TransportKategoria: "Samochód dostawczy",
+}
+
 
 var CallOperatorMock CallOperator = func(method, url string, in any, out any) error {
 	switch v := out.(type) {
@@ -48,6 +64,12 @@ var CallOperatorMock CallOperator = func(method, url string, in any, out any) er
 		return nil
 	case *operator_api.ZrodlaZywnosci:
 		*v = MockZrodlaZywnosci
+		return nil
+	case *operator_api.WarunkiPomocy:
+		*v = MockWarunkiPomocy
+		return nil
+	case *operator_api.Beneficjenci:
+		*v = Beneficjenci
 		return nil
 	default:
 		return fmt.Errorf("unsupported type in mock: %T", out)

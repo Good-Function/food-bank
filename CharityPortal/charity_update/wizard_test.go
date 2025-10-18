@@ -130,3 +130,38 @@ func TestViewZrodlaZywnosci(t *testing.T) {
 		assert.Equal(t, expected, checked)
 	}
 }
+
+func TestViewBeneficjenci(t *testing.T) {	
+	// Arrange + Act 
+	recorded := call(httptest.NewRequest("GET", "/beneficjenci-form", nil))
+	// Assert
+	doc := bodyToDoc(recorded)
+	liczba, _ := doc.Find(fmt.Sprintf("input[name='%s']", "LiczbaBeneficjentow")).Attr("value")
+	assert.Equal(t, fmt.Sprintf("%d", adapters.Beneficjenci.LiczbaBeneficjentow), liczba)
+	beneficjenci, _ := doc.Find("input[name='Beneficjenci']").Attr("value")
+	assert.Equal(t, adapters.Beneficjenci.Beneficjenci, beneficjenci)
+}
+
+func TestViewWarunkiUdzielaniaPomocy(t *testing.T) {
+	// Arrange + Act
+	recorded := call(httptest.NewRequest("GET", "/warunki-udzielania-pomocy-form", nil))
+	textFields := []string{
+		"Kategoria",
+		"RodzajPomocy",
+		"SposobUdzielaniaPomocy",
+		"WarunkiMagazynowe",
+		"TransportOpis",
+		"TransportKategoria",
+	}
+	// Assert
+	doc := bodyToDoc(recorded)
+	_, isHaccp := doc.Find("input[name='HACCP']").Attr("checked")
+	_, isSanepid := doc.Find("input[name='Sanepid']").Attr("checked")
+	assert.Equal(t, adapters.MockWarunkiPomocy.HACCP, isHaccp)
+	assert.Equal(t, adapters.MockWarunkiPomocy.HACCP, isSanepid)
+	for _, name := range textFields {
+		val, _ := doc.Find(fmt.Sprintf("input[name='%s']", name)).Attr("value")
+		expected := reflect.ValueOf(adapters.MockWarunkiPomocy).FieldByName(name).Interface()
+		assert.Equal(t, expected, val, "unexpected value for %s", name)
+	}
+}
