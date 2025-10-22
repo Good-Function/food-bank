@@ -5,10 +5,9 @@ import (
 	"charity_portal/api/middlewares"
 	charity "charity_portal/charity_update"
 	"charity_portal/charity_update/adapters"
-	"charity_portal/charity_update/queries"
+	"charity_portal/charity_update/operator_api"
 	"charity_portal/config"
-	"charity_portal/internal/auth"
-	dataconfirmation "charity_portal/internal/data_confirmation"
+	"charity_portal/web"
 	"context"
 	"fmt"
 	"log"
@@ -54,7 +53,7 @@ func NewAPI(cfg *config.Config) (*API, error) {
 	if err != nil {
 		return nil, err
 	}
-	sessionManager := auth.NewSessionManager(cfg.Auth.HashKey, cfg.Auth.BlockKey, oauth2Config)
+	sessionManager := web.NewSessionManager(cfg.Auth.HashKey, cfg.Auth.BlockKey, oauth2Config)
 	var protect func(next http.HandlerFunc) http.HandlerFunc
 	if cfg.Environment == environmentDevelopment {
 		protect = middlewares.ProtectFake
@@ -68,7 +67,7 @@ func NewAPI(cfg *config.Config) (*API, error) {
 		callOperator = adapters.MakeCallOperator(cfg.CharityUpdate.OperatorApiClientId, cfg.CharityUpdate.OperatorApiBaseUrl)
 	}
 	charityRouter := protect(charity.CreateRouter(charity.Compose(*cfg.CharityUpdate)).ServeHTTP)
-	router := newRouter(tokenVerifier, sessionManager, protect, &charityRouter, adapters.MakeReadOrganizationInfoBeEmail(callOperator))
+	router := newRouter(tokenVerifier, sessionManager, protect, &charityRouter, adapters.MakeReadOrganizationInfoByEmail(callOperator))
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: router,
@@ -81,23 +80,23 @@ func NewAPI(cfg *config.Config) (*API, error) {
 
 func newRouter(
 	tokenVerifier *oidc.IDTokenVerifier,
-	sessionManager *auth.SessionManager,
+	sessionManager *web.SessionManager,
 	protect func(next http.HandlerFunc) http.HandlerFunc,
 	charityRouter *http.HandlerFunc,
-	readOrgInfo queries.ReadOrganizationIdByEmail,
+	readOrgInfo operator_api.ReadOrganizationIdByEmail,
 ) http.Handler {
 	mux := http.NewServeMux()
 
-	dataConfirmationService := dataconfirmation.NewDataConfirmationService()
 	fs := http.FileServer(http.Dir("./web/static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
-	mux.Handle("/",  protect(handlers.NewDashboardHandler().ServeHTTP))
+
 	mux.Handle("GET /login", handlers.LoginHandler(sessionManager))
 	mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(tokenVerifier, sessionManager, readOrgInfo))
-	mux.Handle("GET /dashboard", protect(handlers.NewDashboardHandler().ServeHTTP))
 	mux.Handle("POST /logout", handlers.NewLogoutHandler())
-	mux.Handle("POST /data-confirmation", protect(handlers.NewDataConfirmationHandler(dataConfirmationService).ServeHTTP))
-	mux.Handle("/charity-update/", http.StripPrefix("/charity-update", charityRouter))
+	mux.Handle("/charity-update/", protect(http.StripPrefix("/charity-update", charityRouter).ServeHTTP))
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/charity-update", http.StatusSeeOther)
+	})
 	notFoundWrapped := middlewares.WithNotFound(mux)
 	forwardedWrapped := middlewares.WithForwardedHost(notFoundWrapped)
 	return middlewares.WithLog(forwardedWrapped)

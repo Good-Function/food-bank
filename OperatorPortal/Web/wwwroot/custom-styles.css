@@ -26,20 +26,6 @@ a:hover {
     border-bottom: 2px solid var(--pico-primary-inverse);
 }
 
-.bzsos-logo {
-    background-image: url('/img/bzsoslogo.png');
-    background-size: contain;
-    background-position: center;
-    width: 195px;
-    height: 80px;
-}
-
-@media screen and (max-width: 770px) {
-    .bzsos-logo {
-        display: none;
-    }
-}
-
 .focus-dim {
     box-shadow: 0 0 0 500vmax rgb(0 0 0 / 50%);
     position: relative;

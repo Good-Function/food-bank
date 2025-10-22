@@ -66,9 +66,13 @@ func MakeCallOperator(operatorApiClientId, baseUrl string) CallOperator {
 		}
 		defer resp.Body.Close()
 
-		if resp.StatusCode != http.StatusOK {
+		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 			body, _ := io.ReadAll(resp.Body)
-			return fmt.Errorf("non-200 status %d: %s", resp.StatusCode, string(body))
+			return fmt.Errorf("unexpected status %d: %s", resp.StatusCode, string(body))
+		}		
+
+		if out == nil {	
+			return nil
 		}
 
 		body, err := io.ReadAll(resp.Body)

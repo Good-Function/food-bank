@@ -1,7 +1,7 @@
 package adapters
 
 import (
-	"charity_portal/charity_update/queries"
+	"charity_portal/charity_update/operator_api"
 	"context"
 	"fmt"
 )
@@ -10,9 +10,9 @@ type orgReqBody struct {
 	Email string `json:"email"`
 }
 
-func MakeReadOrganizationInfoBeEmail(fetcher CallOperator) queries.ReadOrganizationIdByEmail {
-	return func(ctx context.Context, email string) (queries.OrgInfo, error) {
-		var orgInfo queries.OrgInfo
+func MakeReadOrganizationInfoByEmail(fetcher CallOperator) operator_api.ReadOrganizationIdByEmail {
+	return func(ctx context.Context, email string) (operator_api.OrgInfo, error) {
+		var orgInfo operator_api.OrgInfo
 		reqBody := orgReqBody{Email: email}
 		if err := fetcher("POST", "/api/organizations/lookup-by-email", reqBody, &orgInfo); err != nil {
 			panic(err)
@@ -21,13 +21,23 @@ func MakeReadOrganizationInfoBeEmail(fetcher CallOperator) queries.ReadOrganizat
 	}
 }
 
-func MakeFetchKontakty(fetcher CallOperator) queries.ReadKontaktyBy {
-	return func(ctx context.Context, id int64) (queries.Kontakty, error) {
-		var daneKontakowe queries.Kontakty
-		url := fmt.Sprintf("/api/%d/organizations/kontakty", id)
-		if err := fetcher("GET", url, nil, &daneKontakowe); err != nil {
+func MakeUpdater[T any](fetcher CallOperator, pathTemplate string) func(ctx context.Context, id int64, payload T) error {
+	return func(ctx context.Context, id int64, payload T) error {
+		url := fmt.Sprintf(pathTemplate, id)
+		if err := fetcher("PUT", url, payload, nil); err != nil {
 			panic(err)
 		}
-		return daneKontakowe, nil
+		return nil
+	}
+}
+
+func MakeFetcher[T any](fetcher CallOperator, pathTemplate string) func(ctx context.Context, id int64) (T, error) {
+	return func(ctx context.Context, id int64) (T, error) {
+		var data T
+		url := fmt.Sprintf(pathTemplate, id)
+		if err := fetcher("GET", url, nil, &data); err != nil {
+			panic(err)
+		}
+		return data, nil
 	}
 }

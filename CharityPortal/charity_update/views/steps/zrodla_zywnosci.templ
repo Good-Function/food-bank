@@ -1,0 +1,29 @@
+package steps
+
+import "charity_portal/charity_update/operator_api"
+
+templ ZrodlaZywnosciForm(data operator_api.ZrodlaZywnosci, teczkaId int64) {
+	<form>
+		<fieldset class="two-col-form">
+			<label for="Sieci">Sieci handlowe</label>
+			<input name="Sieci" id="Sieci" type="checkbox" checked?={ data.Sieci }/>
+			<label for="Bazarki">Bazarki / targowiska</label>
+			<input name="Bazarki" id="Bazarki" type="checkbox" checked?={ data.Bazarki }/>
+			<label for="Machfit">Machfit</label>
+			<input name="Machfit" id="Machfit" type="checkbox" checked?={ data.Machfit }/>
+			<label for="FEPZ2024">Program FEPŻ 2024</label>
+			<input name="FEPZ2024" id="FEPZ2024" type="checkbox" checked?={ data.FEPZ2024 }/>
+			<label for="OdbiorKrotkiTermin">Odbiór produktów o krótkim terminie</label>
+			<input name="OdbiorKrotkiTermin" id="OdbiorKrotkiTermin" type="checkbox" checked?={ data.OdbiorKrotkiTermin }/>
+			<label for="TylkoNaszMagazyn">Tylko nasz magazyn</label>
+			<input name="TylkoNaszMagazyn" id="TylkoNaszMagazyn" type="checkbox" checked?={ data.TylkoNaszMagazyn }/>
+		</fieldset>
+		<input
+			class="secondary"
+			type="submit"
+			value="Zapisz"
+			hx-put="/charity-update/zrodla-zywnosci-form"
+			hx-target="#wizard"
+		/>
+	</form>
+}

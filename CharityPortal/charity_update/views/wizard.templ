@@ -1,0 +1,117 @@
+package views
+
+type WizardStep int
+
+const (
+	Start WizardStep = iota
+	DaneAdresowe
+	Kontakty
+	Beneficjenci
+	ZrodlaZywnosci
+	WarunkiUdzielaniaPomocy
+)
+
+type SectionMeta struct {
+	Title     string
+	WizardUrl string
+	FormUrl   string
+	Id 	  	  string
+}
+
+func (s WizardStep) Meta() SectionMeta {
+	switch s {
+	case DaneAdresowe:
+		return SectionMeta{
+			Title: "Dane adresowe", 
+			WizardUrl: "/charity-update/dane-adresowe", 
+			FormUrl: "/charity-update/dane-adresowe-form",
+			Id: "dane-adresowe",
+		}
+	case Kontakty:
+		return SectionMeta{
+			Title: "Kontakty", 
+			WizardUrl: "/charity-update/kontakty", 
+			FormUrl: "/charity-update/kontakty-form",
+			Id: "kontakty",
+			}
+	case Beneficjenci:
+		return SectionMeta{
+			Title: "Beneficjenci", 
+			WizardUrl: "/charity-update/beneficjenci", 
+			FormUrl: "/charity-update/beneficjenci-form",
+			Id: "beneficjenci",
+			}
+	case ZrodlaZywnosci:
+		return SectionMeta{
+			Title: "Źrodła żywności", 
+			WizardUrl: "/charity-update/zrodla-zywnosci", 
+			FormUrl: "/charity-update/zrodla-zywnosci-form",
+			Id: "zrodla-zywnosci",
+			}
+	case WarunkiUdzielaniaPomocy:
+		return SectionMeta{
+			Title: "Warunki udzielania pomocy", 
+			WizardUrl: "/charity-update/warunki-udzielania-pomocy", 
+			FormUrl: "/charity-update/warunki-udzielania-pomocy-form",
+			Id: "warunki-udzielania-pomocy",
+			}
+	default:
+		return SectionMeta{
+			Title: "", 
+			WizardUrl: "", 
+			FormUrl: "",
+			}
+	}
+}
+
+templ Shimmers(rows int) {
+	for i := 0; i < rows; i++ {
+		<div class="shimmer"></div>
+	}
+}
+
+templ Section(step, currentStep WizardStep) {
+	<button
+		class="outline"
+		disabled?={ currentStep == step }
+		style="width:100%; margin-bottom:var(--pico-spacing)"
+		hx-get={ step.Meta().WizardUrl }
+		hx-push-url="true"
+		hx-target="#wizard"
+		hx-swap="outerHTML"
+		id={ step.Meta().Id }
+	>
+		<div style="display:flex; flex-direction: row; justify-content:space-between">
+			<span>{ step.Meta().Title }</span>
+			if step == currentStep {
+				<div style="background-image: var(--pico-icon-chevron); width: 1rem;"></div>
+			} else {
+				<div style="background-image: var(--pico-icon-chevron); width: 1rem; transform: rotate(-90deg);"></div>
+			}
+		</div>
+	</button>
+	if currentStep == step {
+		<div hx-get={ step.Meta().FormUrl } hx-trigger="revealed" hx-target="this" hx-swap="outerHTML">
+			@Shimmers(5)
+		</div>
+	}
+}
+
+templ Wizard(step WizardStep) {
+	<div id="wizard">
+		<article>
+			<header><b>🗓️ Aktualizacja danych</b></header>
+			Prosimy Cię o krótką aktualizację informacji o Twojej organizacji — to pomoże nam lepiej i szybciej nieść pomoc. Pamiętaj, aby zapisać zmiany w każdej sekcji nim przejdziesz dalej.
+			<hr/>
+			@Section(DaneAdresowe, step)
+			@Section(Kontakty, step)
+			@Section(Beneficjenci, step)
+			@Section(ZrodlaZywnosci, step)
+			@Section(WarunkiUdzielaniaPomocy, step)
+			<hr/>
+			<button style="width:100%" hx-get="/charity-update/finito" hx-push-url="true" hx-target="main">
+				Zakończ
+			</button>
+		</article>
+	</div>
+}

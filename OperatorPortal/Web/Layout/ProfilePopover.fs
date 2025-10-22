@@ -3,7 +3,7 @@ module Layout.ProfilePopover
 open Oxpecker.ViewEngine
 
 let Template (userName: string) =
-    aside (style="width:200px;") {
+    aside () {
         span(style="color: var(--pico-contrast-underline)") { userName }
         nav () {
             ul () {

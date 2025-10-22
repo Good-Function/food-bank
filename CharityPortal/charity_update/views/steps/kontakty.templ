@@ -1,0 +1,38 @@
+package steps
+
+import "charity_portal/charity_update/operator_api"
+
+templ KontaktyForm(data operator_api.Kontakty, teczkaId int64) {
+	<form>
+		<fieldset class="two-col-form">
+			<label for="WwwFacebook">www / facebook</label>
+			<input name="WwwFacebook" id="WwwFacebook" type="text" required value={ data.WwwFacebook }/>
+			<label for="Email">Email</label>
+			<input name="Email" id="Email" type="email" required value={ data.Email }/>
+			<label for="Kontakt">Kontakt</label>
+			<input name="Kontakt" id="Kontakt" type="text" required value={ data.Kontakt }/>
+			<label for="Kontakt">Telefon</label>
+			<input name="Telefon" id="Telefon" type="text" required value={ data.Telefon }/>
+			<label for="OsobaDoKontaktu">Osoba do kontaktu</label>
+			<input name="OsobaDoKontaktu" id="OsobaDoKontaktu" type="text" required value={ data.OsobaDoKontaktu }/>
+			<label for="MailOsobyKontaktowej">Email os. kontaktowej</label>
+			<input name="MailOsobyKontaktowej" id="MailOsobyKontaktowej" type="email" required value={ data.MailOsobyKontaktowej }/>
+			<label for="TelefonOsobyKontaktowej">Tel. osoby kontaktowej</label>
+			<input name="TelefonOsobyKontaktowej" id="TelefonOsobyKontaktowej" type="text" required value={ data.TelefonOsobyKontaktowej }/>
+			<label for="Dostepnosc">Dostępność</label>
+			<input name="Dostepnosc" id="Dostepnosc" type="text" required value={ data.Dostepnosc }/>
+			<label for="OsobaOdbierajacaZywnosc">Osoba odbierająca żywnosc</label>
+			<input name="OsobaOdbierajacaZywnosc" id="OsobaOdbierajacaZywnosc" type="text" required value={ data.OsobaOdbierajacaZywnosc }/>
+			<label for="TelefonOsobyOdbierajacej">Tel. Osoby odbierajacej żywność</label>
+			<input name="TelefonOsobyOdbierajacej" id="TelefonOsobyOdbierajacej" type="text" required value={ data.TelefonOsobyOdbierajacej }/>
+			<label for="Przedstawiciel">Przedstawiciel</label>
+			<input name="Przedstawiciel" id="Przedstawiciel" type="text" required value={ data.Przedstawiciel }/>
+		</fieldset>
+		<input 
+      class="secondary" 
+      type="submit" 
+      value="Zapisz" 
+      hx-put="/charity-update/kontakty-form"
+      hx-target="#wizard"/>
+	</form>
+}

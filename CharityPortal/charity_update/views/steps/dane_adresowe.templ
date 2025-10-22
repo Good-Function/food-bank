@@ -1,0 +1,28 @@
+package steps
+
+import "charity_portal/charity_update/operator_api"
+
+templ DaneAdresoweForm(data operator_api.DaneAdresowe, teczkaId int64) {
+	<form>
+		<fieldset class="two-col-form">
+			<label for="NazwaOrganizacjiPodpisujacejUmowe">Nazwa organizacji podpisującej umowę</label>
+			<input name="NazwaOrganizacjiPodpisujacejUmowe" id="NazwaOrganizacjiPodpisujacejUmowe" type="text" value={ data.NazwaOrganizacjiPodpisujacejUmowe }/>
+			<label for="AdresRejestrowy">Adres rejestrowy</label>
+			<input name="AdresRejestrowy" id="AdresRejestrowy" type="text" value={ data.AdresRejestrowy }/>
+			<label for="NazwaPlacowkiTrafiaZywnosc">Nazwa placówki gdzie trafia żywność</label>
+			<input name="NazwaPlacowkiTrafiaZywnosc" id="NazwaPlacowkiTrafiaZywnosc" type="text" value={ data.NazwaPlacowkiTrafiaZywnosc }/>
+			<label for="AdresPlacowkiTrafiaZywnosc">Adres placówki gdzie trafia żywność</label>
+			<input name="AdresPlacowkiTrafiaZywnosc" id="AdresPlacowkiTrafiaZywnosc" type="text" value={ data.AdresPlacowkiTrafiaZywnosc }/>
+			<label for="GminaDzielnica">Gmina / Dzielnica</label>
+			<input name="GminaDzielnica" id="GminaDzielnica" type="text" value={ data.GminaDzielnica }/>
+			<label for="Powiat">Powiat</label>
+			<input name="Powiat" id="Powiat" type="text" value={ data.Powiat }/>
+		</fieldset>
+		<input 
+			class="secondary" 
+			type="submit" 
+			value="Zapisz" 
+			hx-put="/charity-update/dane-adresowe-form" 
+			hx-target="#wizard" />
+	</form>
+}
