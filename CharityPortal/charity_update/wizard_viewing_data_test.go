@@ -62,10 +62,7 @@ func TestWhenVisitingCharityUpdateThenShowsWizardWithAllSteps(t *testing.T) {
 }
 
 func TestViewKontakty(t *testing.T) {
-	// Arrange + Act
-	recorded := call(httptest.NewRequest("GET", "/kontakty-form", nil))
-	// Assert
-	doc := bodyToDoc(recorded)
+	// Arrange
 	fields := []string{
 		"WwwFacebook",
 		"Email",
@@ -79,7 +76,10 @@ func TestViewKontakty(t *testing.T) {
 		"TelefonOsobyOdbierajacej",
 		"Przedstawiciel",
 	}
-	
+	// Act
+	recorded := call(httptest.NewRequest("GET", "/kontakty-form", nil))
+	// Assert
+	doc := bodyToDoc(recorded)
 	for _, name := range fields {
 		val, _ := doc.Find(fmt.Sprintf("input[name='%s']", name)).Attr("value")
 		expected := reflect.ValueOf(adapters.MockKontakty).FieldByName(name).Interface()
