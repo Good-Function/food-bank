@@ -90,7 +90,7 @@ func newRouter(
 	fs := http.FileServer(http.Dir("./web/static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.Handle("GET /login", handlers.LoginHandler(sessionManager))
-	mux.Handle("GET /signup", protect(handlers.SignupHandler()))
+	mux.Handle("GET /signup", handlers.SignupHandler())
 	mux.Handle("GET /login/callback", handlers.NewLoginCallbackHandler(tokenVerifier, sessionManager, readOrgInfo))
 	mux.Handle("POST /logout", handlers.NewLogoutHandler())
 	mux.Handle("/charity-update/", protect(http.StripPrefix("/charity-update", charityRouter).ServeHTTP))
