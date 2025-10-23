@@ -7,7 +7,7 @@ open Users.Domain
 open Oxpecker.Htmx
 
 let View (users: User list) (roles: Role list) permissions =
-    table(style="layout:fixed") {
+    table() {
         thead() {
             th(style="width:128px; min-width:64px;") {}
             th(style="width:50%") {"Mail"}

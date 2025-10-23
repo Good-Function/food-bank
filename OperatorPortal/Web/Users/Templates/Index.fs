@@ -24,7 +24,7 @@ let private page permissions  =
             }
         else
             Fragment()
-        div(id="UsersTable", style="position:relative"){
+        div(id="UsersTable", style="position:relative; overflow:auto;"){
             div (hxGet = "/team/users", hxTrigger = "revealed", hxSwap = "outerHTML") {
                 table(style="layout:fixed") {
                     thead() {
