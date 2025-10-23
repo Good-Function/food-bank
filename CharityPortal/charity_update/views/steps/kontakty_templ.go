@@ -8,7 +8,10 @@ package steps
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "charity_portal/charity_update/operator_api"
+import (
+	"charity_portal/charity_update/operator_api"
+	"charity_portal/web/layout"
+)
 
 func KontaktyForm(data operator_api.Kontakty, teczkaId int64) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -31,14 +34,14 @@ func KontaktyForm(data operator_api.Kontakty, teczkaId int64) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form><fieldset class=\"two-col-form\"><label for=\"WwwFacebook\">www / facebook</label> <input name=\"WwwFacebook\" id=\"WwwFacebook\" type=\"text\" required value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form class=\"with-indicator\"><fieldset class=\"two-col-form\"><label for=\"WwwFacebook\">www / facebook</label> <input name=\"WwwFacebook\" id=\"WwwFacebook\" type=\"text\" required value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(data.WwwFacebook)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 9, Col: 91}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 12, Col: 91}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -51,7 +54,7 @@ func KontaktyForm(data operator_api.Kontakty, teczkaId int64) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(data.Email)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 11, Col: 74}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 14, Col: 74}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -64,7 +67,7 @@ func KontaktyForm(data operator_api.Kontakty, teczkaId int64) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(data.Kontakt)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 13, Col: 79}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 16, Col: 79}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -77,7 +80,7 @@ func KontaktyForm(data operator_api.Kontakty, teczkaId int64) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(data.Telefon)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 15, Col: 79}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 18, Col: 79}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -90,7 +93,7 @@ func KontaktyForm(data operator_api.Kontakty, teczkaId int64) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(data.OsobaDoKontaktu)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 17, Col: 103}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 20, Col: 103}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -103,7 +106,7 @@ func KontaktyForm(data operator_api.Kontakty, teczkaId int64) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(data.MailOsobyKontaktowej)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 19, Col: 119}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 22, Col: 119}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -116,7 +119,7 @@ func KontaktyForm(data operator_api.Kontakty, teczkaId int64) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(data.TelefonOsobyKontaktowej)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 21, Col: 127}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 24, Col: 127}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -129,7 +132,7 @@ func KontaktyForm(data operator_api.Kontakty, teczkaId int64) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(data.Dostepnosc)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 23, Col: 88}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 26, Col: 88}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -142,7 +145,7 @@ func KontaktyForm(data operator_api.Kontakty, teczkaId int64) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(data.OsobaOdbierajacaZywnosc)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 25, Col: 127}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 28, Col: 127}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -155,7 +158,7 @@ func KontaktyForm(data operator_api.Kontakty, teczkaId int64) templ.Component {
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(data.TelefonOsobyOdbierajacej)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 27, Col: 130}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 30, Col: 130}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -168,13 +171,21 @@ func KontaktyForm(data operator_api.Kontakty, teczkaId int64) templ.Component {
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(data.Przedstawiciel)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 29, Col: 100}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/kontakty.templ`, Line: 32, Col: 100}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\"></fieldset><input class=\"secondary\" type=\"submit\" value=\"Zapisz\" hx-put=\"/charity-update/kontakty-form\" hx-target=\"#wizard\"></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\"></fieldset>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = layout.OverlaySpinner("kontakty-indicator").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<input class=\"secondary\" type=\"submit\" value=\"Zapisz\" hx-put=\"/charity-update/kontakty-form\" hx-target=\"#wizard\" hx-indicator=\"#kontakty-indicator\"></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

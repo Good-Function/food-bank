@@ -1,9 +1,12 @@
 package steps
 
-import "charity_portal/charity_update/operator_api"
+import (
+	"charity_portal/charity_update/operator_api"
+	"charity_portal/web/layout"
+)
 
 templ KontaktyForm(data operator_api.Kontakty, teczkaId int64) {
-	<form>
+	<form class="with-indicator">
 		<fieldset class="two-col-form">
 			<label for="WwwFacebook">www / facebook</label>
 			<input name="WwwFacebook" id="WwwFacebook" type="text" required value={ data.WwwFacebook }/>
@@ -28,11 +31,14 @@ templ KontaktyForm(data operator_api.Kontakty, teczkaId int64) {
 			<label for="Przedstawiciel">Przedstawiciel</label>
 			<input name="Przedstawiciel" id="Przedstawiciel" type="text" required value={ data.Przedstawiciel }/>
 		</fieldset>
+		@layout.OverlaySpinner("kontakty-indicator")
 		<input 
-      class="secondary" 
-      type="submit" 
-      value="Zapisz" 
-      hx-put="/charity-update/kontakty-form"
-      hx-target="#wizard"/>
+			class="secondary" 
+			type="submit" 
+			value="Zapisz" 
+			hx-put="/charity-update/kontakty-form"
+			hx-target="#wizard"
+			hx-indicator="#kontakty-indicator"
+	  />
 	</form>
 }

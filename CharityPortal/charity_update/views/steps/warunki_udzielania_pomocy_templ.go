@@ -8,7 +8,10 @@ package steps
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "charity_portal/charity_update/operator_api"
+import (
+	"charity_portal/charity_update/operator_api"
+	"charity_portal/web/layout"
+)
 
 func WarunkiUdzielaniaPomocy(data operator_api.WarunkiPomocy, teczkaId int64) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -31,14 +34,14 @@ func WarunkiUdzielaniaPomocy(data operator_api.WarunkiPomocy, teczkaId int64) te
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form><fieldset class=\"two-col-form\"><label for=\"Kategoria\">Kategoria</label> <input name=\"Kategoria\" id=\"Kategoria\" type=\"text\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form class=\"with-indicator\"><fieldset class=\"two-col-form\"><label for=\"Kategoria\">Kategoria</label> <input name=\"Kategoria\" id=\"Kategoria\" type=\"text\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(data.Kategoria)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/warunki_udzielania_pomocy.templ`, Line: 9, Col: 76}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/warunki_udzielania_pomocy.templ`, Line: 12, Col: 76}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -51,7 +54,7 @@ func WarunkiUdzielaniaPomocy(data operator_api.WarunkiPomocy, teczkaId int64) te
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(data.RodzajPomocy)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/warunki_udzielania_pomocy.templ`, Line: 11, Col: 85}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/warunki_udzielania_pomocy.templ`, Line: 14, Col: 85}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -64,7 +67,7 @@ func WarunkiUdzielaniaPomocy(data operator_api.WarunkiPomocy, teczkaId int64) te
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(data.SposobUdzielaniaPomocy)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/warunki_udzielania_pomocy.templ`, Line: 13, Col: 115}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/warunki_udzielania_pomocy.templ`, Line: 16, Col: 115}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -77,7 +80,7 @@ func WarunkiUdzielaniaPomocy(data operator_api.WarunkiPomocy, teczkaId int64) te
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(data.WarunkiMagazynowe)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/warunki_udzielania_pomocy.templ`, Line: 15, Col: 100}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/warunki_udzielania_pomocy.templ`, Line: 18, Col: 100}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -110,7 +113,7 @@ func WarunkiUdzielaniaPomocy(data operator_api.WarunkiPomocy, teczkaId int64) te
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(data.TransportOpis)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/warunki_udzielania_pomocy.templ`, Line: 21, Col: 88}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/warunki_udzielania_pomocy.templ`, Line: 24, Col: 88}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -123,13 +126,21 @@ func WarunkiUdzielaniaPomocy(data operator_api.WarunkiPomocy, teczkaId int64) te
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(data.TransportKategoria)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/warunki_udzielania_pomocy.templ`, Line: 23, Col: 103}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/warunki_udzielania_pomocy.templ`, Line: 26, Col: 103}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\"></fieldset><input class=\"secondary\" type=\"submit\" value=\"Zapisz\" hx-put=\"/charity-update/warunki-udzielania-pomocy-form\" hx-target=\"#wizard\"></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\"></fieldset>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = layout.OverlaySpinner("warunki-pomocy-indicator").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<input class=\"secondary\" type=\"submit\" value=\"Zapisz\" hx-put=\"/charity-update/warunki-udzielania-pomocy-form\" hx-target=\"#wizard\" hx-indicator=\"#warunki-pomocy-indicator\"></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

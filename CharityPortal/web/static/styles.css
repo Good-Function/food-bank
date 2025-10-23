@@ -1,6 +1,17 @@
-.small-button {
-	font-size: 12px;
-	padding: 0.25rem 0.75rem;
+.htmx-indicator {
+  display: none;
+}
+
+.htmx-request .htmx-indicator {
+  display: flex;
+}
+
+.htmx-request.htmx-indicator {
+  display: flex;
+}
+
+.with-indicator {
+  position: relative;
 }
 
 .two-col-form {

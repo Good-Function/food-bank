@@ -8,7 +8,10 @@ package steps
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "charity_portal/charity_update/operator_api"
+import (
+	"charity_portal/charity_update/operator_api"
+	"charity_portal/web/layout"
+)
 
 func ZrodlaZywnosciForm(data operator_api.ZrodlaZywnosci, teczkaId int64) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -31,7 +34,7 @@ func ZrodlaZywnosciForm(data operator_api.ZrodlaZywnosci, teczkaId int64) templ.
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form><fieldset class=\"two-col-form\"><label for=\"Sieci\">Sieci handlowe</label> <input name=\"Sieci\" id=\"Sieci\" type=\"checkbox\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form class=\"with-indicator\"><fieldset class=\"two-col-form\"><label for=\"Sieci\">Sieci handlowe</label> <input name=\"Sieci\" id=\"Sieci\" type=\"checkbox\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -91,7 +94,15 @@ func ZrodlaZywnosciForm(data operator_api.ZrodlaZywnosci, teczkaId int64) templ.
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "></fieldset><input class=\"secondary\" type=\"submit\" value=\"Zapisz\" hx-put=\"/charity-update/zrodla-zywnosci-form\" hx-target=\"#wizard\"></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "></fieldset>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = layout.OverlaySpinner("zrodla-zywnosci-indicator").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<input class=\"secondary\" type=\"submit\" value=\"Zapisz\" hx-put=\"/charity-update/zrodla-zywnosci-form\" hx-target=\"#wizard\" hx-indicator=\"#zrodla-zywnosci-indicator\"></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

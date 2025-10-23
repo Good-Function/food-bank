@@ -8,7 +8,14 @@ package steps
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "charity_portal/charity_update/operator_api"
+import (
+	"charity_portal/charity_update/operator_api"
+	"charity_portal/web/layout"
+)
+
+func Test() {
+	layout.OverlaySpinner("")
+}
 
 func BeneficenciForm(data operator_api.Beneficjenci, teczkaId int64) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -31,14 +38,14 @@ func BeneficenciForm(data operator_api.Beneficjenci, teczkaId int64) templ.Compo
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form><fieldset class=\"two-col-form\"><label for=\"Beneficjenci\">Beneficjenci</label> <input name=\"Beneficjenci\" id=\"Beneficjenci\" required value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form class=\"with-indicator\"><fieldset class=\"two-col-form\"><label for=\"Beneficjenci\">Beneficjenci</label> <input name=\"Beneficjenci\" id=\"Beneficjenci\" required value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(data.Beneficjenci)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/beneficjenci.templ`, Line: 9, Col: 82}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/beneficjenci.templ`, Line: 16, Col: 82}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -51,13 +58,21 @@ func BeneficenciForm(data operator_api.Beneficjenci, teczkaId int64) templ.Compo
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(data.LiczbaBeneficjentow)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/beneficjenci.templ`, Line: 11, Col: 117}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `charity_update/views/steps/beneficjenci.templ`, Line: 18, Col: 117}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"></fieldset><input class=\"secondary\" type=\"submit\" value=\"Zapisz\" hx-put=\"/charity-update/beneficjenci-form\" hx-target=\"#wizard\"></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"></fieldset>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = layout.OverlaySpinner("beneficjenci-indicator").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<input class=\"secondary\" type=\"submit\" value=\"Zapisz\" hx-put=\"/charity-update/beneficjenci-form\" hx-target=\"#wizard\" hx-indicator=\"#beneficjenci-indicator\"></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

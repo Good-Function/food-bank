@@ -1,9 +1,12 @@
 package steps
 
-import "charity_portal/charity_update/operator_api"
+import (
+	"charity_portal/charity_update/operator_api"
+	"charity_portal/web/layout"
+)
 
 templ DaneAdresoweForm(data operator_api.DaneAdresowe, teczkaId int64) {
-	<form>
+	<form class="with-indicator">
 		<fieldset class="two-col-form">
 			<label for="NazwaOrganizacjiPodpisujacejUmowe">Nazwa organizacji podpisującej umowę</label>
 			<input name="NazwaOrganizacjiPodpisujacejUmowe" id="NazwaOrganizacjiPodpisujacejUmowe" type="text" value={ data.NazwaOrganizacjiPodpisujacejUmowe }/>
@@ -18,11 +21,13 @@ templ DaneAdresoweForm(data operator_api.DaneAdresowe, teczkaId int64) {
 			<label for="Powiat">Powiat</label>
 			<input name="Powiat" id="Powiat" type="text" value={ data.Powiat }/>
 		</fieldset>
+		@layout.OverlaySpinner("dane-adresowe-indicator")
 		<input 
 			class="secondary" 
 			type="submit" 
 			value="Zapisz" 
 			hx-put="/charity-update/dane-adresowe-form" 
-			hx-target="#wizard" />
+			hx-target="#wizard" 
+			hx-indicator="#dane-adresowe-indicator"/>
 	</form>
 }
