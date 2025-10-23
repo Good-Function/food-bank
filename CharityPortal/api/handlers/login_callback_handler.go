@@ -67,5 +67,5 @@ func (lh *LoginCallbackHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 	}
 
 	_ = lh.sessionManager.WriteSession(w, claims.Email, orgInfo.Id)
-	http.Redirect(w, r, "/dashboard", http.StatusFound)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
