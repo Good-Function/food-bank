@@ -29,7 +29,7 @@ func Finito() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div style=\"text-align: center;\"><h1 style=\"font-size: 10vw; text-shadow: 7px 7px #ff9a00\">Dziękujemy</h1></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div style=\"text-align: center;\"><h1 style=\"font-size: 10vw; text-shadow: .05em .05em #ff9a00\">Dziękujemy</h1></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
