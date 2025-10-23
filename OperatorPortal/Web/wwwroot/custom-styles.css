@@ -70,3 +70,5 @@ a:hover {
 td select, td input {
     margin: 0;
 }
+.logo { width: 50px; }
+@media (max-width: 768px) { .logo { display: none; } }

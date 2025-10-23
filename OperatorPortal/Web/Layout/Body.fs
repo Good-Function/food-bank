@@ -11,7 +11,7 @@ let Template (content: HtmlElement) (currentPath: Navigation.Page option) (userN
             class' = "fluid-container",
             style="z-index:2; padding:8px 8px 0px 8px; box-shadow: 0px -2px 8px var(--pico-accordion-open-summary-color); margin-bottom: var(--pico-spacing); background: var(--pico-background-color); top:0; position:sticky;") {
             div (class'="container", style = "display: flex; align-items: flex-start; justify-content: space-between;") {
-                div (title="v0.0.1", style="width:50px;") {
+                div (title="v0.0.1", class'="logo") {
                     Icons.Logo
                 }
                 Navigation.Template currentPath
