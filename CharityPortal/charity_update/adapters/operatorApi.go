@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"strings"
 
@@ -59,13 +60,13 @@ func MakeCallOperator(operatorApiClientId, baseUrl string) CallOperator {
 		if in != nil {
 			req.Header.Add("Content-Type", "application/json")
 		}
-
+		slog.Info(req.Method + " " + req.URL.String())
 		resp, err := client.Do(req)
 		if err != nil {
 			return fmt.Errorf("failed to send request: %w", err)
 		}
 		defer resp.Body.Close()
-
+		slog.Info(req.Method + " " + req.URL.String() + " -> " + resp.Status)
 		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 			body, _ := io.ReadAll(resp.Body)
 			return fmt.Errorf("unexpected status %d: %s", resp.StatusCode, string(body))
