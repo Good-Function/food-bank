@@ -66,6 +66,7 @@ func (lh *LoginCallbackHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	slog.With("handler", "LoginCallbackHandler").Info("session for org with id created", "orgId", orgInfo.Id, "email", claims.Email)
 	_ = lh.sessionManager.WriteSession(w, claims.Email, orgInfo.Id)
 	http.Redirect(w, r, "/", http.StatusFound)
 }
