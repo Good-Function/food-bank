@@ -15,6 +15,10 @@ func BuildProtect(readSession func(r *http.Request) (*web.SessionData, error)) f
 				http.Redirect(w, r, "/login", http.StatusFound)
 				return
 			}
+			if data.OrgID == nil {
+				http.Redirect(w, r, "/signup", http.StatusFound)
+				return
+			}
 			ctx := context.WithValue(r.Context(), web.UserContextKey{}, data)
 			next(w, r.WithContext(ctx))
 		}
