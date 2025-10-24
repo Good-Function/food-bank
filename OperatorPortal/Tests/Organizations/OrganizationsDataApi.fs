@@ -111,7 +111,7 @@ let ``PUT /api/organizations/{id}/dane-adresowe updates data and stores audit wi
 
     result.AdresRejestrowy |> should equal change.AdresRejestrowy
     result.NazwaPlacowkiTrafiaZywnosc |> should equal change.NazwaPlacowkiTrafiaZywnosc
-    let! audit = AuditTrailDao.AuditTrailDao(DbConnection.connectDb).ReadAuditTrail(id)
+    let! audit = AuditTrailDao.AuditTrailDao(DbConnection.connectDb).ReadAuditTrail(id, None)
     audit |> should haveLength 1
     audit.Head.Who |> should equal userEmail
     audit.Head.Kind |> should equal (nameof Organizations.Domain.Organization.DaneAdresowe)
@@ -128,7 +128,7 @@ let ``PUT /api/organizations/{id}/beneficjenci updates data and stores audit wit
                         api $"/api/organizations/{id}/beneficjenci"
 
     result.LiczbaBeneficjentow |> should equal change.LiczbaBeneficjentow
-    let! audit = AuditTrailDao.AuditTrailDao(DbConnection.connectDb).ReadAuditTrail(id)
+    let! audit = AuditTrailDao.AuditTrailDao(DbConnection.connectDb).ReadAuditTrail(id, None)
     audit |> should haveLength 1
     audit.Head.Who |> should equal userEmail
     audit.Head.Kind |> should equal (nameof Organizations.Domain.Organization.Beneficjenci)
@@ -157,7 +157,7 @@ let ``PUT /api/organizations/{id}/kontakty updates data and stores audit with us
 
     result.Email |> should equal change.Email
     result.OsobaDoKontaktu |> should equal change.OsobaDoKontaktu
-    let! audit = AuditTrailDao.AuditTrailDao(DbConnection.connectDb).ReadAuditTrail(id)
+    let! audit = AuditTrailDao.AuditTrailDao(DbConnection.connectDb).ReadAuditTrail(id, None)
     audit |> should haveLength 1
     audit.Head.Who |> should equal userEmail
     audit.Head.Kind |> should equal (nameof Organizations.Domain.Organization.Kontakty)
@@ -183,7 +183,7 @@ let ``PUT /api/organizations/{id}/warunki-pomocy updates data and stores audit w
 
     result.HACCP |> should equal change.HACCP
     result.Kategoria |> should equal change.Kategoria
-    let! audit = AuditTrailDao.AuditTrailDao(DbConnection.connectDb).ReadAuditTrail(id)
+    let! audit = AuditTrailDao.AuditTrailDao(DbConnection.connectDb).ReadAuditTrail(id, None)
     audit |> should haveLength 1
     audit.Head.Who |> should equal userEmail
     audit.Head.Kind |> should equal (nameof Organizations.Domain.Organization.WarunkiPomocy)
@@ -203,7 +203,7 @@ let ``PUT /api/organizations/{id}/adresy-ksiegowosci updates data and stores aud
                         api $"/api/organizations/{id}/adresy-ksiegowosci"
 
     result.KsiegowanieAdres |> should equal change.KsiegowanieAdres
-    let! audit = AuditTrailDao.AuditTrailDao(DbConnection.connectDb).ReadAuditTrail(id)
+    let! audit = AuditTrailDao.AuditTrailDao(DbConnection.connectDb).ReadAuditTrail(id, None)
     audit |> should haveLength 1
     audit.Head.Who |> should equal userEmail
     audit.Head.Kind |> should equal (nameof Organizations.Domain.Organization.AdresyKsiegowosci)
@@ -226,7 +226,7 @@ let ``PUT /api/organizations/{id}/zrodla-zywnosci updates data and stores audit 
 
     result.Sieci |> should equal change.Sieci
     result.Bazarki |> should equal change.Bazarki
-    let! audit = AuditTrailDao.AuditTrailDao(DbConnection.connectDb).ReadAuditTrail(id)
+    let! audit = AuditTrailDao.AuditTrailDao(DbConnection.connectDb).ReadAuditTrail(id, None)
     audit |> should haveLength 1
     audit.Head.Who |> should equal userEmail
     audit.Head.Kind |> should equal (nameof Organizations.Domain.Organization.ZrodlaZywnosci)

@@ -4,6 +4,7 @@ open System.Data
 open Azure.Storage.Blobs
 open Organizations.Application
 open Organizations.Application.ReadModels
+open Organizations.Application.ReadModels.ReadAuditTrail
 open Organizations.Application.ReadModels.OrganizationDetails
 open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Database
@@ -11,6 +12,7 @@ open Organizations.Database
 type Dependencies =
     { ReadOrganizationSummaries: ReadOrganizationSummaries
       ReadOrganizationDetailsBy: ReadOrganizationDetailsBy
+      ReadAuditTrail: ReadAuditTrail
       ReadMailingList: MailingList.ReadMailingList
       ChangeDaneAdresowe: Handlers.ChangeDaneAdresowe
       ChangeKontakty: Handlers.ChangeKontakty
@@ -62,6 +64,7 @@ let build (connectDb: unit -> Async<IDbConnection>, blobServiceClient: BlobServi
             (BlobStorage.upload blobServiceClient)
             (OrganizationsDao.saveDocMetadata connectDb)
       DeleteDocument = BlobStorage.delete blobServiceClient
+      ReadAuditTrail = AuditTrailDao.AuditTrailDao(connectDb).ReadAuditTrail
       GenerateDownloadUri = BlobStorage.generateDownloadUri blobServiceClient
       Import =
         CreateOrganizationCommandHandler.importOrganizations

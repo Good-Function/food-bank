@@ -1,44 +1,47 @@
 module AuditTrailTests
 
 open System
-open Organizations.Application.Audit
-open Organizations.Database.AuditTrailDao
-open Organizations.FindDiffForAudit
+open System.Net
+open Organizations.Domain.Identifiers
+open Organizations.Domain.Organization
+open Oxpecker.ViewEngine
+open Tests
+open Tools.FormDataBuilder
 open Xunit
+open Tools.TestServer
 open FsUnit.Xunit
+open Tools.HttResponseMessageToHtml
+open Organizations.Database.OrganizationsDao
+open FSharp.Data
 
-type Test = { Name: string; Age: int }
+let shouldBeNowWithin (tolerance: TimeSpan) (actualString: string) =
+    let actual = DateTime.Parse(actualString)
+    let diff = (actual - DateTime.Now).Duration()
+    diff |> should be (lessThan tolerance)
 
 [<Fact>]
-let ``Audit Trail diff finds fields which value differs and dao can persist the difference`` () =
+let ``Audit stores only changed fields and returns audit trail by related entity id and kind`` () =
     task {
         // Arrange
-        let auditTrailDao = AuditTrailDao Tools.DbConnection.connectDb
-
-        let oldValue =
-            { Name = Guid.NewGuid().ToString()
-              Age = 32 }
-
-        let newValue =
-            { Name = Guid.NewGuid().ToString()
-              Age = 32 }
-
-        let auditTrail: AuditTrail =
-            { Who = "marcin"
-              OccuredAt =DateTime.UtcNow
-              Kind = "Test"
-              EntityId = 100
-              Diff = findDiff oldValue newValue }
+        let api = runTestApi() |> authenticate "Editor"
+        let organization = Arranger.AnOrganization()
+        do! organization |> (save Tools.DbConnection.connectDb)
+        let expectedLiczbaBeneficjentow = organization.Beneficjenci.LiczbaBeneficjentow + 20 |> _.ToString()
+        let data = formData {
+            yield "LiczbaBeneficjentow", expectedLiczbaBeneficjentow
+            yield "Beneficjenci", organization.Beneficjenci.Beneficjenci
+        }
         // Act
-        do! auditTrailDao.SaveAuditTrail auditTrail
+        let! modificationResponse = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/beneficjenci", data)
         // Assert
-        let! rows = auditTrailDao.ReadAuditTrail auditTrail.EntityId
-
-        let oldState =
-            rows
-            |> List.tryFind (fun row ->
-                row.Diff["Name"].Old.ToString() = oldValue.Name
-                && row.Diff["Name"].New.ToString() = newValue.Name)
-        auditTrail.Diff.Count |> should equal 1
-        oldState |> should not' (be None)
+        let! auditTrailResponse = api.GetAsync($"organizations/{organization.Teczka |> TeczkaId.unwrap}/audit-trail?kind=beneficjenci")
+        modificationResponse.StatusCode |> should equal HttpStatusCode.OK
+        auditTrailResponse.StatusCode |> should equal HttpStatusCode.OK
+        let! doc = auditTrailResponse.HtmlContent()
+        let cells = doc.CssSelect("tbody td") |> List.map _.InnerText()
+        cells[0] |> should equal Authentication.userName
+        cells[1] |> shouldBeNowWithin (TimeSpan.FromSeconds(5.0))
+        cells[2] |> should equal "LiczbaBeneficjentow"
+        cells[3] |> should equal $"{organization.Beneficjenci.LiczbaBeneficjentow}"
+        cells[4] |> should equal $"{organization.Beneficjenci.LiczbaBeneficjentow + 20}"
     }

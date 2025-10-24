@@ -4,8 +4,8 @@ open System
 open System.Data
 open System.Text.Json
 open Organizations.Application.Audit
+open Organizations.Application.ReadModels.ReadAuditTrail
 open PostgresPersistence.DapperFsharp
-open Organizations.Application.Handlers
 
 type AuditTrailRow =
     { related_entity_id: int64
@@ -34,19 +34,18 @@ type AuditTrailDao(connectDB: unit -> Async<IDbConnection>) =
             do! db.Execute query parameters
         }
 
-    member this.ReadAuditTrail(entityId: int64) : Async<AuditTrail list> =
+    member this.ReadAuditTrail: ReadAuditTrail = fun(entityId: int64, kind: string option) ->
         async {
             use! db = connectDB ()
-
-            let query =
-                """
+            let query = """
             SELECT related_entity_id, who, kind, occured_at, diff
             FROM audit_trail
             WHERE related_entity_id = @entityId
-            ORDER BY occured_at ASC"""
+              AND (@kind IS NULL OR kind ILIKE @kind)
+            ORDER BY occured_at ASC
+            """
 
-            let! rows = db.QueryBy<AuditTrailRow> query {| entityId = entityId |}
-
+            let! rows = db.QueryBy<AuditTrailRow> query {| entityId = entityId; kind = kind |}
             return
                 rows
                 |> Seq.map (fun r ->

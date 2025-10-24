@@ -8,12 +8,17 @@ open Microsoft.AspNetCore.Authentication.OpenIdConnect
 open Microsoft.AspNetCore.Http
 open Oxpecker
 
+[<Literal>]
+let userName = "developer@bzsos.pl"
+[<Literal>]
+let userRole = "Editor"
+
 let fakeAuthenticate =
     Func<HttpContext, RequestDelegate, Task>(fun ctx next ->
-        let role = ctx.TryGetHeaderValue("role") |> Option.defaultValue "Editor"
+        let role = ctx.TryGetHeaderValue("role") |> Option.defaultValue userRole
         task {
             let claims = [
-                Claim("preferred_username", "developer@bzsos.pl")
+                Claim("preferred_username", userName)
                 Claim(ClaimTypes.NameIdentifier, "0")
                 Claim(ClaimTypes.Role, role)
             ]

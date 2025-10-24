@@ -4,6 +4,7 @@ open System
 open Microsoft.AspNetCore.Http
 open Microsoft.FSharp.Reflection
 open Organizations.Application
+open Organizations.Application.ReadModels.ReadAuditTrail
 open Organizations.Application.ReadModels.Filter
 open Organizations.Application.ReadModels.FilterOperators
 open Organizations.Application.ReadModels.OrganizationSummary
@@ -109,6 +110,14 @@ let details (readDetailsBy: ReadOrganizationDetailsBy) (id: int64) : EndpointHan
                        (DetailsTemplate.Template details permissions)
                        (DetailsTemplate.FullPage details permissions username)
         }
+        
+let auditTrail (readAuditTrail: ReadAuditTrail) (id: int64) : EndpointHandler =
+    fun ctx ->
+        task {
+            let kind = ctx.TryGetQueryValue "kind"
+            let! auditTrail = readAuditTrail(id, kind)
+            return! ctx.WriteHtmlView (Audit.View auditTrail)
+        }
     
 let import: EndpointHandler =
     fun ctx -> task {
@@ -137,6 +146,7 @@ let Endpoints (dependencies: Dependencies) =
             route "/summaries/mailing-list" (mailingList dependencies.ReadMailingList)
             routef "/{%d}" (details dependencies.ReadOrganizationDetailsBy)
             route "/import" import
+            routef "/{%d}/audit-trail" (auditTrail dependencies.ReadAuditTrail)
           ]
       POST [
           route "/import/upload" (upload dependencies.Import)
