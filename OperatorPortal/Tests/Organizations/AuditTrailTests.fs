@@ -13,7 +13,7 @@ type Test = { Name: string; Age: int }
 let ``Audit Trail diff finds fields which value differs and dao can persist the difference`` () =
     task {
         // Arrange
-        let auditTrailDao = AuditTrailDao(Tools.DbConnection.connectDb)
+        let auditTrailDao = AuditTrailDao Tools.DbConnection.connectDb
 
         let oldValue =
             { Name = Guid.NewGuid().ToString()
