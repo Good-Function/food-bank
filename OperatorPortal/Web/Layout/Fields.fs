@@ -6,12 +6,37 @@ open Oxpecker.ViewEngine
 open Oxpecker.ViewEngine.Aria
 open Oxpecker.Htmx
 open Permissions
+open Web.Layout.Dropdown
 
 let editableHeader (title: string) (formPath: string) (permissions: Permission list) =
     header (class' = "action-header") {
         span () { title }
         if permissions |> List.contains Permission.EditOrganization then
             div (class' = "action-header-actions") {
+                span (
+                    hxGet = formPath,
+                    hxTarget = "closest article",
+                    hxSwap = "outerHTML"
+                ) {
+                    Icons.Pen
+                }
+            }
+        else Fragment()
+    }
+    
+let editableHeader2
+    (title: string)
+    (formPath: string)
+    (permissions: Permission list)
+    (auditPath: string)
+    =
+    header (class' = "action-header") {
+        span () { title }
+        if permissions |> List.contains Permission.EditOrganization then
+            div (class' = "action-header-actions") {
+                span (hxGet = auditPath, hxTarget="body", hxSwap="beforeend") {
+                    Icons.Chronic
+                }
                 span (
                     hxGet = formPath,
                     hxTarget = "closest article",

@@ -8,7 +8,11 @@ open Permissions
 
 let View (kontakty: OrganizationDetails.Kontakty) (teczka: int64) (permissions: Permission list) =
     article () {
-        editableHeader "Kontakty" $"/organizations/{teczka}/kontakty/edit" permissions
+        editableHeader2
+            "Kontakty"
+            $"/organizations/{teczka}/kontakty/edit"
+            permissions
+            $"/organizations/{teczka}/audit-trail?kind=kontakty"
         readonlyField "www / facebook" kontakty.WwwFacebook
         readonlyField "Telefon" kontakty.Telefon
         readonlyField "Przedstawiciel" kontakty.Przedstawiciel

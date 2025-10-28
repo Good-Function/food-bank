@@ -38,10 +38,9 @@ let ``Audit stores only changed fields and returns audit trail by related entity
         modificationResponse.StatusCode |> should equal HttpStatusCode.OK
         auditTrailResponse.StatusCode |> should equal HttpStatusCode.OK
         let! doc = auditTrailResponse.HtmlContent()
-        let cells = doc.CssSelect("tbody td") |> List.map _.InnerText()
-        cells[0] |> should equal Authentication.userName
-        cells[1] |> shouldBeNowWithin (TimeSpan.FromSeconds(5.0))
-        cells[2] |> should equal "LiczbaBeneficjentow"
-        cells[3] |> should equal $"{organization.Beneficjenci.LiczbaBeneficjentow}"
-        cells[4] |> should equal $"{organization.Beneficjenci.LiczbaBeneficjentow + 20}"
+        let text = doc.CssSelect("ul") |> List.map _.InnerText() |> List.head
+        text |> should haveSubstring Authentication.userName
+        text |> should haveSubstring "Liczba Beneficjentow"
+        text |> should haveSubstring $"{organization.Beneficjenci.LiczbaBeneficjentow}"
+        text |> should haveSubstring $"{organization.Beneficjenci.LiczbaBeneficjentow + 20}"
     }

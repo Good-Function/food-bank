@@ -6,7 +6,7 @@ open Oxpecker.Htmx
 open Web.Layout.Dropdown
 
 let Template (content: HtmlElement) (currentPath: Navigation.Page option) (userName: string) =
-    body (hxBoost = true) {
+    body (hxBoost = true, class'="modal-is-opening") {
         header (
             class' = "fluid-container",
             style="z-index:2; padding:8px 8px 0px 8px; box-shadow: 0px -2px 8px var(--pico-accordion-open-summary-color); margin-bottom: var(--pico-spacing); background: var(--pico-background-color); top:0; position:sticky;") {

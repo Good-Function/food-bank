@@ -41,8 +41,8 @@ type AuditTrailDao(connectDB: unit -> Async<IDbConnection>) =
             SELECT related_entity_id, who, kind, occured_at, diff
             FROM audit_trail
             WHERE related_entity_id = @entityId
-              AND (@kind IS NULL OR kind ILIKE @kind)
-            ORDER BY occured_at ASC
+              AND (@kind::text IS NULL OR kind ILIKE @kind::text)
+            ORDER BY occured_at DESC
             """
 
             let! rows = db.QueryBy<AuditTrailRow> query {| entityId = entityId; kind = kind |}

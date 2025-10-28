@@ -1,0 +1,32 @@
+.timeline {
+    
+}
+.timeline li {
+    position: relative;
+    padding: 10px;
+    list-style: none;
+}
+.timeline li a {
+    color: gray;
+}
+
+.timeline li:before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #D8D8D8;
+    position: absolute;
+    left: -15px;
+    top: 0.8em;
+}
+
+.timeline li:not(:last-child):after {
+    content: '';
+    width: 2px;
+    height: 100%;
+    background: #D8D8D8;
+    position: absolute;
+    left: -8px;
+    top: 1.1em;
+}

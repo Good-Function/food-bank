@@ -8,7 +8,11 @@ open Permissions
 
 let View (beneficjenci: OrganizationDetails.Beneficjenci) (teczka: int64) (permissions: Permission list) =
     article () {
-        editableHeader "Beneficjenci" $"/organizations/{teczka}/beneficjenci/edit" permissions
+        editableHeader2
+            "Beneficjenci"
+            $"/organizations/{teczka}/beneficjenci/edit"
+            permissions
+            $"/organizations/{teczka}/audit-trail?kind=beneficjenci"
         readonlyField "Liczba Beneficjentów" $"{beneficjenci.LiczbaBeneficjentow}"
         readonlyField "Beneficjenci" beneficjenci.Beneficjenci
     }

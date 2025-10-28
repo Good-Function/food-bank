@@ -3,28 +3,32 @@ module Organizations.Templates.Audit
 open Organizations.Application.Audit
 open Oxpecker.ViewEngine
 
-let View (auditTrail: AuditTrail list) =
-    article () {
-        table() {
-            thead() {
-                tr() {
-                    th() { "Who" }
-                    th() { "OccuredAt" }
-                    th() { "Field" }
-                    th() { "Old" }
-                    th() { "New" }
+let View2 (auditTrail: AuditTrail list) =
+    dialog (open' = true) {
+        article () {
+            header () { "Historia zmian" }
+            small () {
+                form (method = "dialog") {
+                    ul (class' = "timeline") {
+                        for trail in auditTrail do
+                            li () {
+                                Fragment() {
+                                    b (style="color:var(--pico-primary)") {
+                                        trail.OccuredAt.ToShortDateString() + " " + trail.OccuredAt.ToShortTimeString()
+                                    }
+
+                                    span () { " - " + trail.Who }
+                                }
+
+                                for KeyValue(key, value) in trail.Diff do
+                                    br ()
+                                    b () { key |> Formatters.pascalToWords }
+                                    br ()
+                                    Fragment() { $"{value.Old} → {value.New}" }
+                            }
+                    }
+                    input (type' = "submit", formnovalidate = true, value = "Zamknij")
                 }
-            }
-            tbody() {
-                for trail in auditTrail do
-                    for KeyValue(key, value) in trail.Diff do
-                        tr() {
-                            td() { trail.Who }
-                            td() { trail.OccuredAt.ToString "u" }
-                            td() { key }
-                            td() { value.Old.ToString() }
-                            td() { value.New.ToString() }
-                        }
             }
         }
     }
