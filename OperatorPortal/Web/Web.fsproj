@@ -92,6 +92,7 @@
       <Compile Include="Organizations\Application\ReadModels\OrganizationSummary.fs" />
       <Compile Include="Organizations\Application\ReadModels\OrganizationDetails.fs" />
       <Compile Include="Organizations\Application\ReadModels\MailingList.fs" />
+      <Compile Include="Organizations\Application\ReadModels\ReadAuditTrail.fs" />
       <Content Include="Organizations\Database\migrations.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
@@ -125,6 +126,7 @@
       <Compile Include="Organizations\Templates\List\ListTemplate.fs" />
       <Compile Include="Organizations\Templates\ImportExcelTemplate.fs" />
       <Compile Include="Organizations\Templates\ImportExcelResult.fs" />
+      <Compile Include="Organizations\Templates\Audit.fs" />
       <Compile Include="Organizations\ClosedXmlExcelImport.fs" />
       <Compile Include="Organizations\BlobStorage.fs" />
       <Compile Include="Organizations\CompositionRoot.fs" />

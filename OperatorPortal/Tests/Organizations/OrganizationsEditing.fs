@@ -49,12 +49,12 @@ let ``PUT /ogranizations/{id}/dane-adresowe modifies and returns updated data`` 
         do! organization |> (save Tools.DbConnection.connectDb)
         let randomStuff = Guid.NewGuid().ToString()
         let data = formData {
-            yield ("NazwaOrganizacjiPodpisujacejUmowe", randomStuff)
-            yield ("AdresRejestrowy", randomStuff)
-            yield ("NazwaPlacowkiTrafiaZywnosc", randomStuff)
-            yield ("AdresPlacowkiTrafiaZywnosc", randomStuff)
-            yield ("GminaDzielnica", randomStuff)
-            yield ("Powiat", randomStuff)
+            yield "NazwaOrganizacjiPodpisujacejUmowe", randomStuff
+            yield "AdresRejestrowy", randomStuff
+            yield "NazwaPlacowkiTrafiaZywnosc", randomStuff
+            yield "AdresPlacowkiTrafiaZywnosc", randomStuff
+            yield "GminaDzielnica", randomStuff
+            yield "Powiat", randomStuff
         }
         let api = runTestApi() |> authenticate "Editor"
         // Act
@@ -80,7 +80,7 @@ let ``GET /ogranizations/{id}/kontakty/edit returns prefilled inputs to edit the
     task {
         // Arrange
         let organization = Arranger.AnOrganization()
-        do! organization |> (save Tools.DbConnection.connectDb)
+        do! organization |> save Tools.DbConnection.connectDb
         // Arrange
         let api = runTestApi()
         // Act
@@ -115,17 +115,17 @@ let ``PUT /ogranizations/{id}/kontakty modifies and returns updated data`` () =
         do! organization |> (save Tools.DbConnection.connectDb)
         let randomStuff = Guid.NewGuid().ToString()
         let data = formData {
-            yield ("WwwFacebook", randomStuff)
-            yield ("Telefon", randomStuff)
-            yield ("Przedstawiciel", randomStuff)
-            yield ("Kontakt", randomStuff)
-            yield ("Email", randomStuff)
-            yield ("Dostepnosc", randomStuff)
-            yield ("OsobaDoKontaktu", randomStuff)
-            yield ("TelefonOsobyKontaktowej", randomStuff)
-            yield ("MailOsobyKontaktowej", randomStuff)
-            yield ("OsobaOdbierajacaZywnosc", randomStuff)
-            yield ("TelefonOsobyOdbierajacej", randomStuff)
+            yield "WwwFacebook", randomStuff
+            yield "Telefon", randomStuff
+            yield "Przedstawiciel", randomStuff
+            yield "Kontakt", randomStuff
+            yield "Email", randomStuff
+            yield "Dostepnosc", randomStuff
+            yield "OsobaDoKontaktu", randomStuff
+            yield "TelefonOsobyKontaktowej", randomStuff
+            yield "MailOsobyKontaktowej", randomStuff
+            yield "OsobaOdbierajacaZywnosc", randomStuff
+            yield "TelefonOsobyOdbierajacej", randomStuff
         }
         let api = runTestApi() |> authenticate "Editor"
         // Act
@@ -181,8 +181,8 @@ let ``PUT /ogranizations/{id}/beneficjenci modifies and returns updated data`` (
         let expectedLiczbaBeneficjentow = organization.Beneficjenci.LiczbaBeneficjentow + 20 |> _.ToString()
         let expectedBeneficjenci = $"{Guid.NewGuid()}"
         let data = formData {
-            yield ("LiczbaBeneficjentow", expectedLiczbaBeneficjentow)
-            yield ("Beneficjenci", expectedBeneficjenci)
+            yield "LiczbaBeneficjentow", expectedLiczbaBeneficjentow
+            yield "Beneficjenci", expectedBeneficjenci
         }
         // Act
         let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/beneficjenci", data)
@@ -228,15 +228,15 @@ let ``PUT /ogranizations/{id}/dokumenty modifies and returns updated data`` () =
     task {
         // Arrange
         let organization = Arranger.AnOrganization()
-        let expectedDate = Some <| DateOnly.FromDateTime(DateTime.Today)
-        do! organization |> (save Tools.DbConnection.connectDb)
+        let expectedDate = Some <| DateOnly.FromDateTime DateTime.Today
+        do! organization |> save Tools.DbConnection.connectDb
         let data = formData {
-            yield ("Wniosek", expectedDate |> toInput)
-            yield ("UmowaZDn", "")
-            yield ("UmowaRODO", expectedDate |> toInput)
-            yield ("KartyOrganizacjiData", expectedDate |> toInput)
-            yield ("OstatnieOdwiedzinyData", expectedDate |> toInput)
-            yield ("DataUpowaznieniaDoOdbioru", expectedDate |> toInput)
+            yield "Wniosek", expectedDate |> toInput
+            yield "UmowaZDn", ""
+            yield "UmowaRODO", expectedDate |> toInput
+            yield "KartyOrganizacjiData", expectedDate |> toInput
+            yield "OstatnieOdwiedzinyData", expectedDate |> toInput
+            yield "DataUpowaznieniaDoOdbioru", expectedDate |> toInput
         }
         // Arrange
         let api = runTestApi()
@@ -291,14 +291,14 @@ let ``PUT /ogranizations/{id}/zrodla-zywnosci modifies and returns updated data`
     task {
         // Arrange
         let organization = Arranger.AnOrganization()
-        do! organization |> (save Tools.DbConnection.connectDb)
+        do! organization |> save Tools.DbConnection.connectDb
         let data = formData {
-            yield ("Sieci", "true")
-            yield ("Bazarki", "true")
-            yield ("Machfit", "true")
-            yield ("FEPZ2024", "true")
-            yield ("OdbiorKrotkiTermin", "true")
-            yield ("TylkoNaszMagazyn", "true")
+            yield "Sieci", "true"
+            yield "Bazarki", "true"
+            yield "Machfit", "true"
+            yield "FEPZ2024", "true"
+            yield "OdbiorKrotkiTermin", "true"
+            yield "TylkoNaszMagazyn", "true"
         }
         let api = runTestApi() |> authenticate "Editor"
         // Act
@@ -345,12 +345,12 @@ let ``PUT /ogranizations/{id}/adresy-ksiegowosci modifies and returns updated da
     task {
         // Arrange
         let organization = Arranger.AnOrganization()
-        do! organization |> (save Tools.DbConnection.connectDb)
+        do! organization |> save Tools.DbConnection.connectDb
         let expectedText = $"{Guid.NewGuid()}"
         let data = formData {
-            yield ("NazwaOrganizacjiKsiegowanieDarowizn", expectedText)
-            yield ("KsiegowanieAdres", expectedText)
-            yield ("TelOrganProwadzacegoKsiegowosc", expectedText)
+            yield "NazwaOrganizacjiKsiegowanieDarowizn", expectedText
+            yield "KsiegowanieAdres", expectedText
+            yield "TelOrganProwadzacegoKsiegowosc", expectedText
         }
         let api = runTestApi() |> authenticate "Editor"
         // Act
@@ -405,17 +405,17 @@ let ``PUT /ogranizations/{id}/warunki-pomocy modifies and returns updated data``
     task {
         // Arrange
         let organization = Arranger.AnOrganization()
-        do! organization |> (save Tools.DbConnection.connectDb)
+        do! organization |> save Tools.DbConnection.connectDb
         let expectedText = $"{Guid.NewGuid()}"
         let data = formData {
-            yield ("Kategoria", expectedText)
-            yield ("RodzajPomocy", expectedText)
-            yield ("SposobUdzielaniaPomocy", expectedText)
-            yield ("WarunkiMagazynowe", expectedText)
-            yield ("HACCP", "true")
-            yield ("Sanepid", "true")
-            yield ("TransportOpis", expectedText)
-            yield ("TransportKategoria", expectedText)
+            yield "Kategoria", expectedText
+            yield "RodzajPomocy", expectedText
+            yield "SposobUdzielaniaPomocy", expectedText
+            yield "WarunkiMagazynowe", expectedText
+            yield "HACCP", "true"
+            yield "Sanepid", "true"
+            yield "TransportOpis", expectedText
+            yield "TransportKategoria", expectedText
         }
         // Arrange
         let api = runTestApi() |> authenticate "Editor"

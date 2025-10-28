@@ -5,11 +5,10 @@ open Layout.Navigation
 open Oxpecker.ViewEngine
 open Layout
 open Oxpecker.Htmx
-open Permissions
 
 let private page permissions  =
     Fragment() {
-        if permissions |> List.contains Permission.ManageUsers then
+        if permissions |> List.contains Permissions.ManageUsers then
             form(style="margin:auto;",
                  hxPost="/team/users",
                  hxTarget="#UsersTable",
