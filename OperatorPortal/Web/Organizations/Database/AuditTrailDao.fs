@@ -17,6 +17,7 @@ type AuditTrailRow =
 type AuditTrailDao(connectDB: unit -> Async<IDbConnection>) =
     member this.SaveAuditTrail(auditTrail: AuditTrail) : Async<unit> =
         async {
+            if auditTrail.Diff.IsEmpty then return ()
             use! db = connectDB ()
 
             let query =

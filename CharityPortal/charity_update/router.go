@@ -94,7 +94,7 @@ func updateDaneAdresoweHandler(updateDaneAdresoweBy operator_api.UpdateDaneAdres
 			GminaDzielnica:                    r.FormValue("GminaDzielnica"),
 			Powiat:                            r.FormValue("Powiat"),
 		}
-		updateDaneAdresoweBy(r.Context(), *session.OrgID, daneAdresowe)
+		updateDaneAdresoweBy(r.Context(), *session.OrgID, session.Email, daneAdresowe)
 		w.Header().Set("HX-Redirect", "/charity-update/kontakty#kontakty")
 		w.WriteHeader(http.StatusOK)
 	}
@@ -135,7 +135,7 @@ func updateKontaktyHandler(updateDaneKontaktoweBy operator_api.UpdateKontaktyBy)
 			OsobaOdbierajacaZywnosc:  r.FormValue("OsobaOdbierajacaZywnosc"),
 			TelefonOsobyOdbierajacej: r.FormValue("TelefonOsobyOdbierajacej"),
 		}
-		updateDaneKontaktoweBy(r.Context(), *session.OrgID, kontakty)
+		updateDaneKontaktoweBy(r.Context(), *session.OrgID, session.Email, kontakty)
 		w.Header().Set("HX-Redirect", "/charity-update/beneficjenci#beneficjenci")
 		w.WriteHeader(http.StatusOK)
 	}
@@ -171,7 +171,7 @@ func updateBeneficjenciHandler(updateBeneficjenciBy operator_api.UpdateBeneficje
 			}(),
 			Beneficjenci: r.FormValue("Beneficjenci"),
 		}
-		updateBeneficjenciBy(r.Context(), *session.OrgID, beneficjenci)
+		updateBeneficjenciBy(r.Context(), *session.OrgID, session.Email, beneficjenci)
 		w.Header().Set("HX-Redirect", "/charity-update/zrodla-zywnosci#zrodla-zywnosci")
 		w.WriteHeader(http.StatusOK)
 	}
@@ -207,7 +207,7 @@ func updateZrodlaZywnosciHandler(updateZrodlaZywnosciBy operator_api.UpdateZrodl
 			OdbiorKrotkiTermin: r.FormValue("OdbiorKrotkiTermin") == "on",
 			TylkoNaszMagazyn:   r.FormValue("TylkoNaszMagazyn") == "on",
 		}
-		updateZrodlaZywnosciBy(r.Context(), *session.OrgID, zrodla)
+		updateZrodlaZywnosciBy(r.Context(), *session.OrgID, session.Email, zrodla)
 		w.Header().Set("HX-Redirect", "/charity-update/warunki-udzielania-pomocy#warunki-udzielania-pomocy")
 		w.WriteHeader(http.StatusOK)
 	}
@@ -245,7 +245,7 @@ func updateWarunkiUdzielaniaPomocyHandler(updateWarunkiPomocyBy operator_api.Upd
 			TransportOpis:      r.FormValue("TransportOpis"),
 			TransportKategoria: r.FormValue("TransportKategoria"),
 		}
-		updateWarunkiPomocyBy(r.Context(), *session.OrgID, warunki)
+		updateWarunkiPomocyBy(r.Context(), *session.OrgID, session.Email, warunki)
 		w.Header().Set("HX-Redirect", "/charity-update")
 		w.WriteHeader(http.StatusOK)
 	}

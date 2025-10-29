@@ -97,7 +97,7 @@ func mockPut(in any) error {
 	}
 }
 
-var CallOperatorMock CallOperator = func(_,_ string, in any, out any) error {
+var CallOperatorMock CallOperator = func(_,_ string, in any, out any, email *string) error {
 	if out != nil {
 		return mockGet(out)
 	} else {

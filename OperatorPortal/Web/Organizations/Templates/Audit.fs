@@ -3,12 +3,13 @@ module Organizations.Templates.Audit
 open Organizations.Application.Audit
 open Oxpecker.ViewEngine
 
-let View2 (auditTrail: AuditTrail list) =
+let View (auditTrail: AuditTrail list) =
     dialog (open' = true) {
         article () {
             header () { "Historia zmian" }
             small () {
                 form (method = "dialog") {
+                    auditTrail |> function [] -> "Brak" | _ -> ""
                     ul (class' = "timeline") {
                         for trail in auditTrail do
                             li () {

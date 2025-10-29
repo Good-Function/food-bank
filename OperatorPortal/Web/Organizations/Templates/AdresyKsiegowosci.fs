@@ -8,7 +8,11 @@ open Permissions
 
 let View (adresy: OrganizationDetails.AdresyKsiegowosci) (teczka: int64) (permissions: Permission list) =
     article () {
-        editableHeader "Dane adresowe księgowości" $"/organizations/{teczka}/adresy-ksiegowosci/edit" permissions
+        editableHeader2
+            "Dane adresowe księgowości"
+            $"/organizations/{teczka}/adresy-ksiegowosci/edit"
+            permissions
+            $"/organizations/{teczka}/audit-trail?kind=AdresyKsiegowosci"
         readonlyField "Organizacja na którą wystawiamy WZ" adresy.NazwaOrganizacjiKsiegowanieDarowizn
         readonlyField "Adres" adresy.KsiegowanieAdres
         readonlyField "Telefon" adresy.TelOrganProwadzacegoKsiegowosc

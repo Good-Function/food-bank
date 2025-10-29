@@ -9,7 +9,10 @@ open Permissions
 
 let View (warunki: OrganizationDetails.WarunkiPomocy) (teczka: int64) (permissions: Permission list)=
     article () {
-        editableHeader "Warunki udzielania pomocy żywnościowej" $"/organizations/{teczka}/warunki-pomocy/edit" permissions
+        editableHeader2
+            "Warunki udzielania pomocy żywnościowej"
+            $"/organizations/{teczka}/warunki-pomocy/edit"
+            permissions $"/organizations/{teczka}/audit-trail?kind=WarunkiPomocy"
         readonlyField "Kategoria" warunki.Kategoria
         readonlyField "Rodzaj pomocy" warunki.RodzajPomocy
         readonlyField "Sposób udzielania pomocy" warunki.SposobUdzielaniaPomocy

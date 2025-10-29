@@ -8,7 +8,11 @@ open Permissions
 
 let View (adresy: OrganizationDetails.DaneAdresowe) (teczka: int64) (permissions: Permission list) =
     article () {
-        editableHeader "Dane adresowe" $"/organizations/{teczka}/dane-adresowe/edit" permissions
+        editableHeader2
+            "Dane adresowe"
+            $"/organizations/{teczka}/dane-adresowe/edit"
+            permissions
+            $"/organizations/{teczka}/audit-trail?kind=DaneAdresowe"
         readonlyField "Organizacja, która podpisała umowę" adresy.NazwaOrganizacjiPodpisujacejUmowe
         readonlyField "Adres rejestrowy" adresy.AdresRejestrowy
         readonlyField "Placówka do której trafia żywność" adresy.NazwaPlacowkiTrafiaZywnosc

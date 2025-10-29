@@ -9,7 +9,11 @@ open Permissions
 
 let View (zrodla: OrganizationDetails.ZrodlaZywnosci) (teczka: int64) (permissions: Permission list)=
     article () {
-        editableHeader "Źródła żywności"  $"/organizations/{teczka}/zrodla-zywnosci/edit" permissions
+        editableHeader2
+            "Źródła żywności"
+            $"/organizations/{teczka}/zrodla-zywnosci/edit"
+            permissions
+            $"/organizations/{teczka}/audit-trail?kind=ZrodlaZywnosci"
         readonlyField "Sieci" (zrodla.Sieci |> toTakNie)
         readonlyField "Bazarki" (zrodla.Bazarki |> toTakNie)
         readonlyField "Machfit" (zrodla.Machfit |> toTakNie)

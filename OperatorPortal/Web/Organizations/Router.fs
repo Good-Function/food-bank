@@ -116,7 +116,7 @@ let auditTrail (readAuditTrail: ReadAuditTrail) (id: int64) : EndpointHandler =
         task {
             let kind = ctx.TryGetQueryValue "kind"
             let! auditTrail = readAuditTrail(id, kind)
-            return! ctx.WriteHtmlView (Audit.View2 auditTrail)
+            return! ctx.WriteHtmlView (Audit.View auditTrail)
         }
     
 let import: EndpointHandler =

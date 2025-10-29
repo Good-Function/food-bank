@@ -14,17 +14,17 @@ func MakeReadOrganizationInfoByEmail(fetcher CallOperator) operator_api.ReadOrga
 	return func(ctx context.Context, email string) (operator_api.OrgInfo, error) {
 		var orgInfo operator_api.OrgInfo
 		reqBody := orgReqBody{Email: email}
-		if err := fetcher("POST", "/api/organizations/lookup-by-email", reqBody, &orgInfo); err != nil {
+		if err := fetcher("POST", "/api/organizations/lookup-by-email", reqBody, &orgInfo, nil); err != nil {
 			panic(err)
 		}
 		return orgInfo, nil
 	}
 }
 
-func MakeUpdater[T any](fetcher CallOperator, pathTemplate string) func(ctx context.Context, id int64, payload T) error {
-	return func(ctx context.Context, id int64, payload T) error {
+func MakeUpdater[T any](fetcher CallOperator, pathTemplate string) func(ctx context.Context, id int64, email string, payload T) error {
+	return func(ctx context.Context, id int64, email string, payload T) error {
 		url := fmt.Sprintf(pathTemplate, id)
-		if err := fetcher("PUT", url, payload, nil); err != nil {
+		if err := fetcher("PUT", url, payload, nil, &email); err != nil {
 			panic(err)
 		}
 		return nil
@@ -35,7 +35,7 @@ func MakeFetcher[T any](fetcher CallOperator, pathTemplate string) func(ctx cont
 	return func(ctx context.Context, id int64) (T, error) {
 		var data T
 		url := fmt.Sprintf(pathTemplate, id)
-		if err := fetcher("GET", url, nil, &data); err != nil {
+		if err := fetcher("GET", url, nil, &data, nil); err != nil {
 			panic(err)
 		}
 		return data, nil

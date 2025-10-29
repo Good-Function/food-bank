@@ -64,21 +64,21 @@ type OrgInfo struct {
 
 
 type ReadKontaktyBy func(context.Context, int64) (Kontakty, error)
-type UpdateKontaktyBy func(context.Context, int64, Kontakty) (error)
+type UpdateKontaktyBy func(context.Context, int64, string, Kontakty) (error)
 
 type ReadDaneAdresoweBy func(context.Context, int64) (DaneAdresowe, error)
-type UpdateDaneAdresoweBy func(context.Context, int64, DaneAdresowe) (error)
+type UpdateDaneAdresoweBy func(context.Context, int64, string, DaneAdresowe) (error)
 
 type ReadAdresyKsiegowosciBy func(context.Context, int64) (AdresyKsiegowosci, error)
-type UpdateAdresyKsiegowosciBy func(context.Context, int64, AdresyKsiegowosci) (error)
+type UpdateAdresyKsiegowosciBy func(context.Context, int64, string, AdresyKsiegowosci) (error)
 
 type ReadZrodlaZywnosciBy func(context.Context, int64) (ZrodlaZywnosci, error)
-type UpdateZrodlaZywnosciBy func(context.Context, int64, ZrodlaZywnosci) (error)
+type UpdateZrodlaZywnosciBy func(context.Context, int64, string, ZrodlaZywnosci) (error)
 
 type ReadBeneficjenciBy func(context.Context, int64) (Beneficjenci, error)
-type UpdateBeneficjenciBy func(context.Context, int64, Beneficjenci) (error)
+type UpdateBeneficjenciBy func(context.Context, int64, string, Beneficjenci) (error)
 
 type ReadWarunkiPomocyBy func(context.Context, int64) (WarunkiPomocy, error)
-type UpdateWarunkiPomocyBy func(context.Context, int64, WarunkiPomocy) (error)
+type UpdateWarunkiPomocyBy func(context.Context, int64, string, WarunkiPomocy) (error)
 
 type ReadOrganizationIdByEmail func(context.Context, string) (OrgInfo, error)
