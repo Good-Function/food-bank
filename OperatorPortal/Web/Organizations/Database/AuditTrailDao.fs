@@ -17,22 +17,24 @@ type AuditTrailRow =
 type AuditTrailDao(connectDB: unit -> Async<IDbConnection>) =
     member this.SaveAuditTrail(auditTrail: AuditTrail) : Async<unit> =
         async {
-            if auditTrail.Diff.IsEmpty then return ()
-            use! db = connectDB ()
+            if auditTrail.Diff.IsEmpty then
+                return ()
+            else 
+                use! db = connectDB ()
 
-            let query =
-                """
-            INSERT INTO audit_trail (related_entity_id, who, kind, occured_at, diff)
-            VALUES (@related_entity_id, @who, @kind, @occured_at, @diff::jsonb)"""
+                let query =
+                    """
+                INSERT INTO audit_trail (related_entity_id, who, kind, occured_at, diff)
+                VALUES (@related_entity_id, @who, @kind, @occured_at, @diff::jsonb)"""
 
-            let parameters =
-                {| who = auditTrail.Who
-                   occured_at = auditTrail.OccuredAt
-                   diff = JsonSerializer.Serialize(auditTrail.Diff)
-                   kind = auditTrail.Kind
-                   related_entity_id = auditTrail.EntityId |}
+                let parameters =
+                    {| who = auditTrail.Who
+                       occured_at = auditTrail.OccuredAt
+                       diff = JsonSerializer.Serialize(auditTrail.Diff)
+                       kind = auditTrail.Kind
+                       related_entity_id = auditTrail.EntityId |}
 
-            do! db.Execute query parameters
+                do! db.Execute query parameters
         }
 
     member this.ReadAuditTrail: ReadAuditTrail = fun(entityId: int64, kind: string option) ->
