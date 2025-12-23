@@ -24,5 +24,5 @@ let Template (content: HtmlElement) (currentPath: Navigation.Page option) (userN
             }
         }
         main (class' = "container") { content }
-        script (src = "/copyEmails.js")
+        script (src = "/copyEmails.js", defer = true)
     }
