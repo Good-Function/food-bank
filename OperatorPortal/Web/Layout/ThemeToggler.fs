@@ -5,7 +5,7 @@ open Oxpecker.ViewEngine
 let Component =
     raw
         """
-<button class="outline" style="border:none; border-radius:50%; background-color: var(--pico-contrast); padding: 8px; outline: none; box-shadow: none; color: var(--pico-contrast-inverse);"
+<button class="outline" aria-label="Przełącz motyw" style="border:none; border-radius:50%; background-color: var(--pico-contrast); padding: 8px; outline: none; box-shadow: none; color: var(--pico-contrast-inverse);"
         onclick="
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';

@@ -3,6 +3,7 @@ module Organizations.Templates.List.Pagination
 open Layout
 open Organizations.Application.ReadModels.OrganizationSummary
 open Oxpecker.ViewEngine
+open Oxpecker.ViewEngine.Aria
 open Oxpecker.Htmx
 
 let build (pagination: Pagination) (currentRowsCount: int) (total: int)=
@@ -15,6 +16,7 @@ let build (pagination: Pagination) (currentRowsCount: int) (total: int)=
         span (style = "margin-right:.25rem") { $"{range} z {total}" }
         button (
             class' = "outline secondary",
+            ariaLabel = "Poprzednia strona",
             disabled = disablePrevious,
             hxPushUrl = "true",
             hxGet = $"/organizations/summaries?page={pagination.Page - 1}",
@@ -24,6 +26,7 @@ let build (pagination: Pagination) (currentRowsCount: int) (total: int)=
             ) { div () { Icons.ChevronLeft } }
         button (
             class' = "outline secondary",
+            ariaLabel = "Następna strona",
             disabled = disableNext,
             hxGet = $"/organizations/summaries?page={pagination.Page + 1}",
             hxIndicator = ".big-table",

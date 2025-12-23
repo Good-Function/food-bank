@@ -8,13 +8,13 @@ open Sortable
 
 let build (query: Query) =
     Fragment() {
-        th (style = "width:85px;") {
+        th (scope = "col", style = "width:85px;") {
             sortable
                 { Column = Teczka
                   CurrentSortBy = query.SortBy }
         }
 
-        th (style = "width:290px;") {
+        th (scope = "col", style = "width:290px;") {
             sortable
                 { Column = NazwaPlacowkiTrafiaZywnosc
                   CurrentSortBy = query.SortBy }
@@ -25,7 +25,7 @@ let build (query: Query) =
                   CurrentFilters = query.Filters }
         }
 
-        th (style = "width:300px;") {
+        th (scope = "col", style = "width:300px;") {
             sortable
                 { Column = AdresPlacowkiTrafiaZywnosc
                   CurrentSortBy = query.SortBy }
@@ -36,7 +36,7 @@ let build (query: Query) =
                   CurrentFilters = query.Filters }
         }
 
-        th (style = "width:220px;") {
+        th (scope = "col", style = "width:220px;") {
             sortable
                 { Column = GminaDzielnica
                   CurrentSortBy = query.SortBy }
@@ -47,7 +47,7 @@ let build (query: Query) =
                   CurrentFilters = query.Filters }
         }
 
-        th (style = "width:200px;") {
+        th (scope = "col", style = "width:200px;") {
             sortable
                 { Column = FormaPrawna
                   CurrentSortBy = query.SortBy }
@@ -58,7 +58,7 @@ let build (query: Query) =
                   CurrentFilters = query.Filters }
         }
 
-        th (style = "width:200px;") {
+        th (scope = "col", style = "width:200px;") {
             sortable
                 { Column = Kategoria
                   CurrentSortBy = query.SortBy }
@@ -69,7 +69,7 @@ let build (query: Query) =
                   CurrentFilters = query.Filters }
         }
 
-        th (style = "width:200px;") {
+        th (scope = "col", style = "width:200px;") {
             sortable
                 { Column = Beneficjenci
                   CurrentSortBy = query.SortBy }
@@ -80,7 +80,7 @@ let build (query: Query) =
                   CurrentFilters = query.Filters }
         }
 
-        th (style = "width:155px;") {
+        th (scope = "col", style = "width:155px;") {
             sortable
                 { Column = LiczbaBeneficjentow
                   CurrentSortBy = query.SortBy }
@@ -91,11 +91,11 @@ let build (query: Query) =
                   CurrentFilters = query.Filters }
         }
 
-        th (style = "width:150px;") {
+        th (scope = "col", style = "width:150px;") {
             sortable
                 { Column = OstatnieOdwiedzinyData
                   CurrentSortBy = query.SortBy }
         }
 
-        th (style = "width:110px;") { "Kontakt" }
+        th (scope = "col", style = "width:110px;") { "Kontakt" }
     }

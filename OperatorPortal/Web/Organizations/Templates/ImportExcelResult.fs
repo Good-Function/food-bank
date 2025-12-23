@@ -16,7 +16,7 @@ let Template ((importSummary, errors): ImportResult) =
 
         for error in errors do
             details () {
-                summary(role="button", class'="outline") { $"Wiersz %i{error |> fst}" }
+                summary(role="button", class'="outline", ariaLabel = $"Pokaż błędy w wierszu %i{error |> fst}") { $"Wiersz %i{error |> fst}" }
 
                 small () {
                     ul () {

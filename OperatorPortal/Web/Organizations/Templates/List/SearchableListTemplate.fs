@@ -5,6 +5,7 @@ open Layout.Navigation
 open Organizations.Application.ReadModels.OrganizationSummary
 open Organizations.Templates.List
 open Oxpecker.ViewEngine
+open Oxpecker.ViewEngine.Aria
 open Oxpecker.Htmx
 open Web.Organizations
 open PageComposer
@@ -54,6 +55,7 @@ let Template (query: Query)=
             div (class' = "big-table-footer") {
                 button (
                     class' = "outline secondary",
+                    ariaLabel = "Pobierz listę mailingową",
                     hxGet = "/organizations/summaries/mailing-list",
                     hxInclude = $"[name='search'], {HxIncludes.all}",
                     hxSwap = "outerHtml",
