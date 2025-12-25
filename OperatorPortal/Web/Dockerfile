@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+﻿FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 COPY ["Web/Web.fsproj", "Web/"]
 RUN dotnet restore "Web/Web.fsproj"
@@ -9,7 +9,7 @@ RUN dotnet build "Web.fsproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "Web.fsproj" -c Release -o /app/publish /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081

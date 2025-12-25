@@ -18,7 +18,7 @@ type DateOnlyOptionHandler() =
     if Object.ReferenceEquals(value, null) || value = box DBNull.Value then
       None
     else
-      Some(DateOnly.FromDateTime(value :?> DateTime))
+      Some(value :?> DateOnly)
     
 
 type DateOnlyHandler() =
@@ -28,7 +28,7 @@ type DateOnlyHandler() =
     param.Value <- date.ToDateTime(TimeOnly(0, 0))
     
   override _.Parse(value) =
-    DateOnly.FromDateTime(value :?> DateTime)
+    value :?> DateOnly
 
 type OptionHandler<'T>() =
   inherit SqlMapper.TypeHandler<option<'T>>()

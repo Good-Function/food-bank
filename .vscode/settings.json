@@ -1,4 +1,10 @@
 {
     "FSharp.inlayHints.parameterNames": false,
-    "FSharp.inlayHints.typeAnnotations": false
+    "FSharp.inlayHints.typeAnnotations": false,
+    "files.exclude": {
+        "node_modules/": true,
+        "**/**/bin/": true,
+        "**/**/obj/": true,
+        "**/**/.idea/": true
+        },
 }
