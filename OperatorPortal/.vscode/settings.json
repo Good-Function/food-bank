@@ -3,6 +3,11 @@
     "[fsharp]": {
         "editor.inlayHints.enabled": "off"
     },
+    "files.exclude": {
+    "node_modules/": true,
+    "**/**/bin/": true,
+    "**/**/obj/": true
+    },
     "sqltools.connections": [
         {
             "ssh": "Disabled",
