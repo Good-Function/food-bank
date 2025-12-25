@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <!-- Enable MSBuild to build multiple projects in parallel -->
+    <MaxCpuCount>0</MaxCpuCount> <!-- 0 = use all available CPUs -->
+    
+    <!-- Enable F# parallel compilation within projects -->
+    <ParallelCompilation>true</ParallelCompilation>
+    <Deterministic>false</Deterministic> <!-- Note: deterministic builds don't get the benefits of parallel compilation -->
+    
+    <!-- Additional performance optimizations -->
+    <UseSharedCompilation>true</UseSharedCompilation>
+  </PropertyGroup>
+</Project>
+
