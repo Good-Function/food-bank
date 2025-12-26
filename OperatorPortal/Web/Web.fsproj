@@ -6,21 +6,21 @@
         <Deterministic>false</Deterministic> <!-- Note: deterministic builds don't get the benefits of parallel compilation -->
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Azure.Storage.Blobs" Version="12.24.1" />
-      <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-      <PackageReference Include="Dapper" Version="2.1.66" />
-      <PackageReference Include="FSharp.Data" Version="6.6.0" />
-      <PackageReference Include="FsToolkit.ErrorHandling" Version="5.1.0" />
-      <PackageReference Include="ClosedXML" Version="0.105.0" />  
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.1" />  
-      <PackageReference Include="Microsoft.Graph" Version="5.99.0" />  
-      <PackageReference Include="Microsoft.Identity.Web" Version="4.2.0" />  
-      <PackageReference Include="Npgsql" Version="10.0.1" />
-      <PackageReference Include="Oxpecker" Version="1.2.0" />
-      <PackageReference Include="Oxpecker.Htmx" Version="1.0.0" />
-      <PackageReference Include="Oxpecker.ViewEngine" Version="1.1.0" />
-      <PackageReference Update="FSharp.Core" Version="10.0.101" />
-      <PackageReference Include="Thoth.Json.Net" Version="12.0.0" />
+      <PackageReference Include="Azure.Storage.Blobs" />
+      <PackageReference Include="BCrypt.Net-Next" />
+      <PackageReference Include="Dapper" />
+      <PackageReference Include="FSharp.Data" />
+      <PackageReference Include="FsToolkit.ErrorHandling" />
+      <PackageReference Include="ClosedXML" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
+      <PackageReference Include="Microsoft.Graph" />
+      <PackageReference Include="Microsoft.Identity.Web" />
+      <PackageReference Include="Npgsql" />
+      <PackageReference Include="Oxpecker" />
+      <PackageReference Include="Oxpecker.Htmx" />
+      <PackageReference Include="Oxpecker.ViewEngine" />
+      <PackageReference Include="FSharp.Core" />
+      <PackageReference Include="Thoth.Json.Net" />
     </ItemGroup>
     <ItemGroup>
       <Compile Include="Transaction.fs" />

@@ -1,0 +1,52 @@
+<Project>
+  <PropertyGroup>
+    <!-- Central Package Management - All package versions are managed here -->
+    <!-- This ensures consistent versions across all projects and allows us to override transitive dependencies -->
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <!-- Direct dependencies from Web project -->
+    <PackageVersion Include="Azure.Storage.Blobs" Version="12.24.1" />
+    <PackageVersion Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageVersion Include="Dapper" Version="2.1.66" />
+    <PackageVersion Include="FSharp.Data" Version="6.6.0" />
+    <PackageVersion Include="FsToolkit.ErrorHandling" Version="5.1.0" />
+    <PackageVersion Include="ClosedXML" Version="0.105.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.99.0" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="4.2.0" />
+    <PackageVersion Include="Npgsql" Version="10.0.1" />
+    <PackageVersion Include="Oxpecker" Version="1.2.0" />
+    <PackageVersion Include="Oxpecker.Htmx" Version="1.0.0" />
+    <PackageVersion Include="Oxpecker.ViewEngine" Version="1.1.0" />
+    <PackageVersion Include="Thoth.Json.Net" Version="12.0.0" />
+    
+    <!-- Direct dependencies from Migrations project -->
+    <PackageVersion Include="dbup" Version="5.0.41" />
+    <PackageVersion Include="dbup-postgresql" Version="6.1.5" />
+    
+    <!-- Direct dependencies from Tests project -->
+    <PackageVersion Include="Bogus" Version="35.6.5" />
+    <PackageVersion Include="IdGen" Version="3.0.7" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.57.0" />
+    <PackageVersion Include="FsUnit.xUnit" Version="7.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.1" />
+    <PackageVersion Include="Testcontainers" Version="4.4.0" />
+    <PackageVersion Include="Testcontainers.Azurite" Version="4.4.0" />
+    <PackageVersion Include="Testcontainers.PostgreSql" Version="4.4.0" />
+    <PackageVersion Include="xunit.v3" Version="1.0.1" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.1" />
+    
+    <!-- Common packages -->
+    <PackageVersion Include="FSharp.Core" Version="10.0.101" />
+    
+    <!-- Security-critical transitive dependencies - explicitly pinned to secure versions -->
+    <!-- These override vulnerable versions that might be pulled in transitively -->
+    <PackageVersion Include="Azure.Identity" Version="1.16.0" />
+    <PackageVersion Include="Microsoft.Identity.Client" Version="4.76.0" />
+    <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.3.1" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1" />
+  </ItemGroup>
+</Project>
+

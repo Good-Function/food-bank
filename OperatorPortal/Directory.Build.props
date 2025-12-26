@@ -9,6 +9,9 @@
     
     <!-- Additional performance optimizations -->
     <UseSharedCompilation>true</UseSharedCompilation>
+    
+    <!-- Enable Central Package Management -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
 </Project>
 

@@ -16,9 +16,6 @@ open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Configuration
 open Oxpecker
 open Settings
-open Microsoft.AspNetCore.Authentication.JwtBearer
-open Microsoft.AspNetCore.Authentication.OpenIdConnect
-open Microsoft.Extensions.DependencyInjection
 
 let protect =  configureEndpoint _.RequireAuthorization()
 let protectApi =  configureEndpoint _.RequireAuthorization("ServicePolicy")
@@ -100,7 +97,7 @@ let createServer () =
     ) |> ignore
     builder.Services.Configure<ForwardedHeadersOptions>(fun (options: ForwardedHeadersOptions) ->
         options.ForwardedHeaders <- ForwardedHeaders.XForwardedProto ||| ForwardedHeaders.XForwardedHost
-        options.KnownNetworks.Clear()
+        options.KnownIPNetworks.Clear()
         options.KnownProxies.Clear()
     ) |> ignore
     let app = builder.Build()
