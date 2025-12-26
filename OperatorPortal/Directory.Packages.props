@@ -16,9 +16,9 @@
     <PackageVersion Include="Microsoft.Graph" Version="5.99.0" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="4.2.0" />
     <PackageVersion Include="Npgsql" Version="10.0.1" />
-    <PackageVersion Include="Oxpecker" Version="1.2.0" />
-    <PackageVersion Include="Oxpecker.Htmx" Version="1.0.0" />
-    <PackageVersion Include="Oxpecker.ViewEngine" Version="1.1.0" />
+    <PackageVersion Include="Oxpecker" Version="2.0.0" />
+    <PackageVersion Include="Oxpecker.Htmx" Version="2.0.0" />
+    <PackageVersion Include="Oxpecker.ViewEngine" Version="2.0.0" />
     <PackageVersion Include="Thoth.Json.Net" Version="12.0.0" />
     
     <!-- Direct dependencies from Migrations project -->
