@@ -1,5 +1,6 @@
 module Tools.TestServer
 
+open System.Collections.Generic
 open System.Net.Http
 open System.Threading.Tasks
 open Microsoft.AspNetCore.Mvc.Testing
@@ -42,8 +43,9 @@ let private addCookiesToClient (client: HttpClient) (response: HttpResponseMessa
             else
                 client.DefaultRequestHeaders.Add("Cookie", cookieValues)
 
-let getAntiforgeryToken (client: HttpClient) (editUrl: string) : Task<string> = task {
-    let! response = client.GetAsync(editUrl)
+
+let getAntiforgeryToken (client: HttpClient) (formUrl: string) : Task<string> = task {
+    let! response = client.GetAsync(formUrl)
     response.EnsureSuccessStatusCode() |> ignore
     let! html = response.Content.ReadAsStringAsync()
     addCookiesToClient client response
@@ -51,5 +53,24 @@ let getAntiforgeryToken (client: HttpClient) (editUrl: string) : Task<string> = 
     let doc = HtmlDocument.Parse html
     let tokenInput = doc.CssSelect "input[name='__RequestVerificationToken']" |> List.tryHead
     return tokenInput |> Option.map (fun input -> input.AttributeValue("value")) |> Option.defaultValue ""
+}
+
+let formDataWithToken (client: HttpClient) (formUrl: string) (fields: (string * string) list) = task {
+    let! token = getAntiforgeryToken client formUrl
+    let allFields = ("__RequestVerificationToken", token) :: fields
+    return 
+        allFields
+        |> List.map (fun (key, value) -> KeyValuePair<string, string>(key, value))
+        |> fun pairs -> new FormUrlEncodedContent(pairs)
+}
+
+let putFormWithToken (client: HttpClient) (editUrl: string) (submitUrl: string) (fields: (string * string) list) = task {
+    let! data = formDataWithToken client editUrl fields
+    return! client.PutAsync(submitUrl, data)
+}
+
+let postFormWithToken (client: HttpClient) (formUrl: string) (submitUrl: string) (fields: (string * string) list) = task {
+    let! data = formDataWithToken client formUrl fields
+    return! client.PostAsync(submitUrl, data)
 }
     

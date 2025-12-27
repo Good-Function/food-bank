@@ -2,7 +2,6 @@ module Team.TeamManagement
 
 open System
 open Bogus
-open Tools.FormDataBuilder
 open Users
 open Xunit
 open Tools.TestServer
@@ -47,13 +46,10 @@ let ``POST /team/users/{id} adds user`` () =
         // Arrange
         let emailToAdd = Faker().Person.Email
         let api = runTestApi() |> authenticate "Admin"
-        let! token = getAntiforgeryToken api "/team"
-        let data = formData {
-            yield "__RequestVerificationToken", token
-            yield ("Email", emailToAdd)
-        }
         // Act
-        let! response = api.PostAsync("/team/users", data)
+        let! response = postFormWithToken api "/team" "/team/users" [
+            ("Email", emailToAdd)
+        ]
         // Assert
         (int response.StatusCode) |> should equal HttpStatusCodes.Created
         let! doc = response.HtmlContent()
@@ -68,13 +64,10 @@ let ``PUT /team/users/{id}/role/{roleId} assigns role`` () =
         let api = runTestApi() |> authenticate "Admin"
         let editorRole = ManagementMock.editor
         let userIdToChangeRole = ManagementMock.users.Head.Id
-        let! token = getAntiforgeryToken api "/team/users"
-        let data = formData {
-            yield "__RequestVerificationToken", token
-            yield ("RoleId", editorRole.Id.ToString())
-        }
         // Act
-        let! response = api.PutAsync($"/team/users/{userIdToChangeRole}/roles", data)
+        let! response = putFormWithToken api "/team/users" $"/team/users/{userIdToChangeRole}/roles" [
+            ("RoleId", editorRole.Id.ToString())
+        ]
         // Assert
         (int response.StatusCode) |> should equal HttpStatusCodes.OK
         let! doc = response.HtmlContent()

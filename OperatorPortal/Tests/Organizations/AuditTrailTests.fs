@@ -6,7 +6,6 @@ open Organizations.Domain.Identifiers
 open Organizations.Domain.Organization
 open Oxpecker.ViewEngine
 open Tests
-open Tools.FormDataBuilder
 open Xunit
 open Tools.TestServer
 open FsUnit.Xunit
@@ -28,14 +27,11 @@ let ``Audit stores only changed fields and returns audit trail by related entity
         do! organization |> (save Tools.DbConnection.connectDb)
         let expectedLiczbaBeneficjentow = organization.Beneficjenci.LiczbaBeneficjentow + 20 |> _.ToString()
         let teczka = organization.Teczka |> TeczkaId.unwrap
-        let! token = getAntiforgeryToken api $"/organizations/{teczka}/beneficjenci/edit"
-        let data = formData {
-            yield "__RequestVerificationToken", token
-            yield "LiczbaBeneficjentow", expectedLiczbaBeneficjentow
-            yield "Beneficjenci", organization.Beneficjenci.Beneficjenci
-        }
         // Act
-        let! modificationResponse = api.PutAsync($"/organizations/{teczka}/beneficjenci", data)
+        let! modificationResponse = putFormWithToken api ($"/organizations/{teczka}/beneficjenci/edit") ($"/organizations/{teczka}/beneficjenci") [
+            ("LiczbaBeneficjentow", expectedLiczbaBeneficjentow)
+            ("Beneficjenci", organization.Beneficjenci.Beneficjenci)
+        ]
         // Assert
         let! auditTrailResponse = api.GetAsync($"organizations/{organization.Teczka |> TeczkaId.unwrap}/audit-trail?kind=beneficjenci")
         modificationResponse.StatusCode |> should equal HttpStatusCode.OK

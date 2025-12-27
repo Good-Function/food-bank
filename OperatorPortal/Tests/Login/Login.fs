@@ -22,14 +22,11 @@ let ``User can log in, get the auth cookie and be redirected to default page /or
     task {
         // Arrange
         let api = runTestApi()
-        let! token = getAntiforgeryToken api "/login"
-        let data = formData {
-            yield "__RequestVerificationToken", token
-            yield ("Email", "admin@admin.pl")
-            yield ("Password", "f00d!")
-        }
         // Act
-        let! loginResponse = api.PostAsync("/login", data)
+        let! loginResponse = postFormWithToken api "/login" "/login" [
+            ("Email", "admin@admin.pl")
+            ("Password", "f00d!")
+        ]
         // Assert
         let authCookie = loginResponse.Headers.GetValues("Set-Cookie") |> Seq.head
         let hxRedirectCookie = loginResponse.Headers.GetValues("HX-Redirect") |> Seq.head

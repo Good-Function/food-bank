@@ -52,18 +52,15 @@ let ``PUT /ogranizations/{id}/dane-adresowe modifies and returns updated data`` 
         let randomStuff = Guid.NewGuid().ToString()
         let api = runTestApi() |> authenticate "Editor"
         let teczka = organization.Teczka |> TeczkaId.unwrap
-        let! token = getAntiforgeryToken api $"/organizations/{teczka}/dane-adresowe/edit"
-        let data = formData {
-            yield "__RequestVerificationToken", token
-            yield "NazwaOrganizacjiPodpisujacejUmowe", randomStuff
-            yield "AdresRejestrowy", randomStuff
-            yield "NazwaPlacowkiTrafiaZywnosc", randomStuff
-            yield "AdresPlacowkiTrafiaZywnosc", randomStuff
-            yield "GminaDzielnica", randomStuff
-            yield "Powiat", randomStuff
-        }
         // Act
-        let! response = api.PutAsync($"/organizations/{teczka}/dane-adresowe", data)
+        let! response = putFormWithToken api ($"/organizations/{teczka}/dane-adresowe/edit") ($"/organizations/{teczka}/dane-adresowe") [
+            ("NazwaOrganizacjiPodpisujacejUmowe", randomStuff)
+            ("AdresRejestrowy", randomStuff)
+            ("NazwaPlacowkiTrafiaZywnosc", randomStuff)
+            ("AdresPlacowkiTrafiaZywnosc", randomStuff)
+            ("GminaDzielnica", randomStuff)
+            ("Powiat", randomStuff)
+        ]
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -123,23 +120,20 @@ let ``PUT /ogranizations/{id}/kontakty modifies and returns updated data`` () =
         let randomStuff = Guid.NewGuid().ToString()
         let api = runTestApi() |> authenticate "Editor"
         let teczka = organization.Teczka |> TeczkaId.unwrap
-        let! token = getAntiforgeryToken api $"/organizations/{teczka}/kontakty/edit"
-        let data = formData {
-            yield "__RequestVerificationToken", token
-            yield "WwwFacebook", randomStuff
-            yield "Telefon", randomStuff
-            yield "Przedstawiciel", randomStuff
-            yield "Kontakt", randomStuff
-            yield "Email", randomStuff
-            yield "Dostepnosc", randomStuff
-            yield "OsobaDoKontaktu", randomStuff
-            yield "TelefonOsobyKontaktowej", randomStuff
-            yield "MailOsobyKontaktowej", randomStuff
-            yield "OsobaOdbierajacaZywnosc", randomStuff
-            yield "TelefonOsobyOdbierajacej", randomStuff
-        }
         // Act
-        let! response = api.PutAsync($"/organizations/{teczka}/kontakty", data)
+        let! response = putFormWithToken api ($"/organizations/{teczka}/kontakty/edit") ($"/organizations/{teczka}/kontakty") [
+            ("WwwFacebook", randomStuff)
+            ("Telefon", randomStuff)
+            ("Przedstawiciel", randomStuff)
+            ("Kontakt", randomStuff)
+            ("Email", randomStuff)
+            ("Dostepnosc", randomStuff)
+            ("OsobaDoKontaktu", randomStuff)
+            ("TelefonOsobyKontaktowej", randomStuff)
+            ("MailOsobyKontaktowej", randomStuff)
+            ("OsobaOdbierajacaZywnosc", randomStuff)
+            ("TelefonOsobyOdbierajacej", randomStuff)
+        ]
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -193,14 +187,11 @@ let ``PUT /ogranizations/{id}/beneficjenci modifies and returns updated data`` (
         let expectedLiczbaBeneficjentow = organization.Beneficjenci.LiczbaBeneficjentow + 20 |> _.ToString()
         let expectedBeneficjenci = $"{Guid.NewGuid()}"
         let teczka = organization.Teczka |> TeczkaId.unwrap
-        let! token = getAntiforgeryToken api $"/organizations/{teczka}/beneficjenci/edit"
-        let data = formData {
-            yield "__RequestVerificationToken", token
-            yield "LiczbaBeneficjentow", expectedLiczbaBeneficjentow
-            yield "Beneficjenci", expectedBeneficjenci
-        }
         // Act
-        let! response = api.PutAsync($"/organizations/{teczka}/beneficjenci", data)
+        let! response = putFormWithToken api ($"/organizations/{teczka}/beneficjenci/edit") ($"/organizations/{teczka}/beneficjenci") [
+            ("LiczbaBeneficjentow", expectedLiczbaBeneficjentow)
+            ("Beneficjenci", expectedBeneficjenci)
+        ]
         // Assert
         let! doc = response.HtmlContent()
         let beneficjenciValues =
@@ -312,18 +303,15 @@ let ``PUT /ogranizations/{id}/zrodla-zywnosci modifies and returns updated data`
         do! organization |> save Tools.DbConnection.connectDb
         let api = runTestApi() |> authenticate "Editor"
         let teczka = organization.Teczka |> TeczkaId.unwrap
-        let! token = getAntiforgeryToken api $"/organizations/{teczka}/zrodla-zywnosci/edit"
-        let data = formData {
-            yield "__RequestVerificationToken", token
-            yield "Sieci", "true"
-            yield "Bazarki", "true"
-            yield "Machfit", "true"
-            yield "FEPZ2024", "true"
-            yield "OdbiorKrotkiTermin", "true"
-            yield "TylkoNaszMagazyn", "true"
-        }
         // Act
-        let! response = api.PutAsync($"/organizations/{teczka}/zrodla-zywnosci", data)
+        let! response = putFormWithToken api ($"/organizations/{teczka}/zrodla-zywnosci/edit") ($"/organizations/{teczka}/zrodla-zywnosci") [
+            ("Sieci", "true")
+            ("Bazarki", "true")
+            ("Machfit", "true")
+            ("FEPZ2024", "true")
+            ("OdbiorKrotkiTermin", "true")
+            ("TylkoNaszMagazyn", "true")
+        ]
         // Assert
         let! doc = response.HtmlContent()
         let takNie =
@@ -372,15 +360,12 @@ let ``PUT /ogranizations/{id}/adresy-ksiegowosci modifies and returns updated da
         let expectedText = $"{Guid.NewGuid()}"
         let api = runTestApi() |> authenticate "Editor"
         let teczka = organization.Teczka |> TeczkaId.unwrap
-        let! token = getAntiforgeryToken api $"/organizations/{teczka}/adresy-ksiegowosci/edit"
-        let data = formData {
-            yield "__RequestVerificationToken", token
-            yield "NazwaOrganizacjiKsiegowanieDarowizn", expectedText
-            yield "KsiegowanieAdres", expectedText
-            yield "TelOrganProwadzacegoKsiegowosc", expectedText
-        }
         // Act
-        let! response = api.PutAsync($"/organizations/{teczka}/adresy-ksiegowosci", data)
+        let! response = putFormWithToken api ($"/organizations/{teczka}/adresy-ksiegowosci/edit") ($"/organizations/{teczka}/adresy-ksiegowosci") [
+            ("NazwaOrganizacjiKsiegowanieDarowizn", expectedText)
+            ("KsiegowanieAdres", expectedText)
+            ("TelOrganProwadzacegoKsiegowosc", expectedText)
+        ]
         // Assert
         let! doc = response.HtmlContent()
         let dates =
@@ -439,20 +424,17 @@ let ``PUT /ogranizations/{id}/warunki-pomocy modifies and returns updated data``
         let expectedText = $"{Guid.NewGuid()}"
         let api = runTestApi() |> authenticate "Editor"
         let teczka = organization.Teczka |> TeczkaId.unwrap
-        let! token = getAntiforgeryToken api $"/organizations/{teczka}/warunki-pomocy/edit"
-        let data = formData {
-            yield "__RequestVerificationToken", token
-            yield "Kategoria", expectedText
-            yield "RodzajPomocy", expectedText
-            yield "SposobUdzielaniaPomocy", expectedText
-            yield "WarunkiMagazynowe", expectedText
-            yield "HACCP", "true"
-            yield "Sanepid", "true"
-            yield "TransportOpis", expectedText
-            yield "TransportKategoria", expectedText
-        }
         // Act
-        let! response = api.PutAsync($"/organizations/{teczka}/warunki-pomocy", data)
+        let! response = putFormWithToken api ($"/organizations/{teczka}/warunki-pomocy/edit") ($"/organizations/{teczka}/warunki-pomocy") [
+            ("Kategoria", expectedText)
+            ("RodzajPomocy", expectedText)
+            ("SposobUdzielaniaPomocy", expectedText)
+            ("WarunkiMagazynowe", expectedText)
+            ("HACCP", "true")
+            ("Sanepid", "true")
+            ("TransportOpis", expectedText)
+            ("TransportKategoria", expectedText)
+        ]
         // Assert
         let! doc = response.HtmlContent()
         let warunkiPomocy =

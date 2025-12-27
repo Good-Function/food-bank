@@ -8,7 +8,6 @@ open Login.Database
 open Login.Domain
 open Login.SignInHandler
 open Tools.DbConnection
-open Tools.FormDataBuilder
 open Xunit
 open Tools.TestServer
 open Tools.HttResponseMessageToHtml
@@ -40,15 +39,12 @@ let ``Change password changes the password (wow!)`` () =
         let expectedPassword = Guid.NewGuid().ToString()
         do! PasswordDao.changePassword connectDb {UserId = testUserId; NewPassword = oldPasswordHash}
         let api = runTestApi ()
-        let! token = getAntiforgeryToken api "/login/password-change"
-        let passwordChange = formData {
-            yield "__RequestVerificationToken", token
-            yield ("OldPassword", oldPassword)
-            yield ("NewPassword", expectedPassword)
-            yield ("NewPasswordConfirmation", expectedPassword)
-        }
         // Act
-        let! response = api.PostAsync("/login/password-change", passwordChange)
+        let! response = postFormWithToken api "/login/password-change" "/login/password-change" [
+            ("OldPassword", oldPassword)
+            ("NewPassword", expectedPassword)
+            ("NewPasswordConfirmation", expectedPassword)
+        ]
         // Assert
         let! doc = response.HtmlContent()
         let headers = doc.Elements "h1" |> List.map _.InnerText()
@@ -59,15 +55,12 @@ let ``Change password changes the password (wow!)`` () =
 let ``Change password shows error when old password is not correct`` () =
     task {
         let api = runTestApi ()
-        let! token = getAntiforgeryToken api "/login/password-change"
-        let passwordChange = formData {
-            yield "__RequestVerificationToken", token
-            yield ("OldPassword", Guid.NewGuid().ToString())
-            yield ("NewPassword", "whatever")
-            yield ("NewPasswordConfirmation", "whatever")
-        }
         // Act
-        let! response = api.PostAsync("/login/password-change", passwordChange)
+        let! response = postFormWithToken api "/login/password-change" "/login/password-change" [
+            ("OldPassword", Guid.NewGuid().ToString())
+            ("NewPassword", "whatever")
+            ("NewPasswordConfirmation", "whatever")
+        ]
         // Assert
         let! doc = response.HtmlContent()
         let error = doc.CssSelect("#OldPassword-error") |> List.map _.InnerText()
@@ -79,15 +72,12 @@ let ``Change password shows error when new passowrd confirmation doesn't match n
     task {
         let! user = readUserBy connectDb 0
         let api = runTestApi ()
-        let! token = getAntiforgeryToken api "/login/password-change"
-        let passwordChange = formData {
-            yield "__RequestVerificationToken", token
-            yield ("OldPassword", user.Password |> Password.value)
-            yield ("NewPassword", "blabla1")
-            yield ("NewPasswordConfirmation", "blabla2")
-        }
         // Act
-        let! response = api.PostAsync("/login/password-change", passwordChange)
+        let! response = postFormWithToken api "/login/password-change" "/login/password-change" [
+            ("OldPassword", user.Password |> Password.value)
+            ("NewPassword", "blabla1")
+            ("NewPasswordConfirmation", "blabla2")
+        ]
         // Assert
         let! doc = response.HtmlContent()
         let error = doc.CssSelect("#NewPasswordConfirmation-error") |> List.map _.InnerText()
