@@ -6,13 +6,14 @@ open Oxpecker.ViewEngine
 open Layout
 open Oxpecker.Htmx
 
-let private page permissions  =
+let private page permissions (antiforgeryToken: HtmlElement)  =
     Fragment() {
         if permissions |> List.contains Permissions.ManageUsers then
             form(style="margin:auto;",
                  hxPost="/team/users",
                  hxTarget="#UsersTable",
                  hxIndicator="#UsersIndicator").attr("hx-on::after-request", "if(event.detail.successful) this.reset()") {
+                antiforgeryToken
                 fieldset().attr("role", "group") {
                     input(
                         type'="email",
@@ -39,11 +40,11 @@ let private page permissions  =
         }
     }
 
-let Partial (userName: string) permissions=
+let Partial (userName: string) permissions (antiforgeryToken: HtmlElement)=
     Fragment() {
-        Body.Template (page permissions) (Some Page.Team) userName
+        Body.Template (page permissions antiforgeryToken) (Some Page.Team) userName
         ReplaceTitle <| Page.Team.ToTitle()
     }
 
-let FullPage (userName: string) permissions =
-    Head.Template (Partial userName permissions) (Page.Team.ToTitle())
+let FullPage (userName: string) permissions (antiforgeryToken: HtmlElement) =
+    Head.Template (Partial userName permissions antiforgeryToken) (Page.Team.ToTitle())

@@ -22,7 +22,9 @@ let ``User can log in, get the auth cookie and be redirected to default page /or
     task {
         // Arrange
         let api = runTestApi()
+        let! token = getAntiforgeryToken api "/login"
         let data = formData {
+            yield "__RequestVerificationToken", token
             yield ("Email", "admin@admin.pl")
             yield ("Password", "f00d!")
         }

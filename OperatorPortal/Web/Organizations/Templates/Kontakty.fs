@@ -26,9 +26,10 @@ let View (kontakty: OrganizationDetails.Kontakty) (teczka: int64) (permissions: 
         readonlyField "Telefon do os. odbierającej" kontakty.TelefonOsobyOdbierajacej
     }
 
-let Form (kontakty: OrganizationDetails.Kontakty) (teczka: int64) =
+let Form (kontakty: OrganizationDetails.Kontakty) (teczka: int64) (antiforgeryToken: HtmlElement) =
     let indicator = "KontaktySpinner"
     form () {
+        antiforgeryToken
         article (class' = "focus-dim") {
             activeEditableHeader "Kontakty" $"/organizations/{teczka}/kontakty" indicator
             Indicators.OverlaySpinner indicator

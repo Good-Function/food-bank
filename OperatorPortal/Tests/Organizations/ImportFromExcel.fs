@@ -14,9 +14,11 @@ let ``POST /organizations/import/upload returns bad request when file is not xls
     task {
         // Arrange
         let api = runTestApi()
+        let! token = getAntiforgeryToken api "/organizations/import"
         let fileBytes = File.ReadAllBytes(Path.Combine(__SOURCE_DIRECTORY__, "notExcel.txt"))
         let fileContent = new ByteArrayContent(fileBytes)
         use form = new MultipartFormDataContent()
+        form.Add(new StringContent(token), "__RequestVerificationToken")
         form.Add(fileContent, "file", "notExcel.txt")
         // Acts
         let! response = api.PostAsync("/organizations/import/upload", form)
@@ -32,9 +34,11 @@ let ``POST /organizations/import/upload returns info with how many rows were imp
     task {
         // Arrange
         let api = runTestApi()
+        let! token = getAntiforgeryToken api "/organizations/import"
         let fileBytes = File.ReadAllBytes(Path.Combine(__SOURCE_DIRECTORY__, "bank.xlsx"))
         let fileContent = new ByteArrayContent(fileBytes)
         use form = new MultipartFormDataContent()
+        form.Add(new StringContent(token), "__RequestVerificationToken")
         form.Add(fileContent, "file", "bank.xlsx")
         // Acts
         let! response = api.PostAsync("/organizations/import/upload", form)

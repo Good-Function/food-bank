@@ -17,9 +17,10 @@ let View (beneficjenci: OrganizationDetails.Beneficjenci) (teczka: int64) (permi
         readonlyField "Beneficjenci" beneficjenci.Beneficjenci
     }
 
-let Form (beneficjenci: OrganizationDetails.Beneficjenci) (teczka: int64) =
+let Form (beneficjenci: OrganizationDetails.Beneficjenci) (teczka: int64) (antiforgeryToken: HtmlElement) =
     let indicator = "BeneficjenciSpinner"
     form () {
+        antiforgeryToken
         article (class' = "focus-dim") {
             activeEditableHeader "Beneficjenci" $"/organizations/{teczka}/beneficjenci" indicator
             Indicators.OverlaySpinner indicator

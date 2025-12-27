@@ -21,9 +21,10 @@ let View (adresy: OrganizationDetails.DaneAdresowe) (teczka: int64) (permissions
         readonlyField "Powiat" adresy.Powiat
     }
 
-let Form (adresy: OrganizationDetails.DaneAdresowe) (teczka: int64) =
+let Form (adresy: OrganizationDetails.DaneAdresowe) (teczka: int64) (antiforgeryToken: HtmlElement) =
     let indicator = "DaneAdresoweSpinner"
     form () {
+        antiforgeryToken
         article (class' = "focus-dim") {
             activeEditableHeader "Dane adresowe" $"/organizations/{teczka}/dane-adresowe" indicator
             Indicators.OverlaySpinner indicator

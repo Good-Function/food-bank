@@ -5,7 +5,7 @@ open Oxpecker.ViewEngine.Aria
 open Oxpecker.Htmx
 open Layout
 
-let private login (returnUrl: string option) =
+let private login (returnUrl: string option) (antiforgeryToken: HtmlElement) =
     let actionWithReturnUrl =
         match returnUrl with
                 | Some url -> $"/login?ReturnUrl={url}"
@@ -22,6 +22,7 @@ let private login (returnUrl: string option) =
 
         main (style = "max-width:450px; margin:auto") {
             form (action = actionWithReturnUrl, method = "POST", hxTarget="#ErrorContainer", hxIndicator="#spinner" ) {
+                antiforgeryToken
                 input (
                     autocomplete = "email",
                     ariaLabel = "Email",
@@ -45,5 +46,6 @@ let private login (returnUrl: string option) =
             }
         }
     }
-let LoginTemplate url = Head.Template (login url) "Logowanie"
+let LoginTemplate url = Head.Template (login url (Fragment())) "Logowanie"
+let LoginTemplateWithToken returnUrl token = Head.Template (login returnUrl token) "Logowanie"
 let LoginError = span(style="color: var(--pico-del-color)") { "Invalid Email or Password." }

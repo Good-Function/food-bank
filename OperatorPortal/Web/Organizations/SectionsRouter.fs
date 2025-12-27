@@ -24,7 +24,8 @@ let daneAdresoweEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) 
     fun ctx ->
         task {
             let! details = readDetailsBy teczka
-            return ctx.WriteHtmlView(DaneAdresowe.Form details.DaneAdresowe teczka)
+            let token = ctx.GetAntiforgeryInput()
+            return ctx.WriteHtmlView(DaneAdresowe.Form details.DaneAdresowe teczka token)
         }
 
 let changeDaneAdresowe (handle: Handlers.ChangeDaneAdresowe) (teczka: int64) :EndpointHandler =
@@ -48,7 +49,8 @@ let kontaktyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : En
     fun ctx ->
         task {
             let! details = readDetailsBy teczka
-            return ctx.WriteHtmlView(Kontakty.Form details.Kontakty teczka)
+            let token = ctx.GetAntiforgeryInput()
+            return ctx.WriteHtmlView(Kontakty.Form details.Kontakty teczka token)
         }
 
 let changeKontakty (handle: Handlers.ChangeKontakty) (teczka: int64) :EndpointHandler =
@@ -72,7 +74,8 @@ let beneficjenciEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) 
     fun ctx ->
         task {
             let! details = readDetailsBy teczka
-            return ctx.WriteHtmlView(Beneficjenci.Form details.Beneficjenci teczka)
+            let token = ctx.GetAntiforgeryInput()
+            return ctx.WriteHtmlView(Beneficjenci.Form details.Beneficjenci teczka token)
         }
 
 let changeBeneficjenci (handle: Handlers.ChangeBeneficjenci) (teczka: int64) :EndpointHandler =
@@ -100,7 +103,8 @@ let dokumentyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64) : E
     fun ctx ->
         task {
             let! details = readDetailsBy teczka
-            return ctx.WriteHtmlView(Dokumenty.Form details.Dokumenty teczka)
+            let token = ctx.GetAntiforgeryInput()
+            return ctx.WriteHtmlView(Dokumenty.Form details.Dokumenty teczka token)
         }
         
 let readFileByType<'T> (ctx: HttpContext) (docType: 'T) fallbackFileName =
@@ -187,7 +191,8 @@ let zrodlaZywnosciEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64
     fun ctx ->
         task {
             let! details = readDetailsBy teczka
-            return ctx.WriteHtmlView(ZrodlaZywnosci.Form details.ZrodlaZywnosci teczka)
+            let token = ctx.GetAntiforgeryInput()
+            return ctx.WriteHtmlView(ZrodlaZywnosci.Form details.ZrodlaZywnosci teczka token)
         }
 
 let changeZrodlaZywnosci (handle: Handlers.ChangeZrodlaZywnosci) (teczka: int64) :EndpointHandler =
@@ -211,7 +216,8 @@ let adresyKsiegowosciEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: in
     fun ctx ->
         task {
             let! details = readDetailsBy teczka
-            return ctx.WriteHtmlView(AdresyKsiegowosci.Form details.AdresyKsiegowosci teczka)
+            let token = ctx.GetAntiforgeryInput()
+            return ctx.WriteHtmlView(AdresyKsiegowosci.Form details.AdresyKsiegowosci teczka token)
         }
 
 let changeAdresyKsiegowosci (handle: Handlers.ChangeAdresyKsiegowosci) (teczka: int64): EndpointHandler =
@@ -235,7 +241,8 @@ let warunkiPomocyEdit (readDetailsBy: ReadOrganizationDetailsBy) (teczka: int64)
     fun ctx ->
         task {
             let! details = readDetailsBy teczka
-            return ctx.WriteHtmlView(WarunkiPomocy.Form details.WarunkiPomocy teczka)
+            let token = ctx.GetAntiforgeryInput()
+            return ctx.WriteHtmlView(WarunkiPomocy.Form details.WarunkiPomocy teczka token)
         }
         
 let changeWarunkiPomocy (handle: Handlers.ChangeWarunkiPomocy) (teczka: int64): EndpointHandler =

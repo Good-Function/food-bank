@@ -122,7 +122,8 @@ let auditTrail (readAuditTrail: ReadAuditTrail) (id: int64) : EndpointHandler =
 let import: EndpointHandler =
     fun ctx -> task {
         let username = ctx.UserName
-        return ctx |> render (ImportExcelTemplate.Partial username None) (ImportExcelTemplate.FullPage username None)
+        let token = ctx.GetAntiforgeryInput()
+        return ctx |> render (ImportExcelTemplate.Partial username None token) (ImportExcelTemplate.FullPage username None token)
     }
     
 let upload (import: CreateOrganizationCommandHandler.Import): EndpointHandler =
@@ -133,10 +134,12 @@ let upload (import: CreateOrganizationCommandHandler.Import): EndpointHandler =
             | Ok output -> return! ctx.WriteHtmlView (ImportExcelResultTemplate.Template output)
             | Error err ->
                 ctx.SetStatusCode StatusCodes.Status400BadRequest
-                return! ctx.WriteHtmlView (ImportExcelTemplate.Upload (Some $"%A{err}"))
+                let token = ctx.GetAntiforgeryInput()
+                return! ctx.WriteHtmlView (ImportExcelTemplate.Upload (Some $"%A{err}") token)
         | None ->
             ctx.SetStatusCode StatusCodes.Status400BadRequest
-            return! ctx.WriteHtmlView (ImportExcelTemplate.Upload (Some "Niepoprawny plik excel (.xlsx)"))
+            let token = ctx.GetAntiforgeryInput()
+            return! ctx.WriteHtmlView (ImportExcelTemplate.Upload (Some "Niepoprawny plik excel (.xlsx)") token)
     }
 
 let Endpoints (dependencies: Dependencies) =

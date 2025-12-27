@@ -21,6 +21,8 @@ let ``PUT /organizations/{id}/dokumenty returns 200 OK with link to document`` (
         let organization = AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         let api = runTestApi() |> authenticate "Editor"
+        let teczka = organization.Teczka |> TeczkaId.unwrap
+        let! token = getAntiforgeryToken api $"/organizations/{teczka}/dokumenty/edit"
         let wniosekDate = DateOnly.FromDateTime(DateTime.Today)|> Some
         let umowaDate = DateOnly.FromDateTime(DateTime.Today)|> Some
         let rodoDate = DateOnly.FromDateTime(DateTime.Today)|> Some
@@ -28,6 +30,7 @@ let ``PUT /organizations/{id}/dokumenty returns 200 OK with link to document`` (
         let upowaznienieDate = DateOnly.FromDateTime(DateTime.Today)|> Some
         let file = File.ReadAllBytes(Path.Combine(__SOURCE_DIRECTORY__, "doc.pdf"))
         use form = new MultipartFormDataContent()
+        form.Add(new StringContent(token), "__RequestVerificationToken")
         form.Add(new ByteArrayContent(file), "Wniosek", "wniosek.pdf")
         form.Add(new ByteArrayContent(file), "Umowa", "umowa.pdf")
         form.Add(new ByteArrayContent(file), "RODO", "rodo.pdf")
@@ -39,7 +42,7 @@ let ``PUT /organizations/{id}/dokumenty returns 200 OK with link to document`` (
         form.Add(new StringContent(odwiedzinyDate |> toInput), "OdwiedzinyDate")
         form.Add(new StringContent(upowaznienieDate |> toInput), "UpowaznienieDoOdbioruDate")
         // Acts
-        let! changeDocsResponse = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/dokumenty", form)
+        let! changeDocsResponse = api.PutAsync($"/organizations/{teczka}/dokumenty", form)
         // Assert
         let! docsResponse = api.GetAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/dokumenty")
         let! docsHtml = docsResponse.HtmlContent()

@@ -35,10 +35,11 @@ let page: EndpointHandler =
         task {
             let username = ctx.UserName
             let permissions = permissionsMap[ctx.UserRole]
+            let token = ctx.GetAntiforgeryInput()
 
             return
                 ctx
-                |> render (Index.Partial username permissions) (Index.FullPage username permissions)
+                |> render (Index.Partial username permissions token) (Index.FullPage username permissions token)
         }
 
 let users (listUsers: Queries.ListUsers) (listRoles: Queries.ListRoles) : EndpointHandler =
@@ -47,7 +48,8 @@ let users (listUsers: Queries.ListUsers) (listRoles: Queries.ListRoles) : Endpoi
             let! users = listUsers ()
             let! roles = listRoles ()
             let permissions = permissionsMap[ctx.UserRole]
-            return ctx.WriteHtmlView(Templates.UsersTable.View users roles permissions)
+            let token = ctx.GetAntiforgeryInput()
+            return ctx.WriteHtmlView(Templates.UsersTable.View users roles permissions token)
         }
 
 let addUser
@@ -62,8 +64,9 @@ let addUser
             let! users = listUsers ()
             let! roles = listRoles ()
             let permissions = permissionsMap[ctx.UserRole]
+            let token = ctx.GetAntiforgeryInput()
             ctx.SetStatusCode(StatusCodes.Status201Created)
-            return ctx.WriteHtmlView(Templates.UsersTable.View users roles permissions)
+            return ctx.WriteHtmlView(Templates.UsersTable.View users roles permissions token)
         }
 
 let assignRole
@@ -81,8 +84,9 @@ let assignRole
             do! assignRole userId roleId
             let! users = listUsers ()
             let! roles = listRoles ()
+            let token = ctx.GetAntiforgeryInput()
             ctx.SetStatusCode(StatusCodes.Status200OK)
-            return ctx.WriteHtmlView(Templates.UsersTable.View users roles permissions)
+            return ctx.WriteHtmlView(Templates.UsersTable.View users roles permissions token)
         }
 
 let Endpoints (deps: Dependencies) =

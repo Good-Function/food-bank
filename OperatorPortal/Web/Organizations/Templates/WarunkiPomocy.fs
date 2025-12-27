@@ -23,9 +23,10 @@ let View (warunki: OrganizationDetails.WarunkiPomocy) (teczka: int64) (permissio
         readonlyField "Transport - kategoria" warunki.TransportKategoria
     }
 
-let Form (warunki: OrganizationDetails.WarunkiPomocy) (teczka: int64) =
+let Form (warunki: OrganizationDetails.WarunkiPomocy) (teczka: int64) (antiforgeryToken: HtmlElement) =
     let indicator = "WarunkiPomocySpinner"
     form () {
+        antiforgeryToken
         article (class' = "focus-dim") {
             activeEditableHeader "Warunki udzielania pomocy żywnościowej" $"/organizations/{teczka}/warunki-pomocy" indicator
             Indicators.OverlaySpinner indicator

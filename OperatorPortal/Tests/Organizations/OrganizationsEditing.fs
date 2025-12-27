@@ -28,7 +28,9 @@ let ``GET /ogranizations/{id}/dane-adresowe/edit returns prefilled inputs to edi
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
-            doc.CssSelect "input" |> List.map _.AttributeValue("value")
+            doc.CssSelect "input"
+            |> List.filter (fun input -> input.AttributeValue("name") <> "__RequestVerificationToken")
+            |> List.map _.AttributeValue("value")
         response.StatusCode |> should equal HttpStatusCode.OK
         inputs |> should equal [
             organization.DaneAdresowe.NazwaOrganizacjiPodpisujacejUmowe
@@ -48,7 +50,11 @@ let ``PUT /ogranizations/{id}/dane-adresowe modifies and returns updated data`` 
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         let randomStuff = Guid.NewGuid().ToString()
+        let api = runTestApi() |> authenticate "Editor"
+        let teczka = organization.Teczka |> TeczkaId.unwrap
+        let! token = getAntiforgeryToken api $"/organizations/{teczka}/dane-adresowe/edit"
         let data = formData {
+            yield "__RequestVerificationToken", token
             yield "NazwaOrganizacjiPodpisujacejUmowe", randomStuff
             yield "AdresRejestrowy", randomStuff
             yield "NazwaPlacowkiTrafiaZywnosc", randomStuff
@@ -56,9 +62,8 @@ let ``PUT /ogranizations/{id}/dane-adresowe modifies and returns updated data`` 
             yield "GminaDzielnica", randomStuff
             yield "Powiat", randomStuff
         }
-        let api = runTestApi() |> authenticate "Editor"
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/dane-adresowe", data)
+        let! response = api.PutAsync($"/organizations/{teczka}/dane-adresowe", data)
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -88,7 +93,9 @@ let ``GET /ogranizations/{id}/kontakty/edit returns prefilled inputs to edit the
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
-            doc.CssSelect "input" |> List.map _.AttributeValue("value")
+            doc.CssSelect "input"
+            |> List.filter (fun input -> input.AttributeValue("name") <> "__RequestVerificationToken")
+            |> List.map _.AttributeValue("value")
         response.StatusCode |> should equal HttpStatusCode.OK
         inputs |> should equal [
             organization.Kontakty.WwwFacebook
@@ -114,7 +121,11 @@ let ``PUT /ogranizations/{id}/kontakty modifies and returns updated data`` () =
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         let randomStuff = Guid.NewGuid().ToString()
+        let api = runTestApi() |> authenticate "Editor"
+        let teczka = organization.Teczka |> TeczkaId.unwrap
+        let! token = getAntiforgeryToken api $"/organizations/{teczka}/kontakty/edit"
         let data = formData {
+            yield "__RequestVerificationToken", token
             yield "WwwFacebook", randomStuff
             yield "Telefon", randomStuff
             yield "Przedstawiciel", randomStuff
@@ -127,9 +138,8 @@ let ``PUT /ogranizations/{id}/kontakty modifies and returns updated data`` () =
             yield "OsobaOdbierajacaZywnosc", randomStuff
             yield "TelefonOsobyOdbierajacej", randomStuff
         }
-        let api = runTestApi() |> authenticate "Editor"
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/kontakty", data)
+        let! response = api.PutAsync($"/organizations/{teczka}/kontakty", data)
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
@@ -163,7 +173,9 @@ let ``GET /ogranizations/{id}/beneficjenci/edit returns prefilled inputs to edit
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
-            doc.CssSelect "input" |> List.map _.AttributeValue("value")
+            doc.CssSelect "input"
+            |> List.filter (fun input -> input.AttributeValue("name") <> "__RequestVerificationToken")
+            |> List.map _.AttributeValue("value")
         response.StatusCode |> should equal HttpStatusCode.OK
         inputs |> should equal [
             $"{organization.Beneficjenci.LiczbaBeneficjentow}"
@@ -180,12 +192,15 @@ let ``PUT /ogranizations/{id}/beneficjenci modifies and returns updated data`` (
         do! organization |> (save Tools.DbConnection.connectDb)
         let expectedLiczbaBeneficjentow = organization.Beneficjenci.LiczbaBeneficjentow + 20 |> _.ToString()
         let expectedBeneficjenci = $"{Guid.NewGuid()}"
+        let teczka = organization.Teczka |> TeczkaId.unwrap
+        let! token = getAntiforgeryToken api $"/organizations/{teczka}/beneficjenci/edit"
         let data = formData {
+            yield "__RequestVerificationToken", token
             yield "LiczbaBeneficjentow", expectedLiczbaBeneficjentow
             yield "Beneficjenci", expectedBeneficjenci
         }
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/beneficjenci", data)
+        let! response = api.PutAsync($"/organizations/{teczka}/beneficjenci", data)
         // Assert
         let! doc = response.HtmlContent()
         let beneficjenciValues =
@@ -210,7 +225,9 @@ let ``GET /ogranizations/{id}/dokumenty/edit returns prefilled inputs to edit th
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
-            doc.CssSelect "input" |> List.map _.AttributeValue("value")
+            doc.CssSelect "input"
+            |> List.filter (fun input -> input.AttributeValue("name") <> "__RequestVerificationToken")
+            |> List.map _.AttributeValue("value")
         response.StatusCode |> should equal HttpStatusCode.OK
         let map (doc: Document) = doc.Date
         inputs |> should equal [
@@ -271,6 +288,7 @@ let ``GET /ogranizations/{id}/zroda-zywnosci/edit returns prefilled inputs to ed
         let! doc = response.HtmlContent()
         let inputs =
             doc.CssSelect "input"
+                |> List.filter (fun input -> input.AttributeValue("name") <> "__RequestVerificationToken")
                 |> List.filter _.HasAttribute("checked", "")
                 |> List.map(fun input -> input.AttributeValue("value") |> Boolean.Parse)
         response.StatusCode |> should equal HttpStatusCode.OK
@@ -292,7 +310,11 @@ let ``PUT /ogranizations/{id}/zrodla-zywnosci modifies and returns updated data`
         // Arrange
         let organization = Arranger.AnOrganization()
         do! organization |> save Tools.DbConnection.connectDb
+        let api = runTestApi() |> authenticate "Editor"
+        let teczka = organization.Teczka |> TeczkaId.unwrap
+        let! token = getAntiforgeryToken api $"/organizations/{teczka}/zrodla-zywnosci/edit"
         let data = formData {
+            yield "__RequestVerificationToken", token
             yield "Sieci", "true"
             yield "Bazarki", "true"
             yield "Machfit", "true"
@@ -300,9 +322,8 @@ let ``PUT /ogranizations/{id}/zrodla-zywnosci modifies and returns updated data`
             yield "OdbiorKrotkiTermin", "true"
             yield "TylkoNaszMagazyn", "true"
         }
-        let api = runTestApi() |> authenticate "Editor"
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/zrodla-zywnosci", data)
+        let! response = api.PutAsync($"/organizations/{teczka}/zrodla-zywnosci", data)
         // Assert
         let! doc = response.HtmlContent()
         let takNie =
@@ -331,7 +352,9 @@ let ``GET /ogranizations/{id}/adresy-ksiegowosci/edit returns prefilled inputs t
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
-            doc.CssSelect "input" |> List.map _.AttributeValue("value")
+            doc.CssSelect "input"
+            |> List.filter (fun input -> input.AttributeValue("name") <> "__RequestVerificationToken")
+            |> List.map _.AttributeValue("value")
         response.StatusCode |> should equal HttpStatusCode.OK
         inputs |> should equal [
             organization.AdresyKsiegowosci.NazwaOrganizacjiKsiegowanieDarowizn
@@ -347,14 +370,17 @@ let ``PUT /ogranizations/{id}/adresy-ksiegowosci modifies and returns updated da
         let organization = Arranger.AnOrganization()
         do! organization |> save Tools.DbConnection.connectDb
         let expectedText = $"{Guid.NewGuid()}"
+        let api = runTestApi() |> authenticate "Editor"
+        let teczka = organization.Teczka |> TeczkaId.unwrap
+        let! token = getAntiforgeryToken api $"/organizations/{teczka}/adresy-ksiegowosci/edit"
         let data = formData {
+            yield "__RequestVerificationToken", token
             yield "NazwaOrganizacjiKsiegowanieDarowizn", expectedText
             yield "KsiegowanieAdres", expectedText
             yield "TelOrganProwadzacegoKsiegowosc", expectedText
         }
-        let api = runTestApi() |> authenticate "Editor"
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/adresy-ksiegowosci", data)
+        let! response = api.PutAsync($"/organizations/{teczka}/adresy-ksiegowosci", data)
         // Assert
         let! doc = response.HtmlContent()
         let dates =
@@ -380,9 +406,13 @@ let ``GET /ogranizations/{id}/warunki-pomocy/edit returns prefilled inputs to ed
         // Assert
         let! doc = response.HtmlContent()
         let inputs =
-            doc.CssSelect "input" |> List.filter(fun elem -> elem.AttributeValue("type") <> "radio") |> List.map _.AttributeValue("value")
+            doc.CssSelect "input"
+            |> List.filter (fun input -> input.AttributeValue("name") <> "__RequestVerificationToken")
+            |> List.filter(fun elem -> elem.AttributeValue("type") <> "radio")
+            |> List.map _.AttributeValue("value")
         let radios =
             doc.CssSelect "input"
+                |> List.filter (fun input -> input.AttributeValue("name") <> "__RequestVerificationToken")
                 |> List.filter _.HasAttribute("checked", "")
                 |> List.map(fun input -> input.AttributeValue("value") |> Boolean.Parse)
         response.StatusCode |> should equal HttpStatusCode.OK
@@ -407,7 +437,11 @@ let ``PUT /ogranizations/{id}/warunki-pomocy modifies and returns updated data``
         let organization = Arranger.AnOrganization()
         do! organization |> save Tools.DbConnection.connectDb
         let expectedText = $"{Guid.NewGuid()}"
+        let api = runTestApi() |> authenticate "Editor"
+        let teczka = organization.Teczka |> TeczkaId.unwrap
+        let! token = getAntiforgeryToken api $"/organizations/{teczka}/warunki-pomocy/edit"
         let data = formData {
+            yield "__RequestVerificationToken", token
             yield "Kategoria", expectedText
             yield "RodzajPomocy", expectedText
             yield "SposobUdzielaniaPomocy", expectedText
@@ -417,10 +451,8 @@ let ``PUT /ogranizations/{id}/warunki-pomocy modifies and returns updated data``
             yield "TransportOpis", expectedText
             yield "TransportKategoria", expectedText
         }
-        // Arrange
-        let api = runTestApi() |> authenticate "Editor"
         // Act
-        let! response = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/warunki-pomocy", data)
+        let! response = api.PutAsync($"/organizations/{teczka}/warunki-pomocy", data)
         // Assert
         let! doc = response.HtmlContent()
         let warunkiPomocy =

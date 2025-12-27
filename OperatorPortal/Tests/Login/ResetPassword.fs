@@ -40,7 +40,9 @@ let ``Change password changes the password (wow!)`` () =
         let expectedPassword = Guid.NewGuid().ToString()
         do! PasswordDao.changePassword connectDb {UserId = testUserId; NewPassword = oldPasswordHash}
         let api = runTestApi ()
+        let! token = getAntiforgeryToken api "/login/password-change"
         let passwordChange = formData {
+            yield "__RequestVerificationToken", token
             yield ("OldPassword", oldPassword)
             yield ("NewPassword", expectedPassword)
             yield ("NewPasswordConfirmation", expectedPassword)
@@ -57,7 +59,9 @@ let ``Change password changes the password (wow!)`` () =
 let ``Change password shows error when old password is not correct`` () =
     task {
         let api = runTestApi ()
+        let! token = getAntiforgeryToken api "/login/password-change"
         let passwordChange = formData {
+            yield "__RequestVerificationToken", token
             yield ("OldPassword", Guid.NewGuid().ToString())
             yield ("NewPassword", "whatever")
             yield ("NewPasswordConfirmation", "whatever")
@@ -75,7 +79,9 @@ let ``Change password shows error when new passowrd confirmation doesn't match n
     task {
         let! user = readUserBy connectDb 0
         let api = runTestApi ()
+        let! token = getAntiforgeryToken api "/login/password-change"
         let passwordChange = formData {
+            yield "__RequestVerificationToken", token
             yield ("OldPassword", user.Password |> Password.value)
             yield ("NewPassword", "blabla1")
             yield ("NewPasswordConfirmation", "blabla2")

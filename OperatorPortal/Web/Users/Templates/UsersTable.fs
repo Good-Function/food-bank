@@ -6,8 +6,9 @@ open Permissions
 open Users.Domain
 open Oxpecker.Htmx
 
-let View (users: User list) (roles: Role list) permissions =
+let View (users: User list) (roles: Role list) permissions (antiforgeryToken: HtmlElement) =
     table() {
+        antiforgeryToken
         thead() {
             th(style="width:128px; min-width:64px;") {}
             th(style="width:50%") {"Mail"}
@@ -31,7 +32,8 @@ let View (users: User list) (roles: Role list) permissions =
                             disabled = not (permissions |> List.contains Permission.ManageUsers),
                             hxSwap="outerHTML",
                             name="RoleId",
-                            hxIndicator= "#UsersIndicator"
+                            hxIndicator= "#UsersIndicator",
+                            hxInclude = "[name='__RequestVerificationToken']"
                             ){
                             for role in roles do
                                 option(selected = (role.Id = user.RoleId), title = role.Description, value=role.Id.ToString()) {
@@ -46,6 +48,7 @@ let View (users: User list) (roles: Role list) permissions =
                                 hxDelete =  $"/team/users/{user.Id}",
                                 hxConfirm="Czy na pewno chcesz usunąć tego użytkownika?",
                                 hxIndicator= "#UsersIndicator",
+                                hxInclude = "[name='__RequestVerificationToken']",
                                 href="") {
                                 Icons.Delete
                             }

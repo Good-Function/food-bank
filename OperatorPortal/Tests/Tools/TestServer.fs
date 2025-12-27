@@ -1,9 +1,11 @@
 module Tools.TestServer
 
 open System.Net.Http
+open System.Threading.Tasks
 open Microsoft.AspNetCore.Mvc.Testing
 open Microsoft.AspNetCore.Hosting
 open Program
+open FSharp.Data
 
 type TestWebApplicationFactory() =
     inherit WebApplicationFactory<Program>()
@@ -16,6 +18,7 @@ type TestWebApplicationFactory() =
 let private factory = lazy (new TestWebApplicationFactory())
 
 let runTestApi () =
+    // WebApplicationFactory.CreateClient() automatically configures HttpClient to handle cookies
     let client = factory.Value.Server.CreateClient()
     client.DefaultRequestHeaders.Add("HX-Request", "true")
     client
@@ -23,4 +26,30 @@ let runTestApi () =
 let authenticate (role: string) (client: HttpClient)=
     client.DefaultRequestHeaders.Add("role", role)
     client
+
+let private addCookiesToClient (client: HttpClient) (response: HttpResponseMessage) =
+    if response.Headers.Contains("Set-Cookie") then
+        let cookieValues = 
+            response.Headers.GetValues("Set-Cookie")
+            |> Seq.map (fun c -> c.Split(';').[0].Trim())
+            |> Seq.filter (fun c -> c.Contains("="))
+            |> String.concat "; "
+        if cookieValues <> "" then
+            if client.DefaultRequestHeaders.Contains("Cookie") then
+                let existing = client.DefaultRequestHeaders.GetValues("Cookie") |> Seq.head
+                client.DefaultRequestHeaders.Remove("Cookie") |> ignore
+                client.DefaultRequestHeaders.Add("Cookie", $"{existing}; {cookieValues}")
+            else
+                client.DefaultRequestHeaders.Add("Cookie", cookieValues)
+
+let getAntiforgeryToken (client: HttpClient) (editUrl: string) : Task<string> = task {
+    let! response = client.GetAsync(editUrl)
+    response.EnsureSuccessStatusCode() |> ignore
+    let! html = response.Content.ReadAsStringAsync()
+    addCookiesToClient client response
+    
+    let doc = HtmlDocument.Parse html
+    let tokenInput = doc.CssSelect "input[name='__RequestVerificationToken']" |> List.tryHead
+    return tokenInput |> Option.map (fun input -> input.AttributeValue("value")) |> Option.defaultValue ""
+}
     

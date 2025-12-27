@@ -14,7 +14,9 @@ open Microsoft.AspNetCore.Builder
 let protect =  configureEndpoint _.RequireAuthorization()
 
 let renderLogin: EndpointHandler =
-    fun ctx -> ctx.WriteHtmlView(ctx.TryGetQueryValue "ReturnUrl" |> Template.LoginTemplate)
+    fun ctx -> 
+        let token = ctx.GetAntiforgeryInput()
+        ctx.WriteHtmlView(Template.LoginTemplateWithToken (ctx.TryGetQueryValue "ReturnUrl") token)
 
 let handleLogin (readUser: Email -> Async<User option>) : EndpointHandler =
     fun ctx ->
@@ -29,7 +31,8 @@ let handleLogin (readUser: Email -> Async<User option>) : EndpointHandler =
         
 let passwordChange: EndpointHandler =
     fun ctx -> task {
-        return ctx |> render (ChangePasswordTemplate.Partial ctx.UserName) (ChangePasswordTemplate.FullPage ctx.UserName)
+        let token = ctx.GetAntiforgeryInput()
+        return ctx |> render (ChangePasswordTemplate.Partial ctx.UserName token) (ChangePasswordTemplate.FullPage ctx.UserName token)
     }
     
 let changePassword (readUser: int64 -> Async<User>) (changePassword: Commands.ChangePassword) : EndpointHandler =
@@ -51,7 +54,8 @@ let changePassword (readUser: int64 -> Async<User>) (changePassword: Commands.Ch
                 do! changePassword { NewPassword = hashedPassword ; UserId = user.Id }
                 return ctx.WriteHtmlView ChangePasswordTemplate.Success
             else 
-                return ctx.WriteHtmlView (ChangePasswordTemplate.Form errors)
+                let token = ctx.GetAntiforgeryInput()
+                return ctx.WriteHtmlView (ChangePasswordTemplate.Form errors token)
         }
         
 let Endpoints (deps: Dependencies) =

@@ -22,9 +22,10 @@ let View (zrodla: OrganizationDetails.ZrodlaZywnosci) (teczka: int64) (permissio
         readonlyField "Tylko nasz magazyn" (zrodla.TylkoNaszMagazyn |> toTakNie)
     }
 
-let Form (zrodla: OrganizationDetails.ZrodlaZywnosci) (teczka: int64) =
+let Form (zrodla: OrganizationDetails.ZrodlaZywnosci) (teczka: int64) (antiforgeryToken: HtmlElement) =
     let indicator = "ZrodlaZywnosciIndicator"
     form () {
+        antiforgeryToken
         article (class' = "focus-dim") {
             activeEditableHeader "Źródła żywności" $"/organizations/{teczka}/zrodla-zywnosci" indicator
             Indicators.OverlaySpinner indicator

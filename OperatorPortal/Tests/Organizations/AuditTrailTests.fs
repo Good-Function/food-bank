@@ -27,12 +27,15 @@ let ``Audit stores only changed fields and returns audit trail by related entity
         let organization = Arranger.AnOrganization()
         do! organization |> (save Tools.DbConnection.connectDb)
         let expectedLiczbaBeneficjentow = organization.Beneficjenci.LiczbaBeneficjentow + 20 |> _.ToString()
+        let teczka = organization.Teczka |> TeczkaId.unwrap
+        let! token = getAntiforgeryToken api $"/organizations/{teczka}/beneficjenci/edit"
         let data = formData {
+            yield "__RequestVerificationToken", token
             yield "LiczbaBeneficjentow", expectedLiczbaBeneficjentow
             yield "Beneficjenci", organization.Beneficjenci.Beneficjenci
         }
         // Act
-        let! modificationResponse = api.PutAsync($"/organizations/{organization.Teczka |> TeczkaId.unwrap}/beneficjenci", data)
+        let! modificationResponse = api.PutAsync($"/organizations/{teczka}/beneficjenci", data)
         // Assert
         let! auditTrailResponse = api.GetAsync($"organizations/{organization.Teczka |> TeczkaId.unwrap}/audit-trail?kind=beneficjenci")
         modificationResponse.StatusCode |> should equal HttpStatusCode.OK

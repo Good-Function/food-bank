@@ -47,7 +47,9 @@ let ``POST /team/users/{id} adds user`` () =
         // Arrange
         let emailToAdd = Faker().Person.Email
         let api = runTestApi() |> authenticate "Admin"
+        let! token = getAntiforgeryToken api "/team"
         let data = formData {
+            yield "__RequestVerificationToken", token
             yield ("Email", emailToAdd)
         }
         // Act
@@ -66,7 +68,9 @@ let ``PUT /team/users/{id}/role/{roleId} assigns role`` () =
         let api = runTestApi() |> authenticate "Admin"
         let editorRole = ManagementMock.editor
         let userIdToChangeRole = ManagementMock.users.Head.Id
+        let! token = getAntiforgeryToken api "/team/users"
         let data = formData {
+            yield "__RequestVerificationToken", token
             yield ("RoleId", editorRole.Id.ToString())
         }
         // Act

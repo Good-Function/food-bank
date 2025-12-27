@@ -74,9 +74,10 @@ let View (documents: Document list) (teczka: int64) (permissions: Permission lis
         }
     }
 
-let Form (documents: Document list) (teczka: int64) =
+let Form (documents: Document list) (teczka: int64) (antiforgeryToken: HtmlElement) =
     let spinner = "DokumentySpinner"
     form () {
+        antiforgeryToken
         article (class' = "focus-dim") {
             activeEditableHeader "Dokumenty" $"/organizations/{teczka}/dokumenty" spinner
             Indicators.OverlaySpinner "DokumentySpinner"

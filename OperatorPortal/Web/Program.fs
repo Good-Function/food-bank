@@ -66,6 +66,7 @@ let createServer () =
     let blobServiceClient = (BlobServiceClient settings.BlobStorageConnectionString)
     builder.Services
         .AddRouting()
+        .AddAntiforgery()
         .AddOxpecker()
         .AddAuthorization(fun options ->
         options.AddPolicy("ServicePolicy", fun policy ->
@@ -111,6 +112,7 @@ let createServer () =
         .UseRouting()
         .UseStaticFiles()
         .UseAuthentication()
+        .UseAntiforgery()
         .UseAuthorization()
         .UseOxpecker(endpoints
                         (Organizations.CompositionRoot.build(dbConnect, blobServiceClient))

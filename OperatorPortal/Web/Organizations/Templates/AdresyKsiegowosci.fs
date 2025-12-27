@@ -18,9 +18,10 @@ let View (adresy: OrganizationDetails.AdresyKsiegowosci) (teczka: int64) (permis
         readonlyField "Telefon" adresy.TelOrganProwadzacegoKsiegowosc
     }
 
-let Form (adresy: OrganizationDetails.AdresyKsiegowosci) (teczka: int64) =
+let Form (adresy: OrganizationDetails.AdresyKsiegowosci) (teczka: int64) (antiforgeryToken: HtmlElement) =
     let indicator = "AdresySpinner"
     form () {
+        antiforgeryToken
         article (class' = "focus-dim") {
             activeEditableHeader "Dane adresowe księgowości" $"/organizations/{teczka}/adresy-ksiegowosci" indicator
             Indicators.OverlaySpinner indicator
