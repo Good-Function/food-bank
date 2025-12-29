@@ -14,10 +14,10 @@ let createEmailOrFail email : Email =
     | Ok email -> email
     | Error _ -> failwithf "Invalid email found in database: %s" email
 
-let tryFindUserBy (connectDB: unit -> Async<IDbConnection>) (userEmail: Email) : Async<User option> =
+let tryFindUserBy (connectDb: unit -> Async<IDbConnection>) (userEmail: Email) : Async<User option> =
     let emailString = userEmail |> Email.value
     async {
-        use! db = connectDB ()
+        use! db = connectDb ()
         let! userRow =
             db.trySingle<UserRow>
                 """
@@ -34,9 +34,9 @@ WHERE email = @email"""
             | _ -> None
     }
 
-let readUserBy (connectDB: unit -> Async<IDbConnection>) (id: int64) : Async<User> =
+let readUserBy (connectDb: unit -> Async<IDbConnection>) (id: int64) : Async<User> =
     async {
-        use! db = connectDB ()
+        use! db = connectDb ()
         let! userRow =
             db.Single<UserRow>
                 """

@@ -3,9 +3,9 @@ module Applications.Database
 open System.Data
 open PostgresPersistence.DapperFsharp
 
-let readSchemas (connectDB: unit -> Async<IDbConnection>) =
+let readSchemas (connectDb: unit -> Async<IDbConnection>) =
     async {
-        use! db = connectDB()
+        use! db = connectDb()
         let! schemas = db.Query<{|schema_name:string|}> """
     SELECT extname as schema_name FROM pg_extension
 """

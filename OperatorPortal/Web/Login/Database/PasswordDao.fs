@@ -5,10 +5,10 @@ open Login
 open Login.Domain
 open PostgresPersistence.DapperFsharp
 
-let changePassword (connectDB: unit -> Async<IDbConnection>) (passwordChange: Commands.PasswordChange) =
+let changePassword (connectDb: unit -> Async<IDbConnection>) (passwordChange: Commands.PasswordChange) =
     let passwordString = passwordChange.NewPassword |> Password.value
     async {
-        use! db = connectDB ()
+        use! db = connectDb ()
         do! db.Execute """
 UPDATE users
 SET password = @NewPassword

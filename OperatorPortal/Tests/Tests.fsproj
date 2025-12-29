@@ -45,8 +45,8 @@
       <Compile Include="Organizations\Arranger.fs" />
       <Compile Include="Organizations\GenerateOrgs.fs" />
       <Compile Include="Organizations\OrganizationsDataApi.fs" />
-      <Compile Include="Organizations\OrganizationsViewing.fs" />
-      <Compile Include="Organizations\OrganizationsEditing.fs" />
+      <Compile Include="Organizations\Viewing.fs" />
+      <Compile Include="Organizations\Editing.fs" />
       <Compile Include="Organizations\OrganizationsFileUpload.fs" />
       <Compile Include="Organizations\MailingList.fs" />
       <Compile Include="Organizations\ImportFromExcel.fs" />

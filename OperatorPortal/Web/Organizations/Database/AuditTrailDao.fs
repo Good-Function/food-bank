@@ -14,13 +14,13 @@ type AuditTrailRow =
       occured_at: DateTime
       diff: string }
 
-type AuditTrailDao(connectDB: unit -> Async<IDbConnection>) =
+type AuditTrailDao(connectDb: unit -> Async<IDbConnection>) =
     member this.SaveAuditTrail(auditTrail: AuditTrail) : Async<unit> =
         async {
             if auditTrail.Diff.IsEmpty then
                 return ()
             else 
-                use! db = connectDB ()
+                use! db = connectDb ()
 
                 let query =
                     """
@@ -39,7 +39,7 @@ type AuditTrailDao(connectDB: unit -> Async<IDbConnection>) =
 
     member this.ReadAuditTrail: ReadAuditTrail = fun(entityId: int64, kind: string option) ->
         async {
-            use! db = connectDB ()
+            use! db = connectDb ()
             let query = """
             SELECT related_entity_id, who, kind, occured_at, diff
             FROM audit_trail

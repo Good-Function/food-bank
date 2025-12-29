@@ -1,4 +1,4 @@
-module OrganizationEditing
+module Organizations.Editing
 
 open System
 open System.Net
@@ -451,3 +451,4 @@ let ``PUT /ogranizations/{id}/warunki-pomocy modifies and returns updated data``
             expectedText
         ]
     }
+

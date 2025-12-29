@@ -66,10 +66,10 @@ let prepareFilter (operator: string, value: obj) =
     | :? string -> $"{operator} '%%{value}%%'"
     | _ -> failwith  "Unknown type"
 
-let readSummaries (connectDB: unit -> Async<IDbConnection>): ReadOrganizationSummaries =
+let readSummaries (connectDb: unit -> Async<IDbConnection>): ReadOrganizationSummaries =
     fun query ->
         async {
-            use! db = connectDB()
+            use! db = connectDb()
             let sortBy, dir = match query.SortBy with
                                 | Some (sortBy, dir) -> ($"{sortBy}", dir.ToString())
                                 | None -> ("teczka", "desc")
@@ -88,10 +88,10 @@ let readSummaries (connectDB: unit -> Async<IDbConnection>): ReadOrganizationSum
             return summaries, total
         }
 
-let saveDocMetadata (connectDB: unit -> Async<IDbConnection>) : DocumentHandlers.SaveDocMetadata =
+let saveDocMetadata (connectDb: unit -> Async<IDbConnection>) : DocumentHandlers.SaveDocMetadata =
     fun (teczkaId, metadata) ->
         async {
-            use! db = connectDB()
+            use! db = connectDb()
             let jsonPropName =
                 match metadata.Type with
                 | Odwiedziny -> "Odwiedziny"
@@ -113,10 +113,10 @@ WHERE Teczka = @Teczka; """ {|
                             |}
         }
     
-let readMailingListBy (connectDB: unit-> Async<IDbConnection>): MailingList.ReadMailingList =
+let readMailingListBy (connectDb: unit-> Async<IDbConnection>): MailingList.ReadMailingList =
     fun (searchTerm, filters) ->
         async {
-            let! db = connectDB()
+            let! db = connectDb()
             let filterClause = filters
                                |> List.map(fun f -> $"AND {f.Key} {(prepareFilter(f.Operator.Symbol, f.Value))} ")
                                |> String.concat ""
@@ -126,24 +126,24 @@ let readMailingListBy (connectDB: unit-> Async<IDbConnection>): MailingList.Read
             return mails
         }
         
-let readDetailsBy (connectDB: unit -> Async<IDbConnection>) (teczka: int64) =
+let readDetailsBy (connectDb: unit -> Async<IDbConnection>) (teczka: int64) =
     async {
-        use! db = connectDB()
+        use! db = connectDb()
         let! row = db.Single<OrganizationDetailsRow> "SELECT * FROM organizacje WHERE teczka = @teczka" {|teczka = teczka|}
         return row.ToReadModel()
     }
     
-let readByEmail (connectDB: unit -> Async<IDbConnection>): OrganizationDetails.ReadOrganizationDetailsByEmail =
+let readByEmail (connectDb: unit -> Async<IDbConnection>): OrganizationDetails.ReadOrganizationDetailsByEmail =
     fun email ->
         async {
-            use! db = connectDB()
+            use! db = connectDb()
             let! row = db.trySingle<OrganizationDetailsRow> "SELECT * FROM organizacje WHERE email = @email" {|email = email|}
             return row |> Option.map _.ToReadModel()
         }
 
-let readBy (connectDB: unit -> Async<IDbConnection>) (teczka: Organizations.Domain.Identifiers.TeczkaId) =
+let readBy (connectDb: unit -> Async<IDbConnection>) (teczka: Organizations.Domain.Identifiers.TeczkaId) =
     async {
-        use! db = connectDB()
+        use! db = connectDb()
         let! row = db.Single<OrganizationDetailsRow> "SELECT * FROM organizacje WHERE teczka = @teczka" {|teczka = teczka |> Organizations.Domain.Identifiers.TeczkaId.unwrap|}
         return row.ToDomain()
     }
@@ -292,16 +292,16 @@ ON CONFLICT (Teczka) DO UPDATE
     """
     }
     
-let saveMany (connectDB: unit -> Async<IDbConnection>) (orgs: Organization list)=
+let saveMany (connectDb: unit -> Async<IDbConnection>) (orgs: Organization list)=
     async {
-        use! db = connectDB()
+        use! db = connectDb()
         let tasks = orgs|> List.map(saveOnConnection db)
         for task in tasks do
             do! task
     }
     
-let save (connectDB: unit -> Async<IDbConnection>) (org: Organization)  =
+let save (connectDb: unit -> Async<IDbConnection>) (org: Organization)  =
     async {
-        use! db = connectDB()
+        use! db = connectDb()
         do! org |> saveOnConnection db 
     }

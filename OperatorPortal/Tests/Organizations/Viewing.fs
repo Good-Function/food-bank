@@ -1,4 +1,4 @@
-module OrganizationsViewing
+module Organizations.Viewing
 
 open System
 open System.Net
@@ -228,3 +228,4 @@ let ``GET /ogranizations/{id}/dane-adresowe returns fields from dane adresowe`` 
         ]
         inputs.Length |> should equal 6
     }
+

@@ -142,17 +142,17 @@ let upload (import: CreateOrganizationCommandHandler.Import): EndpointHandler =
             return! ctx.WriteHtmlView (ImportExcelTemplate.Upload (Some "Niepoprawny plik excel (.xlsx)") token)
     }
 
-let Endpoints (dependencies: Dependencies) =
+let Endpoints (deps: Dependencies) =
     [ GET
           [ route "/" indexPage
-            route "/summaries" (summaries dependencies.ReadOrganizationSummaries)
-            route "/summaries/mailing-list" (mailingList dependencies.ReadMailingList)
-            routef "/{%d}" (details dependencies.ReadOrganizationDetailsBy)
+            route "/summaries" (summaries deps.ReadOrganizationSummaries)
+            route "/summaries/mailing-list" (mailingList deps.ReadMailingList)
+            routef "/{%d}" (details deps.ReadOrganizationDetailsBy)
             route "/import" import
-            routef "/{%d}/audit-trail" (auditTrail dependencies.ReadAuditTrail)
+            routef "/{%d}/audit-trail" (auditTrail deps.ReadAuditTrail)
           ]
       POST [
-          route "/import/upload" (upload dependencies.Import)
+          route "/import/upload" (upload deps.Import)
       ]
-      subRoute "/" (SectionsRouter.Endpoints dependencies)
+      subRoute "/" (SectionsRouter.Endpoints deps)
     ]

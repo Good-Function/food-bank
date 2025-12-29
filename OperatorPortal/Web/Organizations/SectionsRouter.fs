@@ -254,39 +254,39 @@ let changeWarunkiPomocy (handle: Handlers.ChangeWarunkiPomocy) (teczka: int64): 
             return ctx.WriteHtmlView(WarunkiPomocy.View (cmd |> WarunkiPomocy.FromCommand) teczka permissions)
         }
 
-let Endpoints (dependencies: Dependencies) =
+let Endpoints (deps: Dependencies) =
     [ GET
           [ 
-            routef "/{%d}/dane-adresowe" (daneAdresowe dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/dane-adresowe/edit" (daneAdresoweEdit dependencies.ReadOrganizationDetailsBy) 
-            routef "/{%d}/kontakty" (kontakty dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/kontakty/edit" (kontaktyEdit dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/beneficjenci" (beneficjenci dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/beneficjenci/edit" (beneficjenciEdit dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/dokumenty" (dokumenty dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/dokumenty/edit" (dokumentyEdit dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/dokumenty/{%s}" (downloadFile dependencies.GenerateDownloadUri)
-            routef "/{%d}/zrodla-zywnosci" (zrodlaZywnosci dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/zrodla-zywnosci/edit" (zrodlaZywnosciEdit dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/adresy-ksiegowosci" (adresyKsiegowosci dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/adresy-ksiegowosci/edit" (adresyKsiegowosciEdit dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/warunki-pomocy" (warunkiPomocy dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/warunki-pomocy/edit" (warunkiPomocyEdit dependencies.ReadOrganizationDetailsBy)
+            routef "/{%d}/dane-adresowe" (daneAdresowe deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/dane-adresowe/edit" (daneAdresoweEdit deps.ReadOrganizationDetailsBy) 
+            routef "/{%d}/kontakty" (kontakty deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/kontakty/edit" (kontaktyEdit deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/beneficjenci" (beneficjenci deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/beneficjenci/edit" (beneficjenciEdit deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/dokumenty" (dokumenty deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/dokumenty/edit" (dokumentyEdit deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/dokumenty/{%s}" (downloadFile deps.GenerateDownloadUri)
+            routef "/{%d}/zrodla-zywnosci" (zrodlaZywnosci deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/zrodla-zywnosci/edit" (zrodlaZywnosciEdit deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/adresy-ksiegowosci" (adresyKsiegowosci deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/adresy-ksiegowosci/edit" (adresyKsiegowosciEdit deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/warunki-pomocy" (warunkiPomocy deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/warunki-pomocy/edit" (warunkiPomocyEdit deps.ReadOrganizationDetailsBy)
           ]
       PUT [
           routef "/{%d}/dane-adresowe" (authorize Permission.EditOrganization >>=>
-                                        changeDaneAdresowe dependencies.ChangeDaneAdresowe)
+                                        changeDaneAdresowe deps.ChangeDaneAdresowe)
           routef "/{%d}/kontakty" (authorize Permission.EditOrganization >>=>
-                                   changeKontakty dependencies.ChangeKontakty)
+                                   changeKontakty deps.ChangeKontakty)
           routef "/{%d}/beneficjenci" (authorize Permission.EditOrganization >>=>
-                                       changeBeneficjenci dependencies.ChangeBeneficjenci)
+                                       changeBeneficjenci deps.ChangeBeneficjenci)
           routef "/{%d}/dokumenty" (authorize Permission.EditOrganization >>=>
-                                    changeDokumenty dependencies.SaveDocument dependencies.DeleteDocument)
+                                    changeDokumenty deps.SaveDocument deps.DeleteDocument)
           routef "/{%d}/zrodla-zywnosci" (authorize Permission.EditOrganization >>=>
-                                          changeZrodlaZywnosci dependencies.ChangeZrodlaZywnosci)
+                                          changeZrodlaZywnosci deps.ChangeZrodlaZywnosci)
           routef "/{%d}/adresy-ksiegowosci" (authorize Permission.EditOrganization >>=>
-                                             changeAdresyKsiegowosci dependencies.ChangeAdresyKsiegowosci)
+                                             changeAdresyKsiegowosci deps.ChangeAdresyKsiegowosci)
           routef "/{%d}/warunki-pomocy" (authorize Permission.EditOrganization >>=>
-                                         changeWarunkiPomocy dependencies.ChangeWarunkiPomocy)
+                                         changeWarunkiPomocy deps.ChangeWarunkiPomocy)
       ] ]
 

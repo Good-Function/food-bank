@@ -3,14 +3,13 @@ module Users.CompositionRoot
 open Azure.Identity
 open Users.Settings
 
-type Dependencies = {
-    ListUsers: Queries.ListUsers
-    ListRoles: Queries.ListRoles
-    FetchProfilePhoto: Queries.FetchProfilePhoto
-    AddUser: Commands.AddUser
-    DeleteUser: Commands.DeleteUser
-    AssignRole: Commands.AssignRole
-}
+type Dependencies =
+    { ListUsers: Queries.ListUsers
+      ListRoles: Queries.ListRoles
+      FetchProfilePhoto: Queries.FetchProfilePhoto
+      AddUser: Commands.AddUser
+      DeleteUser: Commands.DeleteUser
+      AssignRole: Commands.AssignRole }
 
 let build (azureAdSettings: AzureAdSettings) (settings: UsersSettings) =
     let credential = ClientSecretCredential(

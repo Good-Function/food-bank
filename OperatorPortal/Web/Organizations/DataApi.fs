@@ -117,21 +117,21 @@ let changeWarunkiPomocy (handle: Handlers.ChangeWarunkiPomocy) (teczka: int64) :
             return ctx.SetStatusCode(StatusCodes.Status204NoContent)
         }
 
-let Endpoints (dependencies: CompositionRoot.DataApiDependencies) =
+let Endpoints (deps: CompositionRoot.DataApiDependencies) =
     [ GET
-          [ routef "/{%d}/kontakty" (kontakty dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/beneficjenci" (beneficjenci dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/dane-adresowe" (daneAdresowe dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/zrodla-zywnosci" (zrodlaZywnosci dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/adresy-ksiegowosci" (adresyKsiegowosci dependencies.ReadOrganizationDetailsBy)
-            routef "/{%d}/warunki-pomocy" (warunkiPomocy dependencies.ReadOrganizationDetailsBy) ]
-      POST [ route "/lookup-by-email" (lookup dependencies.ReadOrganizationDetailsByEmail) ]
+          [ routef "/{%d}/kontakty" (kontakty deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/beneficjenci" (beneficjenci deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/dane-adresowe" (daneAdresowe deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/zrodla-zywnosci" (zrodlaZywnosci deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/adresy-ksiegowosci" (adresyKsiegowosci deps.ReadOrganizationDetailsBy)
+            routef "/{%d}/warunki-pomocy" (warunkiPomocy deps.ReadOrganizationDetailsBy) ]
+      POST [ route "/lookup-by-email" (lookup deps.ReadOrganizationDetailsByEmail) ]
       PUT [
-          routef "/{%d}/dane-adresowe" (changeDaneAdresowe dependencies.ChangeDaneAdresowe)
-          routef "/{%d}/kontakty" (changeKontakty dependencies.ChangeKontakty)
-          routef "/{%d}/beneficjenci" (changeBeneficjenci dependencies.ChangeBeneficjenci)
-          routef "/{%d}/zrodla-zywnosci" (changeZrodlaZywnosci dependencies.ChangeZrodlaZywnosci)
-          routef "/{%d}/adresy-ksiegowosci" (changeAdresyKsiegowosci dependencies.ChangeAdresyKsiegowosci)
-          routef "/{%d}/warunki-pomocy" (changeWarunkiPomocy dependencies.ChangeWarunkiPomocy)
+          routef "/{%d}/dane-adresowe" (changeDaneAdresowe deps.ChangeDaneAdresowe)
+          routef "/{%d}/kontakty" (changeKontakty deps.ChangeKontakty)
+          routef "/{%d}/beneficjenci" (changeBeneficjenci deps.ChangeBeneficjenci)
+          routef "/{%d}/zrodla-zywnosci" (changeZrodlaZywnosci deps.ChangeZrodlaZywnosci)
+          routef "/{%d}/adresy-ksiegowosci" (changeAdresyKsiegowosci deps.ChangeAdresyKsiegowosci)
+          routef "/{%d}/warunki-pomocy" (changeWarunkiPomocy deps.ChangeWarunkiPomocy)
       ]
     ]
