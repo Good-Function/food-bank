@@ -3,7 +3,7 @@ module Layout.Body
 open Layout
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
-open Web.Layout.Dropdown
+open Layout.Dropdown
 
 let Template (content: HtmlElement) (currentPath: Navigation.Page option) (userName: string) =
     body (hxBoost = true, class'="modal-is-opening") {

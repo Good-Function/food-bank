@@ -5,8 +5,7 @@ open Layout.Navigation
 open Organizations.Application.ReadModels.OrganizationDetails
 open Layout.Fields
 open Oxpecker.ViewEngine
-open Web.Organizations
-open PageComposer
+open Organizations.Templates.PageComposer
 open Organizations.Templates.Formatters
 
 let Template (org: OrganizationDetails) permissions =

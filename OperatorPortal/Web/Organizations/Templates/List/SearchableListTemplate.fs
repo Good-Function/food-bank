@@ -7,8 +7,7 @@ open Organizations.Templates.List
 open Oxpecker.ViewEngine
 open Oxpecker.ViewEngine.Aria
 open Oxpecker.Htmx
-open Web.Organizations
-open PageComposer
+open Organizations.Templates.PageComposer
 
 let createFilterStateHolder filter =
             match filter.SortBy with

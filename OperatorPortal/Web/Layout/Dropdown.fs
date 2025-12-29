@@ -1,4 +1,4 @@
-module Web.Layout.Dropdown
+module Layout.Dropdown
 
 open Oxpecker.ViewEngine
 open Oxpecker.ViewEngine.Aria

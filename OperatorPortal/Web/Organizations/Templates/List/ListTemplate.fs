@@ -8,7 +8,7 @@ open Organizations.Templates.List
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
 open Organizations.Application.ReadModels.OrganizationSummary
-open Web.Layout.Dropdown
+open Layout.Dropdown
 
 let filterTemplate query =
     Fragment() {

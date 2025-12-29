@@ -6,7 +6,7 @@ open Organizations.Application.ReadModels.FilterOperators
 open Organizations.Application.ReadModels.QueriedColumn
 open Oxpecker.ViewEngine
 open Oxpecker.Htmx
-open Web.Layout.Dropdown
+open Layout.Dropdown
 
 type FilterType =
     | StringFilter

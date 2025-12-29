@@ -1,4 +1,4 @@
-module Web.Organizations.PageComposer
+module Organizations.Templates.PageComposer
 
 open Layout
 open Layout.Navigation
