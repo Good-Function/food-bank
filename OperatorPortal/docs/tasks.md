@@ -224,27 +224,23 @@ type AppendResult =
 ```fsharp
 module EventStore.Serialization
 
-open System.Text.Json
-open System.Text.Json.Serialization
-
-let private options =
-    let opts = JsonSerializerOptions()
-    opts.Converters.Add(JsonFSharpConverter())
-    opts.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
-    opts
+open Thoth.Json.Net
 
 let serialize<'T> (event: 'T) : string =
-    JsonSerializer.Serialize(event, options)
+    Encode.Auto.toString(0, event, caseStrategy = CaseStrategy.CamelCase)
 
 let deserialize<'T> (json: string) : 'T =
-    JsonSerializer.Deserialize<'T>(json, options)
+    match Decode.Auto.fromString<'T>(json, caseStrategy = CaseStrategy.CamelCase) with
+    | Ok value -> value
+    | Error error -> failwith $"Failed to deserialize event: {error}"
 ```
 
 **Acceptance Criteria:**
-- Uses System.Text.Json with F# support (FSharp.SystemTextJson)
+- Uses Thoth.Json.Net (per project serialization conventions)
 - Serializes F# discriminated unions correctly
 - Option types handled correctly (None → null, Some x → x)
 - Serialization roundtrip preserves data
+- Uses camelCase naming strategy
 
 ---
 
@@ -534,7 +530,7 @@ let appendEvents<'EventData>
 **Implementation Details:**
 - **Files Created:**
   - `Web/EventStore/EventStore.Types.fs` - Error types (AppendError)
-  - `Web/EventStore/EventStore.Serialization.fs` - JSON serialization with FSharp.SystemTextJson
+  - `Web/EventStore/EventStore.Serialization.fs` - JSON serialization with Thoth.Json.Net
   - `Web/EventStore/EventStore.Core.fs` - Core functions (loadEvents, getCurrentVersion, appendEvents)
   - `Web/EventStore/Database/migrations.sql` - Events table schema with optimistic concurrency
   - `Tests/EventStore/EventStoreTests.fs` - 14 comprehensive integration tests

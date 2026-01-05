@@ -1,16 +1,11 @@
 module EventStore.Serialization
 
-open System.Text.Json
-open System.Text.Json.Serialization
-
-let private options =
-    let opts = JsonSerializerOptions()
-    opts.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
-    opts.Converters.Add(JsonFSharpConverter())
-    opts
+open Thoth.Json.Net
 
 let serialize<'T> (event: 'T) : string =
-    JsonSerializer.Serialize(event, options)
+    Encode.Auto.toString(0, event, caseStrategy = CaseStrategy.CamelCase)
 
 let deserialize<'T> (json: string) : 'T =
-    JsonSerializer.Deserialize<'T>(json, options)
+    match Decode.Auto.fromString<'T>(json, caseStrategy = CaseStrategy.CamelCase) with
+    | Ok value -> value
+    | Error error -> failwith $"Failed to deserialize event: {error}"

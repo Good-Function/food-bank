@@ -21,6 +21,7 @@ Follow `docs/conventions/testing.md`.
 When writing, editing, refactoring, or reviewing code:
 
 - always follow `docs/conventions/software-design.md`
+- always follow `docs/conventions/serialization.md` for JSON serialization
 
 The automatic code review agent enforces these conventions (see `./claude/automatic-code-review/rules.md`)
 
