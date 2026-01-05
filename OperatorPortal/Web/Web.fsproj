@@ -50,6 +50,9 @@
         <Content Include="EventStore\Database\migrations.sql">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Compile Include="EventSourcing\CommandHandler.fs" />
+        <Compile Include="EventSourcing\FeatureFlag.fs" />
+        <Compile Include="EventSourcing\Projection.fs" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Layout\Icons\Icons.fs" />

@@ -26,6 +26,11 @@
         <Compile Include="EventStore\EventStoreTests.fs" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="EventSourcing\CommandHandlerTests.fs" />
+        <Compile Include="EventSourcing\FeatureFlagTests.fs" />
+        <Compile Include="EventSourcing\ProjectionTests.fs" />
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="Bogus" />
         <PackageReference Include="ClosedXML" />
         <PackageReference Include="IdGen" />
