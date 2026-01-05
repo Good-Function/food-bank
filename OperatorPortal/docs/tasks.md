@@ -1,9 +1,9 @@
 # Organization Event Sourcing Migration - Implementation Tasks
 
-**Document Version:** 1.1
+**Document Version:** 2.0
 **Created:** 2026-01-04
 **Last Updated:** 2026-01-05
-**Status:** Phase 1 Complete - Phase 2 Ready
+**Status:** Phase 1 Complete - Phase 1.5 Ready
 **Related PRD:** [prd-organization-event-sourcing.md](prd-organization-event-sourcing.md)
 **Architecture Guide:** [architecture/event-sourcing.md](architecture/event-sourcing.md)
 
@@ -11,11 +11,12 @@
 
 ## Overview
 
-This document provides a comprehensive, phase-by-phase task breakdown for migrating the Organization vertical slice to event sourcing. The migration follows a **6-phase approach** with **61 total tasks**, emphasizing:
+This document provides a comprehensive, phase-by-phase task breakdown for migrating the Organization vertical slice to event sourcing. The migration follows a **7-phase approach** emphasizing:
 
 - **Test-Driven Development (TDD):** All implementation follows test-first approach
 - **100% Test Coverage:** Mandatory coverage gates at end of each phase
-- **Shared EventStore Package:** Reusable infrastructure for future vertical slices
+- **Shared Infrastructure:** Reusable EventStore (Phase 1) and EventSourcing patterns (Phase 1.5) for all vertical slices
+- **Generic Patterns First:** Extract reusable patterns before domain-specific implementation
 - **Gradual Rollout:** Feature-flagged deployment with 4-week rollout plan
 - **Zero Downtime:** Legacy and ES handlers coexist during migration
 
@@ -26,9 +27,10 @@ This document provides a comprehensive, phase-by-phase task breakdown for migrat
 | Phase | Success Criteria |
 |-------|------------------|
 | **1: EventStore Infrastructure** | ✅ EventStore package created in `Web/EventStore/`<br>✅ Events table migration added to Migrations project<br>✅ TDD: All tests written before implementation<br>✅ **100% test coverage for EventStore package** |
-| **2: Domain Modeling** | ✅ Event types, commands, aggregates defined<br>✅ Pure functions (decide, evolve, replay) implemented<br>✅ TDD: All domain logic test-driven<br>✅ **100% test coverage for all domain logic** |
-| **3: Projections & Dual-Write** | ✅ Projections update organizacje table correctly<br>✅ Synthetic OrganizationCreated events work<br>✅ ES handlers mirror legacy handlers<br>✅ **100% test coverage for projections and handlers** |
-| **4: Feature Flag & Integration** | ✅ Feature flag switches between ES/legacy correctly<br>✅ Audit trail adapter maintains compatibility<br>✅ CompositionRoot conditionally wires handlers<br>✅ **100% test coverage for integration logic** |
+| **1.5: EventSourcing Patterns** | ✅ EventSourcing package created in `Web/EventSourcing/`<br>✅ Generic CommandHandler for load→decide→append flow<br>✅ Feature flag for percentage-based rollout<br>✅ Projection composition helpers<br>✅ **100% test coverage for all generic patterns** |
+| **2: Domain Modeling** | ✅ Event types, commands, aggregates defined<br>✅ Pure functions (decide, evolve, replay) implemented<br>✅ AggregateIdMapping for TeczkaId → Guid conversion<br>✅ SyntheticEvents for migration<br>✅ **100% test coverage for all domain logic** |
+| **3: Projections & Dual-Write** | ✅ Projections update organizacje table correctly<br>✅ Synthetic OrganizationCreated events work<br>✅ ES handlers use shared CommandHandler<br>✅ **100% test coverage for projections and handlers** |
+| **4: Feature Flag & Integration** | ✅ Feature flag switches between ES/legacy correctly (using shared module)<br>✅ Audit trail adapter maintains compatibility<br>✅ CompositionRoot conditionally wires handlers<br>✅ **100% test coverage for integration logic** |
 | **5: Observability & Rollout** | ✅ Logging and metrics instrumentation added<br>✅ Gradual rollout: 0% → 10% → 50% → 100%<br>✅ No performance degradation >20%<br>✅ **100% monitoring coverage (all operations logged)** |
 | **6: Cleanup & Documentation** | ✅ Legacy code removed (Handlers.fs, FindDiffForAudit.fs)<br>✅ Feature flag removed (ES is default)<br>✅ Documentation complete (architecture, event catalog, time-traveling)<br>✅ **100% test coverage maintained after cleanup** |
 
@@ -39,7 +41,8 @@ This document provides a comprehensive, phase-by-phase task breakdown for migrat
 | Phase | Status | Completion Date | Notes |
 |-------|--------|----------------|-------|
 | **Phase 1: EventStore Infrastructure** | ✅ **COMPLETE** | 2026-01-05 | All 12 tasks complete. 14 integration tests passing. EventStore package production-ready. |
-| **Phase 2: Domain Modeling** | ⏸️ **NOT STARTED** | - | Ready to begin. Organizations/EventSourcing directory to be created. |
+| **Phase 1.5: EventSourcing Patterns** | ⏸️ **NOT STARTED** | - | Ready to begin. Generic patterns for command handling, feature flags, and projections. |
+| **Phase 2: Domain Modeling** | ⏸️ **NOT STARTED** | - | Blocked by Phase 1.5 completion. Organizations/EventSourcing directory to be created. |
 | **Phase 3: Projections & Dual-Write** | ⏸️ **NOT STARTED** | - | Blocked by Phase 2 completion. |
 | **Phase 4: Feature Flag & Integration** | ⏸️ **NOT STARTED** | - | Blocked by Phase 3 completion. |
 | **Phase 5: Observability & Rollout** | ⏸️ **NOT STARTED** | - | Blocked by Phase 4 completion. |
@@ -554,25 +557,480 @@ let appendEvents<'EventData>
 
 ---
 
-## PHASE 2: Domain Modeling
+## PHASE 1.5: EventSourcing Patterns Module
 
-**Goal:** Create Organization events, commands, and pure functions with 100% test coverage
+**Goal:** Create shared EventSourcing package with generic patterns for command handling, feature flags, and projection composition
 
-**Duration Estimate:** 1-2 weeks
-**Tasks:** 13
+**Duration Estimate:** 3-5 days
+**Tasks:** 8
 
 ### Phase Overview
 
-Define event-sourced domain model for Organizations. Create versioned events, commands, aggregate state, and pure functions (decide, evolve, replay) following F# best practices.
+Extract reusable event sourcing patterns into a shared module that any vertical slice can use. This prevents duplication when future slices (Applications, Donors, Distributions) adopt event sourcing.
+
+**Architecture:**
+```
+Web/EventSourcing/          # Generic patterns (reusable)
+├── CommandHandler.fs       # Generic load→decide→append orchestration
+├── FeatureFlag.fs         # Percentage-based rollout with deterministic hashing
+└── Projection.fs          # Composition helpers and utilities
+
+Web/Organizations/EventSourcing/   # Domain-specific (Organizations only)
+├── Events.fs, Commands.fs         # Organization events and commands
+├── Decision.fs, Evolution.fs      # Domain logic (decide, evolve, replay)
+└── Projections.fs                 # SQL updates for organizacje table
+```
+
+**Key Principle:** Generic infrastructure (EventStore + EventSourcing) should be agnostic to domain concepts. Domain-specific logic (Organizations) should use generic infrastructure but remain independent.
+
+### Tasks
+
+#### 1.5.1: Create EventSourcing module structure
+**Type:** Setup
+**Approach:** Manual
+
+- Create folder: `/OperatorPortal/Web/EventSourcing/`
+- Create empty files:
+  - `CommandHandler.fs`
+  - `FeatureFlag.fs`
+  - `Projection.fs`
+- Define module namespaces: `EventSourcing.CommandHandler`, `EventSourcing.FeatureFlag`, `EventSourcing.Projection`
+
+**Acceptance Criteria:**
+- Folder structure created
+- Files compile (empty modules)
+- Module namespaces follow convention
+
+---
+
+#### 1.5.2: TDD - Write tests for CommandHandler.handleCommand
+**Type:** Test
+**Approach:** Test-First (TDD)
+
+**Create test file:** `/OperatorPortal/Tests/EventSourcing/CommandHandlerTests.fs`
+
+**Test Cases:**
+1. `handleCommand succeeds when decide returns events and append succeeds`
+2. `handleCommand returns error when decide function rejects command`
+3. `handleCommand handles optimistic concurrency conflict from EventStore`
+4. `handleCommand handles projection failure error`
+5. `handleCommand works with empty event stream (new aggregate)`
+6. `handleCommand replays events correctly before calling decide`
+7. `handleCommand extracts aggregate ID and converts to Guid correctly`
+
+**Example Test:**
+```fsharp
+[<Fact>]
+let ``handleCommand succeeds with valid command`` () =
+    async {
+        // Arrange
+        let aggregateId = Guid.NewGuid()
+        let events = []  // Empty stream
+        let decide cmd state = Ok [TestEvent { Data = "test" }]
+        let replay evts = None
+        let project evt db = async { () }
+
+        let config = {
+            LoadEvents = fun _ -> async { return events }
+            Replay = replay
+            Decide = decide
+            Project = project
+            AppendEvents = fun _ _ _ -> async { return Ok () }
+            ToGuid = fun id -> aggregateId
+            GetAggregateId = fun cmd -> "test-id"
+            AggregateType = "Test"
+        }
+
+        // Act
+        let! result = CommandHandler.handleCommand config { TestCommand = "test" }
+
+        // Assert
+        match result with
+        | Ok () -> ()  // Success
+        | Error msg -> Assert.Fail($"Expected success, got error: {msg}")
+    } |> Async.RunSynchronously
+```
+
+**Acceptance Criteria:**
+- Tests written and compile (but fail - implementation doesn't exist yet)
+- All edge cases covered (new aggregate, existing aggregate, errors)
+- Tests verify full orchestration flow
+
+---
+
+#### 1.5.3: Implement CommandHandler.fs
+**Type:** Implementation
+**Approach:** Test-Driven (make tests from 1.5.2 pass)
+
+**Implementation:**
+```fsharp
+module EventSourcing.CommandHandler
+
+open System
+open System.Data
+open EventStore.Core
+open EventStore.Types
+
+type CommandHandlerConfig<'State, 'Command, 'Event, 'AggregateId> = {
+    LoadEvents: Guid -> Async<'Event list>
+    Replay: 'Event list -> 'State option
+    Decide: 'Command -> 'State option -> Result<'Event list, string>
+    Project: 'Event -> IDbConnection -> Async<unit>
+    AppendEvents: Guid -> int -> 'Event list -> Async<Result<unit, AppendError>>
+    ToGuid: 'AggregateId -> Guid
+    GetAggregateId: 'Command -> 'AggregateId
+    AggregateType: string
+}
+
+let handleCommand<'State, 'Command, 'Event, 'AggregateId>
+    (config: CommandHandlerConfig<'State, 'Command, 'Event, 'AggregateId>)
+    (command: 'Command)
+    : Async<Result<unit, string>> =
+    async {
+        // 1. Extract aggregate ID and convert to Guid
+        let aggregateId = config.GetAggregateId command
+        let guid = config.ToGuid aggregateId
+
+        // 2. Load events
+        let! events = config.LoadEvents guid
+
+        // 3. Replay to current state
+        let currentState = config.Replay events
+
+        // 4. Get current version
+        let currentVersion = events |> List.length
+
+        // 5. Decide what events to produce
+        match config.Decide command currentState with
+        | Error err ->
+            return Error err
+
+        | Ok newEvents ->
+            // 6. Append events with inline projections
+            let! appendResult = config.AppendEvents guid currentVersion newEvents
+
+            return
+                match appendResult with
+                | Ok () -> Ok ()
+                | Error (ConcurrencyConflict (expected, actual)) ->
+                    Error $"Concurrency conflict: expected version {expected}, actual {actual}"
+                | Error (ProjectionFailed (eventType, ex)) ->
+                    Error $"Projection failed for {eventType}: {ex.Message}"
+                | Error (DatabaseError ex) ->
+                    Error $"Database error: {ex.Message}"
+    }
+```
+
+**Acceptance Criteria:**
+- All tests from task 1.5.2 pass
+- Generic function works with any state/command/event types
+- Error mapping from AppendError to string is clear
+- Full orchestration flow implemented
+
+---
+
+#### 1.5.4: TDD - Write tests for FeatureFlag
+**Type:** Test
+**Approach:** Test-First (TDD)
+
+**Create test file:** `/OperatorPortal/Tests/EventSourcing/FeatureFlagTests.fs`
+
+**Test Cases:**
+1. `isEnabled returns false for all IDs when percentage is 0`
+2. `isEnabled returns true for all IDs when percentage is 100`
+3. `isEnabled returns same result for same ID (deterministic)`
+4. `isEnabled distributes roughly evenly at 50%`
+5. `Environment variable overrides config percentage`
+6. `executeWithFeatureFlag routes to ES handler when enabled`
+7. `executeWithFeatureFlag routes to legacy handler when disabled`
+
+**Example Test:**
+```fsharp
+[<Fact>]
+let ``isEnabled is deterministic for same ID`` () =
+    // Arrange
+    let config = { Percentage = 50; EnvVarName = "TEST_FLAG" }
+    let aggregateId = "test-123"
+
+    // Act
+    let result1 = FeatureFlag.isEnabled config aggregateId
+    let result2 = FeatureFlag.isEnabled config aggregateId
+    let result3 = FeatureFlag.isEnabled config aggregateId
+
+    // Assert
+    result1 |> should equal result2
+    result2 |> should equal result3
+```
+
+**Acceptance Criteria:**
+- Tests written and compile (but fail)
+- Determinism and distribution tested
+- Environment variable override tested
+
+---
+
+#### 1.5.5: Implement FeatureFlag.fs
+**Type:** Implementation
+**Approach:** Test-Driven (make tests from 1.5.4 pass)
+
+**Implementation:**
+```fsharp
+module EventSourcing.FeatureFlag
+
+open System
+open System.Security.Cryptography
+open System.Text
+
+type FeatureFlagConfig = {
+    Percentage: int  // 0-100
+    EnvVarName: string
+}
+
+let isEnabled<'AggregateId>
+    (config: FeatureFlagConfig)
+    (aggregateId: 'AggregateId)
+    : bool =
+
+    // 1. Get percentage from environment or config
+    let percentage =
+        match Environment.GetEnvironmentVariable(config.EnvVarName) with
+        | null | "" -> config.Percentage
+        | value ->
+            match Int32.TryParse(value) with
+            | true, pct -> pct
+            | false, _ -> config.Percentage
+
+    // Edge cases
+    if percentage <= 0 then false
+    elif percentage >= 100 then true
+    else
+        // 2. Deterministic hash of aggregate ID
+        let idString = aggregateId.ToString()
+        use sha256 = SHA256.Create()
+        let hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(idString))
+        let hashInt = BitConverter.ToInt32(hashBytes, 0) |> abs
+
+        // 3. Modulo 100 to get bucket (0-99)
+        let bucket = hashInt % 100
+
+        // 4. Enable if bucket < percentage
+        bucket < percentage
+
+let executeWithFeatureFlag<'T, 'AggregateId>
+    (config: FeatureFlagConfig)
+    (aggregateId: 'AggregateId)
+    (esHandler: unit -> Async<Result<'T, string>>)
+    (legacyHandler: unit -> Async<Result<'T, string>>)
+    : Async<Result<'T, string>> =
+
+    if isEnabled config aggregateId then
+        esHandler()
+    else
+        legacyHandler()
+```
+
+**Acceptance Criteria:**
+- All tests from task 1.5.4 pass
+- SHA-256 ensures deterministic hashing
+- Environment variable override works
+- Generic function works with any aggregate ID type
+
+---
+
+#### 1.5.6: TDD - Write tests for Projection helpers
+**Type:** Test
+**Approach:** Test-First (TDD)
+
+**Create test file:** `/OperatorPortal/Tests/EventSourcing/ProjectionTests.fs`
+
+**Test Cases:**
+1. `combine executes all projections in sequence`
+2. `combine stops on first projection failure`
+3. `forEvent only executes handler when matcher returns true`
+4. `forEvent skips handler when matcher returns false`
+5. `withLogging logs start and success`
+6. `withLogging logs failure and rethrows`
+7. `noop projection always succeeds`
+
+**Example Test:**
+```fsharp
+[<Fact>]
+let ``combine executes all projections`` () =
+    async {
+        // Arrange
+        let mutable projection1Called = false
+        let mutable projection2Called = false
+
+        let projection1 evt db = async { projection1Called <- true }
+        let projection2 evt db = async { projection2Called <- true }
+
+        let combined = Projection.combine [projection1; projection2]
+
+        // Act
+        use db = createMockDb()
+        do! combined TestEvent db
+
+        // Assert
+        projection1Called |> should be True
+        projection2Called |> should be True
+    } |> Async.RunSynchronously
+```
+
+**Acceptance Criteria:**
+- Tests written and compile (but fail)
+- All composition patterns tested
+- Logging decorator tested
+
+---
+
+#### 1.5.7: Implement Projection.fs
+**Type:** Implementation
+**Approach:** Test-Driven (make tests from 1.5.6 pass)
+
+**Implementation:**
+```fsharp
+module EventSourcing.Projection
+
+open System.Data
+
+type ProjectionFn<'Event> = 'Event -> IDbConnection -> Async<unit>
+
+let combine<'Event>
+    (projections: ProjectionFn<'Event> list)
+    : ProjectionFn<'Event> =
+    fun event db ->
+        async {
+            for projection in projections do
+                do! projection event db
+        }
+
+let forEvent<'Event>
+    (matcher: 'Event -> bool)
+    (handler: 'Event -> IDbConnection -> Async<unit>)
+    : ProjectionFn<'Event> =
+    fun event db ->
+        async {
+            if matcher event then
+                do! handler event db
+        }
+
+let noop<'Event> : ProjectionFn<'Event> =
+    fun _ _ -> async { () }
+
+let withLogging<'Event>
+    (logger: string -> unit)
+    (projection: ProjectionFn<'Event>)
+    : ProjectionFn<'Event> =
+    fun event db ->
+        async {
+            let eventType = event.GetType().Name
+            logger $"Projecting {eventType}"
+            try
+                do! projection event db
+                logger $"Projected {eventType} successfully"
+            with ex ->
+                logger $"Projection failed for {eventType}: {ex.Message}"
+                reraise()
+        }
+```
+
+**Acceptance Criteria:**
+- All tests from task 1.5.6 pass
+- Composition functions work correctly
+- Logging decorator preserves errors
+- Generic functions work with any event type
+
+---
+
+#### 1.5.8: Add EventSourcing to Web.fsproj & verify 100% coverage
+**Type:** Configuration & Quality Gate
+**Approach:** Manual + Coverage Analysis
+
+**Edit `Web.fsproj`:**
+```xml
+<!-- After EventStore section, before Organizations section -->
+<Compile Include="EventSourcing\CommandHandler.fs" />
+<Compile Include="EventSourcing\FeatureFlag.fs" />
+<Compile Include="EventSourcing\Projection.fs" />
+```
+
+**Order matters:**
+1. CommandHandler (depends on EventStore)
+2. FeatureFlag (no EventStore dependency)
+3. Projection (no EventStore dependency)
+
+**Coverage verification:**
+1. Run test coverage tool (dotnet-coverage or similar)
+2. Generate coverage report for EventSourcing namespace
+3. Verify 100% coverage for all three files
+4. Document any intentional exclusions
+
+**Required Coverage:**
+- EventSourcing.CommandHandler: 100% (all orchestration steps tested)
+- EventSourcing.FeatureFlag: 100% (all branches tested)
+- EventSourcing.Projection: 100% (all helpers tested)
+
+**Acceptance Criteria:**
+- Project compiles successfully
+- EventSourcing modules accessible from Organizations
+- Compilation order correct
+- Coverage report shows 100% for all EventSourcing modules
+
+---
+
+### Phase 1.5 Completion Summary
+
+**Deliverables:**
+- **Files Created:**
+  - `Web/EventSourcing/CommandHandler.fs` - Generic command handler orchestration
+  - `Web/EventSourcing/FeatureFlag.fs` - Percentage-based feature flag
+  - `Web/EventSourcing/Projection.fs` - Projection composition helpers
+  - `Tests/EventSourcing/CommandHandlerTests.fs` - Command handler tests
+  - `Tests/EventSourcing/FeatureFlagTests.fs` - Feature flag tests
+  - `Tests/EventSourcing/ProjectionTests.fs` - Projection helper tests
+
+**Test Coverage:**
+- ✅ 100% coverage for all EventSourcing modules
+- ✅ All orchestration patterns tested
+- ✅ Determinism and distribution verified
+- ✅ Composition patterns tested
+
+**Key Features Delivered:**
+- Generic command handler pattern (load→replay→decide→append)
+- Deterministic feature flag for gradual rollout
+- Projection composition and filtering utilities
+- Reusable by any vertical slice
+
+**Production Readiness:** ✅ Package is production-ready and available for use by Organizations and future domains.
+
+---
+
+## PHASE 2: Domain Modeling (**UPDATED**)
+
+**Goal:** Create Organization events, commands, aggregates, and pure functions with 100% test coverage
+
+**Duration Estimate:** 1-2 weeks
+**Tasks:** 15 (updated from 13)
+
+### Phase Overview
+
+Define event-sourced domain model for Organizations. Create versioned events, commands, aggregate state, pure functions (decide, evolve, replay), and infrastructure for TeczkaId → Guid mapping and synthetic event creation.
+
+**Changes from Original Plan:**
+- ➕ Added AggregateIdMapping.fs for deterministic TeczkaId → Guid conversion
+- ➕ Added SyntheticEvents.fs for migration helpers (create synthetic OrganizationCreated events)
+- ✅ Events.fs, Commands.fs, Aggregate.fs, Decision.fs, Evolution.fs remain unchanged
 
 **File Structure:**
 ```
 Web/Organizations/EventSourcing/
-├── Events.fs          # 6 versioned event types (V1)
-├── Commands.fs        # OrganizationCommand types
-├── Aggregate.fs       # OrganizationState record
-├── Decision.fs        # decide function (command → events)
-└── Evolution.fs       # evolve/replay functions (events → state)
+├── Events.fs               # 6 versioned event types (V1)
+├── Commands.fs             # OrganizationCommand types
+├── Aggregate.fs            # OrganizationState record
+├── Decision.fs             # decide function (command → events)
+├── Evolution.fs            # evolve/replay functions (events → state)
+├── AggregateIdMapping.fs   # TeczkaId → Guid conversion (NEW)
+└── SyntheticEvents.fs      # Migration helpers (NEW)
 ```
 
 ### Tasks
@@ -588,11 +1046,13 @@ Web/Organizations/EventSourcing/
   - `Aggregate.fs`
   - `Decision.fs`
   - `Evolution.fs`
+  - `AggregateIdMapping.fs` (NEW)
+  - `SyntheticEvents.fs` (NEW)
 - Define module namespaces: `Organizations.EventSourcing.*`
 
 **Acceptance Criteria:**
 - Folder structure created
-- Files compile (empty modules)
+- All files compile (empty modules)
 - Namespaces follow convention
 
 ---
@@ -1345,7 +1805,235 @@ let ``Replay is idempotent - replaying twice gives same result``
 
 ---
 
-#### 2.12: Add EventSourcing compile items to Web.fsproj
+#### 2.12: Implement AggregateIdMapping.fs (NEW)
+**Type:** Implementation
+**Approach:** Code
+
+**Purpose:** Deterministic TeczkaId (int64) → Guid conversion for EventStore
+
+**Implementation in `AggregateIdMapping.fs`:**
+```fsharp
+module Organizations.EventSourcing.AggregateIdMapping
+
+open System
+open System.Security.Cryptography
+open System.Text
+open Organizations.Domain.Identifiers
+
+/// Namespace UUID for Organizations (generated once, hardcoded)
+/// This ensures all TeczkaId mappings are deterministic and consistent
+let private organizationNamespace =
+    Guid.Parse("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+
+/// Convert TeczkaId to deterministic Guid using UUID v5 (SHA-1 based)
+/// Same TeczkaId always produces same Guid
+let teczkaIdToGuid (teczkaId: TeczkaId) : Guid =
+    let id = TeczkaId.unwrap teczkaId
+    let name = $"Organization-{id}"
+    let nameBytes = Encoding.UTF8.GetBytes(name)
+
+    // UUID v5 = SHA-1 hash of namespace + name
+    use sha1 = SHA1.Create()
+    let namespaceBytes = organizationNamespace.ToByteArray()
+    let combined = Array.concat [namespaceBytes; nameBytes]
+    let hash = sha1.ComputeHash(combined)
+
+    // Take first 16 bytes, set version and variant bits
+    let guidBytes = hash.[0..15]
+    guidBytes.[6] <- (guidBytes.[6] &&& 0x0Fuy) ||| 0x50uy // Version 5
+    guidBytes.[8] <- (guidBytes.[8] &&& 0x3Fuy) ||| 0x80uy // Variant 10
+
+    Guid(guidBytes)
+```
+
+**Unit Tests:**
+```fsharp
+[<Fact>]
+let ``teczkaIdToGuid is deterministic`` () =
+    // Arrange
+    let teczkaId = TeczkaId.create 123L |> Result.get
+
+    // Act
+    let guid1 = AggregateIdMapping.teczkaIdToGuid teczkaId
+    let guid2 = AggregateIdMapping.teczkaIdToGuid teczkaId
+    let guid3 = AggregateIdMapping.teczkaIdToGuid teczkaId
+
+    // Assert
+    guid1 |> should equal guid2
+    guid2 |> should equal guid3
+
+[<Fact>]
+let ``different TeczkaIds produce different Guids`` () =
+    // Arrange
+    let teczka1 = TeczkaId.create 123L |> Result.get
+    let teczka2 = TeczkaId.create 456L |> Result.get
+
+    // Act
+    let guid1 = AggregateIdMapping.teczkaIdToGuid teczka1
+    let guid2 = AggregateIdMapping.teczkaIdToGuid teczka2
+
+    // Assert
+    guid1 |> should not' (equal guid2)
+```
+
+**Acceptance Criteria:**
+- Deterministic mapping (same TeczkaId → same Guid always)
+- Different TeczkaIds produce different Guids
+- Uses UUID v5 standard for consistency
+- Unit tests verify determinism
+
+---
+
+#### 2.13: Implement SyntheticEvents.fs (NEW)
+**Type:** Implementation
+**Approach:** Code
+
+**Purpose:** Create synthetic OrganizationCreated events for existing organizations during migration
+
+**Implementation in `SyntheticEvents.fs`:**
+```fsharp
+module Organizations.EventSourcing.SyntheticEvents
+
+open System
+open Organizations.Domain
+open Organizations.Domain.Organization
+open Organizations.Domain.Identifiers
+open Organizations.EventSourcing.Events
+open Organizations.EventSourcing.AggregateIdMapping
+open EventStore.Core
+
+/// Create synthetic OrganizationCreated event from existing Organization
+let createOrganizationCreatedEvent
+    (org: Organization)
+    (who: string)
+    : OrganizationCreatedV1 =
+    {
+        TeczkaId = TeczkaId.unwrap org.Teczka
+        IdentyfikatorEnova = org.IdentyfikatorEnova
+        NIP = Nip.unwrap org.NIP
+        Regon = Regon.unwrap org.Regon
+        KrsNr =
+            match org.FormaPrawna with
+            | FormaPrawna.WRejestrzeKRS krs -> Krs.unwrap krs
+            | FormaPrawna.PozaRejestrem _ -> ""
+        FormaPrawna = FormaPrawna.toString org.FormaPrawna
+        OPP = org.OPP
+        DaneAdresowe = {
+            TeczkaId = TeczkaId.unwrap org.Teczka
+            NazwaOrganizacjiPodpisujacejUmowe = org.DaneAdresowe.NazwaOrganizacjiPodpisujacejUmowe
+            AdresRejestrowy = org.DaneAdresowe.AdresRejestrowy
+            NazwaPlacowkiTrafiaZywnosc = org.DaneAdresowe.NazwaPlacowkiTrafiaZywnosc
+            AdresPlacowkiTrafiaZywnosc = org.DaneAdresowe.AdresPlacowkiTrafiaZywnosc
+            GminaDzielnica = org.DaneAdresowe.GminaDzielnica
+            Powiat = org.DaneAdresowe.Powiat
+            Audit = { Who = who; OccurredAt = DateTime.UtcNow }
+        }
+        Kontakty = {
+            TeczkaId = TeczkaId.unwrap org.Teczka
+            Email = org.Kontakty.Email
+            Telefon = org.Kontakty.Telefon
+            OsobaDoKontaktu = org.Kontakty.OsobaDoKontaktu
+            TelefonOsobyKontaktowej = org.Kontakty.TelefonOsobyKontaktowej
+            MailOsobyKontaktowej = org.Kontakty.MailOsobyKontaktowej
+            OsobaOdbierajacaZywnosc = org.Kontakty.OsobaOdbierajacaZywnosc
+            TelefonOsobyOdbierajacej = org.Kontakty.TelefonOsobyOdbierajacej
+            Kontakt = org.Kontakty.Kontakt
+            Przedstawiciel = org.Kontakty.Przedstawiciel
+            Dostepnosc = org.Kontakty.Dostepnosc
+            WwwFacebook = org.Kontakty.WwwFacebook
+            Audit = { Who = who; OccurredAt = DateTime.UtcNow }
+        }
+        ZrodlaZywnosci = {
+            TeczkaId = TeczkaId.unwrap org.Teczka
+            Sieci = org.ZrodlaZywnosci.Sieci
+            Bazarki = org.ZrodlaZywnosci.Bazarki
+            Machfit = org.ZrodlaZywnosci.Machfit
+            FEPZ2024 = org.ZrodlaZywnosci.FEPZ2024
+            OdbiorKrotkiTermin = org.ZrodlaZywnosci.OdbiorKrotkiTermin
+            TylkoNaszMagazyn = org.ZrodlaZywnosci.TylkoNaszMagazyn
+            Audit = { Who = who; OccurredAt = DateTime.UtcNow }
+        }
+        AdresyKsiegowosci = {
+            TeczkaId = TeczkaId.unwrap org.Teczka
+            KsiegowanieAdres = org.AdresyKsiegowosci.KsiegowanieAdres
+            NazwaOrganizacjiKsiegowanieDarowizn = org.AdresyKsiegowosci.NazwaOrganizacjiKsiegowanieDarowizn
+            TelOrganProwadzacegoKsiegowosc = org.AdresyKsiegowosci.TelOrganProwadzacegoKsiegowosc
+            Audit = { Who = who; OccurredAt = DateTime.UtcNow }
+        }
+        Beneficjenci = {
+            TeczkaId = TeczkaId.unwrap org.Teczka
+            LiczbaBeneficjentow = org.Beneficjenci.LiczbaBeneficjentow
+            Beneficjenci = org.Beneficjenci.Beneficjenci
+            Audit = { Who = who; OccurredAt = DateTime.UtcNow }
+        }
+        WarunkiPomocy = {
+            TeczkaId = TeczkaId.unwrap org.Teczka
+            Kategoria = org.WarunkiPomocy.Kategoria
+            RodzajPomocy = org.WarunkiPomocy.RodzajPomocy
+            SposobUdzielaniaPomocy = org.WarunkiPomocy.SposobUdzielaniaPomocy
+            WarunkiMagazynowe = org.WarunkiPomocy.WarunkiMagazynowe
+            HACCP = org.WarunkiPomocy.HACCP
+            Sanepid = org.WarunkiPomocy.Sanepid
+            TransportOpis = org.WarunkiPomocy.TransportOpis
+            TransportKategoria = org.WarunkiPomocy.TransportKategoria
+            Audit = { Who = who; OccurredAt = DateTime.UtcNow }
+        }
+        Audit = { Who = who; OccurredAt = DateTime.UtcNow }
+    }
+
+/// Backfill existing organization with synthetic event (for migration)
+let backfillOrganization
+    (connectDb: unit -> Async<IDbConnection>)
+    (org: Organization)
+    (projection: OrganizationEvent -> IDbConnection -> Async<unit>)
+    : Async<Result<unit, string>> =
+    async {
+        let guid = teczkaIdToGuid org.Teczka
+        let syntheticEvent =
+            OrganizationCreated (createOrganizationCreatedEvent org "migration-script")
+
+        let! result =
+            EventStore.Core.appendEvents
+                connectDb
+                "Organization"
+                guid
+                0 // New stream, version = 0
+                [syntheticEvent]
+                projection
+
+        return
+            match result with
+            | Ok () -> Ok ()
+            | Error err -> Error $"Failed to backfill: {err}"
+    }
+```
+
+**Unit Tests:**
+```fsharp
+[<Fact>]
+let ``createOrganizationCreatedEvent captures all organization data`` () =
+    // Arrange
+    let org = createTestOrganization()
+
+    // Act
+    let event = SyntheticEvents.createOrganizationCreatedEvent org "test-user"
+
+    // Assert
+    event.TeczkaId |> should equal (TeczkaId.unwrap org.Teczka)
+    event.NIP |> should equal (Nip.unwrap org.NIP)
+    event.Kontakty.Email |> should equal org.Kontakty.Email
+    // ... verify all fields
+```
+
+**Acceptance Criteria:**
+- Creates complete OrganizationCreated event from Organization
+- Maps all domain types to event primitives correctly
+- Backfill function appends synthetic event successfully
+- Unit tests verify complete data capture
+
+---
+
+#### 2.14: Add EventSourcing compile items to Web.fsproj (renumbered from 2.12)
 **Type:** Configuration
 **Approach:** Manual
 
@@ -1357,6 +2045,8 @@ let ``Replay is idempotent - replaying twice gives same result``
 <Compile Include="Organizations\EventSourcing\Aggregate.fs" />
 <Compile Include="Organizations\EventSourcing\Decision.fs" />
 <Compile Include="Organizations\EventSourcing\Evolution.fs" />
+<Compile Include="Organizations\EventSourcing\AggregateIdMapping.fs" />
+<Compile Include="Organizations\EventSourcing\SyntheticEvents.fs" />
 ```
 
 **Order:**
@@ -1365,15 +2055,17 @@ let ``Replay is idempotent - replaying twice gives same result``
 3. Aggregate (depends on Domain)
 4. Decision (depends on Events, Commands, Aggregate)
 5. Evolution (depends on Events, Aggregate)
+6. AggregateIdMapping (depends on Domain.Identifiers)
+7. SyntheticEvents (depends on Events, Domain, AggregateIdMapping, EventStore)
 
 **Acceptance Criteria:**
 - Project compiles successfully
-- EventSourcing modules accessible from Organizations
+- All EventSourcing modules accessible from Organizations
 - Dependency order correct
 
 ---
 
-#### 2.13: Verify 100% test coverage for all domain logic
+#### 2.15: Verify 100% test coverage for all domain logic (renumbered from 2.13)
 **Type:** Quality Gate
 **Approach:** Coverage Analysis
 
@@ -1389,17 +2081,21 @@ let ``Replay is idempotent - replaying twice gives same result``
 - Aggregate.fs: 100% (empty state tested)
 - Decision.fs: 100% (all pattern matches tested)
 - Evolution.fs: 100% (all pattern matches tested)
+- AggregateIdMapping.fs: 100% (determinism and uniqueness tested)
+- SyntheticEvents.fs: 100% (event creation and backfill tested)
 
 **Acceptance Criteria:**
-- Coverage report shows 100%
+- Coverage report shows 100% for all modules
 - All edge cases tested
 - Property tests validate replay correctness
+- Deterministic mapping verified for AggregateIdMapping
+- Synthetic event creation verified for SyntheticEvents
 
-**Phase 2 Complete:** Domain model defined with pure, testable functions.
+**Phase 2 Complete:** Domain model defined with pure, testable functions, plus infrastructure for TeczkaId mapping and migration.
 
 ---
 
-## PHASE 3: Projections & Dual-Write
+## PHASE 3: Projections & Dual-Write (**UPDATED**)
 
 **Goal:** Implement projections and ES handlers with 100% test coverage
 
@@ -1408,13 +2104,21 @@ let ``Replay is idempotent - replaying twice gives same result``
 
 ### Phase Overview
 
-Create projection functions that update the `organizacje` table from events. Implement event-sourced handlers that mirror existing handlers but use EventStore. Keep legacy handlers intact (dual-write phase).
+Create projection functions that update the `organizacje` table from events. Implement event-sourced handlers using the **shared CommandHandler** from Phase 1.5. Keep legacy handlers intact (dual-write phase).
+
+**Changes from Original Plan:**
+- ✅ Projections.fs - unchanged (SQL updates only)
+- ✅ EventSourcedHandlers.fs - **SIMPLIFIED** using EventSourcing.CommandHandler
+- ❌ Remove custom handleCommand implementation (use shared module)
+
+**Key Simplification:**
+Each handler becomes ~10 lines of configuration + 1 line calling shared CommandHandler, instead of 50+ lines of orchestration logic.
 
 **File Structure:**
 ```
 Web/Organizations/EventSourcing/
-├── Projections.fs              # Project events to organizacje table
-└── EventSourcedHandlers.fs     # ES versions of existing handlers
+├── Projections.fs              # Project events to organizacje table (SQL updates only)
+└── EventSourcedHandlers.fs     # ES handlers using shared CommandHandler pattern
 ```
 
 ### Tasks
