@@ -12,6 +12,7 @@
       <PackageReference Include="FSharp.Data" />
       <PackageReference Include="FsToolkit.ErrorHandling" />
       <PackageReference Include="ClosedXML" />
+      <PackageReference Include="FSharp.SystemTextJson" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
       <PackageReference Include="Microsoft.Graph" />
       <PackageReference Include="Microsoft.Identity.Web" />
@@ -44,6 +45,12 @@
         </Content>
         <Compile Include="PostgresPersistence\OptionHandler.fs" />
         <Compile Include="PostgresPersistence\DapperFsharp.fs" />
+        <Compile Include="EventStore\EventStore.Types.fs" />
+        <Compile Include="EventStore\EventStore.Serialization.fs" />
+        <Compile Include="EventStore\EventStore.Core.fs" />
+        <Content Include="EventStore\Database\migrations.sql">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Layout\Icons\Icons.fs" />
