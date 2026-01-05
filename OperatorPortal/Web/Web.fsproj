@@ -90,6 +90,13 @@
       <Compile Include="Organizations\Domain\Identifiers.fs" />
       <Compile Include="Organizations\Domain\FormaPrawna.fs" />
       <Compile Include="Organizations\Domain\Organization.fs" />
+      <Compile Include="Organizations\EventSourcing\Events.fs" />
+      <Compile Include="Organizations\EventSourcing\Commands.fs" />
+      <Compile Include="Organizations\EventSourcing\Aggregate.fs" />
+      <Compile Include="Organizations\EventSourcing\Decision.fs" />
+      <Compile Include="Organizations\EventSourcing\Evolution.fs" />
+      <Compile Include="Organizations\EventSourcing\AggregateIdMapping.fs" />
+      <Compile Include="Organizations\EventSourcing\SyntheticEvents.fs" />
       <Compile Include="Organizations\Application\Audit.fs" />
       <Compile Include="Organizations\Application\FindDiffForAudit.fs" />
       <Compile Include="Organizations\Application\DocumentType.fs" />

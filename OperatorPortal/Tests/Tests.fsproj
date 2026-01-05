@@ -52,6 +52,9 @@
     <ItemGroup>
       <Compile Include="Organizations\Arranger.fs" />
       <Compile Include="Organizations\GenerateOrgs.fs" />
+      <Compile Include="Organizations\EventSourcing\EventsTests.fs" />
+      <Compile Include="Organizations\EventSourcing\DecisionTests.fs" />
+      <Compile Include="Organizations\EventSourcing\EvolutionTests.fs" />
       <Compile Include="Organizations\OrganizationsDataApi.fs" />
       <Compile Include="Organizations\Viewing.fs" />
       <Compile Include="Organizations\Editing.fs" />
