@@ -78,9 +78,9 @@ let assignRole
     fun ctx ->
         task {
             let permissions = permissionsMap[ctx.UserRole]
-            let roleId = ctx.TryGetFormValue("RoleId") |> Option.defaultValue ""
+            let role = ctx.TryGetFormValue "RoleId" |> Option.defaultValue ""
             let userId: Domain.UserId = Guid(userId)
-            let roleId: Domain.RoleId = Guid(roleId)
+            let roleId: Domain.RoleId = Guid(role)
             do! assignRole userId roleId
             let! users = listUsers ()
             let! roles = listRoles ()
@@ -98,10 +98,10 @@ let Endpoints (deps: Dependencies) =
           [ route
                 "/users"
                 (authorize Permission.ManageUsers
-                 >=> (addUser deps.AddUser deps.ListUsers deps.ListRoles)) ]
+                 >=> addUser deps.AddUser deps.ListUsers deps.ListRoles) ]
       DELETE [ routef "/users/{%s}" (authorize Permission.ManageUsers >>=> (deleteUser deps.DeleteUser)) ]
       PUT
           [ routef
                 "/users/{%s}/roles"
                 (authorize Permission.ManageUsers
-                 >>=> (assignRole deps.AssignRole deps.ListUsers deps.ListRoles)) ] ]
+                 >>=> assignRole deps.AssignRole deps.ListUsers deps.ListRoles) ] ]

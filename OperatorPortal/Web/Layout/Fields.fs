@@ -6,7 +6,6 @@ open Oxpecker.ViewEngine
 open Oxpecker.ViewEngine.Aria
 open Oxpecker.Htmx
 open Permissions
-open Layout.Dropdown
 
 let editableHeader (title: string) (formPath: string) (permissions: Permission list) =
     header (class' = "action-header") {

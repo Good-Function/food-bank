@@ -25,20 +25,23 @@ let View (users: User list) (roles: Role list) permissions (antiforgeryToken: Ht
                         user.Mail
                     }
                     td() {
-                        select(
-                            hxPut = $"/team/users/{user.Id}/roles",
-                            hxTrigger="change",
-                            hxTarget="closest table",
-                            disabled = not (permissions |> List.contains Permission.ManageUsers),
-                            hxSwap="outerHTML",
-                            name="RoleId",
-                            hxIndicator= "#UsersIndicator",
-                            hxInclude = "[name='__RequestVerificationToken']"
+                        form() {
+                            antiforgeryToken
+                            select(
+                                hxPut = $"/team/users/{user.Id}/roles",
+                                hxTrigger="change",
+                                hxTarget="closest table",
+                                disabled = not (permissions |> List.contains Permission.ManageUsers),
+                                hxSwap="outerHTML",
+                                name="RoleId",
+                                hxIndicator= "#UsersIndicator",
+                                hxInclude = "closest form"
                             ){
-                            for role in roles do
-                                option(selected = (role.Id = user.RoleId), title = role.Description, value=role.Id.ToString()) {
-                                    role.Name
-                                }
+                                for role in roles do
+                                    option(selected = (role.Id = user.RoleId), title = role.Description, value=role.Id.ToString()) {
+                                        role.Name
+                                    }
+                            }
                         }
                     }
                     td() {
