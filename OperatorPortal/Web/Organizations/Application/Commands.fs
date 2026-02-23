@@ -28,19 +28,19 @@ type Kontakty =
 [<CLIMutable>]
 type Dokumenty =
     { Wniosek: string option
-      WniosekDate: System.DateOnly option
+      WniosekDate: string
       DeleteWniosek: string option
       Umowa: string option
-      UmowaDate: System.DateOnly option
+      UmowaDate: string
       DeleteUmowa: string option
       RODO: string option
-      RODODate: System.DateOnly option
+      RODODate: string
       DeleteRODO: string option
       Odwiedziny: string option
-      OdwiedzinyDate: System.DateOnly option
+      OdwiedzinyDate: string
       DeleteOdwiedziny: string option
       UpowaznienieDoOdbioru: string option
-      UpowaznienieDoOdbioruDate: System.DateOnly option
+      UpowaznienieDoOdbioruDate: string
       DeleteUpowaznienieDoOdbioru: string option }
 
 [<CLIMutable>]

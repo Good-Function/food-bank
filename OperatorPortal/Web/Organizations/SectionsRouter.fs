@@ -112,6 +112,10 @@ let readFileByType<'T> (ctx: HttpContext) (docType: 'T) fallbackFileName =
     let fileName = file |> Option.map _.FileName |> Option.orElse fallbackFileName
     file, fileName
 
+let private parseDateOnly (s: string) =
+    if String.IsNullOrWhiteSpace(s) then None
+    else match DateOnly.TryParse(s) with | true, d -> Some d | _ -> None
+
 let changeDokumenty (saveDocument: DocumentHandlers.SaveFile)
                     (deleteDocument: DocumentHandlers.DeleteFile)
                     (teczka: int64) :EndpointHandler =
@@ -138,43 +142,49 @@ let changeDokumenty (saveDocument: DocumentHandlers.SaveFile)
                   |> Async.Parallel
                   |> Async.Ignore    
             
+            let wniosekDate = parseDateOnly cmd.WniosekDate
+            let umowaDate = parseDateOnly cmd.UmowaDate
+            let rodoDate = parseDateOnly cmd.RODODate
+            let odwiedzinyDate = parseDateOnly cmd.OdwiedzinyDate
+            let upowaznienieDate = parseDateOnly cmd.UpowaznienieDoOdbioruDate
+
             do! saveDocument(teczka, {
-                Date = cmd.WniosekDate
+                Date = wniosekDate
                 Type = Wniosek
                 ContentStream = wniosek |> Option.map(_.OpenReadStream())
                 FileName = wniosekFileName
             })
             do! saveDocument(teczka, {
-                Date = cmd.RODODate
+                Date = rodoDate
                 Type = RODO
                 ContentStream = rodo |> Option.map(_.OpenReadStream())
                 FileName = rodoFileName
             })
             do! saveDocument(teczka, {
-                Date = cmd.OdwiedzinyDate
+                Date = odwiedzinyDate
                 Type = Odwiedziny
                 ContentStream = odwiedziny |> Option.map(_.OpenReadStream())
                 FileName = odwiedzinyFileName
             })
             do! saveDocument(teczka, {
-                Date = cmd.UpowaznienieDoOdbioruDate
+                Date = upowaznienieDate
                 Type = UpowaznienieDoOdbioru
                 ContentStream = upowaznienie |> Option.map(_.OpenReadStream())
                 FileName = upowaznienieFileName
             })
             do! saveDocument(teczka, {
-                Date = cmd.UmowaDate
+                Date = umowaDate
                 Type = Umowa
                 ContentStream = umowa |> Option.map(_.OpenReadStream())
                 FileName = umowaFileName
             })
             
             let documents: Document list = [
-                { Date = cmd.WniosekDate; FileName = wniosekFileName; Type = Wniosek }
-                { Date = cmd.UmowaDate; FileName = umowaFileName; Type = Umowa }
-                { Date = cmd.OdwiedzinyDate; FileName = odwiedzinyFileName; Type = Odwiedziny }
-                { Date = cmd.RODODate; FileName = rodoFileName; Type = RODO}
-                { Date = cmd.UpowaznienieDoOdbioruDate; FileName = upowaznienieFileName; Type = UpowaznienieDoOdbioru }
+                { Date = wniosekDate; FileName = wniosekFileName; Type = Wniosek }
+                { Date = umowaDate; FileName = umowaFileName; Type = Umowa }
+                { Date = odwiedzinyDate; FileName = odwiedzinyFileName; Type = Odwiedziny }
+                { Date = rodoDate; FileName = rodoFileName; Type = RODO}
+                { Date = upowaznienieDate; FileName = upowaznienieFileName; Type = UpowaznienieDoOdbioru }
             ]
             return ctx.WriteHtmlView(Dokumenty.View documents teczka permissions)
         }
