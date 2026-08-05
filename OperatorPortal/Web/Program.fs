@@ -51,8 +51,8 @@ let notFoundHandler (ctx: HttpContext) =
     ctx.SetStatusCode 404
     ctx.WriteHtmlView (Layout.Head.Template Layout.NotFound.Template "Not Found")
 
-let createServer () =
-    let builder = WebApplication.CreateBuilder()
+let createServer (args: string array) =
+    let builder = WebApplication.CreateBuilder(args)
     
     let settings =
       ConfigurationBuilder()
@@ -124,6 +124,9 @@ let createServer () =
         .Run notFoundHandler
     app
    
-createServer().Run()
-
 type Program() = class end
+
+[<EntryPoint>]
+let main args =
+    createServer(args).Run()
+    0
