@@ -23,6 +23,14 @@
         <Compile Include="Navigation.fs" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="EventStore\EventStoreTests.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="EventSourcing\CommandHandlerTests.fs" />
+        <Compile Include="EventSourcing\FeatureFlagTests.fs" />
+        <Compile Include="EventSourcing\ProjectionTests.fs" />
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="Bogus" />
         <PackageReference Include="ClosedXML" />
         <PackageReference Include="IdGen" />
@@ -44,6 +52,9 @@
     <ItemGroup>
       <Compile Include="Organizations\Arranger.fs" />
       <Compile Include="Organizations\GenerateOrgs.fs" />
+      <Compile Include="Organizations\EventSourcing\EventsTests.fs" />
+      <Compile Include="Organizations\EventSourcing\DecisionTests.fs" />
+      <Compile Include="Organizations\EventSourcing\EvolutionTests.fs" />
       <Compile Include="Organizations\OrganizationsDataApi.fs" />
       <Compile Include="Organizations\Viewing.fs" />
       <Compile Include="Organizations\Editing.fs" />
